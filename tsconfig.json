@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@modules/*": [
+        "modules/*/src",
+        "modules/*/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "modules",
+    "remotion.config.ts"
+  ]
+}
