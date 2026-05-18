@@ -12,6 +12,9 @@ class AudioDownloadConfig:
     yt_dlp_binary: str
     songs_output_dir: Path
     download_archive_path: Path
+    cookies_file_path: Path
+    cookies_from_browsers: tuple[str, ...]
+    remote_components: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -46,6 +49,9 @@ def get_default_audio_download_config(project_root: str) -> AudioDownloadConfig:
         yt_dlp_binary="yt-dlp",
         songs_output_dir=root / "artifacts" / "songs",
         download_archive_path=root / "artifacts" / "common" / "yt-dlp-archive.txt",
+        cookies_file_path=root / "artifacts" / "common" / "youtube-cookies.txt",
+        cookies_from_browsers=("brave", "chromium", "chrome", "safari"),
+        remote_components=("ejs:github",),
     )
 
 
@@ -60,6 +66,7 @@ def _archive_line(record) -> str:
 def _ensure_dirs(config: AudioDownloadConfig) -> None:
     config.songs_output_dir.mkdir(parents=True, exist_ok=True)
     config.download_archive_path.parent.mkdir(parents=True, exist_ok=True)
+    config.cookies_file_path.parent.mkdir(parents=True, exist_ok=True)
 
 
 def _sanitize_name_part(value: str | None, fallback: str) -> str:
@@ -117,6 +124,91 @@ def _run_yt_dlp(binary: str, args: list[str]) -> str:
         raise RuntimeError("\n".join(message_parts)) from error
 
 
+def _with_remote_components(args: list[str], remote_components: tuple[str, ...]) -> list[str]:
+    if not remote_components:
+        return args
+    return ["--remote-components", ",".join(remote_components), *args]
+
+
+def _should_retry_with_cookies(message: str) -> bool:
+    lowered = message.lower()
+    return "sign in to confirm you’re not a bot" in lowered or "sign in to confirm you're not a bot" in lowered
+
+
+def _export_browser_cookies(binary: str, browser_name: str, cookies_file_path: Path) -> None:
+    try:
+        _run_yt_dlp(
+            binary,
+            _with_remote_components([
+                "--cookies-from-browser",
+                browser_name,
+                "--cookies",
+                str(cookies_file_path),
+                "--skip-download",
+                "--simulate",
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            ], ("ejs:github",)),
+        )
+    except Exception as error:
+        if cookies_file_path.exists() and cookies_file_path.stat().st_size > 0:
+            return
+        raise error
+
+
+def ensure_youtube_cookies(config: AudioDownloadConfig) -> tuple[Path | None, str | None]:
+    binary_path = shutil.which(config.yt_dlp_binary)
+    if not binary_path:
+        return None, f"yt-dlp binary not found: {config.yt_dlp_binary}"
+
+    _ensure_dirs(config)
+    if config.cookies_file_path.exists() and config.cookies_file_path.stat().st_size > 0:
+        return config.cookies_file_path, None
+
+    failures: list[str] = []
+    for browser_name in config.cookies_from_browsers:
+        try:
+            _export_browser_cookies(binary_path, browser_name, config.cookies_file_path)
+            if config.cookies_file_path.exists() and config.cookies_file_path.stat().st_size > 0:
+                return config.cookies_file_path, None
+        except Exception as error:
+            failures.append(f"[cookies-from-browser {browser_name}]\n{error}")
+
+    return None, "\n\n".join(failures) if failures else "No cookies could be exported."
+
+
+def _run_yt_dlp_with_fallback_cookies(
+    binary: str,
+    args: list[str],
+    browsers: tuple[str, ...],
+    cookies_file_path: Path,
+) -> str:
+    try:
+        return _run_yt_dlp(binary, args)
+    except Exception as error:
+        first_message = str(error)
+        if not _should_retry_with_cookies(first_message):
+            raise
+
+        failures = [first_message]
+        if cookies_file_path.exists() and cookies_file_path.stat().st_size > 0:
+            try:
+                return _run_yt_dlp(
+                    binary,
+                    _with_remote_components(["--cookies", str(cookies_file_path), *args], ("ejs:github",)),
+                )
+            except Exception as cookie_file_error:
+                failures.append(f"[cookies file {cookies_file_path}]\n{cookie_file_error}")
+
+        for browser_name in browsers:
+            try:
+                _export_browser_cookies(binary, browser_name, cookies_file_path)
+                return _run_yt_dlp(binary, _with_remote_components(["--cookies", str(cookies_file_path), *args], ("ejs:github",)))
+            except Exception as cookie_error:
+                failures.append(f"[cookies-from-browser {browser_name}]\n{cookie_error}")
+
+        raise RuntimeError("\n\n".join(failures)) from error
+
+
 def _parse_metadata(raw_json: str) -> DownloadedAudioMetadata:
     data = json.loads(raw_json)
     return DownloadedAudioMetadata(
@@ -155,14 +247,29 @@ def download_audio(record, config: AudioDownloadConfig) -> tuple[DownloadedAudio
     try:
         raw_metadata = _run_yt_dlp(
             binary_path,
-            ["--dump-single-json", "--no-playlist", record.watch_url],
+            _with_remote_components(
+                ["--dump-single-json", "--no-playlist", record.watch_url],
+                config.remote_components,
+            ),
         )
         metadata = _parse_metadata(raw_metadata)
     except Exception as error:
-        return None, DownloadAudioError(
-            reason="metadata-fetch-failed",
-            message=str(error),
-        )
+        try:
+            raw_metadata = _run_yt_dlp_with_fallback_cookies(
+                binary_path,
+                _with_remote_components(
+                    ["--dump-single-json", "--no-playlist", record.watch_url],
+                    config.remote_components,
+                ),
+                config.cookies_from_browsers,
+                config.cookies_file_path,
+            )
+            metadata = _parse_metadata(raw_metadata)
+        except Exception as fallback_error:
+            return None, DownloadAudioError(
+                reason="metadata-fetch-failed",
+                message=str(fallback_error or error),
+            )
 
     if has_downloaded_audio(record, config.download_archive_path):
         metadata_path = record_downloaded_audio(config, metadata)
@@ -183,21 +290,24 @@ def download_audio(record, config: AudioDownloadConfig) -> tuple[DownloadedAudio
     try:
         output = _run_yt_dlp(
             binary_path,
-            [
-                "--no-playlist",
-                "--extract-audio",
-                "--audio-format",
-                "mp3",
-                "--audio-quality",
-                "0",
-                "--download-archive",
-                str(config.download_archive_path),
-                "--output",
-                str(build_song_directory(config, metadata) / "audio.%(ext)s"),
-                "--print",
-                "after_move:filepath",
-                record.watch_url,
-            ],
+            _with_remote_components(
+                [
+                    "--no-playlist",
+                    "--extract-audio",
+                    "--audio-format",
+                    "mp3",
+                    "--audio-quality",
+                    "0",
+                    "--download-archive",
+                    str(config.download_archive_path),
+                    "--output",
+                    str(build_song_directory(config, metadata) / "audio.%(ext)s"),
+                    "--print",
+                    "after_move:filepath",
+                    record.watch_url,
+                ],
+                config.remote_components,
+            ),
         )
         audio_path = [line.strip() for line in output.splitlines() if line.strip()][-1]
         metadata_path = record_downloaded_audio(config, metadata)
@@ -212,7 +322,44 @@ def download_audio(record, config: AudioDownloadConfig) -> tuple[DownloadedAudio
             None,
         )
     except Exception as error:
-        return None, DownloadAudioError(
-            reason="audio-download-failed",
-            message=str(error),
-        )
+        try:
+            output = _run_yt_dlp_with_fallback_cookies(
+                binary_path,
+                _with_remote_components(
+                    [
+                        "--no-playlist",
+                        "--extract-audio",
+                        "--audio-format",
+                        "mp3",
+                        "--audio-quality",
+                        "0",
+                        "--download-archive",
+                        str(config.download_archive_path),
+                        "--output",
+                        str(build_song_directory(config, metadata) / "audio.%(ext)s"),
+                        "--print",
+                        "after_move:filepath",
+                        record.watch_url,
+                    ],
+                    config.remote_components,
+                ),
+                config.cookies_from_browsers,
+                config.cookies_file_path,
+            )
+            audio_path = [line.strip() for line in output.splitlines() if line.strip()][-1]
+            metadata_path = record_downloaded_audio(config, metadata)
+            return (
+                DownloadedAudioRecord(
+                    source_identity_key=source_identity_key,
+                    status="downloaded",
+                    audio_path=audio_path,
+                    metadata_path=str(metadata_path),
+                    metadata=metadata,
+                ),
+                None,
+            )
+        except Exception as fallback_error:
+            return None, DownloadAudioError(
+                reason="audio-download-failed",
+                message=str(fallback_error or error),
+            )

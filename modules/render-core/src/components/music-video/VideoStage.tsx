@@ -9,14 +9,19 @@ import type {
 } from "../../types";
 import {cn} from "../../lib/cn";
 import {AddToPlaylistPanel} from "./AddToPlaylistPanel";
+import {AudioReactiveBackground} from "./AudioReactiveBackground";
 import {BackgroundLayer} from "./BackgroundLayer";
 import {ControlBar} from "./ControlBar";
+import {EnergyRing} from "./EnergyRing";
 import {LyricCarousel} from "./LyricCarousel";
+import {LyricShockwave} from "./LyricShockwave";
+import {ParticleOrbit} from "./ParticleOrbit";
 import {PlaylistDrawer} from "./PlaylistDrawer";
 import {ProgressBar} from "./ProgressBar";
 import {QueuePanel} from "./QueuePanel";
 import {ReadabilityLayer} from "./ReadabilityLayer";
 import {SafePoetryFrame} from "./SafePoetryFrame";
+import {SparkleLayer} from "./SparkleLayer";
 import {TopSongInfo} from "./TopSongInfo";
 import {WaveformEnergyCanvas} from "./WaveformEnergyCanvas";
 
@@ -31,6 +36,19 @@ const formatDisplayTitle = (title: string, artist: string): string => {
 
 const findActiveLine = (lyrics: LyricVideoCompositionProps["lyrics"], currentMs: number) => {
   return lyrics.find((line) => currentMs >= line.startMs && currentMs < line.endMs) ?? lyrics[0];
+};
+
+const sampleAudioFeature = (
+  audioFeatures: LyricVideoCompositionProps["audioFeatures"] | undefined,
+  currentMs: number
+) => {
+  if (!audioFeatures || audioFeatures.frames.length === 0) {
+    return null;
+  }
+
+  const frameDurationMs = 1000 / audioFeatures.frameRate;
+  const index = clamp(Math.round(currentMs / frameDurationMs), 0, audioFeatures.frames.length - 1);
+  return audioFeatures.frames[index];
 };
 
 export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
@@ -80,6 +98,13 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const activeSpan = Math.max(1, activeLine.endMs - activeLine.startMs);
   const lineProgress = clamp((effectiveLyricTimeMs - activeLine.startMs) / activeSpan, 0, 1);
   const fallbackEnergy = 0.26 + Math.sin(lineProgress * Math.PI) * 0.74;
+  const sampledFeature = sampleAudioFeature(props.audioFeatures, currentTimeMs);
+  const reactiveBass = sampledFeature?.bass ?? fallbackEnergy * 0.82;
+  const reactiveMid = sampledFeature?.mid ?? fallbackEnergy * 0.72;
+  const reactiveHigh = sampledFeature?.high ?? fallbackEnergy * 0.62;
+  const reactiveEnergy = sampledFeature?.energy ?? fallbackEnergy;
+  const reactiveBeat = sampledFeature?.beat ?? 0;
+  const reactiveOnset = sampledFeature?.onset ?? 0;
 
   const playlists: PlaylistSummary[] = useMemo(() => {
     const provided = props.playlists ?? [];
@@ -302,13 +327,47 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     >
       {isStudio && props.audioSrc ? <audio ref={audioRef} src={props.audioSrc} preload="auto" /> : null}
       <BackgroundLayer kind={props.background.kind} src={props.background.src} color={props.background.color} />
+      <AudioReactiveBackground bass={reactiveBass} energy={reactiveEnergy} onset={reactiveOnset} />
       <ReadabilityLayer />
+      <EnergyRing
+        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        bass={reactiveBass}
+        mid={reactiveMid}
+        energy={reactiveEnergy}
+        beat={reactiveBeat}
+        onset={reactiveOnset}
+        lineProgress={lineProgress}
+      />
+      <ParticleOrbit
+        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        energy={reactiveEnergy}
+        high={reactiveHigh}
+        beat={reactiveBeat}
+        onset={reactiveOnset}
+      />
+      <LyricShockwave lineProgress={lineProgress} onset={reactiveOnset} />
+      <SparkleLayer
+        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        high={reactiveHigh}
+        beat={reactiveBeat}
+        onset={reactiveOnset}
+      />
       <WaveformEnergyCanvas
         currentTimeMs={currentTimeMs}
-        energy={isStudio ? audioEnergy : fallbackEnergy}
+        bass={sampledFeature ? reactiveBass : fallbackEnergy * 0.8}
+        mid={sampledFeature ? reactiveMid : fallbackEnergy * 0.6}
+        high={sampledFeature ? reactiveHigh : fallbackEnergy * 0.36}
+        energy={sampledFeature ? reactiveEnergy : isStudio ? audioEnergy : fallbackEnergy}
+        onset={sampledFeature ? reactiveOnset : 0}
         isPlaying={isStudio ? isPlaying : true}
       />
-      <SafePoetryFrame nickname="@xcai43323" />
+      <SafePoetryFrame
+        nickname={props.poetryFrame?.nickname ?? "@xcai43323"}
+        topLabel={props.poetryFrame?.topLabel}
+        leftVertical={props.poetryFrame?.leftVertical}
+        rightVertical={props.poetryFrame?.rightVertical}
+        bottomLine={props.poetryFrame?.bottomLine}
+      />
 
       <div
         className="absolute inset-0 z-40"
@@ -353,8 +412,8 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
           isPlaying={isStudio ? isPlaying : true}
           liked={liked}
           repeatMode={repeatMode}
-          canGoPrevious={queue.length > 0}
-          canGoNext={queue.length > 0}
+          canGoPrevious={queue.length > 1}
+          canGoNext={queue.length > 1}
           onTogglePlay={() => void togglePlay()}
           onPrevious={goPrevious}
           onNext={goNext}

@@ -1,5 +1,5 @@
 import React from "react";
-import {AbsoluteFill} from "remotion";
+import {AbsoluteFill, Audio} from "remotion";
 
 import type {LyricVideoCompositionProps} from "../types";
 import {VideoStage} from "../components/music-video/VideoStage";
@@ -11,6 +11,7 @@ export const MusicVideoComposition: React.FC<LyricVideoCompositionProps> = (prop
         backgroundColor: "#000"
       }}
     >
+      {props.audioSrc ? <Audio src={props.audioSrc} /> : null}
       <VideoStage {...props} />
     </AbsoluteFill>
   );

@@ -1,13 +1,68 @@
-import type {
+import fs from "node:fs";
+import path from "node:path";
+
+const projectRoot = process.cwd();
+const songsRoot = path.join(projectRoot, "artifacts", "songs");
+const currentSongConfigPath = path.join(projectRoot, "src", "remotion", "current-song.json");
+const previewPropsPath = path.join(projectRoot, "src", "remotion", "preview-composition-props.ts");
+
+const requested = process.argv.slice(2).join(" ").trim();
+
+if (!requested) {
+  throw new Error("Usage: node tools/select-song-for-preview.mjs \"<song-folder-name>\"");
+}
+
+const absoluteCandidate = path.isAbsolute(requested) ? requested : path.join(songsRoot, requested);
+const songDirPath = path.resolve(absoluteCandidate);
+
+if (!fs.existsSync(songDirPath) || !fs.statSync(songDirPath).isDirectory()) {
+  throw new Error(`Song directory not found: ${songDirPath}`);
+}
+
+const songDirName = path.basename(songDirPath);
+const renderInputPath = path.join(songDirPath, "render-input.json");
+const audioFeaturesPath = path.join(songDirPath, "audio-features.json");
+const audioPath = path.join(songDirPath, "audio.mp3");
+
+if (!fs.existsSync(renderInputPath)) {
+  throw new Error(`Missing render-input.json in ${songDirPath}`);
+}
+if (!fs.existsSync(audioFeaturesPath)) {
+  throw new Error(`Missing audio-features.json in ${songDirPath}`);
+}
+if (!fs.existsSync(audioPath)) {
+  throw new Error(`Missing audio.mp3 in ${songDirPath}`);
+}
+
+const supportedBackgrounds = [
+  "background.png",
+  "background.jpg",
+  "background.jpeg",
+  "background.webp",
+];
+
+const backgroundFileName = supportedBackgrounds.find((candidate) =>
+  fs.existsSync(path.join(songDirPath, candidate))
+);
+
+const songImportBase = `../../artifacts/songs/${songDirName}`;
+const backgroundImportLine = backgroundFileName
+  ? `import previewBackgroundSrc from "${songImportBase}/${backgroundFileName}";`
+  : "";
+const backgroundSrcExpression = backgroundFileName
+  ? `input.background.kind === "image" ? previewBackgroundSrc : undefined`
+  : "undefined";
+
+const previewPropsSource = `import type {
   AudioFeatureTrack,
   LyricVideoCompositionProps,
   TimedLyricLine
 } from "../../modules/render-core/src";
 
-import previewAudioSrc from "../../artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914/audio.mp3";
-import rawAudioFeatures from "../../artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914/audio-features.json";
-
-import rawRenderInput from "../../artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914/render-input.json";
+import previewAudioSrc from "${songImportBase}/audio.mp3";
+import rawAudioFeatures from "${songImportBase}/audio-features.json";
+${backgroundImportLine}
+import rawRenderInput from "${songImportBase}/render-input.json";
 
 type RawTimedLyricLine = {
   startMs: number;
@@ -73,7 +128,7 @@ export const previewCompositionProps: LyricVideoCompositionProps = {
   fps: input.fps,
   background: {
     kind: input.background.kind ?? "color",
-    src: undefined,
+    src: ${backgroundSrcExpression},
     color: input.background.color ?? "#101828"
   },
   poetryFrame: input.poetryFrame
@@ -89,7 +144,7 @@ export const previewCompositionProps: LyricVideoCompositionProps = {
   audioFeatures: audioFeatures as AudioFeatureTrack,
   queue: [
     {
-      id: "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
+      id: "${songDirName}",
       title: input.title,
       artist: input.artist,
       accent: "rgba(163, 206, 255, 0.7)"
@@ -101,3 +156,9 @@ export const previewCompositionProps: LyricVideoCompositionProps = {
     {id: "drafts", name: "灵感备忘", count: 0, accent: "rgba(255,255,255,0.58)"}
   ]
 };
+`;
+
+fs.writeFileSync(currentSongConfigPath, JSON.stringify({songDirName}, null, 2) + "\n", "utf-8");
+fs.writeFileSync(previewPropsPath, previewPropsSource, "utf-8");
+
+console.log(songDirName);

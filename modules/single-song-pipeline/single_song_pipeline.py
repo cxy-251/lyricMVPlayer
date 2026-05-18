@@ -48,6 +48,23 @@ def _is_decorative_lyric(text: str) -> bool:
     return bool(re.fullmatch(r"[♪\s]+", text))
 
 
+def _format_lrc_timestamp(start_ms: int) -> str:
+    total_seconds = max(0, start_ms / 1000)
+    minutes = int(total_seconds // 60)
+    seconds = total_seconds - minutes * 60
+    return f"{minutes:02d}:{seconds:05.2f}"
+
+
+def _timed_lyrics_document_to_lrc_text(document) -> str:
+    rows: list[str] = []
+    for line in document.lines:
+        text = line.text.strip()
+        if not text:
+            continue
+        rows.append(f"[{_format_lrc_timestamp(int(line.start_ms))}] {text}")
+    return "\n".join(rows)
+
+
 def save_pipeline_result(result: dict, project_root: str) -> str:
     root = Path(project_root)
     song_dir = result.get("song_dir")
@@ -132,16 +149,14 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
     alignment_result = None
     alignment_error = None
     if audio_record.audio_path:
-        lyrics_text = "\n".join(
-            line.text for line in lyric_document.lines if line.text.strip() and not _is_decorative_lyric(line.text)
-        )
+        lyrics_text = _timed_lyrics_document_to_lrc_text(lyric_document)
         if lyrics_text.strip():
             alignment_result, alignment_error = audio_lyrics_alignment.run_audio_lyrics_alignment(
                 audio_path=audio_record.audio_path,
                 lyrics_text=lyrics_text,
                 song_dir=str(song_dir),
                 project_root=project_root,
-                lyrics_format="plain",
+                lyrics_format="lrc",
             )
 
     background_context = background_generation.BackgroundPromptContext(
@@ -153,6 +168,8 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
     )
     background_package = background_generation.build_background_prompt_package(background_context)
     background_paths = background_generation.save_background_prompt_package(background_package, background_context)
+    poetry_package = background_generation.build_poetry_frame_package(background_context)
+    poetry_paths = background_generation.save_poetry_frame_package(poetry_package, background_context)
     workflow_package = background_generation.build_comfyui_workflow_package(background_package, background_context)
     workflow_path = background_generation.save_comfyui_workflow_package(workflow_package, background_context)
     render_job = video_render.build_render_job_input(str(song_dir))
@@ -183,6 +200,11 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
             "package": _serialize(background_package),
             "json_path": background_paths["json_path"],
             "md_path": background_paths["md_path"],
+        },
+        "poetry_frame": {
+            "package": _serialize(poetry_package),
+            "json_path": poetry_paths["json_path"],
+            "md_path": poetry_paths["md_path"],
         },
         "background_workflow": {
             "checkpoint_name": workflow_package.checkpoint_name,

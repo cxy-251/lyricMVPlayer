@@ -38,6 +38,7 @@ def _module_paths(module_root: Path) -> dict[str, Path]:
     return {
         "separate_vocals": module_root / "separate_vocals.py",
         "align_lyrics": module_root / "align_lyrics.py",
+        "diagnose_alignment": module_root / "diagnose_alignment.py",
     }
 
 
@@ -92,3 +93,23 @@ def run_audio_lyrics_alignment(
         ),
         None,
     )
+
+
+def run_alignment_diagnostic(song_dir: str, project_root: str) -> tuple[dict | None, dict | None]:
+    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    paths = _module_paths(module_root)
+    diagnose_alignment = _load_module("audio_lyrics_alignment_diagnose_alignment", paths["diagnose_alignment"])
+
+    try:
+        report = diagnose_alignment.build_alignment_diagnostic(song_dir)
+        output_paths = diagnose_alignment.save_alignment_diagnostic(report, song_dir)
+        return {
+            "report": _serialize(report),
+            "json_path": output_paths["json_path"],
+            "md_path": output_paths["md_path"],
+        }, None
+    except Exception as error:  # noqa: BLE001
+        return None, {
+            "stage": "diagnose-alignment",
+            "error": {"message": str(error)},
+        }

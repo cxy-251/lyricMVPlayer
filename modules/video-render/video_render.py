@@ -22,6 +22,15 @@ class RenderBackgroundAsset:
 
 
 @dataclass(frozen=True)
+class RenderPoetryFrame:
+    nickname: str
+    topLabel: str
+    leftVertical: str
+    rightVertical: str
+    bottomLine: str
+
+
+@dataclass(frozen=True)
 class RenderJobInput:
     title: str
     artist: str
@@ -30,6 +39,7 @@ class RenderJobInput:
     durationInFrames: int
     fps: int
     background: RenderBackgroundAsset
+    poetryFrame: RenderPoetryFrame
     lyrics: list[RenderTimedLyricLine]
     songDir: str
     outputMp4Name: str
@@ -97,6 +107,27 @@ def _discover_background_asset(song_dir: Path) -> RenderBackgroundAsset:
     return RenderBackgroundAsset(kind="color", color="#101828")
 
 
+def _load_poetry_frame(song_dir: Path) -> RenderPoetryFrame:
+    poetry_path = song_dir / "poetry-frame.json"
+    if poetry_path.exists():
+        poetry_data = _load_json(poetry_path)
+        return RenderPoetryFrame(
+            nickname=str(poetry_data.get("nickname") or "@xcai43323"),
+            topLabel=str(poetry_data.get("top_label") or "@xcai43323 · AUDIO DIARY"),
+            leftVertical=str(poetry_data.get("left_vertical") or ""),
+            rightVertical=str(poetry_data.get("right_vertical") or ""),
+            bottomLine=str(poetry_data.get("bottom_line") or ""),
+        )
+
+    return RenderPoetryFrame(
+        nickname="@xcai43323",
+        topLabel="@xcai43323 · AUDIO DIARY",
+        leftVertical="THE RAIN WRITES SOFTLY ON THE GLASS WHILE THE MUSIC REMEMBERS",
+        rightVertical="STREETLIGHTS RETURN AS QUIET STARS BENEATH THE MIDNIGHT SKY",
+        bottomLine="LET THE NIGHT HUM SOFTLY",
+    )
+
+
 def build_output_mp4_name(title: str, artist: str) -> str:
     clean_title = _normalize_song_title(title, artist)
     clean_artist = _sanitize_name_part(artist, "unknown-artist")
@@ -124,6 +155,7 @@ def build_render_job_input(song_dir: str, fps: int = 30) -> RenderJobInput:
         durationInFrames=duration_in_frames,
         fps=fps,
         background=_discover_background_asset(song_path),
+        poetryFrame=_load_poetry_frame(song_path),
         lyrics=lyric_lines,
         songDir=str(song_path),
         outputMp4Name=build_output_mp4_name(title, artist),

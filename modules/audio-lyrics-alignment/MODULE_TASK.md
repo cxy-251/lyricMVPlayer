@@ -25,6 +25,7 @@ The module should be designed to run inside the `kwai` conda environment.
 - transcribe vocals through a replaceable transcription provider
 - align lyric lines to transcript timing
 - save `alignedLRC.json`
+- generate a diagnostic report that compares source lyrics and aligned lyrics
 - keep all per-song outputs inside the song folder
 - keep downloadable model assets under `artifacts/common/models/`
 
@@ -49,12 +50,15 @@ The module should be designed to run inside the `kwai` conda environment.
 - `separate_vocals(audio_path, song_dir, config)`
 - `align_lyrics(input_data, config)`
 - `run_audio_lyrics_alignment(audio_path, lyrics_text, song_dir, project_root, lyrics_format="auto")`
+- `run_alignment_diagnostic(song_dir, project_root)`
 
 ## Outputs
 
 - `separated/vocals.wav`
 - `separated/no_vocals.wav` if available
 - `alignedLRC.json`
+- `alignment-diagnostic.json`
+- `alignment-diagnostic.md`
 
 ## Acceptance target
 

@@ -1,6 +1,9 @@
 export type {
+  AudioFeatureFrame,
+  AudioFeatureTrack,
   BackgroundAsset,
   LyricVideoCompositionProps,
+  PoetryFrame,
   TimedLyricLine
 } from "./types";
 export {sampleCompositionProps} from "./sample-data";

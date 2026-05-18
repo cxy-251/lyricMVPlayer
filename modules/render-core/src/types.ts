@@ -10,6 +10,14 @@ export type BackgroundAsset = {
   color?: string;
 };
 
+export type PoetryFrame = {
+  nickname: string;
+  topLabel: string;
+  leftVertical: string;
+  rightVertical: string;
+  bottomLine: string;
+};
+
 export type QueueTrack = {
   id: string;
   title: string;
@@ -24,6 +32,22 @@ export type PlaylistSummary = {
   accent?: string;
 };
 
+export type AudioFeatureFrame = {
+  timeMs: number;
+  bass: number;
+  mid: number;
+  high: number;
+  energy: number;
+  beat: number;
+  onset: number;
+};
+
+export type AudioFeatureTrack = {
+  frameRate: number;
+  durationMs: number;
+  frames: AudioFeatureFrame[];
+};
+
 export type LyricVideoCompositionProps = {
   title: string;
   artist: string;
@@ -32,7 +56,9 @@ export type LyricVideoCompositionProps = {
   durationInFrames: number;
   fps: number;
   background: BackgroundAsset;
+  poetryFrame?: PoetryFrame;
   lyrics: TimedLyricLine[];
+  audioFeatures?: AudioFeatureTrack;
   queue?: QueueTrack[];
   playlists?: PlaylistSummary[];
 };

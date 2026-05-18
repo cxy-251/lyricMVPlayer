@@ -15,7 +15,12 @@ This document defines the intended module split for `lyricMVPlayer`.
 ### `render-core`
 - Purpose: base Remotion composition structure and rendering contracts
 - Public interface: composition props, root registration, composition component
-- Code location: `modules/render-core/src/` plus fixed HUD components in `src/components/music-video/`
+- Code location: `modules/render-core/src/`
+
+### `audio-features`
+- Purpose: preprocess deterministic per-frame audio motion features for the lyric video effects system
+- Public interface: `extract_audio_features(audio_path, output_path, frame_rate=60)` and `extract_audio_features_for_song(song_dir, frame_rate=60)`
+- Code location: `modules/audio-features/`
 
 ### `source-ingestion`
 - Purpose: normalize single-song or playlist inputs
@@ -34,7 +39,7 @@ This document defines the intended module split for `lyricMVPlayer`.
 
 ### `audio-lyrics-alignment`
 - Purpose: separate vocals and align provided lyric text into reusable line timings
-- Public interface: vocals separation result, aligned lyric JSON result, and one orchestration runner
+- Public interface: vocals separation result, aligned lyric JSON result, one orchestration runner, and an alignment diagnostic report
 - Code location: `modules/audio-lyrics-alignment/`
 
 ### `background-generation`
@@ -57,6 +62,16 @@ This document defines the intended module split for `lyricMVPlayer`.
 - Public interface: single-song pipeline run function and saved result output
 - Code location: `modules/single-song-pipeline/single_song_pipeline.py`
 
+### `render-queue`
+- Purpose: control which prepared song folders should be rendered into MP4 files
+- Public interface: CSV queue creation, row upsert, runnable-row listing, and render status updates
+- Code location: `modules/render-queue/`
+
+### `playlist-pipeline`
+- Purpose: prepare an entire playlist up to song-package readiness without rendering MP4 files
+- Public interface: `run_playlist_pipeline(playlist_url, project_root, default_render_batch="")`
+- Code location: `modules/playlist-pipeline/`
+
 ## Recommended implementation order
 
 1. `render-core`
@@ -67,4 +82,7 @@ This document defines the intended module split for `lyricMVPlayer`.
 6. `background-generation`
 7. `history-dedupe`
 8. `single-song-pipeline`
-9. `video-render`
+9. `audio-features`
+10. `render-queue`
+11. `playlist-pipeline`
+12. `video-render`

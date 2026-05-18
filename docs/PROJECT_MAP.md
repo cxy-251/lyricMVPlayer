@@ -22,16 +22,18 @@ lyricMVPlayer/
 │  ├─ audio-download/
 │  ├─ lyrics/
 │  ├─ audio-lyrics-alignment/
+│  ├─ audio-features/
+│  ├─ render-queue/
+│  ├─ playlist-pipeline/
 │  ├─ background-generation/
 │  ├─ video-render/
 │  ├─ history-dedupe/
 │  └─ single-song-pipeline/
 ├─ artifacts/
 │  ├─ common/
+│  ├─ songsout/
 │  └─ songs/
 ├─ src/
-│  ├─ components/
-│  │  └─ music-video/
 │  ├─ remotion/
 │  └─ styles/
 └─ tasks/
@@ -76,18 +78,19 @@ lyricMVPlayer/
 - `artifacts/common/`
   Shared cross-song state such as downloaded ID archives.
   Shared downloadable model files should also live under `artifacts/common/models/`.
+  The render control CSV also lives here as `render-queue.csv`.
 
 - `artifacts/songs/`
-  One folder per song. Audio, lyrics, prompt files, generated images, and final MP4 outputs should stay together here.
+  One folder per song. Audio, lyrics, prompt files, generated images, and per-song temporary render outputs should stay together here.
 
-- `src/components/music-video/`
-  Fixed-layout 1080x1920 player HUD components used by the Remotion composition.
+- `artifacts/songsout/`
+  Final exported MP4 files using the song folder name as the filename.
 
 - `src/remotion/`
-  Thin top-level Remotion integration entry plus preview binding for one real song package.
+  Thin top-level Remotion integration entry plus preview binding for the currently selected song package.
 
 - `src/styles/`
-  Shared CSS design tokens and fixed-coordinate player layout styles.
+  Thin global reset / Tailwind entry only. Main HUD layout now lives inside render-core components.
 
 - `tasks/TASK_TEMPLATE.md`
   Standard format for implementation or diagnosis tasks.
@@ -100,12 +103,16 @@ lyricMVPlayer/
 - A first audio-download Python module now exists and is designed around `yt-dlp` plus download-archive dedupe.
 - A first lyrics Python module now exists with timed-lyrics fallback structure and two real providers in scope.
 - A first audio-lyrics-alignment module now exists with a Demucs-oriented vocals separation interface and a replaceable lyric-line alignment runner.
+- A first audio-features module now exists to preprocess deterministic `bass / mid / high / energy / beat / onset` frame data into `audio-features.json`.
+- A first render-queue module now exists to maintain one CSV file controlling which prepared songs should be rendered.
+- A first playlist-pipeline module now exists to prepare playlist entries up to song-package readiness without starting MP4 renders.
 - A first background-generation Python module now exists to generate subjectless illustration prompt packages.
 - A first single-song pipeline runner now exists to compose source, audio, and lyrics into one saved result.
 - Song artifacts are now grouped by per-song folder using the naming pattern `song title - artist - id`.
+- The currently active preview/render song is tracked in `src/remotion/current-song.json` and can be switched with `npm run use:song -- "<song-folder-name>"`.
 - Shared downloaded-ID state now lives in `artifacts/common/`.
 - The Remotion composition contract still lives under `modules/render-core/src/`.
-- The fixed player HUD now lives under `src/components/music-video/`.
+- The fixed player HUD now lives under `modules/render-core/src/components/music-video/`.
 - There is no CLI yet.
 - There is no full video pipeline yet, but the first single-song ingestion runner now exists.
 
