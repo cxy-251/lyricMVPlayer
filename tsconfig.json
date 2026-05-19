@@ -9,11 +9,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
       "@modules/*": [
-        "modules/*/src",
-        "modules/*/src/index.ts"
+        "./modules/*/src",
+        "./modules/*/src/index.ts"
       ]
     }
   },

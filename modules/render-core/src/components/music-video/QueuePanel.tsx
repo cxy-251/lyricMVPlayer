@@ -39,7 +39,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({
             <X size={24} strokeWidth={1.8} />
           </button>
         </div>
-        <div className="mt-[24px] flex flex-col gap-[14px]">
+        <div className="mt-[24px] flex max-h-[680px] flex-col gap-[14px] overflow-y-auto pr-[6px]">
           {queue.map((track) => (
             <button
               key={track.id}

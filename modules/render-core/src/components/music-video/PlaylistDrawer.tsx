@@ -1,5 +1,5 @@
 import React from "react";
-import {Plus, X} from "lucide-react";
+import {X} from "lucide-react";
 
 import type {PlaylistSummary} from "../../types";
 import {cn} from "../../lib/cn";
@@ -9,7 +9,6 @@ type PlaylistDrawerProps = {
   playlists: PlaylistSummary[];
   selectedPlaylistId: string | null;
   onClose: () => void;
-  onCreatePlaylist: () => void;
   onSelectPlaylist: (playlistId: string) => void;
 };
 
@@ -18,7 +17,6 @@ export const PlaylistDrawer: React.FC<PlaylistDrawerProps> = ({
   playlists,
   selectedPlaylistId,
   onClose,
-  onCreatePlaylist,
   onSelectPlaylist
 }) => {
   if (!open) {
@@ -38,14 +36,7 @@ export const PlaylistDrawer: React.FC<PlaylistDrawerProps> = ({
             <X size={24} strokeWidth={1.8} />
           </button>
         </div>
-        <button
-          className="mt-[22px] flex w-full items-center gap-3 rounded-[22px] border border-white/10 bg-white/6 px-[18px] py-[16px] text-left text-[18px] text-white/92"
-          onClick={onCreatePlaylist}
-        >
-          <Plus size={20} strokeWidth={1.8} />
-          <span>Create Playlist</span>
-        </button>
-        <div className="mt-[18px] flex flex-col gap-[14px]">
+        <div className="mt-[22px] flex max-h-[1280px] flex-col gap-[14px] overflow-y-auto pr-[6px]">
           {playlists.map((playlist) => (
             <button
               key={playlist.id}

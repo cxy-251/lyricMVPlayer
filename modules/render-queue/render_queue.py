@@ -7,62 +7,123 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 
-CSV_HEADERS = ["视频状态", "渲染批次", "资源文件夹", "来源URL"]
-ALLOWED_STATUSES = {"未渲染", "已渲染", "已发布"}
+CSV_HEADERS = ["video_status", "render_batch", "background_ready", "song_dir", "source_url"]
+ALLOWED_STATUSES = {"pending", "rendered", "published"}
+TRUE_VALUES = {"true", "1", "yes", "y"}
+LEGACY_STATUS_MAP = {
+    "未渲染": "pending",
+    "已渲染": "rendered",
+    "已发布": "published",
+}
 
 
 @dataclass(frozen=True)
 class RenderQueueRow:
-    视频状态: str
-    渲染批次: str
-    来源URL: str
-    资源文件夹: str
+    video_status: str
+    render_batch: str
+    background_ready: str
+    song_dir: str
+    source_url: str
 
 
-def get_render_queue_csv_path(project_root: str) -> Path:
+def get_production_queue_csv_path(project_root: str) -> Path:
+    return Path(project_root) / "artifacts" / "common" / "production-queue.csv"
+
+
+def get_legacy_render_queue_csv_path(project_root: str) -> Path:
     return Path(project_root) / "artifacts" / "common" / "render-queue.csv"
 
 
-def ensure_render_queue_csv(project_root: str) -> Path:
-    csv_path = get_render_queue_csv_path(project_root)
-    csv_path.parent.mkdir(parents=True, exist_ok=True)
-    if not csv_path.exists():
-        with csv_path.open("w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=CSV_HEADERS)
-            writer.writeheader()
-    return csv_path
+def _has_background_asset(project_root: str, song_dir_name: str) -> bool:
+    song_dir = Path(project_root) / "artifacts" / "songs" / song_dir_name
+    for file_name in ("background.png", "background.jpg", "background.jpeg", "background.webp"):
+        if (song_dir / file_name).exists():
+            return True
+    return False
 
 
-def _load_rows(csv_path: Path) -> list[dict[str, str]]:
-    csv_path.parent.mkdir(parents=True, exist_ok=True)
-    if not csv_path.exists():
-        with csv_path.open("w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=CSV_HEADERS)
-            writer.writeheader()
-    with csv_path.open("r", encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle)
-        return [dict(row) for row in reader]
+def _normalize_background_flag(value: str | None, project_root: str, song_dir_name: str) -> str:
+    if value is None or str(value).strip() == "":
+        return "true" if _has_background_asset(project_root, song_dir_name) else "false"
+    return "true" if str(value).strip().lower() in TRUE_VALUES else "false"
+
+
+def _normalize_row(raw_row: dict[str, str], project_root: str) -> dict[str, str]:
+    song_dir_name = (raw_row.get("song_dir") or raw_row.get("资源文件夹") or "").strip()
+    status = (raw_row.get("video_status") or raw_row.get("视频状态") or "").strip()
+    batch = (raw_row.get("render_batch") or raw_row.get("渲染批次") or "").strip()
+    source_url = (raw_row.get("source_url") or raw_row.get("来源URL") or "").strip()
+    has_background = _normalize_background_flag(
+        raw_row.get("background_ready") or raw_row.get("是否生产了背景图"),
+        project_root,
+        song_dir_name,
+    )
+
+    status = LEGACY_STATUS_MAP.get(status, status)
+    if status not in ALLOWED_STATUSES:
+        status = "pending"
+
+    return {
+        "video_status": status,
+        "render_batch": batch,
+        "background_ready": has_background,
+        "song_dir": song_dir_name,
+        "source_url": source_url,
+    }
 
 
 def _save_rows(csv_path: Path, rows: list[dict[str, str]]) -> None:
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=CSV_HEADERS)
         writer.writeheader()
         writer.writerows(rows)
 
 
+def _load_rows(csv_path: Path, project_root: str) -> list[dict[str, str]]:
+    if not csv_path.exists():
+        return []
+    with csv_path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        return [_normalize_row(dict(row), project_root) for row in reader]
+
+
+def ensure_render_queue_csv(project_root: str) -> Path:
+    csv_path = get_production_queue_csv_path(project_root)
+    legacy_csv_path = get_legacy_render_queue_csv_path(project_root)
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if csv_path.exists():
+        rows = _load_rows(csv_path, project_root)
+        _save_rows(csv_path, rows)
+        return csv_path
+
+    if legacy_csv_path.exists():
+        rows = _load_rows(legacy_csv_path, project_root)
+        _save_rows(csv_path, rows)
+        try:
+            legacy_csv_path.unlink()
+        except FileNotFoundError:
+            pass
+        return csv_path
+
+    _save_rows(csv_path, [])
+    return csv_path
+
+
 def upsert_render_queue_row(project_root: str, row: RenderQueueRow) -> Path:
     csv_path = ensure_render_queue_csv(project_root)
-    rows = _load_rows(csv_path)
-    serialized = asdict(row)
+    rows = _load_rows(csv_path, project_root)
+    serialized = _normalize_row(asdict(row), project_root)
 
     for existing in rows:
-        if existing["资源文件夹"] == row.资源文件夹:
-            existing["来源URL"] = row.来源URL
-            if row.渲染批次 != "":
-                existing["渲染批次"] = row.渲染批次
-            if existing["视频状态"] not in ALLOWED_STATUSES:
-                existing["视频状态"] = row.视频状态
+        if existing["song_dir"] == row.song_dir:
+            existing["source_url"] = serialized["source_url"]
+            if row.render_batch != "":
+                existing["render_batch"] = serialized["render_batch"]
+            if existing["video_status"] not in ALLOWED_STATUSES:
+                existing["video_status"] = serialized["video_status"]
+            existing["background_ready"] = serialized["background_ready"]
             _save_rows(csv_path, rows)
             return csv_path
 
@@ -71,13 +132,21 @@ def upsert_render_queue_row(project_root: str, row: RenderQueueRow) -> Path:
     return csv_path
 
 
+def list_background_pending_rows(project_root: str) -> list[dict[str, str]]:
+    csv_path = ensure_render_queue_csv(project_root)
+    rows = _load_rows(csv_path, project_root)
+    return [row for row in rows if row.get("background_ready") == "false"]
+
+
 def list_runnable_rows(project_root: str, batch_value: str = "0") -> list[dict[str, str]]:
     csv_path = ensure_render_queue_csv(project_root)
-    rows = _load_rows(csv_path)
+    rows = _load_rows(csv_path, project_root)
     return [
         row
         for row in rows
-        if row.get("视频状态") == "未渲染" and row.get("渲染批次", "") == batch_value
+        if row.get("video_status") == "pending"
+        and row.get("render_batch", "") == batch_value
+        and row.get("background_ready") == "true"
     ]
 
 
@@ -86,26 +155,44 @@ def mark_render_status(project_root: str, song_dir_name: str, status: str) -> Pa
         raise ValueError(f"Unsupported status: {status}")
 
     csv_path = ensure_render_queue_csv(project_root)
-    rows = _load_rows(csv_path)
+    rows = _load_rows(csv_path, project_root)
     for existing in rows:
-        if existing["资源文件夹"] == song_dir_name:
-            existing["视频状态"] = status
+        if existing["song_dir"] == song_dir_name:
+            existing["video_status"] = status
             _save_rows(csv_path, rows)
             return csv_path
 
-    raise FileNotFoundError(f"Song not found in render queue: {song_dir_name}")
+    raise FileNotFoundError(f"Song not found in production queue: {song_dir_name}")
+
+
+def mark_background_generated(project_root: str, song_dir_name: str, generated: bool = True) -> Path:
+    csv_path = ensure_render_queue_csv(project_root)
+    rows = _load_rows(csv_path, project_root)
+    for existing in rows:
+        if existing["song_dir"] == song_dir_name:
+            existing["background_ready"] = "true" if generated else "false"
+            _save_rows(csv_path, rows)
+            return csv_path
+
+    raise FileNotFoundError(f"Song not found in production queue: {song_dir_name}")
 
 
 def _main(argv: list[str]) -> int:
     if len(argv) < 3:
         raise SystemExit(
             "Usage:\n"
+            "  render_queue.py list-background-pending <project_root>\n"
             "  render_queue.py list-runnable <project_root> [batch]\n"
             "  render_queue.py mark <project_root> <song_dir_name> <status>\n"
+            "  render_queue.py mark-background <project_root> <song_dir_name> <true|false>\n"
         )
 
     command = argv[1]
     project_root = argv[2]
+
+    if command == "list-background-pending":
+        print(json.dumps(list_background_pending_rows(project_root), ensure_ascii=False, indent=2))
+        return 0
 
     if command == "list-runnable":
         batch_value = argv[3] if len(argv) > 3 else "0"
@@ -116,6 +203,14 @@ def _main(argv: list[str]) -> int:
         if len(argv) < 5:
             raise SystemExit("Usage: render_queue.py mark <project_root> <song_dir_name> <status>")
         csv_path = mark_render_status(project_root, argv[3], argv[4])
+        print(str(csv_path))
+        return 0
+
+    if command == "mark-background":
+        if len(argv) < 5:
+            raise SystemExit("Usage: render_queue.py mark-background <project_root> <song_dir_name> <true|false>")
+        generated = str(argv[4]).strip().lower() in TRUE_VALUES
+        csv_path = mark_background_generated(project_root, argv[3], generated)
         print(str(csv_path))
         return 0
 

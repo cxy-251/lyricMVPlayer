@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from dataclasses import asdict, dataclass, is_dataclass
 from pathlib import Path
@@ -32,6 +33,13 @@ class AudioLyricsAlignmentResult:
     accompaniment_path: str | None
     aligned_lrc_json_path: str
     lyric_source_format: str
+
+
+@dataclass(frozen=True)
+class TranscriptionFallbackResult:
+    vocals_path: str
+    accompaniment_path: str | None
+    lyrics_json_path: str
 
 
 def _module_paths(module_root: Path) -> dict[str, Path]:
@@ -113,3 +121,53 @@ def run_alignment_diagnostic(song_dir: str, project_root: str) -> tuple[dict | N
             "stage": "diagnose-alignment",
             "error": {"message": str(error)},
         }
+
+
+def run_transcription_fallback(
+    audio_path: str,
+    song_dir: str,
+    project_root: str,
+) -> tuple[TranscriptionFallbackResult | None, dict | None]:
+    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    paths = _module_paths(module_root)
+
+    separate_vocals = _load_module("audio_lyrics_fallback_separate_vocals", paths["separate_vocals"])
+    align_lyrics = _load_module("audio_lyrics_fallback_align_lyrics", paths["align_lyrics"])
+
+    separation_config = separate_vocals.get_default_alignment_config(project_root)
+    separation_result, separation_error = separate_vocals.separate_vocals(
+        audio_path=audio_path,
+        song_dir=song_dir,
+        config=separation_config,
+    )
+    if separation_error is not None:
+        return None, {
+            "stage": "separate-vocals",
+            "error": _serialize(separation_error),
+        }
+
+    transcription_document, transcription_error = align_lyrics.transcribe_vocals_to_lyrics_document(
+        vocals_path=separation_result.vocals_path,
+        models_root=separation_config.models_root,
+    )
+    if transcription_error is not None:
+        return None, {
+            "stage": "transcribe-vocals",
+            "error": _serialize(transcription_error),
+            "vocals_path": separation_result.vocals_path,
+        }
+
+    lyrics_json_path = Path(song_dir) / "lyrics.json"
+    lyrics_json_path.write_text(
+        json.dumps(_serialize(transcription_document), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    return (
+        TranscriptionFallbackResult(
+            vocals_path=separation_result.vocals_path,
+            accompaniment_path=separation_result.accompaniment_path,
+            lyrics_json_path=str(lyrics_json_path),
+        ),
+        None,
+    )

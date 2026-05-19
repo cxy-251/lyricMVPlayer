@@ -5,7 +5,8 @@ import {ListMusic, Menu} from "lucide-react";
 import type {
   LyricVideoCompositionProps,
   PlaylistSummary,
-  QueueTrack
+  QueueTrack,
+  SongLibraryItem
 } from "../../types";
 import {cn} from "../../lib/cn";
 import {AddToPlaylistPanel} from "./AddToPlaylistPanel";
@@ -26,8 +27,15 @@ import {TopSongInfo} from "./TopSongInfo";
 import {WaveformEnergyCanvas} from "./WaveformEnergyCanvas";
 
 type RepeatMode = "none" | "one" | "list";
+type StoredLibraryState = {
+  likedTrackIds: string[];
+  customPlaylists: Array<{id: string; name: string; trackIds: string[]}>;
+  selectedPlaylistId: string | null;
+};
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const STORAGE_KEY = "lyricMVPlayer.libraryState.v1";
+const DEFAULT_NICKNAME = "CleanKsen";
 
 const formatDisplayTitle = (title: string, artist: string): string => {
   const strippedArtist = title.replace(new RegExp(`^${artist}\\s*-\\s*`, "i"), "");
@@ -63,7 +71,6 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const smoothedEnergyRef = useRef(0.16);
   const transitionGuardRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [liked, setLiked] = useState(false);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("list");
   const [previewTimeMs, setPreviewTimeMs] = useState(0);
   const [audioEnergy, setAudioEnergy] = useState(0.16);
@@ -71,34 +78,154 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const [playlistDrawerOpen, setPlaylistDrawerOpen] = useState(false);
   const [queueOpen, setQueueOpen] = useState(false);
   const [addToPlaylistOpen, setAddToPlaylistOpen] = useState(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>("liked");
-  const [customPlaylists, setCustomPlaylists] = useState<string[]>([
-    "Night Drive",
-    "City Echoes",
-    "Neon Pulse",
-    "Soft Pages",
-    "Afterglow"
-  ]);
-
-  const queue = props.queue ?? [
-    {
-      id: `${props.title}-${props.artist}`,
-      title: props.title,
-      artist: props.artist
+  const initialLibrary = useMemo<SongLibraryItem[]>(() => {
+    if (props.library && props.library.length > 0) {
+      return props.library;
     }
-  ];
+
+    return [
+      {
+        id: `${props.title}-${props.artist}`,
+        title: props.title,
+        artist: props.artist,
+        audioSrc: props.audioSrc,
+        lyricOffsetMs: props.lyricOffsetMs,
+        durationInFrames: props.durationInFrames,
+        fps: props.fps,
+        background: props.background,
+        poetryFrame: props.poetryFrame,
+        lyrics: props.lyrics,
+        audioFeatures: props.audioFeatures,
+      },
+    ];
+  }, [props]);
+
+  const initialTrackIndex = useMemo(() => {
+    if (!props.initialTrackId) {
+      return 0;
+    }
+    const foundIndex = initialLibrary.findIndex((item) => item.id === props.initialTrackId);
+    return foundIndex >= 0 ? foundIndex : 0;
+  }, [initialLibrary, props.initialTrackId]);
+
+  const initialCustomPlaylists = useMemo<
+    Array<{id: string; name: string; trackIds: string[]}>
+  >(() => {
+    const defaults = (props.playlists ?? []).filter((playlist) => playlist.id !== "liked");
+    if (defaults.length > 0) {
+      return defaults.map((playlist) => ({
+        id: playlist.id,
+        name: playlist.name,
+        trackIds: playlist.trackIds ?? [],
+      }));
+    }
+    return [
+      {id: "night-drive", name: "Night Drive", trackIds: initialLibrary.map((item) => item.id)},
+      {id: "city-echoes", name: "City Echoes", trackIds: []},
+      {id: "neon-pulse", name: "Neon Pulse", trackIds: []},
+      {id: "soft-pages", name: "Soft Pages", trackIds: []},
+      {id: "afterglow", name: "Afterglow", trackIds: []},
+    ];
+  }, [initialLibrary, props.playlists]);
+
+  const initialStoredState = useMemo<StoredLibraryState>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as Partial<StoredLibraryState>;
+          const playlistSeedMap = new Map(initialCustomPlaylists.map((playlist) => [playlist.id, playlist]));
+          const storedTrackMap = new Map(
+            Array.isArray(parsed.customPlaylists)
+              ? parsed.customPlaylists
+                  .filter((playlist): playlist is {id: string; name: string; trackIds: string[]} =>
+                    Boolean(playlist && playlist.id && Array.isArray(playlist.trackIds))
+                  )
+                  .map((playlist) => [playlist.id, playlist.trackIds])
+              : []
+          );
+
+          return {
+            likedTrackIds: Array.isArray(parsed.likedTrackIds) ? parsed.likedTrackIds : [],
+            customPlaylists: initialCustomPlaylists.map((playlist) => {
+              const storedTrackIds = storedTrackMap.get(playlist.id);
+              return {
+                id: playlist.id,
+                name: playlist.name,
+                trackIds: (storedTrackIds ?? playlist.trackIds).filter((trackId) =>
+                  initialLibrary.some((item) => item.id === trackId)
+                ),
+              };
+            }),
+            selectedPlaylistId:
+              typeof parsed.selectedPlaylistId === "string" &&
+              (parsed.selectedPlaylistId === "all" ||
+                parsed.selectedPlaylistId === "liked" ||
+                playlistSeedMap.has(parsed.selectedPlaylistId))
+                ? parsed.selectedPlaylistId
+                : null,
+          };
+        }
+      } catch {
+        // ignore malformed local state and fall back to defaults
+      }
+    }
+
+    return {
+      likedTrackIds: [],
+      customPlaylists: initialCustomPlaylists,
+      selectedPlaylistId: null,
+    };
+  }, [initialCustomPlaylists, initialLibrary]);
+
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(initialTrackIndex);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(
+    initialStoredState.selectedPlaylistId ?? "all"
+  );
+  const [likedTrackIds, setLikedTrackIds] = useState<string[]>(initialStoredState.likedTrackIds);
+  const [customPlaylists, setCustomPlaylists] = useState<
+    Array<{id: string; name: string; trackIds: string[]}>
+  >(initialStoredState.customPlaylists);
+
+  const queue = useMemo<QueueTrack[]>(
+    () =>
+      props.queue ??
+      initialLibrary.map((item) => ({
+        id: item.id,
+        title: item.title,
+        artist: item.artist,
+        accent: item.accent,
+      })),
+    [initialLibrary, props.queue]
+  );
+  const library = initialLibrary;
   const currentTrack = queue[currentTrackIndex] ?? queue[0];
-  const title = formatDisplayTitle(currentTrack.title, currentTrack.artist);
-  const currentTimeMs = isStudio ? previewTimeMs : (frame / props.fps) * 1000;
-  const effectiveLyricTimeMs = currentTimeMs + (props.lyricOffsetMs ?? 0);
-  const lyricsEndMs = props.lyrics[props.lyrics.length - 1]?.endMs ?? 0;
-  const durationMs = Math.max((props.durationInFrames / props.fps) * 1000, lyricsEndMs);
-  const activeLine = findActiveLine(props.lyrics, effectiveLyricTimeMs);
+  const currentSong = library[currentTrackIndex] ?? library[0];
+  const isCurrentLiked = likedTrackIds.includes(currentSong.id);
+  const filteredQueue = useMemo(() => {
+    if (!selectedPlaylistId || selectedPlaylistId === "all") {
+      return queue;
+    }
+    if (selectedPlaylistId === "liked") {
+      return queue.filter((track) => likedTrackIds.includes(track.id));
+    }
+    const playlist = customPlaylists.find((item) => item.id === selectedPlaylistId);
+    if (!playlist) {
+      return queue;
+    }
+    return queue.filter((track) => playlist.trackIds.includes(track.id));
+  }, [customPlaylists, likedTrackIds, queue, selectedPlaylistId]);
+  const title = formatDisplayTitle(currentSong.title, currentSong.artist);
+  const renderTrimStartMs = currentSong.renderTrimStartMs ?? 0;
+  const currentTimeMs = isStudio ? previewTimeMs : (frame / currentSong.fps) * 1000 + renderTrimStartMs;
+  const effectiveLyricTimeMs = currentTimeMs + (currentSong.lyricOffsetMs ?? 0);
+  const lyricsEndMs = currentSong.lyrics[currentSong.lyrics.length - 1]?.endMs ?? 0;
+  const durationMs = Math.max((currentSong.durationInFrames / currentSong.fps) * 1000, lyricsEndMs);
+  const activeLine = findActiveLine(currentSong.lyrics, effectiveLyricTimeMs);
   const activeSpan = Math.max(1, activeLine.endMs - activeLine.startMs);
   const lineProgress = clamp((effectiveLyricTimeMs - activeLine.startMs) / activeSpan, 0, 1);
   const fallbackEnergy = 0.26 + Math.sin(lineProgress * Math.PI) * 0.74;
-  const sampledFeature = sampleAudioFeature(props.audioFeatures, currentTimeMs);
+  const sampledFeature = sampleAudioFeature(currentSong.audioFeatures, currentTimeMs);
   const reactiveBass = sampledFeature?.bass ?? fallbackEnergy * 0.82;
   const reactiveMid = sampledFeature?.mid ?? fallbackEnergy * 0.72;
   const reactiveHigh = sampledFeature?.high ?? fallbackEnergy * 0.62;
@@ -107,21 +234,29 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const reactiveOnset = sampledFeature?.onset ?? 0;
 
   const playlists: PlaylistSummary[] = useMemo(() => {
-    const provided = props.playlists ?? [];
-    const generated = customPlaylists
-      .filter((name) => !provided.some((playlist) => playlist.name === name))
-      .map((name, index) => ({
-        id: `custom-${index}`,
-        name,
-        count: 0
-      }));
-
     return [
-      {id: "liked", name: "Liked Songs", count: liked ? 1 : 0},
-      ...provided.filter((playlist) => playlist.id !== "liked"),
-      ...generated
+      {id: "all", name: "All Songs", count: queue.length},
+      {id: "liked", name: "Liked Songs", count: likedTrackIds.length},
+      ...customPlaylists.map((playlist) => ({
+        id: playlist.id,
+        name: playlist.name,
+        count: playlist.trackIds.length,
+      })),
     ];
-  }, [customPlaylists, liked, props.playlists]);
+  }, [customPlaylists, likedTrackIds.length]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const payload: StoredLibraryState = {
+      likedTrackIds,
+      customPlaylists,
+      selectedPlaylistId,
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  }, [customPlaylists, likedTrackIds, selectedPlaylistId]);
 
   const performSeek = (targetMs: number) => {
     const nextMs = clamp(targetMs, 0, durationMs);
@@ -301,18 +436,61 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       return;
     }
 
-    if (queue.length > 1) {
-      setCurrentTrackIndex((value) => (value - 1 + queue.length) % queue.length);
+    if (filteredQueue.length > 1) {
+      const activeIndex = filteredQueue.findIndex((track) => track.id === currentSong.id);
+      const nextTrack = filteredQueue[(activeIndex - 1 + filteredQueue.length) % filteredQueue.length];
+      const nextLibraryIndex = library.findIndex((item) => item.id === nextTrack.id);
+      if (nextLibraryIndex >= 0) {
+        setCurrentTrackIndex(nextLibraryIndex);
+      }
     }
     performSeek(0);
   };
 
   const goNext = () => {
-    if (queue.length > 1) {
-      setCurrentTrackIndex((value) => (value + 1) % queue.length);
+    if (filteredQueue.length > 1) {
+      const activeIndex = filteredQueue.findIndex((track) => track.id === currentSong.id);
+      const nextTrack = filteredQueue[(activeIndex + 1) % filteredQueue.length];
+      const nextLibraryIndex = library.findIndex((item) => item.id === nextTrack.id);
+      if (nextLibraryIndex >= 0) {
+        setCurrentTrackIndex(nextLibraryIndex);
+      }
     }
     performSeek(0);
   };
+
+  useEffect(() => {
+    setCurrentTrackIndex(initialTrackIndex);
+  }, [initialTrackIndex]);
+
+  useEffect(() => {
+    if (filteredQueue.length === 0) {
+      return;
+    }
+    if (!filteredQueue.some((track) => track.id === currentSong.id)) {
+      const nextTrack = filteredQueue[0];
+      const nextLibraryIndex = library.findIndex((item) => item.id === nextTrack.id);
+      if (nextLibraryIndex >= 0) {
+        setCurrentTrackIndex(nextLibraryIndex);
+        performSeek(0);
+      }
+    }
+  }, [currentSong.id, filteredQueue, library]);
+
+  useEffect(() => {
+    if (!isStudio) {
+      return;
+    }
+    setPreviewTimeMs(0);
+    if (!audioRef.current) {
+      return;
+    }
+    audioRef.current.currentTime = 0;
+    audioRef.current.load();
+    if (isPlaying) {
+      void audioRef.current.play().catch(() => undefined);
+    }
+  }, [currentTrackIndex, isPlaying, isStudio]);
 
   return (
     <div
@@ -325,8 +503,8 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         backgroundColor: "#000"
       }}
     >
-      {isStudio && props.audioSrc ? <audio ref={audioRef} src={props.audioSrc} preload="auto" /> : null}
-      <BackgroundLayer kind={props.background.kind} src={props.background.src} color={props.background.color} />
+      {isStudio && currentSong.audioSrc ? <audio ref={audioRef} src={currentSong.audioSrc} preload="auto" /> : null}
+      <BackgroundLayer kind={currentSong.background.kind} src={currentSong.background.src} color={currentSong.background.color} />
       <AudioReactiveBackground bass={reactiveBass} energy={reactiveEnergy} onset={reactiveOnset} />
       <ReadabilityLayer />
       <EnergyRing
@@ -362,11 +540,11 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         isPlaying={isStudio ? isPlaying : true}
       />
       <SafePoetryFrame
-        nickname={props.poetryFrame?.nickname ?? "@xcai43323"}
-        topLabel={props.poetryFrame?.topLabel}
-        leftVertical={props.poetryFrame?.leftVertical}
-        rightVertical={props.poetryFrame?.rightVertical}
-        bottomLine={props.poetryFrame?.bottomLine}
+        nickname={currentSong.poetryFrame?.nickname ?? DEFAULT_NICKNAME}
+        topLabel={currentSong.poetryFrame?.topLabel}
+        leftVertical={currentSong.poetryFrame?.leftVertical}
+        rightVertical={currentSong.poetryFrame?.rightVertical}
+        bottomLine={currentSong.poetryFrame?.bottomLine}
       />
 
       <div
@@ -393,11 +571,11 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
           <ListMusic size={38} strokeWidth={1.8} />
         </button>
 
-        <TopSongInfo label="NOW PLAYING" title={title} artist={currentTrack.artist} />
+        <TopSongInfo label="NOW PLAYING" title={title} artist={currentSong.artist} />
 
         <LyricCarousel
-          lyrics={props.lyrics}
-          fps={props.fps}
+          lyrics={currentSong.lyrics}
+          fps={currentSong.fps}
           currentTimeMs={effectiveLyricTimeMs}
           onSeek={isStudio ? performSeek : undefined}
         />
@@ -410,14 +588,20 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
 
         <ControlBar
           isPlaying={isStudio ? isPlaying : true}
-          liked={liked}
+          liked={isCurrentLiked}
           repeatMode={repeatMode}
-          canGoPrevious={queue.length > 1}
-          canGoNext={queue.length > 1}
+          canGoPrevious={filteredQueue.length > 1}
+          canGoNext={filteredQueue.length > 1}
           onTogglePlay={() => void togglePlay()}
           onPrevious={goPrevious}
           onNext={goNext}
-          onToggleLike={() => setLiked((value) => !value)}
+          onToggleLike={() =>
+            setLikedTrackIds((value) =>
+              value.includes(currentSong.id)
+                ? value.filter((id) => id !== currentSong.id)
+                : [...value, currentSong.id]
+            )
+          }
           onToggleRepeatOne={() => setRepeatMode((value) => (value === "one" ? "none" : "one"))}
           onToggleRepeatList={() => setRepeatMode((value) => (value === "list" ? "none" : "list"))}
           onAddToPlaylist={() => setAddToPlaylistOpen(true)}
@@ -425,24 +609,20 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         />
       </div>
 
-      <PlaylistDrawer
-        open={playlistDrawerOpen}
-        playlists={playlists}
-        selectedPlaylistId={selectedPlaylistId}
-        onClose={() => setPlaylistDrawerOpen(false)}
-        onCreatePlaylist={() => {
-          const newName = `New Playlist ${customPlaylists.length + 1}`;
-          setCustomPlaylists((value) => [...value, newName]);
-        }}
-        onSelectPlaylist={(playlistId) => {
-          setSelectedPlaylistId(playlistId);
-          setPlaylistDrawerOpen(false);
-        }}
-      />
+        <PlaylistDrawer
+          open={playlistDrawerOpen}
+          playlists={playlists}
+          selectedPlaylistId={selectedPlaylistId}
+          onClose={() => setPlaylistDrawerOpen(false)}
+          onSelectPlaylist={(playlistId) => {
+            setSelectedPlaylistId((value) => (value === playlistId ? null : playlistId));
+            setPlaylistDrawerOpen(false);
+          }}
+        />
 
       <QueuePanel
         open={queueOpen}
-        queue={queue}
+        queue={filteredQueue}
         currentTrackId={currentTrack.id}
         onClose={() => setQueueOpen(false)}
         onSelectTrack={(trackId) => {
@@ -455,20 +635,33 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         }}
       />
 
-      <AddToPlaylistPanel
-        open={addToPlaylistOpen}
-        playlists={playlists}
-        selectedPlaylistId={selectedPlaylistId}
-        onClose={() => setAddToPlaylistOpen(false)}
-        onCreatePlaylist={() => {
-          const newName = `New Playlist ${customPlaylists.length + 1}`;
-          setCustomPlaylists((value) => [...value, newName]);
-        }}
-        onSelectPlaylist={(playlistId) => {
-          setSelectedPlaylistId(playlistId);
-          setAddToPlaylistOpen(false);
-        }}
-      />
+        <AddToPlaylistPanel
+          open={addToPlaylistOpen}
+          playlists={playlists}
+          selectedPlaylistId={selectedPlaylistId}
+          onClose={() => setAddToPlaylistOpen(false)}
+          onSelectPlaylist={(playlistId) => {
+            if (playlistId === "liked") {
+              setLikedTrackIds((value) =>
+                value.includes(currentSong.id) ? value : [...value, currentSong.id]
+              );
+            } else {
+              setCustomPlaylists((value) =>
+                value.map((playlist) =>
+                  playlist.id === playlistId
+                    ? {
+                        ...playlist,
+                        trackIds: playlist.trackIds.includes(currentSong.id)
+                          ? playlist.trackIds
+                          : [...playlist.trackIds, currentSong.id],
+                      }
+                    : playlist
+                )
+              );
+            }
+            setAddToPlaylistOpen(false);
+          }}
+        />
 
       <div
         className={cn(

@@ -1,5 +1,5 @@
 import React from "react";
-import {Check, Plus, X} from "lucide-react";
+import {Check, X} from "lucide-react";
 
 import type {PlaylistSummary} from "../../types";
 import {cn} from "../../lib/cn";
@@ -10,7 +10,6 @@ type AddToPlaylistPanelProps = {
   selectedPlaylistId: string | null;
   onClose: () => void;
   onSelectPlaylist: (playlistId: string) => void;
-  onCreatePlaylist: () => void;
 };
 
 export const AddToPlaylistPanel: React.FC<AddToPlaylistPanelProps> = ({
@@ -18,8 +17,7 @@ export const AddToPlaylistPanel: React.FC<AddToPlaylistPanelProps> = ({
   playlists,
   selectedPlaylistId,
   onClose,
-  onSelectPlaylist,
-  onCreatePlaylist
+  onSelectPlaylist
 }) => {
   if (!open) {
     return null;
@@ -38,14 +36,7 @@ export const AddToPlaylistPanel: React.FC<AddToPlaylistPanelProps> = ({
             <X size={22} strokeWidth={1.8} />
           </button>
         </div>
-        <button
-          className="mt-[20px] flex w-full items-center gap-3 rounded-[22px] border border-white/10 bg-white/6 px-[18px] py-[16px] text-left text-[18px] text-white/92"
-          onClick={onCreatePlaylist}
-        >
-          <Plus size={20} strokeWidth={1.8} />
-          <span>Create Playlist</span>
-        </button>
-        <div className="mt-[14px] flex flex-col gap-[10px]">
+        <div className="mt-[20px] flex flex-col gap-[10px]">
           {playlists.map((playlist) => (
             <button
               key={playlist.id}

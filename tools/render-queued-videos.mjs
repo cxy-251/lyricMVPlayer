@@ -21,7 +21,7 @@ if (listResult.status !== 0) {
 
 const rows = JSON.parse(listResult.stdout || "[]");
 for (const row of rows) {
-  const songDirName = row["资源文件夹"];
+  const songDirName = row.song_dir;
   if (!songDirName) {
     continue;
   }
@@ -52,7 +52,7 @@ for (const row of rows) {
 
   const markResult = spawnSync(
     "conda",
-    ["run", "-n", "kwai", "python", renderQueueScript, "mark", projectRoot, songDirName, "已渲染"],
+    ["run", "-n", "kwai", "python", renderQueueScript, "mark", projectRoot, songDirName, "rendered"],
     {
       cwd: projectRoot,
       stdio: "inherit",

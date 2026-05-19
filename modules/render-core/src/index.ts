@@ -4,6 +4,7 @@ export type {
   BackgroundAsset,
   LyricVideoCompositionProps,
   PoetryFrame,
+  SongLibraryItem,
   TimedLyricLine
 } from "./types";
 export {sampleCompositionProps} from "./sample-data";

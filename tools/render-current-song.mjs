@@ -28,7 +28,7 @@ fs.mkdirSync(songsOutDir, {recursive: true});
 
 const renderResult = spawnSync(
   remotionBin,
-  ["render", "src/remotion/Root.tsx", "MusicVideo", finalOutputPath],
+  ["render", "src/remotion/RenderRoot.tsx", "MusicVideo", finalOutputPath],
   {
     cwd: projectRoot,
     stdio: "inherit",

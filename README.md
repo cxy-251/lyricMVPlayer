@@ -53,26 +53,45 @@ Common commands for the frontend preview and render layer:
   This updates the Remotion preview entry to read from the selected song directory under:
   `artifacts/songs/`
 
+- `artifacts/common/library-state.json`
+  This file is the project-level seed for playlist definitions and the default nickname.
+  If you want to add, rename, or reorder playlists, edit this file directly.
+  The preview player no longer provides create/delete playlist UI.
+
 - `npm run prepare:playlist -- "<playlist-url>" [default-render-batch]`
   Run the playlist preparation pipeline.
-  This downloads and prepares each song package, resolves lyrics, aligns lyrics, generates background workflow assets, generates `audio-features.json`, and writes or updates:
-  `artifacts/common/render-queue.csv`
-  The CSV now keeps only:
-  - `视频状态`
-  - `渲染批次`
-  - `资源文件夹`
-  - `来源URL`
-  It does not render MP4 files.
+  This downloads and prepares each song package, resolves lyrics, aligns lyrics, generates prompt/workflow assets for the future background step, generates `audio-features.json`, and writes or updates:
+  `artifacts/common/production-queue.csv`
+  It also refreshes the current web preview library so newly prepared songs appear in the player after a page refresh.
+  It does not generate background images and does not render MP4 files.
+  The CSV keeps:
+  - `video_status`
+  - `render_batch`
+  - `background_ready`
+  - `song_dir`
+  - `source_url`
 
 - `npm run refresh:cookies`
   Try to export reusable YouTube browser cookies into:
   `artifacts/common/youtube-cookies.txt`
   Future download steps will reuse this file automatically when it exists.
 
+- `npm run generate:background:current`
+  Regenerate the current song's background prompt, poetry frame, and ComfyUI workflow, then submit it to the local ComfyUI API if it is available.
+
+- `npm run generate:backgrounds`
+  Read `artifacts/common/production-queue.csv` and generate background images only for rows where:
+  - `background_ready = false`
+  This command uses the local ComfyUI API on:
+  `http://127.0.0.1:8000`
+  If the API is unavailable, the command still refreshes each song's prompt / poetry / workflow files but will stop before image generation.
+
 - `npm run render:queue -- [batch-value]`
-  Read `artifacts/common/render-queue.csv` and render only rows where:
-  - `视频状态 = 未渲染`
-  - `渲染批次 = 0` by default, or the provided batch value
+  Read `artifacts/common/production-queue.csv` and render only rows where:
+  - `video_status = pending`
+  - `render_batch = 0` by default, or the provided batch value
+  - `background_ready = true`
+  Rendered MP4s keep the full song in web preview, but video export starts a few seconds before the first detected vocal so long intros do not dominate the final video.
 
 - `npm run typecheck`
   Run TypeScript checks without building.

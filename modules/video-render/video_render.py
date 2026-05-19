@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from dataclasses import asdict, dataclass
+from statistics import median
 from pathlib import Path
 from typing import Literal
 
@@ -36,6 +38,8 @@ class RenderJobInput:
     artist: str
     audioSrc: str
     lyricOffsetMs: int
+    renderTrimStartMs: int
+    renderDurationInFrames: int
     durationInFrames: int
     fps: int
     background: RenderBackgroundAsset
@@ -66,12 +70,96 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _load_preferred_lyrics(song_path: Path) -> tuple[dict, int]:
-    aligned_path = song_path / "alignedLRC.json"
-    if aligned_path.exists():
-        return _load_json(aligned_path), 0
+def _probe_audio_duration_ms(audio_path: Path) -> int:
+    try:
+        result = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=nk=1:nw=1",
+                str(audio_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return 0
 
-    return _load_json(song_path / "lyrics.json"), 0
+    try:
+        return int(float(result.stdout.strip()) * 1000)
+    except ValueError:
+        return 0
+
+
+def _extract_line_count_and_end_ms(lyrics_data: dict) -> tuple[int, int]:
+    count = 0
+    last_end_ms = 0
+    for line in lyrics_data.get("lines", []):
+        start_ms = line.get("startMs", line.get("start_ms"))
+        end_ms = line.get("endMs", line.get("end_ms"))
+        text = str(line.get("text", "")).strip()
+        if start_ms is None or end_ms is None or not text:
+            continue
+        count += 1
+        last_end_ms = max(last_end_ms, int(end_ms))
+    return count, last_end_ms
+
+
+def _aligned_deviation_too_large(raw_lyrics: dict, aligned_lyrics: dict) -> bool:
+    raw_lines = [
+        line for line in raw_lyrics.get("lines", [])
+        if str(line.get("text", "")).strip() and str(line.get("text", "")).strip() != "♪"
+    ]
+    aligned_lines = [
+        line for line in aligned_lyrics.get("lines", [])
+        if str(line.get("text", "")).strip() and str(line.get("text", "")).strip() != "♪"
+    ]
+
+    comparable_deltas: list[int] = []
+    for raw_line, aligned_line in zip(raw_lines, aligned_lines):
+        raw_text = re.sub(r"\s+", " ", str(raw_line.get("text", "")).strip().lower())
+        aligned_text = re.sub(r"\s+", " ", str(aligned_line.get("text", "")).strip().lower())
+        if raw_text != aligned_text:
+            continue
+        raw_start = raw_line.get("start_ms", raw_line.get("startMs"))
+        aligned_start = aligned_line.get("start_ms", aligned_line.get("startMs"))
+        if raw_start is None or aligned_start is None:
+            continue
+        comparable_deltas.append(abs(int(aligned_start) - int(raw_start)))
+
+    if len(comparable_deltas) < 8:
+        return False
+
+    return median(comparable_deltas) > 12000
+
+
+def _load_preferred_lyrics(song_path: Path) -> tuple[dict, int]:
+    raw_lyrics = _load_json(song_path / "lyrics.json")
+    raw_count, raw_end_ms = _extract_line_count_and_end_ms(raw_lyrics)
+
+    aligned_path = song_path / "alignedLRC.json"
+    if not aligned_path.exists():
+        return raw_lyrics, 0
+
+    aligned_lyrics = _load_json(aligned_path)
+    aligned_count, aligned_end_ms = _extract_line_count_and_end_ms(aligned_lyrics)
+
+    aligned_is_suspicious = (
+        aligned_count == 0
+        or (raw_count >= 8 and aligned_count < max(3, raw_count // 3))
+        or (raw_end_ms >= 60_000 and aligned_end_ms < raw_end_ms * 0.5)
+        or _aligned_deviation_too_large(raw_lyrics, aligned_lyrics)
+    )
+
+    if aligned_is_suspicious:
+        return raw_lyrics, 0
+
+    return aligned_lyrics, 0
 
 
 def _extract_lyric_lines(lyrics_data: dict) -> list[RenderTimedLyricLine]:
@@ -93,6 +181,15 @@ def _extract_lyric_lines(lyrics_data: dict) -> list[RenderTimedLyricLine]:
         )
 
     return normalized_lines
+
+
+def _find_first_vocal_start_ms(lyric_lines: list[RenderTimedLyricLine]) -> int:
+    for line in lyric_lines:
+        text = line.text.strip()
+        if not text or text == "♪":
+            continue
+        return line.startMs
+    return 0
 
 
 def _discover_background_asset(song_dir: Path) -> RenderBackgroundAsset:
@@ -143,15 +240,34 @@ def build_render_job_input(song_dir: str, fps: int = 30) -> RenderJobInput:
     title = source_data.get("title") or song_path.name
     artist = source_data.get("channel") or source_data.get("uploader") or "unknown-artist"
     lyric_lines = _extract_lyric_lines(lyrics_data)
+    audio_duration_ms = _probe_audio_duration_ms(audio_path)
 
     last_end_ms = max((line.endMs for line in lyric_lines), default=0)
-    duration_in_frames = max(int((last_end_ms / 1000.0) * fps) + fps * 2, fps * 4)
+    if audio_duration_ms > 0:
+        effective_end_ms = min(max(last_end_ms, 0), audio_duration_ms)
+        preview_duration_ms = max(audio_duration_ms, fps * 1000)
+    else:
+        effective_end_ms = max(last_end_ms, 0)
+        preview_duration_ms = max(effective_end_ms + 2000, fps * 4000)
+
+    first_vocal_start_ms = _find_first_vocal_start_ms(lyric_lines)
+    render_trim_start_ms = max(0, first_vocal_start_ms - 3000)
+    render_tail_end_ms = min(
+        audio_duration_ms if audio_duration_ms > 0 else effective_end_ms + 2000,
+        max(effective_end_ms + 2000, first_vocal_start_ms + 4000),
+    )
+    render_duration_ms = max(render_tail_end_ms - render_trim_start_ms, fps * 4000)
+
+    duration_in_frames = max(int((preview_duration_ms / 1000.0) * fps), fps * 4)
+    render_duration_in_frames = max(int((render_duration_ms / 1000.0) * fps), fps * 4)
 
     return RenderJobInput(
         title=title,
         artist=artist,
         audioSrc=str(audio_path),
         lyricOffsetMs=lyric_offset_ms,
+        renderTrimStartMs=render_trim_start_ms,
+        renderDurationInFrames=render_duration_in_frames,
         durationInFrames=duration_in_frames,
         fps=fps,
         background=_discover_background_asset(song_path),

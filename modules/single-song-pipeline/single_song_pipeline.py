@@ -126,30 +126,46 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
     )
     song_base_name = audio_download.build_song_base_name(audio_record.metadata)
     song_dir = audio_download.build_song_directory(audio_config, audio_record.metadata)
-    lyric_document, lyric_error = lyrics.resolve_timed_lyrics(lyric_input)
-    if lyric_error is not None:
-        result = {
-            "ok": False,
-            "stage": "lyrics",
-            "song_base_name": song_base_name,
-            "song_dir": str(song_dir),
-            "source": {
-                "source_identity_key": source_ingestion.get_source_identity(record),
-                "record": _serialize(record),
-            },
-            "audio": _serialize(audio_record),
-            "error": _serialize(lyric_error),
-        }
-        result["result_path"] = save_pipeline_result(result, project_root)
-        return result
-
     song_dir.mkdir(parents=True, exist_ok=True)
     timed_lyrics_path = song_dir / "lyrics.json"
-    timed_lyrics_path.write_text(lyrics.timed_lyrics_to_json(lyric_document), encoding="utf-8")
+    lyric_document, lyric_error = lyrics.resolve_timed_lyrics(lyric_input)
+    fallback_result = None
+    fallback_error = None
+    if lyric_error is not None:
+        if audio_record.audio_path:
+            fallback_result, fallback_error = audio_lyrics_alignment.run_transcription_fallback(
+                audio_path=audio_record.audio_path,
+                song_dir=str(song_dir),
+                project_root=project_root,
+            )
+            if fallback_result is not None:
+                lyric_document = _load_json(Path(fallback_result.lyrics_json_path))
+        if lyric_error is not None and fallback_result is None:
+            result = {
+                "ok": False,
+                "stage": "lyrics",
+                "song_base_name": song_base_name,
+                "song_dir": str(song_dir),
+                "source": {
+                    "source_identity_key": source_ingestion.get_source_identity(record),
+                    "record": _serialize(record),
+                },
+                "audio": _serialize(audio_record),
+                "error": _serialize(lyric_error),
+                "fallback_error": fallback_error,
+            }
+            result["result_path"] = save_pipeline_result(result, project_root)
+            return result
+
+    if hasattr(lyric_document, "lines"):
+        timed_lyrics_path.write_text(lyrics.timed_lyrics_to_json(lyric_document), encoding="utf-8")
     alignment_result = None
     alignment_error = None
     if audio_record.audio_path:
-        lyrics_text = _timed_lyrics_document_to_lrc_text(lyric_document)
+        lyrics_lines_for_alignment = (
+            lyric_document.lines if hasattr(lyric_document, "lines") else []
+        )
+        lyrics_text = _timed_lyrics_document_to_lrc_text(lyric_document) if hasattr(lyric_document, "lines") else ""
         if lyrics_text.strip():
             alignment_result, alignment_error = audio_lyrics_alignment.run_audio_lyrics_alignment(
                 audio_path=audio_record.audio_path,
@@ -164,7 +180,10 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
         artist=audio_record.metadata.channel or audio_record.metadata.uploader or "unknown-artist",
         song_base_name=song_base_name,
         song_dir=str(song_dir),
-        lyric_lines=[line.text for line in lyric_document.lines],
+        lyric_lines=[
+            line.text if hasattr(line, "text") else str(line.get("text", ""))
+            for line in (lyric_document.lines if hasattr(lyric_document, "lines") else [])
+        ],
     )
     background_package = background_generation.build_background_prompt_package(background_context)
     background_paths = background_generation.save_background_prompt_package(background_package, background_context)
@@ -188,7 +207,8 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
         "timed_lyrics": {
             "path": str(timed_lyrics_path),
             "document": _serialize(lyric_document),
-            "score": lyrics.score_timed_lyrics(lyric_document),
+            "score": lyrics.score_timed_lyrics(lyric_document) if hasattr(lyric_document, "lines") else None,
+            "fallback_used": fallback_result is not None,
         },
         "aligned_lyrics": {
             "path": alignment_result.aligned_lrc_json_path if alignment_result else None,

@@ -65,7 +65,7 @@ def _extract_playlist_entries(playlist_url: str) -> list[dict]:
     return normalized
 
 
-def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_batch: str = "") -> dict:
+def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_batch: str = "0") -> dict:
     root = Path(project_root)
     modules_root = root / "modules"
 
@@ -96,10 +96,11 @@ def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_b
             render_queue.upsert_render_queue_row(
                 project_root,
                 render_queue.RenderQueueRow(
-                    视频状态="未渲染",
-                    渲染批次=default_render_batch,
-                    来源URL=entry["watch_url"],
-                    资源文件夹=Path(song_dir).name,
+                    video_status="pending",
+                    render_batch=default_render_batch,
+                    background_ready="false",
+                    source_url=entry["watch_url"],
+                    song_dir=Path(song_dir).name,
                 ),
             )
             pipeline_result["audio_features"] = {"path": audio_features_path}
@@ -110,7 +111,7 @@ def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_b
         "ok": True,
         "playlist_url": playlist_url,
         "entry_count": len(playlist_entries),
-        "render_queue_csv": str(queue_csv_path),
+        "production_queue_csv": str(queue_csv_path),
         "results": results,
     }
 

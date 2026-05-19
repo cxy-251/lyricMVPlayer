@@ -25,11 +25,29 @@ export type QueueTrack = {
   accent?: string;
 };
 
+export type SongLibraryItem = {
+  id: string;
+  title: string;
+  artist: string;
+  audioSrc?: string;
+  lyricOffsetMs?: number;
+  renderTrimStartMs?: number;
+  renderDurationInFrames?: number;
+  durationInFrames: number;
+  fps: number;
+  background: BackgroundAsset;
+  poetryFrame?: PoetryFrame;
+  lyrics: TimedLyricLine[];
+  audioFeatures?: AudioFeatureTrack;
+  accent?: string;
+};
+
 export type PlaylistSummary = {
   id: string;
   name: string;
   count: number;
   accent?: string;
+  trackIds?: string[];
 };
 
 export type AudioFeatureFrame = {
@@ -53,6 +71,8 @@ export type LyricVideoCompositionProps = {
   artist: string;
   audioSrc?: string;
   lyricOffsetMs?: number;
+  renderTrimStartMs?: number;
+  renderDurationInFrames?: number;
   durationInFrames: number;
   fps: number;
   background: BackgroundAsset;
@@ -60,5 +80,7 @@ export type LyricVideoCompositionProps = {
   lyrics: TimedLyricLine[];
   audioFeatures?: AudioFeatureTrack;
   queue?: QueueTrack[];
+  library?: SongLibraryItem[];
+  initialTrackId?: string;
   playlists?: PlaylistSummary[];
 };

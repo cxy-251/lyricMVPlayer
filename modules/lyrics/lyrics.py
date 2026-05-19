@@ -5,9 +5,10 @@ import re
 import subprocess
 import tempfile
 from dataclasses import asdict, dataclass
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Literal
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse, parse_qs
 from urllib.request import urlopen
 
 
@@ -249,6 +250,83 @@ def _normalize_search_title(title: str | None) -> str | None:
     return cleaned.strip() or None
 
 
+def _normalize_match_text(value: str | None) -> str:
+    normalized = (value or "").lower().strip()
+    normalized = re.sub(r"\[[^\]]+\]", "", normalized)
+    normalized = re.sub(r"[^a-z0-9\u4e00-\u9fff\s']", " ", normalized)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
+
+
+def _extract_video_id(watch_url: str) -> str | None:
+    try:
+        parsed = urlparse(watch_url)
+        if parsed.netloc.endswith("youtu.be"):
+            candidate = parsed.path.strip("/")
+            return candidate or None
+        query = parse_qs(parsed.query)
+        candidate = query.get("v", [None])[0]
+        if candidate:
+            return candidate
+        if "/shorts/" in parsed.path:
+            return parsed.path.rsplit("/", 1)[-1] or None
+    except Exception:
+        return None
+    return None
+
+
+def _similarity(a: str | None, b: str | None) -> float:
+    aa = _normalize_match_text(a or "")
+    bb = _normalize_match_text(b or "")
+    if not aa or not bb:
+        return 0.0
+    return SequenceMatcher(None, aa, bb).ratio()
+
+
+def _artist_match_ratio(expected_artist: str | None, candidate_artists: list[str]) -> float:
+    expected = _normalize_match_text(expected_artist or "")
+    if not expected:
+        return 0.0
+    expected_tokens = set(expected.split())
+    best = 0.0
+    for artist in candidate_artists:
+        normalized = _normalize_match_text(artist)
+        if not normalized:
+            continue
+        candidate_tokens = set(normalized.split())
+        overlap = len(expected_tokens & candidate_tokens) / max(1, len(expected_tokens))
+        best = max(best, overlap, _similarity(expected_artist, artist))
+    return best
+
+
+def _extract_candidate_artists(song: dict) -> list[str]:
+    artists = []
+    for artist in song.get("artists", []) or []:
+        name = artist.get("name")
+        if name:
+            artists.append(str(name))
+    if song.get("artist"):
+        artists.append(str(song.get("artist")))
+    if song.get("author"):
+        artists.append(str(song.get("author")))
+    return artists
+
+
+def _is_reasonable_song_match(song: dict, input_data: TimedLyricResolutionInput) -> bool:
+    candidate_title = (
+        song.get("title")
+        or song.get("name")
+        or song.get("track")
+        or ""
+    )
+    title_score = max(
+        _similarity(input_data.title, candidate_title),
+        _similarity(_normalize_search_title(input_data.title), candidate_title),
+    )
+    artist_score = _artist_match_ratio(input_data.artist, _extract_candidate_artists(song))
+    return title_score >= 0.52 and artist_score >= 0.35
+
+
 def _try_youtube_music(input_data: TimedLyricResolutionInput) -> TimedLyricDocument | None:
     normalized_title = _normalize_search_title(input_data.title)
     if not normalized_title or not input_data.artist:
@@ -259,32 +337,18 @@ def _try_youtube_music(input_data: TimedLyricResolutionInput) -> TimedLyricDocum
     except Exception:
         return None
 
-    query = f"{normalized_title} {input_data.artist}"
-
-    try:
-        ytm = YTMusic()
-        search_results = ytm.search(query, filter="songs", limit=5)
-    except Exception:
-        return None
-
-    if not search_results:
-        return None
-
-    for song in search_results:
-        video_id = song.get("videoId")
-        if not video_id:
-            continue
+    def _lyrics_doc_from_video_id(video_id: str, detail_label: str) -> TimedLyricDocument | None:
         try:
             watch_data = ytm.get_watch_playlist(videoId=video_id)
             lyrics_browse_id = watch_data.get("lyrics")
             if not lyrics_browse_id:
-                continue
+                return None
             lyrics_data = ytm.get_lyrics(lyrics_browse_id, timestamps=True)
         except Exception:
-            continue
+            return None
 
         if not lyrics_data or not lyrics_data.get("hasTimestamps"):
-            continue
+            return None
 
         parsed_lines: list[TimedLyricLine] = []
         for item in lyrics_data.get("lyrics", []):
@@ -302,15 +366,43 @@ def _try_youtube_music(input_data: TimedLyricResolutionInput) -> TimedLyricDocum
             )
 
         if not parsed_lines:
-            continue
+            return None
 
         return TimedLyricDocument(
             source="youtube-music",
-            source_detail=f"ytmusic search -> {video_id}",
+            source_detail=detail_label,
             has_word_level_timing=False,
             language=None,
             lines=parsed_lines,
         )
+
+    direct_video_id = _extract_video_id(input_data.watch_url)
+    if direct_video_id:
+        direct_doc = _lyrics_doc_from_video_id(direct_video_id, f"ytmusic direct -> {direct_video_id}")
+        if direct_doc is not None:
+            return direct_doc
+
+    query = f"{input_data.title or normalized_title} {input_data.artist}"
+
+    try:
+        ytm = YTMusic()
+        search_results = ytm.search(query, filter="songs", limit=5)
+    except Exception:
+        return None
+
+    if not search_results:
+        return None
+
+    for song in search_results:
+        if not _is_reasonable_song_match(song, input_data):
+            continue
+
+        video_id = song.get("videoId")
+        if not video_id:
+            continue
+        document = _lyrics_doc_from_video_id(video_id, f"ytmusic search -> {video_id}")
+        if document is not None:
+            return document
 
     return None
 

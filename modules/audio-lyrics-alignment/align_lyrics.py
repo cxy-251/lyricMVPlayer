@@ -24,6 +24,23 @@ class TranscriptWord:
 
 
 @dataclass(frozen=True)
+class TranscribedLyricLine:
+    text: str
+    start_ms: int
+    end_ms: int
+
+
+@dataclass(frozen=True)
+class TranscribedLyricsDocument:
+    source: str
+    source_detail: str
+    has_word_level_timing: bool
+    language: str | None
+    vocals_path: str
+    lines: list[TranscribedLyricLine]
+
+
+@dataclass(frozen=True)
 class AlignedLyricLine:
     text: str
     start_ms: int
@@ -209,6 +226,48 @@ def _transcribe_vocals_with_faster_whisper(
         )
 
     return (results, words), None
+
+
+def transcribe_vocals_to_lyrics_document(
+    vocals_path: str,
+    transcription_model_size: str = "small",
+    models_root: str | None = None,
+) -> tuple[TranscribedLyricsDocument | None, LyricsAlignmentError | None]:
+    transcript_payload, transcript_error = _transcribe_vocals_with_faster_whisper(
+        vocals_path=vocals_path,
+        model_size=transcription_model_size,
+        models_root=models_root,
+    )
+    if transcript_error is not None:
+        return None, transcript_error
+
+    transcript_segments, transcript_words = transcript_payload
+    lines = [
+        TranscribedLyricLine(
+            text=segment.text,
+            start_ms=segment.start_ms,
+            end_ms=segment.end_ms,
+        )
+        for segment in transcript_segments
+        if str(segment.text).strip()
+    ]
+    if not lines:
+        return None, LyricsAlignmentError(
+            code="transcription-empty",
+            message="The transcription fallback produced no usable lyric lines.",
+        )
+
+    return (
+        TranscribedLyricsDocument(
+            source="transcription-fallback",
+            source_detail=f"faster-whisper:{transcription_model_size}",
+            has_word_level_timing=bool(transcript_words),
+            language=None,
+            vocals_path=vocals_path,
+            lines=lines,
+        ),
+        None,
+    )
 
 
 def _align_lines_to_segments(

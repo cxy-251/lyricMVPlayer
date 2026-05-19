@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 import subprocess
+import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
@@ -57,7 +58,7 @@ POSITIVE_TEMPLATES = {
     "uplifting": {
         "palette": "warm sunset pink, honey gold, soft sky blue",
         "scene": "open coastal boardwalk, glowing horizon, breezy evening sky",
-        "style": "premium lyric video background illustration, cinematic editorial matte painting",
+        "style": "dreamy storybook illustration, cinematic background art",
     },
     "romantic": {
         "palette": "rose dusk, amber light, deep indigo shadows",
@@ -67,17 +68,17 @@ POSITIVE_TEMPLATES = {
     "melancholic": {
         "palette": "muted blue, silver gray, pale violet",
         "scene": "empty train platform in soft rain, distant lights, quiet night air",
-        "style": "atmospheric illustration, poetic background painting",
+        "style": "dreamy storybook illustration, cinematic background art",
     },
     "introspective": {
         "palette": "soft teal, desaturated gold, dusk lavender",
         "scene": "lonely overlook above a city, layered clouds, wind-swept horizon",
-        "style": "cinematic illustration, elegant lyric backdrop art",
+        "style": "dreamy storybook illustration, cinematic background art",
     },
     "energetic": {
         "palette": "neon coral, electric cyan, deep navy",
         "scene": "stylized nightlife boulevard, glowing signs, rhythmic light trails",
-        "style": "stylized music illustration, bold cinematic poster background",
+        "style": "dreamy storybook illustration, cinematic background art",
     },
 }
 
@@ -88,12 +89,21 @@ NEGATIVE_PROMPT = (
 
 LOCAL_LLM_ENDPOINT = "http://127.0.0.1:1234/v1/chat/completions"
 LOCAL_LLM_MODEL = "google/gemma-4-e4b"
+COMFYUI_API_URL = "http://127.0.0.1:8000"
 
 
 def _normalize_title(title: str) -> str:
     cleaned = re.sub(r"\([^)]*\)", "", title)
     cleaned = re.sub(r"\[[^\]]*\]", "", cleaned)
     return re.sub(r"\s{2,}", " ", cleaned).strip()
+
+
+def _normalize_title_against_artist(title: str, artist: str) -> str:
+    normalized_title = _normalize_title(title)
+    artist_prefix = f"{artist} - "
+    if normalized_title.lower().startswith(artist_prefix.lower()):
+        return normalized_title[len(artist_prefix) :].strip()
+    return normalized_title
 
 
 def _infer_mood(song_title: str, lyric_lines: list[str]) -> str:
@@ -202,7 +212,7 @@ def _generate_local_poetry_fields(context: BackgroundPromptContext) -> dict | No
 
 
 def build_background_prompt_package(context: BackgroundPromptContext) -> BackgroundPromptPackage:
-    normalized_title = _normalize_title(context.song_title)
+    normalized_title = _normalize_title_against_artist(context.song_title, context.artist)
     mood = _infer_mood(normalized_title, context.lyric_lines)
     template = POSITIVE_TEMPLATES[mood]
     focus_lines = _extract_focus_lines(context.lyric_lines)
@@ -212,16 +222,14 @@ def build_background_prompt_package(context: BackgroundPromptContext) -> Backgro
     mood = str(local_fields.get("mood") or mood)
     palette = str(local_fields.get("palette") or template["palette"])
     scene = str(local_fields.get("scene") or template["scene"])
-    style = str(local_fields.get("style") or template["style"])
+    style = template["style"]
 
-    composition = str(local_fields.get("composition") or (
-        "vertical 9:16 composition, subjectless illustration, clean center area for lyric overlay, "
-        "layered depth, calm readable layout, premium wallpaper framing"
-    ))
+    composition = "vertical 9:16 composition, subjectless illustration, clean center area for lyric overlay, layered depth, calm readable layout, premium wallpaper framing"
     prompt_focus = str(local_fields.get("prompt_focus") or focus_hint)
+    song_reference = f"{context.artist} - {normalized_title}"
     positive_prompt = (
         f"subjectless illustration background for a music lyric video, inspired by the song "
-        f"'{normalized_title}' by {context.artist}, mood {mood}, {scene}, "
+        f"'{song_reference}' by {context.artist}, mood {mood}, {scene}, "
         f"{palette}, {style}, {composition}, no characters, no human figures, "
         f"visually rich but uncluttered, evocative atmosphere, detailed environment storytelling, "
         f"focus inspiration: {prompt_focus}"
@@ -416,6 +424,219 @@ def get_default_comfy_output_root() -> str:
     return "/Users/cxy251/Documents/ComfyUI/output"
 
 
+def get_default_comfyui_api_url() -> str:
+    return COMFYUI_API_URL
+
+
+def _curl_json(method: str, url: str, payload: dict | None = None) -> dict | None:
+    curl_binary = shutil.which("curl")
+    if not curl_binary:
+        return None
+
+    command = [curl_binary, "-s", "-X", method, url]
+    if payload is not None:
+        command.extend(
+            [
+                "-H",
+                "Content-Type: application/json",
+                "-d",
+                json.dumps(payload, ensure_ascii=False),
+            ]
+        )
+
+    try:
+        completed = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=90,
+        )
+        if not completed.stdout.strip():
+            return None
+        return json.loads(completed.stdout)
+    except (subprocess.SubprocessError, json.JSONDecodeError, TimeoutError):
+        return None
+
+
+def is_comfyui_api_available(api_url: str | None = None) -> bool:
+    body = _curl_json("GET", f"{api_url or get_default_comfyui_api_url()}/system_stats")
+    return isinstance(body, dict) and "system" in body
+
+
+def submit_workflow_to_comfyui(
+    workflow: dict,
+    api_url: str | None = None,
+    client_id: str = "lyricMVPlayer",
+) -> str | None:
+    payload = {
+        "prompt": workflow,
+        "client_id": client_id,
+    }
+    body = _curl_json("POST", f"{api_url or get_default_comfyui_api_url()}/prompt", payload)
+    if not body:
+        return None
+    prompt_id = body.get("prompt_id")
+    return str(prompt_id) if prompt_id else None
+
+
+def wait_for_comfyui_prompt(
+    prompt_id: str,
+    api_url: str | None = None,
+    timeout_seconds: int = 600,
+    poll_interval_seconds: float = 2.0,
+) -> dict | None:
+    deadline = time.time() + timeout_seconds
+    history_url = f"{api_url or get_default_comfyui_api_url()}/history/{prompt_id}"
+
+    while time.time() < deadline:
+        body = _curl_json("GET", history_url)
+        if isinstance(body, dict) and prompt_id in body:
+            return body[prompt_id]
+        time.sleep(poll_interval_seconds)
+
+    return None
+
+
+def build_context_from_song_dir(song_dir: str) -> BackgroundPromptContext:
+    song_path = Path(song_dir)
+    source_data = json.loads((song_path / "source.json").read_text(encoding="utf-8"))
+    lyrics_path = song_path / "alignedLRC.json"
+    if not lyrics_path.exists():
+        lyrics_path = song_path / "lyrics.json"
+    lyrics_data = json.loads(lyrics_path.read_text(encoding="utf-8"))
+
+    return BackgroundPromptContext(
+        song_title=str(source_data.get("title") or song_path.name),
+        artist=str(source_data.get("channel") or source_data.get("uploader") or "unknown-artist"),
+        song_base_name=song_path.name,
+        song_dir=str(song_path),
+        lyric_lines=[
+            str(line.get("text", "")).strip()
+            for line in lyrics_data.get("lines", [])
+            if str(line.get("text", "")).strip()
+        ],
+    )
+
+
+def refresh_song_background_assets(song_dir: str) -> dict[str, str]:
+    context = build_context_from_song_dir(song_dir)
+    background_package = build_background_prompt_package(context)
+    poetry_package = build_poetry_frame_package(context)
+    workflow_package = build_comfyui_workflow_package(background_package, context)
+
+    background_paths = save_background_prompt_package(background_package, context)
+    poetry_paths = save_poetry_frame_package(poetry_package, context)
+    workflow_path = save_comfyui_workflow_package(workflow_package, context)
+
+    return {
+        "song_dir": context.song_dir,
+        "background_json_path": background_paths["json_path"],
+        "background_md_path": background_paths["md_path"],
+        "poetry_json_path": poetry_paths["json_path"],
+        "poetry_md_path": poetry_paths["md_path"],
+        "workflow_path": workflow_path,
+    }
+
+
+def generate_background_for_song(
+    song_dir: str,
+    project_root: str,
+    api_url: str | None = None,
+    comfy_output_root: str | None = None,
+    timeout_seconds: int = 600,
+) -> dict:
+    root = Path(project_root)
+    context = build_context_from_song_dir(song_dir)
+    asset_paths = refresh_song_background_assets(song_dir)
+    workflow = json.loads(Path(asset_paths["workflow_path"]).read_text(encoding="utf-8"))
+
+    existing_import = import_latest_comfy_background(
+        context=context,
+        comfy_output_root=comfy_output_root,
+    )
+    if existing_import is not None:
+        video_render_path = root / "modules" / "video-render" / "video_render.py"
+        import importlib.util
+        import sys
+
+        spec = importlib.util.spec_from_file_location("video_render_background_module", video_render_path)
+        if spec is None or spec.loader is None:
+            raise RuntimeError(f"Unable to load module from {video_render_path}")
+        video_render_module = importlib.util.module_from_spec(spec)
+        sys.modules["video_render_background_module"] = video_render_module
+        spec.loader.exec_module(video_render_module)
+        render_input_path = video_render_module.refresh_render_job_input(context.song_dir)
+        return {
+            "ok": True,
+            "song_dir": context.song_dir,
+            "workflow_path": asset_paths["workflow_path"],
+            "prompt_id": None,
+            "background_path": existing_import,
+            "render_input_path": render_input_path,
+            "reused_existing_output": True,
+        }
+
+    if not is_comfyui_api_available(api_url):
+        return {
+            "ok": False,
+            "reason": "comfyui-api-unavailable",
+            "song_dir": context.song_dir,
+            "workflow_path": asset_paths["workflow_path"],
+            "api_url": api_url or get_default_comfyui_api_url(),
+        }
+
+    prompt_id = submit_workflow_to_comfyui(workflow, api_url=api_url)
+    if not prompt_id:
+        return {
+            "ok": False,
+            "reason": "workflow-submit-failed",
+            "song_dir": context.song_dir,
+            "workflow_path": asset_paths["workflow_path"],
+            "api_url": api_url or get_default_comfyui_api_url(),
+        }
+
+    history_record = wait_for_comfyui_prompt(
+        prompt_id,
+        api_url=api_url,
+        timeout_seconds=timeout_seconds,
+    )
+    if history_record is None:
+        return {
+            "ok": False,
+            "reason": "workflow-timeout",
+            "song_dir": context.song_dir,
+            "prompt_id": prompt_id,
+        }
+
+    imported_background = wait_for_imported_background(
+        context=context,
+        comfy_output_root=comfy_output_root,
+        timeout_seconds=90,
+    )
+
+    video_render_path = root / "modules" / "video-render" / "video_render.py"
+    import importlib.util
+    import sys
+
+    spec = importlib.util.spec_from_file_location("video_render_background_module", video_render_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load module from {video_render_path}")
+    video_render_module = importlib.util.module_from_spec(spec)
+    sys.modules["video_render_background_module"] = video_render_module
+    spec.loader.exec_module(video_render_module)
+    render_input_path = video_render_module.refresh_render_job_input(context.song_dir)
+
+    return {
+        "ok": imported_background is not None,
+        "song_dir": context.song_dir,
+        "workflow_path": asset_paths["workflow_path"],
+        "prompt_id": prompt_id,
+        "background_path": imported_background,
+        "render_input_path": render_input_path,
+    }
+
+
 def import_latest_comfy_background(
     context: BackgroundPromptContext,
     comfy_output_root: str | None = None,
@@ -438,3 +659,21 @@ def import_latest_comfy_background(
     destination = song_dir / f"background{latest.suffix.lower()}"
     shutil.copy2(latest, destination)
     return str(destination)
+
+
+def wait_for_imported_background(
+    context: BackgroundPromptContext,
+    comfy_output_root: str | None = None,
+    timeout_seconds: int = 90,
+    poll_interval_seconds: float = 1.5,
+) -> str | None:
+    deadline = time.time() + timeout_seconds
+    while time.time() < deadline:
+        imported = import_latest_comfy_background(
+            context=context,
+            comfy_output_root=comfy_output_root,
+        )
+        if imported is not None:
+            return imported
+        time.sleep(poll_interval_seconds)
+    return None
