@@ -1,6 +1,5 @@
 .DS_Store
 node_modules/
-artifacts/
 dist/
 .turbo/
 .cache/
@@ -8,3 +7,36 @@ coverage/
 *.log
 __pycache__/
 *.pyc
+
+# Keep artifacts under version control only when they are needed by the web player.
+artifacts/*
+!artifacts/common/
+!artifacts/songs/
+
+# Common files needed for queue/library playback state.
+artifacts/common/*
+!artifacts/common/library-state.json
+!artifacts/common/production-queue.csv
+!artifacts/common/recent-downloads.json
+
+# Never commit local secrets or machine-specific runtime files.
+artifacts/common/youtube-cookies.txt
+artifacts/common/yt-dlp-archive.txt
+artifacts/common/playlist-pipeline.json
+artifacts/common/*.pipeline.json
+artifacts/common/models/
+
+# Song packages: keep only the minimum assets required by the deployed player.
+artifacts/songs/*
+!artifacts/songs/*/
+artifacts/songs/*/*
+!artifacts/songs/*/audio.mp3
+!artifacts/songs/*/render-input.json
+!artifacts/songs/*/audio-features.json
+!artifacts/songs/*/background.png
+!artifacts/songs/*/background.jpg
+!artifacts/songs/*/background.jpeg
+!artifacts/songs/*/background.webp
+
+# Render outputs are publish artifacts, not required for the player site bundle.
+artifacts/songsout/

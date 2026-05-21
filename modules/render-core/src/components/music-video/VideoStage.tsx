@@ -106,6 +106,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const frame = useCurrentFrame();
   const env = getRemotionEnvironment();
   const isStudio = env.isStudio;
+  const isInteractiveAudio = isStudio || props.interactivePreview === true;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -262,7 +263,8 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [customPlaylists, likedTrackIds, queue, selectedPlaylistId]);
   const title = formatDisplayTitle(currentSong.title, currentSong.artist);
   const renderTrimStartMs = currentSong.renderTrimStartMs ?? 0;
-  const currentTimeMs = isStudio ? previewTimeMs : (frame / currentSong.fps) * 1000 + renderTrimStartMs;
+  const liveFrame = Math.floor((previewTimeMs / 1000) * currentSong.fps);
+  const currentTimeMs = isInteractiveAudio ? previewTimeMs : (frame / currentSong.fps) * 1000 + renderTrimStartMs;
   const effectiveLyricTimeMs = currentTimeMs + (currentSong.lyricOffsetMs ?? 0);
   const lyricsEndMs = currentSong.lyrics[currentSong.lyrics.length - 1]?.endMs ?? 0;
   const fallbackDurationMs = Math.max((currentSong.durationInFrames / currentSong.fps) * 1000, lyricsEndMs);
@@ -437,7 +439,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isStudio || !audioRef.current) {
+    if (!isInteractiveAudio || !audioRef.current) {
       return;
     }
 
@@ -496,10 +498,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         window.cancelAnimationFrame(rafId);
       }
     };
-  }, [currentSong.id, filteredQueue, isPlaying, isStudio, library, repeatMode]);
+  }, [currentSong.id, filteredQueue, isInteractiveAudio, isPlaying, library, repeatMode]);
 
   useEffect(() => {
-    if (!isStudio || !audioRef.current || !isPlaying) {
+    if (!isInteractiveAudio || !audioRef.current || !isPlaying) {
       return;
     }
 
@@ -509,10 +511,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     } else if (repeatMode === "one" && currentTimeMs >= durationMs - 760) {
       triggerCrossfadeRestart();
     }
-  }, [currentTimeMs, durationMs, isPlaying, isStudio, lyricsEndMs, repeatMode]);
+  }, [currentTimeMs, durationMs, isInteractiveAudio, isPlaying, lyricsEndMs, repeatMode]);
 
   useEffect(() => {
-    if (!isStudio || !audioRef.current || typeof window === "undefined") {
+    if (!isInteractiveAudio || !audioRef.current || typeof window === "undefined") {
       return;
     }
 
@@ -572,10 +574,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         energyRafRef.current = null;
       }
     };
-  }, [isPlaying, isStudio]);
+  }, [isInteractiveAudio, isPlaying]);
 
   const togglePlay = async () => {
-    if (!isStudio || !audioRef.current) {
+    if (!isInteractiveAudio || !audioRef.current) {
       setIsPlaying((value) => !value);
       return;
     }
@@ -645,7 +647,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [currentSong.id, filteredQueue, library]);
 
   useEffect(() => {
-    if (!isStudio) {
+    if (!isInteractiveAudio) {
       return;
     }
     setPreviewTimeMs(0);
@@ -658,7 +660,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     if (isPlaying) {
       void audioRef.current.play().catch(() => undefined);
     }
-  }, [currentTrackIndex, isStudio]);
+  }, [currentTrackIndex, isInteractiveAudio]);
 
   return (
     <div
@@ -671,12 +673,12 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         backgroundColor: "#000"
       }}
     >
-      {isStudio && currentSong.audioSrc ? <audio ref={audioRef} src={currentSong.audioSrc} preload="auto" /> : null}
+      {isInteractiveAudio && currentSong.audioSrc ? <audio ref={audioRef} src={currentSong.audioSrc} preload="auto" /> : null}
       <BackgroundLayer kind={currentSong.background.kind} src={currentSong.background.src} color={currentSong.background.color} />
       <AudioReactiveBackground bass={reactiveBass} energy={reactiveEnergy} onset={reactiveOnset} />
       <ReadabilityLayer />
       <EnergyRing
-        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        currentFrame={isInteractiveAudio ? liveFrame : frame}
         bass={reactiveBass}
         mid={reactiveMid}
         energy={reactiveEnergy}
@@ -685,7 +687,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         lineProgress={lineProgress}
       />
       <ParticleOrbit
-        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        currentFrame={isInteractiveAudio ? liveFrame : frame}
         energy={reactiveEnergy}
         high={reactiveHigh}
         beat={reactiveBeat}
@@ -693,7 +695,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       />
       <LyricShockwave lineProgress={lineProgress} onset={reactiveOnset} />
       <SparkleLayer
-        currentFrame={isStudio ? Math.floor((currentTimeMs / 1000) * props.fps) : frame}
+        currentFrame={isInteractiveAudio ? liveFrame : frame}
         high={reactiveHigh}
         beat={reactiveBeat}
         onset={reactiveOnset}
@@ -703,9 +705,9 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         bass={sampledFeature ? reactiveBass : fallbackEnergy * 0.8}
         mid={sampledFeature ? reactiveMid : fallbackEnergy * 0.6}
         high={sampledFeature ? reactiveHigh : fallbackEnergy * 0.36}
-        energy={sampledFeature ? reactiveEnergy : isStudio ? audioEnergy : fallbackEnergy}
+        energy={sampledFeature ? reactiveEnergy : isInteractiveAudio ? audioEnergy : fallbackEnergy}
         onset={sampledFeature ? reactiveOnset : 0}
-        isPlaying={isStudio ? isPlaying : true}
+        isPlaying={isInteractiveAudio ? isPlaying : true}
       />
       <SafePoetryFrame
         nickname={currentSong.poetryFrame?.nickname ?? DEFAULT_NICKNAME}
@@ -745,17 +747,17 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
           lyrics={currentSong.lyrics}
           fps={currentSong.fps}
           currentTimeMs={effectiveLyricTimeMs}
-          onSeek={isStudio ? performSeek : undefined}
+          onSeek={isInteractiveAudio ? performSeek : undefined}
         />
 
         <ProgressBar
           currentTimeMs={currentTimeMs}
           durationMs={durationMs}
-          onSeek={isStudio ? performSeek : undefined}
+          onSeek={isInteractiveAudio ? performSeek : undefined}
         />
 
         <ControlBar
-          isPlaying={isStudio ? isPlaying : true}
+          isPlaying={isInteractiveAudio ? isPlaying : true}
           liked={isCurrentLiked}
           repeatMode={repeatMode}
           canGoPrevious={filteredQueue.length > 1}

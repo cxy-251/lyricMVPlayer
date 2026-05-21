@@ -70,6 +70,7 @@ export type LyricVideoCompositionProps = {
   title: string;
   artist: string;
   audioSrc?: string;
+  interactivePreview?: boolean;
   lyricOffsetMs?: number;
   renderTrimStartMs?: number;
   renderDurationInFrames?: number;

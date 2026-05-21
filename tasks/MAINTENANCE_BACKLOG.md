@@ -9,10 +9,21 @@ Updated: 2026-05-21
   - Problem: the manual-lyrics alignment is much better than before, but the bridge/tail section after `Lost but so found` still starts too early. Continuous filler lines like `Ah` no longer collapse the tail, but they still do not express long instrumental timing accurately enough on their own.
   - Next step: support stronger manual timing hints for difficult songs, preferably manual LRC timestamps or explicit gap markers, instead of relying on filler-word interpolation alone.
 
+- Web deploy bundle size
+  - Status: `observing`
+  - Problem: the new Vite web build works, but all song audio and background assets are currently bundled into the deploy output, which will make Cloudflare deploys grow quickly as the library expands.
+  - Next step: move from fully bundled preview assets toward a manifest + external/static asset serving strategy so the site can scale without enormous JS and asset payloads.
+
 ## Resolved Recently
 
 - Playlist membership toggle
   - Fixed `Add to Playlist` so clicking a playlist now toggles membership for the current song instead of only adding tracks. `Liked Songs` now also toggles on/off from the same panel.
+
+- Web build pipeline
+  - Added a Vite-based web player build with:
+    - `npm run dev:web`
+    - `npm run build:web`
+  - Cloudflare Pages can now use `npm run build:web` with `dist/` as the output directory.
 
 - Preview library loading
   - Replaced the oversized generated `preview-composition-props.ts` approach with a manifest-based structure:

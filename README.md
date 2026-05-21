@@ -48,6 +48,19 @@ Common commands for the frontend preview and render layer:
   Default preview URL:
   `http://localhost:3100/MusicVideo`
 
+- `npm run dev:web`
+  Start the Vite web-player app locally.
+  Default preview URL:
+  `http://127.0.0.1:4173`
+
+- `npm run build:web`
+  Build the deployable static web player into:
+  `dist/`
+  This is the command to use for Cloudflare Pages builds.
+  Recommended Cloudflare Pages settings:
+  - Build command: `npm run build:web`
+  - Build output directory: `dist`
+
 - `npm run use:song -- "<song-folder-name>"`
   Switch the active preview/render song package.
   This updates the Remotion preview entry to read from the selected song directory under:
