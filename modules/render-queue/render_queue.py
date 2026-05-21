@@ -42,6 +42,26 @@ def _has_background_asset(project_root: str, song_dir_name: str) -> bool:
     return False
 
 
+def _resolve_source_url(project_root: str, song_dir_name: str, source_url: str | None) -> str:
+    normalized = (source_url or "").strip()
+    if normalized:
+        return normalized
+    if not song_dir_name:
+        return ""
+    source_json_path = Path(project_root) / "artifacts" / "songs" / song_dir_name / "source.json"
+    if not source_json_path.exists():
+        return ""
+    try:
+        payload = json.loads(source_json_path.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    for key in ("webpage_url", "original_url"):
+        value = str(payload.get(key) or "").strip()
+        if value.startswith(("http://", "https://")):
+            return value
+    return ""
+
+
 def _normalize_background_flag(value: str | None, project_root: str, song_dir_name: str) -> str:
     if value is None or str(value).strip() == "":
         return "true" if _has_background_asset(project_root, song_dir_name) else "false"
@@ -53,6 +73,12 @@ def _normalize_row(raw_row: dict[str, str], project_root: str) -> dict[str, str]
     status = (raw_row.get("video_status") or raw_row.get("视频状态") or "").strip()
     batch = (raw_row.get("render_batch") or raw_row.get("渲染批次") or "").strip()
     source_url = (raw_row.get("source_url") or raw_row.get("来源URL") or "").strip()
+
+    if song_dir_name.lower() in TRUE_VALUES and source_url and not source_url.startswith(("http://", "https://")):
+        song_dir_name, source_url = source_url, ""
+
+    source_url = _resolve_source_url(project_root, song_dir_name, source_url)
+
     has_background = _normalize_background_flag(
         raw_row.get("background_ready") or raw_row.get("是否生产了背景图"),
         project_root,

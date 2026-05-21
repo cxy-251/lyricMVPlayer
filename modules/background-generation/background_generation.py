@@ -8,6 +8,8 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 
 @dataclass(frozen=True)
@@ -609,11 +611,17 @@ def generate_background_for_song(
             "prompt_id": prompt_id,
         }
 
-    imported_background = wait_for_imported_background(
+    imported_background = import_background_from_history_record(
+        history_record=history_record,
         context=context,
-        comfy_output_root=comfy_output_root,
-        timeout_seconds=90,
+        api_url=api_url,
     )
+    if imported_background is None:
+        imported_background = wait_for_imported_background(
+            context=context,
+            comfy_output_root=comfy_output_root,
+            timeout_seconds=90,
+        )
 
     video_render_path = root / "modules" / "video-render" / "video_render.py"
     import importlib.util
@@ -642,13 +650,31 @@ def import_latest_comfy_background(
     comfy_output_root: str | None = None,
 ) -> str | None:
     output_root = Path(comfy_output_root or get_default_comfy_output_root())
-    source_dir = output_root / "lyricMVPlayer" / context.song_base_name
-    if not source_dir.exists():
+    lyric_root = output_root / "lyricMVPlayer"
+    source_dir = lyric_root / context.song_base_name
+    candidate_dirs: list[Path] = []
+    try:
+        if source_dir.exists():
+            candidate_dirs.append(source_dir)
+        else:
+            video_id = context.song_base_name.rsplit(" - ", 1)[-1].strip()
+            if lyric_root.exists() and video_id:
+                candidate_dirs.extend(
+                    sorted(
+                        [path for path in lyric_root.iterdir() if path.is_dir() and path.name.endswith(video_id)],
+                        key=lambda item: item.stat().st_mtime,
+                        reverse=True,
+                    )
+                )
+    except (PermissionError, OSError):
+        return None
+    if not candidate_dirs:
         return None
 
     candidates: list[Path] = []
-    for pattern in ["background*.png", "background*.jpg", "background*.jpeg", "background*.webp"]:
-        candidates.extend(source_dir.glob(pattern))
+    for candidate_dir in candidate_dirs:
+        for pattern in ["background*.png", "background*.jpg", "background*.jpeg", "background*.webp"]:
+            candidates.extend(candidate_dir.glob(pattern))
 
     if not candidates:
         return None
@@ -659,6 +685,80 @@ def import_latest_comfy_background(
     destination = song_dir / f"background{latest.suffix.lower()}"
     shutil.copy2(latest, destination)
     return str(destination)
+
+
+def _extract_history_images(history_record: dict) -> list[dict]:
+    outputs = history_record.get("outputs")
+    if not isinstance(outputs, dict):
+        return []
+    images: list[dict] = []
+    for node_output in outputs.values():
+        if not isinstance(node_output, dict):
+            continue
+        node_images = node_output.get("images")
+        if not isinstance(node_images, list):
+            continue
+        for image in node_images:
+            if isinstance(image, dict) and image.get("filename"):
+                images.append(image)
+    return images
+
+
+def _download_history_image(
+    image_record: dict,
+    destination: Path,
+    api_url: str | None = None,
+) -> str | None:
+    filename = image_record.get("filename")
+    if not filename:
+        return None
+    params = {
+        "filename": str(filename),
+        "type": str(image_record.get("type") or "output"),
+    }
+    subfolder = image_record.get("subfolder")
+    if subfolder:
+        params["subfolder"] = str(subfolder)
+    view_url = f"{api_url or get_default_comfyui_api_url()}/view?{urlencode(params)}"
+    try:
+        with urlopen(view_url, timeout=90) as response:
+            body = response.read()
+    except Exception:
+        return None
+
+    if not body:
+        return None
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_bytes(body)
+    return str(destination)
+
+
+def import_background_from_history_record(
+    history_record: dict,
+    context: BackgroundPromptContext,
+    api_url: str | None = None,
+) -> str | None:
+    images = _extract_history_images(history_record)
+    if not images:
+        return None
+
+    prioritized = sorted(
+        images,
+        key=lambda item: (
+            0 if str(item.get("filename", "")).lower().startswith("background") else 1,
+            str(item.get("filename", "")).lower(),
+        ),
+    )
+    song_dir = Path(context.song_dir)
+    for image in prioritized:
+        filename = str(image.get("filename", ""))
+        suffix = Path(filename).suffix.lower() or ".png"
+        destination = song_dir / f"background{suffix}"
+        imported = _download_history_image(image, destination, api_url=api_url)
+        if imported is not None:
+            return imported
+    return None
 
 
 def wait_for_imported_background(

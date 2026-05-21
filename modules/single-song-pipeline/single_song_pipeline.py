@@ -132,30 +132,21 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
     fallback_result = None
     fallback_error = None
     if lyric_error is not None:
-        if audio_record.audio_path:
-            fallback_result, fallback_error = audio_lyrics_alignment.run_transcription_fallback(
-                audio_path=audio_record.audio_path,
-                song_dir=str(song_dir),
-                project_root=project_root,
-            )
-            if fallback_result is not None:
-                lyric_document = _load_json(Path(fallback_result.lyrics_json_path))
-        if lyric_error is not None and fallback_result is None:
-            result = {
-                "ok": False,
-                "stage": "lyrics",
-                "song_base_name": song_base_name,
-                "song_dir": str(song_dir),
-                "source": {
-                    "source_identity_key": source_ingestion.get_source_identity(record),
-                    "record": _serialize(record),
-                },
-                "audio": _serialize(audio_record),
-                "error": _serialize(lyric_error),
-                "fallback_error": fallback_error,
-            }
-            result["result_path"] = save_pipeline_result(result, project_root)
-            return result
+        result = {
+            "ok": False,
+            "stage": "lyrics",
+            "song_base_name": song_base_name,
+            "song_dir": str(song_dir),
+            "source": {
+                "source_identity_key": source_ingestion.get_source_identity(record),
+                "record": _serialize(record),
+            },
+            "audio": _serialize(audio_record),
+            "error": _serialize(lyric_error),
+            "fallback_error": fallback_error,
+        }
+        result["result_path"] = save_pipeline_result(result, project_root)
+        return result
 
     if hasattr(lyric_document, "lines"):
         timed_lyrics_path.write_text(lyrics.timed_lyrics_to_json(lyric_document), encoding="utf-8")

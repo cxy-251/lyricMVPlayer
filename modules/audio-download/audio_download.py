@@ -72,7 +72,7 @@ def _ensure_dirs(config: AudioDownloadConfig) -> None:
 def _sanitize_name_part(value: str | None, fallback: str) -> str:
     if not value:
         return fallback
-    sanitized = re.sub(r"[\\/:*?\"<>|]", "-", value)
+    sanitized = re.sub(r"[\\/:*?\"<>|,]", "-", value)
     sanitized = re.sub(r"\s+", " ", sanitized).strip()
     return sanitized or fallback
 

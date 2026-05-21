@@ -4,11 +4,12 @@
   "private": true,
   "description": "Automated lyric video production pipeline using Remotion, TypeScript, and generated visuals.",
   "scripts": {
-    "dev": "remotion studio src/remotion/Root.tsx",
+    "dev": "node tools/dev-with-sync.mjs",
     "refresh:cookies": "conda run -n kwai python modules/audio-download/refresh_youtube_cookies.py /Users/cxy251/Code/04AIMedia/lyricMVPlayer",
     "prepare:playlist": "node tools/prepare-playlist.mjs",
     "generate:background:current": "node tools/generate-backgrounds.mjs current",
     "generate:backgrounds": "node tools/generate-backgrounds.mjs queue",
+    "apply:manual-lyrics": "node tools/apply-manual-lyrics.mjs",
     "render:queue": "node tools/render-queued-videos.mjs",
     "use:song": "node tools/select-song-for-preview.mjs",
     "render": "node tools/render-current-song.mjs",

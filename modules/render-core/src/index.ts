@@ -4,6 +4,8 @@ export type {
   BackgroundAsset,
   LyricVideoCompositionProps,
   PoetryFrame,
+  PlaylistSummary,
+  QueueTrack,
   SongLibraryItem,
   TimedLyricLine
 } from "./types";

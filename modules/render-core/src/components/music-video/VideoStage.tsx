@@ -36,6 +36,8 @@ type StoredLibraryState = {
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 const STORAGE_KEY = "lyricMVPlayer.libraryState.v1";
 const DEFAULT_NICKNAME = "CleanKsen";
+const LIBRARY_STATE_SYNC_URL = "http://127.0.0.1:3210/api/library-state";
+const ALL_TRACKS_SENTINEL = "__ALL__";
 
 const formatDisplayTitle = (title: string, artist: string): string => {
   const strippedArtist = title.replace(new RegExp(`^${artist}\\s*-\\s*`, "i"), "");
@@ -59,6 +61,47 @@ const sampleAudioFeature = (
   return audioFeatures.frames[index];
 };
 
+const normalizeTrackIds = (trackIds: unknown, libraryIds: string[]): string[] => {
+  if (trackIds === ALL_TRACKS_SENTINEL) {
+    return libraryIds;
+  }
+
+  if (!Array.isArray(trackIds)) {
+    return [];
+  }
+
+  const libraryIdSet = new Set(libraryIds);
+  return Array.from(
+    new Set(trackIds.filter((trackId): trackId is string => typeof trackId === "string" && libraryIdSet.has(trackId)))
+  );
+};
+
+const buildCustomPlaylists = (
+  basePlaylists: Array<{id: string; name: string; trackIds: string[]}>,
+  libraryIds: string[],
+  persistedPlaylists: unknown
+): Array<{id: string; name: string; trackIds: string[]}> => {
+  const baseMap = new Map(basePlaylists.map((playlist) => [playlist.id, playlist]));
+  const persistedList = Array.isArray(persistedPlaylists)
+    ? persistedPlaylists.filter(
+        (playlist): playlist is {id: string; name: string; trackIds: string[] | "__ALL__"} =>
+          Boolean(playlist && typeof playlist === "object" && "id" in playlist && "name" in playlist)
+      )
+    : [];
+
+  const mergedIds = Array.from(new Set([...basePlaylists.map((playlist) => playlist.id), ...persistedList.map((playlist) => playlist.id)]));
+
+  return mergedIds.map((playlistId) => {
+    const base = baseMap.get(playlistId);
+    const persisted = persistedList.find((playlist) => playlist.id === playlistId);
+    return {
+      id: playlistId,
+      name: persisted?.name ?? base?.name ?? playlistId,
+      trackIds: normalizeTrackIds(persisted?.trackIds ?? base?.trackIds ?? [], libraryIds),
+    };
+  });
+};
+
 export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const frame = useCurrentFrame();
   const env = getRemotionEnvironment();
@@ -73,6 +116,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("list");
   const [previewTimeMs, setPreviewTimeMs] = useState(0);
+  const [loadedAudioDurationMs, setLoadedAudioDurationMs] = useState(0);
   const [audioEnergy, setAudioEnergy] = useState(0.16);
   const [crossfadeOpacity, setCrossfadeOpacity] = useState(0);
   const [playlistDrawerOpen, setPlaylistDrawerOpen] = useState(false);
@@ -186,6 +230,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const [customPlaylists, setCustomPlaylists] = useState<
     Array<{id: string; name: string; trackIds: string[]}>
   >(initialStoredState.customPlaylists);
+  const [libraryStateReady, setLibraryStateReady] = useState(false);
 
   const queue = useMemo<QueueTrack[]>(
     () =>
@@ -220,7 +265,8 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const currentTimeMs = isStudio ? previewTimeMs : (frame / currentSong.fps) * 1000 + renderTrimStartMs;
   const effectiveLyricTimeMs = currentTimeMs + (currentSong.lyricOffsetMs ?? 0);
   const lyricsEndMs = currentSong.lyrics[currentSong.lyrics.length - 1]?.endMs ?? 0;
-  const durationMs = Math.max((currentSong.durationInFrames / currentSong.fps) * 1000, lyricsEndMs);
+  const fallbackDurationMs = Math.max((currentSong.durationInFrames / currentSong.fps) * 1000, lyricsEndMs);
+  const durationMs = Math.max(loadedAudioDurationMs || 0, fallbackDurationMs);
   const activeLine = findActiveLine(currentSong.lyrics, effectiveLyricTimeMs);
   const activeSpan = Math.max(1, activeLine.endMs - activeLine.startMs);
   const lineProgress = clamp((effectiveLyricTimeMs - activeLine.startMs) / activeSpan, 0, 1);
@@ -246,6 +292,64 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [customPlaylists, likedTrackIds.length]);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const hydrateLibraryState = async () => {
+      try {
+        const response = await fetch(LIBRARY_STATE_SYNC_URL);
+        if (!response.ok) {
+          throw new Error(`library-state sync failed: ${response.status}`);
+        }
+
+        const parsed = (await response.json()) as Partial<{
+          likedTrackIds: string[];
+          customPlaylists: Array<{id: string; name: string; trackIds: string[] | "__ALL__"}>;
+          selectedPlaylistId: string | null;
+        }>;
+
+        if (cancelled) {
+          return;
+        }
+
+        const libraryIds = initialLibrary.map((item) => item.id);
+        const nextCustomPlaylists = buildCustomPlaylists(initialCustomPlaylists, libraryIds, parsed.customPlaylists);
+        const playlistIds = new Set(nextCustomPlaylists.map((playlist) => playlist.id));
+        const nextSelectedPlaylistId =
+          typeof parsed.selectedPlaylistId === "string" &&
+          (parsed.selectedPlaylistId === "all" ||
+            parsed.selectedPlaylistId === "liked" ||
+            playlistIds.has(parsed.selectedPlaylistId))
+            ? parsed.selectedPlaylistId
+            : "all";
+
+        setLikedTrackIds(
+          Array.isArray(parsed.likedTrackIds)
+            ? Array.from(new Set(parsed.likedTrackIds.filter((trackId) => libraryIds.includes(trackId))))
+            : []
+        );
+        setCustomPlaylists(nextCustomPlaylists);
+        setSelectedPlaylistId(nextSelectedPlaylistId);
+      } catch {
+        // fall back to localStorage/default seed state
+      } finally {
+        if (!cancelled) {
+          setLibraryStateReady(true);
+        }
+      }
+    };
+
+    void hydrateLibraryState();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialCustomPlaylists, initialLibrary]);
+
+  useEffect(() => {
+    if (!libraryStateReady || typeof window === "undefined") {
+      return;
+    }
+
     if (typeof window === "undefined") {
       return;
     }
@@ -256,7 +360,34 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       selectedPlaylistId,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [customPlaylists, likedTrackIds, selectedPlaylistId]);
+
+    const libraryIds = initialLibrary.map((item) => item.id);
+    const syncPayload = {
+      nickname: DEFAULT_NICKNAME,
+      likedTrackIds,
+      selectedPlaylistId,
+      customPlaylists: customPlaylists.map((playlist) => {
+        const coversAllSongs =
+          playlist.id === "night-drive" &&
+          playlist.trackIds.length === libraryIds.length &&
+          libraryIds.every((trackId) => playlist.trackIds.includes(trackId));
+
+        return {
+          id: playlist.id,
+          name: playlist.name,
+          trackIds: coversAllSongs ? ALL_TRACKS_SENTINEL : playlist.trackIds,
+        };
+      }),
+    };
+
+    void fetch(LIBRARY_STATE_SYNC_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(syncPayload),
+    }).catch(() => undefined);
+  }, [customPlaylists, initialLibrary, libraryStateReady, likedTrackIds, selectedPlaylistId]);
 
   const performSeek = (targetMs: number) => {
     const nextMs = clamp(targetMs, 0, durationMs);
@@ -300,6 +431,12 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     const audio = audioRef.current;
     let rafId = 0;
 
+    const syncDuration = () => {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        setLoadedAudioDurationMs(audio.duration * 1000);
+      }
+    };
+
     const tick = () => {
       setPreviewTimeMs(audio.currentTime * 1000);
       if (isPlaying) {
@@ -309,27 +446,44 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
 
     const onEnded = () => {
       setIsPlaying(false);
-      if (repeatMode === "one" || repeatMode === "list") {
-        if (repeatMode === "list" && queue.length > 1) {
-          setCurrentTrackIndex((value) => (value + 1) % queue.length);
-        }
+      if (repeatMode === "one") {
         triggerCrossfadeRestart();
         setIsPlaying(true);
+        return;
+      }
+      if (repeatMode === "list" && filteredQueue.length > 0) {
+        if (filteredQueue.length === 1) {
+          triggerCrossfadeRestart();
+          setIsPlaying(true);
+          return;
+        }
+        const activeIndex = filteredQueue.findIndex((track) => track.id === currentSong.id);
+        const nextTrack = filteredQueue[(activeIndex + 1) % filteredQueue.length];
+        const nextLibraryIndex = library.findIndex((item) => item.id === nextTrack.id);
+        if (nextLibraryIndex >= 0) {
+          setCurrentTrackIndex(nextLibraryIndex);
+          setIsPlaying(true);
+        }
       }
     };
 
+    audio.addEventListener("loadedmetadata", syncDuration);
+    audio.addEventListener("durationchange", syncDuration);
     audio.addEventListener("ended", onEnded);
     if (isPlaying) {
       rafId = window.requestAnimationFrame(tick);
     }
+    syncDuration();
 
     return () => {
+      audio.removeEventListener("loadedmetadata", syncDuration);
+      audio.removeEventListener("durationchange", syncDuration);
       audio.removeEventListener("ended", onEnded);
       if (rafId) {
         window.cancelAnimationFrame(rafId);
       }
     };
-  }, [isPlaying, isStudio, queue.length, repeatMode]);
+  }, [currentSong.id, filteredQueue, isPlaying, isStudio, library, repeatMode]);
 
   useEffect(() => {
     if (!isStudio || !audioRef.current || !isPlaying) {
@@ -337,12 +491,12 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     }
 
     const tailMs = durationMs - lyricsEndMs;
-    if (tailMs > 2200 && currentTimeMs >= lyricsEndMs + 240) {
+    if (repeatMode === "one" && tailMs > 2200 && currentTimeMs >= lyricsEndMs + 240) {
       triggerCrossfadeRestart();
-    } else if (currentTimeMs >= durationMs - 760) {
+    } else if (repeatMode === "one" && currentTimeMs >= durationMs - 760) {
       triggerCrossfadeRestart();
     }
-  }, [currentTimeMs, durationMs, isPlaying, isStudio, lyricsEndMs]);
+  }, [currentTimeMs, durationMs, isPlaying, isStudio, lyricsEndMs, repeatMode]);
 
   useEffect(() => {
     if (!isStudio || !audioRef.current || typeof window === "undefined") {
@@ -482,6 +636,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       return;
     }
     setPreviewTimeMs(0);
+    setLoadedAudioDurationMs(0);
     if (!audioRef.current) {
       return;
     }
@@ -490,7 +645,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     if (isPlaying) {
       void audioRef.current.play().catch(() => undefined);
     }
-  }, [currentTrackIndex, isPlaying, isStudio]);
+  }, [currentTrackIndex, isStudio]);
 
   return (
     <div
@@ -637,7 +792,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
 
         <AddToPlaylistPanel
           open={addToPlaylistOpen}
-          playlists={playlists}
+          playlists={playlists.filter((playlist) => playlist.id !== "all")}
           selectedPlaylistId={selectedPlaylistId}
           onClose={() => setAddToPlaylistOpen(false)}
           onSelectPlaylist={(playlistId) => {

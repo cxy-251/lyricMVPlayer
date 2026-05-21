@@ -79,6 +79,9 @@ class ParsedLyricEntry:
     reference_end_ms: int | None = None
 
 
+_FILLER_TOKENS = {"ah", "oh", "ooh", "la", "na", "da", "dum", "woah", "whoa"}
+
+
 def _normalize_text(value: str) -> str:
     value = value.lower().strip()
     value = re.sub(r"\[[^\]]+\]", "", value)
@@ -140,6 +143,15 @@ def _tokenize_normalized_text(value: str) -> list[str]:
     if not normalized:
         return []
     return normalized.split()
+
+
+def _is_filler_lyric_entry(lyric_entry: ParsedLyricEntry) -> bool:
+    tokens = _tokenize_normalized_text(lyric_entry.text)
+    if not tokens:
+        return False
+    if len(tokens) > 8:
+        return False
+    return set(tokens).issubset(_FILLER_TOKENS)
 
 
 def _score_candidate_tokens(lyric_tokens: list[str], candidate_tokens: list[str]) -> float:
@@ -330,6 +342,8 @@ def _align_lines_to_words(
 
     for lyric_entry in lyric_entries:
         lyric_line = lyric_entry.text
+        if _is_filler_lyric_entry(lyric_entry):
+            continue
         lyric_tokens = _tokenize_normalized_text(lyric_line)
         if not lyric_tokens:
             continue
@@ -432,7 +446,7 @@ def _find_best_segment_window(
     search_start: int,
     previous_reference_ms: int | None,
     previous_aligned_start_ms: int | None,
-) -> tuple[int, int] | None:
+) -> tuple[int, int, float] | None:
     lyric_line = lyric_entry.text
     normalized_lyric = _normalize_text(lyric_line)
     if not normalized_lyric:
@@ -468,11 +482,234 @@ def _find_best_segment_window(
         return None
 
     score, start_index, end_index = best_match
-    if score < 0.28:
-        start_index = min(search_start, len(transcript_segments) - 1)
-        end_index = start_index
+    return start_index, end_index, score
 
-    return start_index, end_index
+
+def _estimated_line_weight(lyric_entry: ParsedLyricEntry) -> float:
+    tokens = _tokenize_normalized_text(lyric_entry.text)
+    if not tokens:
+        return 1.0
+    return max(1.0, float(len(tokens)))
+
+
+def _interpolate_missing_lines(
+    lyric_entries: list[ParsedLyricEntry],
+    partial_lines: list[AlignedLyricLine | None],
+    transcript_segments: list[TranscriptSegment],
+) -> list[AlignedLyricLine]:
+    anchor_indices = [index for index, line in enumerate(partial_lines) if line is not None]
+    if not anchor_indices:
+        return []
+
+    transcript_end_ms = transcript_segments[-1].end_ms if transcript_segments else 0
+    resolved = list(partial_lines)
+
+    def fill_span(span_start: int, span_end: int, window_start_ms: int, window_end_ms: int) -> None:
+        missing_entries = lyric_entries[span_start:span_end]
+        if not missing_entries:
+            return
+        weights = [_estimated_line_weight(entry) for entry in missing_entries]
+        total_weight = sum(weights) or float(len(weights))
+        window_start_ms = max(0, int(window_start_ms))
+        window_end_ms = max(window_start_ms + len(missing_entries) * 320, int(window_end_ms))
+        cursor = window_start_ms
+
+        for offset, entry in enumerate(missing_entries):
+            remaining_window = window_end_ms - cursor
+            remaining_weights = sum(weights[offset:]) or weights[offset]
+            duration_ms = int(round(remaining_window * (weights[offset] / remaining_weights)))
+            if _is_filler_lyric_entry(entry):
+                min_duration_ms = 1800
+            else:
+                min_duration_ms = max(900, min(2600, int(round(weights[offset] * 520))))
+            if offset == len(missing_entries) - 1:
+                end_ms = window_end_ms
+            else:
+                end_ms = min(window_end_ms, max(cursor + min_duration_ms, cursor + duration_ms))
+            resolved_index = span_start + offset
+            resolved[resolved_index] = AlignedLyricLine(
+                text=entry.text,
+                start_ms=cursor,
+                end_ms=max(cursor + 320, end_ms),
+            )
+            cursor = max(cursor + 320, end_ms)
+
+    first_anchor_index = anchor_indices[0]
+    first_anchor = resolved[first_anchor_index]
+    if first_anchor_index > 0 and first_anchor is not None:
+        estimated_total_ms = sum(_estimate_reference_duration_ms(entry) for entry in lyric_entries[:first_anchor_index])
+        fill_span(
+            0,
+            first_anchor_index,
+            max(0, first_anchor.start_ms - estimated_total_ms),
+            first_anchor.start_ms,
+        )
+
+    for left_anchor_index, right_anchor_index in zip(anchor_indices, anchor_indices[1:]):
+        left_anchor = resolved[left_anchor_index]
+        right_anchor = resolved[right_anchor_index]
+        if left_anchor is None or right_anchor is None:
+            continue
+        if right_anchor_index - left_anchor_index <= 1:
+            continue
+        fill_span(
+            left_anchor_index + 1,
+            right_anchor_index,
+            left_anchor.end_ms,
+            max(left_anchor.end_ms + 600, right_anchor.start_ms),
+        )
+
+    last_anchor_index = anchor_indices[-1]
+    last_anchor = resolved[last_anchor_index]
+    if last_anchor is not None and last_anchor_index < len(lyric_entries) - 1:
+        estimated_total_ms = sum(
+            _estimate_reference_duration_ms(entry) for entry in lyric_entries[last_anchor_index + 1 :]
+        )
+        fill_span(
+            last_anchor_index + 1,
+            len(lyric_entries),
+            last_anchor.end_ms,
+            max(transcript_end_ms, last_anchor.end_ms + estimated_total_ms),
+        )
+
+    return [line for line in resolved if line is not None]
+
+
+def _stabilize_aligned_lines(
+    lyric_entries: list[ParsedLyricEntry],
+    aligned_lines: list[AlignedLyricLine],
+    transcript_end_ms: int,
+) -> list[AlignedLyricLine]:
+    if not aligned_lines:
+        return []
+
+    stabilized: list[AlignedLyricLine] = []
+    previous_end_ms = 0
+
+    for index, line in enumerate(aligned_lines):
+        lyric_entry = lyric_entries[min(index, len(lyric_entries) - 1)]
+        estimated_duration_ms = max(700, min(4200, _estimate_reference_duration_ms(lyric_entry)))
+        current_duration_ms = max(320, line.end_ms - line.start_ms)
+        duration_ms = min(current_duration_ms, max(estimated_duration_ms * 2, 1800))
+        start_ms = max(previous_end_ms, line.start_ms)
+
+        next_hint_ms = transcript_end_ms
+        for next_index in range(index + 1, len(aligned_lines)):
+            candidate_start_ms = aligned_lines[next_index].start_ms
+            if candidate_start_ms > start_ms:
+                next_hint_ms = candidate_start_ms
+                break
+
+        if next_hint_ms > start_ms:
+            duration_ms = min(duration_ms, max(320, next_hint_ms - start_ms))
+
+        end_ms = max(start_ms + 320, start_ms + duration_ms)
+        stabilized.append(
+            AlignedLyricLine(
+                text=line.text,
+                start_ms=start_ms,
+                end_ms=end_ms,
+            )
+        )
+        previous_end_ms = end_ms
+
+    return stabilized
+
+
+def _redistribute_tail_from_index(
+    lyric_entries: list[ParsedLyricEntry],
+    aligned_lines: list[AlignedLyricLine],
+    transcript_end_ms: int,
+    start_index: int,
+    stop_index: int | None = None,
+) -> list[AlignedLyricLine]:
+    if start_index <= 0 or start_index >= len(aligned_lines):
+        return aligned_lines
+    if stop_index is not None and stop_index <= start_index:
+        return aligned_lines
+
+    repaired = list(aligned_lines[:start_index])
+    cursor = repaired[-1].end_ms
+    tail_entries = lyric_entries[start_index:stop_index]
+    if not tail_entries:
+        return aligned_lines
+
+    weights = [_estimated_line_weight(entry) for entry in tail_entries]
+    total_weight = sum(weights) or float(len(weights))
+    if stop_index is not None and stop_index < len(aligned_lines):
+        window_end_ms = max(cursor + len(tail_entries) * 900, aligned_lines[stop_index].start_ms)
+    else:
+        window_end_ms = max(cursor + len(tail_entries) * 900, transcript_end_ms)
+
+    for offset, entry in enumerate(tail_entries):
+        remaining_window = window_end_ms - cursor
+        remaining_weights = sum(weights[offset:]) or weights[offset]
+        duration_ms = int(round(remaining_window * (weights[offset] / remaining_weights)))
+        min_duration_ms = 820 if _is_filler_lyric_entry(entry) else 1500
+        if offset == len(tail_entries) - 1:
+            end_ms = window_end_ms
+        else:
+            end_ms = min(window_end_ms, max(cursor + min_duration_ms, cursor + duration_ms))
+        repaired.append(
+            AlignedLyricLine(
+                text=entry.text,
+                start_ms=cursor,
+                end_ms=max(cursor + min_duration_ms, end_ms),
+            )
+        )
+        cursor = repaired[-1].end_ms
+
+    if stop_index is not None:
+        repaired.extend(aligned_lines[stop_index:])
+
+    return repaired
+
+
+def _find_tail_anchor_cluster_start(
+    aligned_lines: list[AlignedLyricLine],
+    start_index: int,
+) -> int | None:
+    if len(aligned_lines) - start_index < 6:
+        return None
+
+    for candidate_start in range(len(aligned_lines) - 4, start_index + 2, -1):
+        cluster = aligned_lines[candidate_start:]
+        if len(cluster) < 4:
+            continue
+        gaps = [
+            cluster[index].start_ms - cluster[index - 1].end_ms
+            for index in range(1, len(cluster))
+        ]
+        if not gaps:
+            continue
+        if all(0 <= gap <= 12000 for gap in gaps):
+            return candidate_start
+
+    return None
+
+
+def _repair_large_tail_gap_for_plain_lyrics(
+    lyric_entries: list[ParsedLyricEntry],
+    aligned_lines: list[AlignedLyricLine],
+    transcript_end_ms: int,
+) -> list[AlignedLyricLine]:
+    if len(aligned_lines) < 8:
+        return aligned_lines
+
+    for index in range(1, len(aligned_lines)):
+        gap_ms = aligned_lines[index].start_ms - aligned_lines[index - 1].end_ms
+        remaining_lines = len(aligned_lines) - index
+        if gap_ms >= 45000 and remaining_lines >= 8:
+            tail_anchor_start = _find_tail_anchor_cluster_start(aligned_lines, index)
+            return _redistribute_tail_from_index(
+                lyric_entries=lyric_entries,
+                aligned_lines=aligned_lines,
+                transcript_end_ms=transcript_end_ms,
+                start_index=index,
+                stop_index=tail_anchor_start,
+            )
+
+    return aligned_lines
 
 
 def align_lyrics(
@@ -503,18 +740,25 @@ def align_lyrics(
     transcript_segments, transcript_words = transcript_payload
     aligned_lines = _align_lines_to_words(lyric_entries, transcript_words)
     if len(aligned_lines) < len(lyric_entries):
-        aligned_by_text: dict[str, list[AlignedLyricLine]] = defaultdict(list)
-        for line in aligned_lines:
-            aligned_by_text[line.text].append(line)
-        stitched_lines: list[AlignedLyricLine] = []
+        stitched_lines: list[AlignedLyricLine | None] = []
         segment_cursor = 0
         previous_reference_ms: int | None = None
         previous_aligned_start_ms: int | None = None
+        aligned_cursor = 0
 
         for lyric_entry in lyric_entries:
             lyric_line = lyric_entry.text
-            existing_bucket = aligned_by_text.get(lyric_line, [])
-            existing = existing_bucket.pop(0) if existing_bucket else None
+            existing = None
+            normalized_lyric_line = _normalize_text(lyric_line)
+            search_cursor = aligned_cursor
+            while search_cursor < len(aligned_lines):
+                candidate = aligned_lines[search_cursor]
+                candidate_text = _normalize_text(candidate.text)
+                if candidate_text == normalized_lyric_line:
+                    existing = candidate
+                    aligned_cursor = search_cursor + 1
+                    break
+                search_cursor += 1
             if existing is not None:
                 stitched_lines.append(existing)
                 for index, segment in enumerate(transcript_segments):
@@ -525,6 +769,14 @@ def align_lyrics(
                 previous_aligned_start_ms = existing.start_ms
                 continue
 
+            if lyric_entry.reference_start_ms is None:
+                stitched_lines.append(None)
+                continue
+
+            if _is_filler_lyric_entry(lyric_entry):
+                stitched_lines.append(None)
+                continue
+
             window = _find_best_segment_window(
                 lyric_entry,
                 transcript_segments,
@@ -533,8 +785,12 @@ def align_lyrics(
                 previous_aligned_start_ms,
             )
             if window is None:
+                stitched_lines.append(None)
                 continue
-            start_index, end_index = window
+            start_index, end_index, score = window
+            if score < 0.28 and lyric_entry.reference_start_ms is None:
+                stitched_lines.append(None)
+                continue
             stitched_lines.append(
                 AlignedLyricLine(
                     text=lyric_line,
@@ -546,7 +802,7 @@ def align_lyrics(
             previous_reference_ms = lyric_entry.reference_start_ms
             previous_aligned_start_ms = transcript_segments[start_index].start_ms
 
-        aligned_lines = stitched_lines
+        aligned_lines = _interpolate_missing_lines(lyric_entries, stitched_lines, transcript_segments)
 
     if len(aligned_lines) < max(1, len(lyric_entries) // 2):
         aligned_lines = _align_lines_to_segments([entry.text for entry in lyric_entries], transcript_segments)
@@ -554,6 +810,17 @@ def align_lyrics(
         return None, LyricsAlignmentError(
             code="alignment-empty",
             message="Transcript was produced but no lyric lines could be aligned.",
+        )
+    aligned_lines = _stabilize_aligned_lines(
+        lyric_entries,
+        aligned_lines,
+        transcript_segments[-1].end_ms if transcript_segments else aligned_lines[-1].end_ms,
+    )
+    if input_data.lyrics_format == "plain":
+        aligned_lines = _repair_large_tail_gap_for_plain_lyrics(
+            lyric_entries,
+            aligned_lines,
+            transcript_segments[-1].end_ms if transcript_segments else aligned_lines[-1].end_ms,
         )
 
     return (

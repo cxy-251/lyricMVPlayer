@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+import math
 import re
+import struct
 import subprocess
+import wave
 from dataclasses import asdict, dataclass
 from statistics import median
 from pathlib import Path
@@ -162,6 +165,89 @@ def _load_preferred_lyrics(song_path: Path) -> tuple[dict, int]:
     return aligned_lyrics, 0
 
 
+def _estimate_vocal_start_ms_from_wav(vocals_path: Path) -> int:
+    if not vocals_path.exists():
+        return 0
+
+    try:
+        with wave.open(str(vocals_path), "rb") as wav_file:
+            channels = wav_file.getnchannels()
+            sample_width = wav_file.getsampwidth()
+            frame_rate = wav_file.getframerate()
+            frame_count = wav_file.getnframes()
+            raw = wav_file.readframes(frame_count)
+    except Exception:
+        return 0
+
+    if sample_width not in (1, 2, 4):
+        return 0
+
+    fmt = {1: "b", 2: "h", 4: "i"}[sample_width]
+    try:
+        values = struct.unpack("<" + fmt * (len(raw) // sample_width), raw)
+    except Exception:
+        return 0
+
+    if channels > 1:
+        mono = [
+            sum(values[index : index + channels]) / channels
+            for index in range(0, len(values), channels)
+        ]
+    else:
+        mono = values
+
+    max_value = float(2 ** (8 * sample_width - 1))
+    window_samples = max(1, int(frame_rate * 0.02))
+    smoothed_values: list[float] = []
+    smoothed_rms = 0.0
+
+    for start in range(0, len(mono), window_samples):
+        chunk = mono[start : start + window_samples]
+        if not chunk:
+            break
+        rms = math.sqrt(sum((sample / max_value) ** 2 for sample in chunk) / len(chunk))
+        smoothed_rms = smoothed_rms * 0.85 + rms * 0.15
+        smoothed_values.append(smoothed_rms)
+
+    if not smoothed_values:
+        return 0
+
+    sorted_values = sorted(smoothed_values)
+    noise_floor = sorted_values[int((len(sorted_values) - 1) * 0.2)]
+    high_band = sorted_values[int((len(sorted_values) - 1) * 0.9)]
+    threshold = max(0.018, noise_floor + (high_band - noise_floor) * 0.22)
+    min_windows = max(1, math.ceil(0.24 / 0.02))
+
+    active_count = 0
+    for index, value in enumerate(smoothed_values):
+        if value >= threshold:
+            active_count += 1
+            if active_count >= min_windows:
+                return int((index - active_count + 1) * 20)
+        else:
+            active_count = 0
+
+    return 0
+
+
+def _estimate_manual_lyric_offset_ms(song_path: Path, lyrics_data: dict) -> int:
+    if str(lyrics_data.get("source", "")) != "manual-lyrics-alignment":
+        return 0
+
+    lyric_lines = _extract_lyric_lines(lyrics_data)
+    if not lyric_lines:
+        return 0
+
+    detected_vocal_start_ms = _estimate_vocal_start_ms_from_wav(song_path / "separated" / "vocals.wav")
+    if detected_vocal_start_ms <= 0:
+        return 0
+
+    offset_ms = lyric_lines[0].startMs - detected_vocal_start_ms
+    if abs(offset_ms) > 15_000:
+        return 0
+    return offset_ms
+
+
 def _extract_lyric_lines(lyrics_data: dict) -> list[RenderTimedLyricLine]:
     normalized_lines: list[RenderTimedLyricLine] = []
     for line in lyrics_data.get("lines", []):
@@ -240,6 +326,7 @@ def build_render_job_input(song_dir: str, fps: int = 30) -> RenderJobInput:
     title = source_data.get("title") or song_path.name
     artist = source_data.get("channel") or source_data.get("uploader") or "unknown-artist"
     lyric_lines = _extract_lyric_lines(lyrics_data)
+    lyric_offset_ms = lyric_offset_ms or _estimate_manual_lyric_offset_ms(song_path, lyrics_data)
     audio_duration_ms = _probe_audio_duration_ms(audio_path)
 
     last_end_ms = max((line.endMs for line in lyric_lines), default=0)

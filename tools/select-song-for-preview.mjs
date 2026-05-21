@@ -23,14 +23,46 @@ if (!fs.existsSync(selectedSongDirPath) || !fs.statSync(selectedSongDirPath).isD
 
 const selectedSongDirName = path.basename(selectedSongDirPath);
 
+const parseCsvLine = (line) => {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const next = line[index + 1];
+
+    if (char === "\"") {
+      if (inQuotes && next === "\"") {
+        current += "\"";
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      values.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current);
+  return values;
+};
+
 const parseCsv = (csvText) => {
   const lines = csvText.trim().split(/\r?\n/);
   if (lines.length <= 1) {
     return [];
   }
-  const headers = lines[0].split(",");
+  const headers = parseCsvLine(lines[0]);
   return lines.slice(1).map((line) => {
-    const values = line.split(",");
+    const values = parseCsvLine(line);
     return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
   });
 };
@@ -48,7 +80,10 @@ const uniqueSongDirNames = Array.from(
     selectedSongDirName,
     ...queueRows.map((row) => row.song_dir).filter(Boolean),
   ])
-);
+).filter((songDirName) => {
+  const songDirPath = path.join(songsRoot, songDirName);
+  return fs.existsSync(songDirPath) && fs.statSync(songDirPath).isDirectory();
+});
 
 const supportedBackgrounds = ["background.png", "background.jpg", "background.jpeg", "background.webp"];
 
@@ -86,9 +121,8 @@ const buildSongEntry = (songDirName, index) => {
     featuresImport,
     audioImport,
     backgroundImport,
-    backgroundSrcExpression: backgroundFileName
-      ? `rawRenderInput${index}.background.kind === "image" ? backgroundSrc${index} : undefined`
-      : "undefined",
+    backgroundExists: Boolean(backgroundFileName),
+    backgroundSrcExpression: backgroundFileName ? `backgroundSrc${index}` : "undefined",
     renderVar: `rawRenderInput${index}`,
     featuresVar: `rawAudioFeatures${index}`,
     audioVar: `audioSrc${index}`,
@@ -118,10 +152,10 @@ const libraryItemsSource = songEntries
     durationInFrames: input${entry.renderVar.replace("rawRenderInput", "")}.durationInFrames,
     fps: input${entry.renderVar.replace("rawRenderInput", "")}.fps,
     background: {
-      kind: (input${entry.renderVar.replace("rawRenderInput", "")}.background.kind ?? "color") as "image" | "video" | "color",
+      kind: ${entry.backgroundExists ? `"image"` : `(input${entry.renderVar.replace("rawRenderInput", "")}.background.kind ?? "color") as "image" | "video" | "color"`},
       src: ${entry.backgroundSrcExpression},
       color: input${entry.renderVar.replace("rawRenderInput", "")}.background.color ?? "#101828"
-    },
+    } as import("../../modules/render-core/src").BackgroundAsset,
     poetryFrame: input${entry.renderVar.replace("rawRenderInput", "")}.poetryFrame
       ? {
           nickname: input${entry.renderVar.replace("rawRenderInput", "")}.poetryFrame.nickname ?? "CleanKsen",
@@ -211,11 +245,11 @@ const normalizeLyrics = (lyrics: RawTimedLyricLine[]): TimedLyricLine[] => {
 
 ${typedRenderInputsSource}
 
-const library = [
+const library: import("../../modules/render-core/src").SongLibraryItem[] = [
 ${libraryItemsSource}
 ];
 
-const queue = [
+const queue: import("../../modules/render-core/src").QueueTrack[] = [
 ${queueSource}
 ];
 

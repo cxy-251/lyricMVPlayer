@@ -57,6 +57,8 @@ Common commands for the frontend preview and render layer:
   This file is the project-level seed for playlist definitions and the default nickname.
   If you want to add, rename, or reorder playlists, edit this file directly.
   The preview player no longer provides create/delete playlist UI.
+  The fixed playlist `New Downloads` is also maintained automatically:
+  each time `prepare:playlist` succeeds, newly prepared songs are appended to that playlist so you can review and later remove them manually.
 
 - `npm run prepare:playlist -- "<playlist-url>" [default-render-batch]`
   Run the playlist preparation pipeline.
@@ -70,6 +72,7 @@ Common commands for the frontend preview and render layer:
   - `background_ready`
   - `song_dir`
   - `source_url`
+  Song resource directory names normalize filesystem-sensitive characters and also replace commas with `-` to avoid queue parsing issues.
 
 - `npm run refresh:cookies`
   Try to export reusable YouTube browser cookies into:
@@ -85,6 +88,9 @@ Common commands for the frontend preview and render layer:
   This command uses the local ComfyUI API on:
   `http://127.0.0.1:8000`
   If the API is unavailable, the command still refreshes each song's prompt / poetry / workflow files but will stop before image generation.
+
+- `npm run apply:manual-lyrics -- "<song-folder-name>"`
+  If a song folder contains `lyrics.manual.txt`, use that file as the preferred lyric source, realign it against the song audio, overwrite `lyrics.json`, refresh `alignedLRC.json`, regenerate background prompt / poetry / workflow assets, and refresh `render-input.json`.
 
 - `npm run render:queue -- [batch-value]`
   Read `artifacts/common/production-queue.csv` and render only rows where:
