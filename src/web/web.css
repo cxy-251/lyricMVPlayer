@@ -24,3 +24,18 @@
   width: 100%;
   height: 100%;
 }
+
+.web-status {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: center;
+  font-family: "Times New Roman", serif;
+  font-size: 24px;
+  line-height: 1.5;
+  background: radial-gradient(circle at center, rgba(38, 59, 109, 0.25), rgba(0, 0, 0, 0.9));
+}

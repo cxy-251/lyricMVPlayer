@@ -5,8 +5,8 @@
   "description": "Automated lyric video production pipeline using Remotion, TypeScript, and generated visuals.",
   "scripts": {
     "dev": "node tools/dev-with-sync.mjs",
-    "dev:web": "vite",
-    "build:web": "vite build",
+    "dev:web": "node tools/build-web-public.mjs && vite",
+    "build:web": "node tools/build-web-public.mjs && vite build",
     "refresh:cookies": "conda run -n kwai python modules/audio-download/refresh_youtube_cookies.py /Users/cxy251/Code/04AIMedia/lyricMVPlayer",
     "prepare:playlist": "node tools/prepare-playlist.mjs",
     "generate:background:current": "node tools/generate-backgrounds.mjs current",

@@ -52,10 +52,14 @@ Common commands for the frontend preview and render layer:
   Start the Vite web-player app locally.
   Default preview URL:
   `http://127.0.0.1:4173`
+  This command first prepares deployable static song assets under:
+  `public-web/`
 
 - `npm run build:web`
   Build the deployable static web player into:
   `dist/`
+  This command first prepares deployable static song assets under:
+  `public-web/`
   This is the command to use for Cloudflare Pages builds.
   Recommended Cloudflare Pages settings:
   - Build command: `npm run build:web`

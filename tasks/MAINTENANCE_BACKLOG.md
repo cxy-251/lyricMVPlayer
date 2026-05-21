@@ -10,9 +10,9 @@ Updated: 2026-05-21
   - Next step: support stronger manual timing hints for difficult songs, preferably manual LRC timestamps or explicit gap markers, instead of relying on filler-word interpolation alone.
 
 - Web deploy bundle size
-  - Status: `observing`
-  - Problem: the new Vite web build works, but all song audio and background assets are currently bundled into the deploy output, which will make Cloudflare deploys grow quickly as the library expands.
-  - Next step: move from fully bundled preview assets toward a manifest + external/static asset serving strategy so the site can scale without enormous JS and asset payloads.
+  - Status: `improving`
+  - Problem: the original Vite web build bundled the entire preview library into a 42 MiB JS chunk, which exceeded Cloudflare Pages' 25 MiB per-file limit.
+  - Next step: continue slimming the runtime asset strategy after switching the web app to fetch a generated static manifest and per-song JSON/audio/background files from `public-web/`.
 
 ## Resolved Recently
 
