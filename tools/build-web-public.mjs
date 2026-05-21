@@ -72,7 +72,15 @@ const currentSongConfig = fs.existsSync(currentSongConfigPath)
 
 const libraryState = fs.existsSync(libraryStatePath)
   ? JSON.parse(fs.readFileSync(libraryStatePath, "utf-8"))
-  : {nickname: "CleanKsen", selectedPlaylistId: "all", likedTrackIds: [], customPlaylists: []};
+  : {
+      nickname: "CleanKsen",
+      selectedPlaylistId: "new-downloads",
+      likedTrackIds: [],
+      customPlaylists: [
+        {id: "new-downloads", name: "New Downloads", trackIds: []},
+        {id: "alignment-error", name: "Alignment Error", trackIds: []},
+      ],
+    };
 
 const queueRows = fs.existsSync(queueCsvPath)
   ? parseCsv(fs.readFileSync(queueCsvPath, "utf-8")).filter((row) => row.song_dir)
@@ -147,7 +155,7 @@ for (const songDirName of songDirNames) {
 
 const manifest = {
   nickname: libraryState.nickname ?? "CleanKsen",
-  selectedPlaylistId: libraryState.selectedPlaylistId ?? "all",
+  selectedPlaylistId: libraryState.selectedPlaylistId ?? "new-downloads",
   currentSongDirName: currentSongConfig.songDirName || songs[0]?.id || "",
   likedTrackIds: Array.isArray(libraryState.likedTrackIds) ? libraryState.likedTrackIds : [],
   customPlaylists: Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [],

@@ -34,6 +34,16 @@ Updated: 2026-05-21
 
 ## Resolved Recently
 
+- Library-state default playlists
+  - Removed the hardcoded fallback playlists `Night Drive`, `City Echoes`, `Neon Pulse`, `Soft Pages`, and `Afterglow`.
+  - The app now only seeds custom playlists with:
+    - `new-downloads`
+    - `alignment-error`
+  - System playlists remain:
+    - `All Songs`
+    - `Liked Songs`
+  - Default `selectedPlaylistId` is now `new-downloads`.
+
 - Playlist membership toggle
   - Fixed `Add to Playlist` so clicking a playlist now toggles membership for the current song instead of only adding tracks. `Liked Songs` now also toggles on/off from the same panel.
 

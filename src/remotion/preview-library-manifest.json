@@ -7387,6 +7387,2849 @@
           "text": "Yeah, it's a party in the USA"
         }
       ]
+    },
+    {
+      "id": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
+      "title": "We Don't Talk Anymore (feat. Selena Gomez)",
+      "artist": "Charlie Puth",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 6531,
+      "durationInFrames": 6531,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE ECHO OF WHAT ONCE WAS IS A SILENT HAUNTING.",
+        "rightVertical": "A GHOST OF MEMORY WHERE WORDS USED TO DANCE.",
+        "bottomLine": "JUST THE AFTERGLOW OF US"
+      },
+      "lyrics": [
+        {
+          "startMs": 300,
+          "endMs": 4240,
+          "text": "We don't talk anymore, we don't talk anymore"
+        },
+        {
+          "startMs": 5040,
+          "endMs": 9360,
+          "text": "We don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 9360,
+          "endMs": 13960,
+          "text": "We don't love anymore, what was all of it for?"
+        },
+        {
+          "startMs": 14880,
+          "endMs": 19020,
+          "text": "Ooh, we don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 20000,
+          "endMs": 22580,
+          "text": "I just heard you found the one you've been lookin'"
+        },
+        {
+          "startMs": 22580,
+          "endMs": 24940,
+          "text": "You've been lookin' for"
+        },
+        {
+          "startMs": 24940,
+          "endMs": 28420,
+          "text": "I wish I would have known that wasn't me"
+        },
+        {
+          "startMs": 28420,
+          "endMs": 32200,
+          "text": "'Cause even after all this time, I still wonder"
+        },
+        {
+          "startMs": 32200,
+          "endMs": 34640,
+          "text": "Why I can't move on"
+        },
+        {
+          "startMs": 34640,
+          "endMs": 37680,
+          "text": "Just the way you did so easily"
+        },
+        {
+          "startMs": 38920,
+          "endMs": 40640,
+          "text": "Don't wanna know"
+        },
+        {
+          "startMs": 40640,
+          "endMs": 42900,
+          "text": "What kinda dress you're wearin' tonight"
+        },
+        {
+          "startMs": 43560,
+          "endMs": 45420,
+          "text": "If he's holdin' on to you so tight"
+        },
+        {
+          "startMs": 45420,
+          "endMs": 47740,
+          "text": "The way I did before"
+        },
+        {
+          "startMs": 48920,
+          "endMs": 50200,
+          "text": "I overdosed"
+        },
+        {
+          "startMs": 50200,
+          "endMs": 52600,
+          "text": "Should've known your love was a game"
+        },
+        {
+          "startMs": 52600,
+          "endMs": 55100,
+          "text": "Now I can't get you out of my brain"
+        },
+        {
+          "startMs": 55100,
+          "endMs": 57400,
+          "text": "Ooh, it's such a shame"
+        },
+        {
+          "startMs": 57400,
+          "endMs": 61900,
+          "text": "That we don't talk anymore, we don't talk anymore"
+        },
+        {
+          "startMs": 61900,
+          "endMs": 66980,
+          "text": "We don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 66980,
+          "endMs": 71520,
+          "text": "We don't love anymore, what was all of it for?"
+        },
+        {
+          "startMs": 72440,
+          "endMs": 76640,
+          "text": "Ooh, we don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 77620,
+          "endMs": 80200,
+          "text": "I just hope you're lyin' next to somebody"
+        },
+        {
+          "startMs": 80920,
+          "endMs": 82620,
+          "text": "Who knows how to love you like me"
+        },
+        {
+          "startMs": 82620,
+          "endMs": 86180,
+          "text": "There must be a good reason that you're gone"
+        },
+        {
+          "startMs": 86180,
+          "endMs": 88380,
+          "text": "Every now and then"
+        },
+        {
+          "startMs": 88380,
+          "endMs": 92280,
+          "text": "I think you might want me to come show up at your door"
+        },
+        {
+          "startMs": 92280,
+          "endMs": 95540,
+          "text": "But I'm just too afraid that I'll be wrong"
+        },
+        {
+          "startMs": 96500,
+          "endMs": 98220,
+          "text": "Don't wanna know"
+        },
+        {
+          "startMs": 98220,
+          "endMs": 100840,
+          "text": "If you're lookin' into her eyes"
+        },
+        {
+          "startMs": 100840,
+          "endMs": 103140,
+          "text": "If she's holdin' on to you so tight"
+        },
+        {
+          "startMs": 103140,
+          "endMs": 105340,
+          "text": "The way I did before"
+        },
+        {
+          "startMs": 106180,
+          "endMs": 107980,
+          "text": "I overdosed"
+        },
+        {
+          "startMs": 107980,
+          "endMs": 110300,
+          "text": "Should've known your love was a game"
+        },
+        {
+          "startMs": 110300,
+          "endMs": 112440,
+          "text": "Now I can't get you out of my brain"
+        },
+        {
+          "startMs": 112900,
+          "endMs": 114960,
+          "text": "Ooh, it's such a shame"
+        },
+        {
+          "startMs": 114960,
+          "endMs": 118860,
+          "text": "That we don't talk anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 119460,
+          "endMs": 121680,
+          "text": "We don't talk anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 121680,
+          "endMs": 126630,
+          "text": "We don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 129979,
+          "endMs": 132279,
+          "text": "We don't love anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 132279,
+          "endMs": 133879,
+          "text": "What was all of it for? (We don't, we don't)"
+        },
+        {
+          "startMs": 133879,
+          "endMs": 139829,
+          "text": "Ooh, we don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 139829,
+          "endMs": 148229,
+          "text": "♪"
+        },
+        {
+          "startMs": 148289,
+          "endMs": 152119,
+          "text": "Like we used to do"
+        },
+        {
+          "startMs": 152119,
+          "endMs": 159009,
+          "text": "♪"
+        },
+        {
+          "startMs": 159009,
+          "endMs": 160549,
+          "text": "Don't wanna know"
+        },
+        {
+          "startMs": 160549,
+          "endMs": 163059,
+          "text": "What kinda dress you're wearin' tonight"
+        },
+        {
+          "startMs": 163059,
+          "endMs": 165659,
+          "text": "If he's givin' it to you just right"
+        },
+        {
+          "startMs": 165659,
+          "endMs": 168509,
+          "text": "The way I did before"
+        },
+        {
+          "startMs": 168509,
+          "endMs": 170259,
+          "text": "I overdosed"
+        },
+        {
+          "startMs": 170259,
+          "endMs": 172629,
+          "text": "Should've known your love was a game"
+        },
+        {
+          "startMs": 172629,
+          "endMs": 175249,
+          "text": "Now I can't get you out of my brain"
+        },
+        {
+          "startMs": 175249,
+          "endMs": 177759,
+          "text": "Ooh, it's such a shame"
+        },
+        {
+          "startMs": 177759,
+          "endMs": 180309,
+          "text": "That we don't talk anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 180309,
+          "endMs": 182699,
+          "text": "We don't talk anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 182699,
+          "endMs": 187479,
+          "text": "We don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 187479,
+          "endMs": 190019,
+          "text": "We don't love anymore (we don't, we don't)"
+        },
+        {
+          "startMs": 190019,
+          "endMs": 191459,
+          "text": "What was all of it for? (We don't, we don't)"
+        },
+        {
+          "startMs": 191459,
+          "endMs": 197199,
+          "text": "Ooh, we don't talk anymore like we used to do"
+        },
+        {
+          "startMs": 197199,
+          "endMs": 199089,
+          "text": "We don't talk anymore (don't wanna know)"
+        },
+        {
+          "startMs": 199089,
+          "endMs": 201579,
+          "text": "(What kinda dress you're wearin' tonight) oh"
+        },
+        {
+          "startMs": 201579,
+          "endMs": 204259,
+          "text": "(If he's holdin' on to you so tight) oh"
+        },
+        {
+          "startMs": 204259,
+          "endMs": 206779,
+          "text": "The way I did before"
+        },
+        {
+          "startMs": 211610,
+          "endMs": 212980,
+          "text": "We don't talk anymore (I overdosed)"
+        },
+        {
+          "startMs": 213400,
+          "endMs": 215960,
+          "text": "(Should've known your love was a game) oh"
+        },
+        {
+          "startMs": 215960,
+          "endMs": 218620,
+          "text": "(Now I can't get you out of my brain) whoa"
+        },
+        {
+          "startMs": 218620,
+          "endMs": 221820,
+          "text": "Ooh, it's such a shame that we don't talk anymore"
+        }
+      ]
+    },
+    {
+      "id": "Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4",
+      "title": "The Lumineers - Ho Hey (Official Video)",
+      "artist": "The Lumineers",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4624,
+      "durationInFrames": 4845,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "I HAVE BEEN TRYING TO DO IT RIGHT, THROUGH THE SHADOWS OF YOUR LIGHT.",
+        "rightVertical": "A LONELY LIFE HAS BOUND ME HERE, WHISPERING SECRETS NO ONE HEARS.",
+        "bottomLine": "OH HO, OH HEY, IN THIS QUIET SPACE."
+      },
+      "lyrics": [
+        {
+          "startMs": 2730,
+          "endMs": 5970,
+          "text": "(Ho!)"
+        },
+        {
+          "startMs": 5970,
+          "endMs": 9150,
+          "text": "(Hey!)"
+        },
+        {
+          "startMs": 9150,
+          "endMs": 11950,
+          "text": "(Ho!)"
+        },
+        {
+          "startMs": 11950,
+          "endMs": 14400,
+          "text": "(Hey!)"
+        },
+        {
+          "startMs": 14400,
+          "endMs": 18070,
+          "text": "(Ho!) I've been tryin' to do it right"
+        },
+        {
+          "startMs": 18070,
+          "endMs": 21200,
+          "text": "(Hey!) I've been livin' a lonely life"
+        },
+        {
+          "startMs": 21200,
+          "endMs": 24400,
+          "text": "(Ho!) I've been sleepin' here instead"
+        },
+        {
+          "startMs": 24400,
+          "endMs": 27460,
+          "text": "(Hey!) I've been sleepin' in my bed"
+        },
+        {
+          "startMs": 27460,
+          "endMs": 30890,
+          "text": "(Ho!) Sleepin' in my bed"
+        },
+        {
+          "startMs": 30890,
+          "endMs": 33780,
+          "text": "(Hey!)"
+        },
+        {
+          "startMs": 33780,
+          "endMs": 36930,
+          "text": "(Ho!)"
+        },
+        {
+          "startMs": 36930,
+          "endMs": 39830,
+          "text": "(Ho!) So show me family"
+        },
+        {
+          "startMs": 39830,
+          "endMs": 42680,
+          "text": "(Hey!) All the blood that I will bleed"
+        },
+        {
+          "startMs": 42680,
+          "endMs": 45660,
+          "text": "(Ho!) I don't know where I belong"
+        },
+        {
+          "startMs": 45660,
+          "endMs": 49050,
+          "text": "(Hey!) I don't know where I went wrong"
+        },
+        {
+          "startMs": 49050,
+          "endMs": 52970,
+          "text": "(Ho!) But I can write a song"
+        },
+        {
+          "startMs": 52970,
+          "endMs": 54310,
+          "text": "(Hey!) Two, three"
+        },
+        {
+          "startMs": 54310,
+          "endMs": 57160,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 57160,
+          "endMs": 60390,
+          "text": "You're my sweetheart"
+        },
+        {
+          "startMs": 60390,
+          "endMs": 63270,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 63270,
+          "endMs": 65550,
+          "text": "You're my sweet-"
+        },
+        {
+          "startMs": 65550,
+          "endMs": 67140,
+          "text": "(Ho!)"
+        },
+        {
+          "startMs": 67140,
+          "endMs": 70050,
+          "text": "(Hey!) (Come on, now)"
+        },
+        {
+          "startMs": 70050,
+          "endMs": 72910,
+          "text": "(Ho!) (Hey)"
+        },
+        {
+          "startMs": 72910,
+          "endMs": 75480,
+          "text": "(Hey!)"
+        },
+        {
+          "startMs": 75480,
+          "endMs": 78940,
+          "text": "(Ho!) I don't think you're right for him"
+        },
+        {
+          "startMs": 78940,
+          "endMs": 82490,
+          "text": "(Hey!) Think of what it might've been if we"
+        },
+        {
+          "startMs": 82490,
+          "endMs": 85330,
+          "text": "(Ho!) Took a bus to Chinatown"
+        },
+        {
+          "startMs": 85330,
+          "endMs": 88280,
+          "text": "(Hey!) I'd be standin' on Canal"
+        },
+        {
+          "startMs": 88280,
+          "endMs": 91110,
+          "text": "(Ho!) And Bowery"
+        },
+        {
+          "startMs": 91110,
+          "endMs": 94160,
+          "text": "(Hey!) Hey"
+        },
+        {
+          "startMs": 94160,
+          "endMs": 97960,
+          "text": "(Ho!) She'd be standin' next to me"
+        },
+        {
+          "startMs": 97960,
+          "endMs": 99270,
+          "text": "(Hey!) Two, three"
+        },
+        {
+          "startMs": 99270,
+          "endMs": 102130,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 102130,
+          "endMs": 105060,
+          "text": "You're my sweetheart"
+        },
+        {
+          "startMs": 105060,
+          "endMs": 108230,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 108230,
+          "endMs": 111030,
+          "text": "You're my sweetheart"
+        },
+        {
+          "startMs": 111030,
+          "endMs": 117050,
+          "text": "Love, we need it now"
+        },
+        {
+          "startMs": 117050,
+          "endMs": 121910,
+          "text": "Let's hope for some"
+        },
+        {
+          "startMs": 121910,
+          "endMs": 129400,
+          "text": "'Cause oh, we're bleedin' out"
+        },
+        {
+          "startMs": 129400,
+          "endMs": 132210,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 132210,
+          "endMs": 135020,
+          "text": "You're my sweetheart"
+        },
+        {
+          "startMs": 135020,
+          "endMs": 138040,
+          "text": "I belong with you, you belong with me"
+        },
+        {
+          "startMs": 138040,
+          "endMs": 140290,
+          "text": "You're my sweet"
+        },
+        {
+          "startMs": 140290,
+          "endMs": 142280,
+          "text": "(Ho!)"
+        },
+        {
+          "startMs": 142280,
+          "endMs": 145070,
+          "text": "(Hey!)"
+        },
+        {
+          "startMs": 145070,
+          "endMs": 148150,
+          "text": "(Ho!) (Last one)"
+        },
+        {
+          "startMs": 148150,
+          "endMs": 152150,
+          "text": "(Hey!)"
+        }
+      ]
+    },
+    {
+      "id": "2002 [Official Video] - Anne-Marie - Il-an3K9pjg",
+      "title": "Anne-Marie - 2002 [Official Video]",
+      "artist": "Anne-Marie",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 5531,
+      "durationInFrames": 5831,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "A SUMMER OF GOLDEN MEMORIES WE CHERISH FOREVERMORE.",
+        "rightVertical": "THE SPARKLE OF THOSE DAYS STILL ILLUMINATES MY HEART'S CORE.",
+        "bottomLine": "TWO THOUSAND TWO, A PERFECT MOMENT IN TIME."
+      },
+      "lyrics": [
+        {
+          "startMs": 340,
+          "endMs": 1920,
+          "text": "I will always remember"
+        },
+        {
+          "startMs": 1920,
+          "endMs": 5780,
+          "text": "The day you kissed my lips"
+        },
+        {
+          "startMs": 5980,
+          "endMs": 6960,
+          "text": "Light as a feather"
+        },
+        {
+          "startMs": 8340,
+          "endMs": 10480,
+          "text": "And it went just like this"
+        },
+        {
+          "startMs": 10480,
+          "endMs": 12020,
+          "text": "No, it's never been better"
+        },
+        {
+          "startMs": 12020,
+          "endMs": 20240,
+          "text": "Than the summer of 2002 (ooh)"
+        },
+        {
+          "startMs": 20240,
+          "endMs": 22020,
+          "text": "Mm, we were only 11"
+        },
+        {
+          "startMs": 22020,
+          "endMs": 25480,
+          "text": "But acting like grown-ups"
+        },
+        {
+          "startMs": 25480,
+          "endMs": 27020,
+          "text": "Like we are in the present"
+        },
+        {
+          "startMs": 28440,
+          "endMs": 30540,
+          "text": "Drinking from plastic cups"
+        },
+        {
+          "startMs": 30540,
+          "endMs": 33320,
+          "text": "Singing, \"Love is forever and ever\""
+        },
+        {
+          "startMs": 34380,
+          "endMs": 36720,
+          "text": "Well, I guess that was true (ooh)"
+        },
+        {
+          "startMs": 41770,
+          "endMs": 43770,
+          "text": "Dancing on the hood in the middle of the woods"
+        },
+        {
+          "startMs": 44090,
+          "endMs": 46270,
+          "text": "On an old Mustang, where we sang"
+        },
+        {
+          "startMs": 46270,
+          "endMs": 49390,
+          "text": "Songs with all our childhood friends"
+        },
+        {
+          "startMs": 49390,
+          "endMs": 51490,
+          "text": "And it went like this, say"
+        },
+        {
+          "startMs": 51550,
+          "endMs": 55650,
+          "text": "Oops, I got 99 problems singing \"bye, bye, bye\""
+        },
+        {
+          "startMs": 55650,
+          "endMs": 58630,
+          "text": "Hold up, if you wanna go and take a ride with me"
+        },
+        {
+          "startMs": 58710,
+          "endMs": 60670,
+          "text": "Better hit me, baby, one more time, uh"
+        },
+        {
+          "startMs": 60670,
+          "endMs": 63490,
+          "text": "Paint a picture for you and me"
+        },
+        {
+          "startMs": 63490,
+          "endMs": 65550,
+          "text": "On the days when we were young, uh"
+        },
+        {
+          "startMs": 65550,
+          "endMs": 69550,
+          "text": "Singing at the top of both our lungs"
+        },
+        {
+          "startMs": 69590,
+          "endMs": 72210,
+          "text": "Now we're under the covers"
+        },
+        {
+          "startMs": 73230,
+          "endMs": 75310,
+          "text": "Fast-forward to 18"
+        },
+        {
+          "startMs": 75530,
+          "endMs": 76990,
+          "text": "We are more than lovers"
+        },
+        {
+          "startMs": 78250,
+          "endMs": 80550,
+          "text": "Yeah, we are all we need"
+        },
+        {
+          "startMs": 80550,
+          "endMs": 82290,
+          "text": "When we're holding each other"
+        },
+        {
+          "startMs": 82290,
+          "endMs": 85850,
+          "text": "I'm taken back to 2002 (ooh)"
+        },
+        {
+          "startMs": 89890,
+          "endMs": 91060,
+          "text": "Yeah"
+        },
+        {
+          "startMs": 91060,
+          "endMs": 93780,
+          "text": "Dancing on the hood in the middle of the woods"
+        },
+        {
+          "startMs": 94100,
+          "endMs": 96260,
+          "text": "On an old Mustang, where we sang"
+        },
+        {
+          "startMs": 96260,
+          "endMs": 99380,
+          "text": "Songs with all our childhood friends"
+        },
+        {
+          "startMs": 99380,
+          "endMs": 101520,
+          "text": "And it went like this, say"
+        },
+        {
+          "startMs": 101560,
+          "endMs": 105560,
+          "text": "Oops, I got 99 problems singing \"bye, bye, bye\""
+        },
+        {
+          "startMs": 105560,
+          "endMs": 108600,
+          "text": "Hold up, if you wanna go and take a ride with me"
+        },
+        {
+          "startMs": 108680,
+          "endMs": 110780,
+          "text": "Better hit me, baby, one more time, uh"
+        },
+        {
+          "startMs": 110780,
+          "endMs": 113480,
+          "text": "Paint a picture for you and me"
+        },
+        {
+          "startMs": 113480,
+          "endMs": 115860,
+          "text": "On the days when we were young, uh"
+        },
+        {
+          "startMs": 115860,
+          "endMs": 119150,
+          "text": "Singing at the top of both our lungs"
+        },
+        {
+          "startMs": 119150,
+          "endMs": 121330,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 121330,
+          "endMs": 124270,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 124270,
+          "endMs": 126410,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 126410,
+          "endMs": 130550,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 130550,
+          "endMs": 133240,
+          "text": "Dancing on the hood in the middle of the woods"
+        },
+        {
+          "startMs": 133240,
+          "endMs": 135730,
+          "text": "On an old Mustang, where we sang"
+        },
+        {
+          "startMs": 135730,
+          "endMs": 139410,
+          "text": "Songs with all our childhood friends"
+        },
+        {
+          "startMs": 139410,
+          "endMs": 140830,
+          "text": "Oh, now"
+        },
+        {
+          "startMs": 140830,
+          "endMs": 145120,
+          "text": "Oops, I got 99 problems singing \"bye, bye, bye\""
+        },
+        {
+          "startMs": 145120,
+          "endMs": 148080,
+          "text": "Hold up, if you wanna go and take a ride with me"
+        },
+        {
+          "startMs": 148080,
+          "endMs": 150640,
+          "text": "Better hit me, baby, one more time"
+        },
+        {
+          "startMs": 150640,
+          "endMs": 152950,
+          "text": "Paint a picture for you and me"
+        },
+        {
+          "startMs": 152950,
+          "endMs": 155690,
+          "text": "On the days when we were young"
+        },
+        {
+          "startMs": 155690,
+          "endMs": 159259,
+          "text": "Singing at the top of both our lungs"
+        },
+        {
+          "startMs": 159259,
+          "endMs": 161430,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 161430,
+          "endMs": 164090,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 164090,
+          "endMs": 166410,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 166410,
+          "endMs": 168990,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 168990,
+          "endMs": 171350,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 171350,
+          "endMs": 174070,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 174070,
+          "endMs": 176570,
+          "text": "On the day we fell in love"
+        },
+        {
+          "startMs": 176570,
+          "endMs": 179170,
+          "text": "Ooh-ooh, ooh-ooh"
+        },
+        {
+          "startMs": 179170,
+          "endMs": 182370,
+          "text": "On the day we fell in love, love, love"
+        }
+      ]
+    },
+    {
+      "id": "Mad at Disney - salem ilese - 4cLaxFWT9iI",
+      "title": "Mad at Disney",
+      "artist": "salem ilese",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4072,
+      "durationInFrames": 4105,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE ILLUSION OF HAPPINESS WAS A SWEET, BRIGHT DECEPTION.",
+        "rightVertical": "A GOLDEN AGE FAILED TO PREPARE YOU FOR THE REALITY.",
+        "bottomLine": "LOST IN THE MAGIC AND THE SHADOWS."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 2320,
+          "text": "I'm mad at Disney, Disney"
+        },
+        {
+          "startMs": 2320,
+          "endMs": 4520,
+          "text": "They tricked me, tricked me"
+        },
+        {
+          "startMs": 4520,
+          "endMs": 7460,
+          "text": "Had me wishing on a shooting star"
+        },
+        {
+          "startMs": 8340,
+          "endMs": 10680,
+          "text": "But now I'm twenty-something"
+        },
+        {
+          "startMs": 10680,
+          "endMs": 12760,
+          "text": "I still know nothing"
+        },
+        {
+          "startMs": 12760,
+          "endMs": 16260,
+          "text": "'Bout who I am or what I'm not"
+        },
+        {
+          "startMs": 17040,
+          "endMs": 19040,
+          "text": "So call me a pessimist"
+        },
+        {
+          "startMs": 19400,
+          "endMs": 21840,
+          "text": "But I don't believe in it"
+        },
+        {
+          "startMs": 21840,
+          "endMs": 24480,
+          "text": "Finding a true love's kiss is bullsh-"
+        },
+        {
+          "startMs": 25240,
+          "endMs": 29160,
+          "text": "'Cause I felt sad love, I felt bad love"
+        },
+        {
+          "startMs": 29700,
+          "endMs": 32110,
+          "text": "Sometimes happy love (happy love)"
+        },
+        {
+          "startMs": 32110,
+          "endMs": 33950,
+          "text": "Turns into giving up (giving up)"
+        },
+        {
+          "startMs": 33950,
+          "endMs": 38130,
+          "text": "I felt hurt love 'bout the word love"
+        },
+        {
+          "startMs": 38130,
+          "endMs": 43200,
+          "text": "What the hell is love supposed to feel like?"
+        },
+        {
+          "startMs": 43200,
+          "endMs": 46700,
+          "text": "What the hell is love? What the hell is love?"
+        },
+        {
+          "startMs": 46700,
+          "endMs": 53260,
+          "text": "What the hell is love supposed to feel like?"
+        },
+        {
+          "startMs": 53260,
+          "endMs": 56070,
+          "text": "(Carry me away to a castle)"
+        },
+        {
+          "startMs": 56070,
+          "endMs": 59280,
+          "text": "(Where we will live happily ever after)"
+        },
+        {
+          "startMs": 59280,
+          "endMs": 61610,
+          "text": "My fairy grandma warned me"
+        },
+        {
+          "startMs": 61610,
+          "endMs": 67440,
+          "text": "Cinderella's story only ended in a bad divorce"
+        },
+        {
+          "startMs": 67440,
+          "endMs": 72240,
+          "text": "The prince ain't sleeping when he takes his sleeping beauty"
+        },
+        {
+          "startMs": 72240,
+          "endMs": 76370,
+          "text": "To the motel on his snow white horse"
+        },
+        {
+          "startMs": 76370,
+          "endMs": 79000,
+          "text": "So call me a pessimist"
+        },
+        {
+          "startMs": 79000,
+          "endMs": 81360,
+          "text": "But I don't believe in it"
+        },
+        {
+          "startMs": 81360,
+          "endMs": 84759,
+          "text": "Finding a true love's kiss is bullsh-"
+        },
+        {
+          "startMs": 84759,
+          "endMs": 88940,
+          "text": "'Cause I felt sad love, I felt bad love"
+        },
+        {
+          "startMs": 88940,
+          "endMs": 90810,
+          "text": "Sometimes happy love (happy love)"
+        },
+        {
+          "startMs": 90810,
+          "endMs": 93210,
+          "text": "Turns into giving up (I'm giving up)"
+        },
+        {
+          "startMs": 93210,
+          "endMs": 97020,
+          "text": "I felt hurt love 'bout the word love"
+        },
+        {
+          "startMs": 97020,
+          "endMs": 102550,
+          "text": "What the hell is love supposed to feel like?"
+        },
+        {
+          "startMs": 102550,
+          "endMs": 105830,
+          "text": "What the hell is love? What the hell is love?"
+        },
+        {
+          "startMs": 105830,
+          "endMs": 110770,
+          "text": "What the hell is love supposed to feel like?"
+        },
+        {
+          "startMs": 110770,
+          "endMs": 114560,
+          "text": "What the hell is love? What the hell is love?"
+        },
+        {
+          "startMs": 114560,
+          "endMs": 121560,
+          "text": "What the hell is love supposed to feel like?"
+        },
+        {
+          "startMs": 126720,
+          "endMs": 129250,
+          "text": "I'm mad at Disney, Disney"
+        },
+        {
+          "startMs": 129250,
+          "endMs": 131280,
+          "text": "They tricked me, tricked me"
+        },
+        {
+          "startMs": 131280,
+          "endMs": 133740,
+          "text": "No more wishing on a shooting star"
+        }
+      ]
+    },
+    {
+      "id": "Backyard Boy - Claire Rosinkranz - 72L5HWbutzI",
+      "title": "Backyard Boy",
+      "artist": "Claire Rosinkranz",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 3846,
+      "durationInFrames": 3877,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE SUMMER AIR HANGS HEAVY WITH UNTOLD PROMISES.",
+        "rightVertical": "A LOOP OF MEMORIES DANCED OUT BENEATH THE SUNSET SKY.",
+        "bottomLine": "FIVE, SIX, SEVEN, EIGHT. LET IT PLAY ON."
+      },
+      "lyrics": [
+        {
+          "startMs": 1550,
+          "endMs": 3370,
+          "text": "Five, six, seven, eight"
+        },
+        {
+          "startMs": 3370,
+          "endMs": 6490,
+          "text": "Dance with me in my backyard, boy"
+        },
+        {
+          "startMs": 6490,
+          "endMs": 9350,
+          "text": "Looking super fine in your corduroy"
+        },
+        {
+          "startMs": 10110,
+          "endMs": 11750,
+          "text": "Drive me 'round the block"
+        },
+        {
+          "startMs": 12190,
+          "endMs": 13190,
+          "text": "We can go in a loop"
+        },
+        {
+          "startMs": 13190,
+          "endMs": 15410,
+          "text": "And we'll turn the volume up"
+        },
+        {
+          "startMs": 15410,
+          "endMs": 16750,
+          "text": "On some good boy band tunes"
+        },
+        {
+          "startMs": 16750,
+          "endMs": 18730,
+          "text": "Love to feel the fresh air"
+        },
+        {
+          "startMs": 18730,
+          "endMs": 20470,
+          "text": "I can feel your eyes stare"
+        },
+        {
+          "startMs": 21130,
+          "endMs": 22530,
+          "text": "And I'm not gonna lie"
+        },
+        {
+          "startMs": 22530,
+          "endMs": 23850,
+          "text": "I get a little bit scared"
+        },
+        {
+          "startMs": 23850,
+          "endMs": 25650,
+          "text": "My heart is on wings"
+        },
+        {
+          "startMs": 26090,
+          "endMs": 27270,
+          "text": "I'm living in dreams"
+        },
+        {
+          "startMs": 27270,
+          "endMs": 30050,
+          "text": "And at the top of our lungs we sing"
+        },
+        {
+          "startMs": 30050,
+          "endMs": 32640,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 32640,
+          "endMs": 35230,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 35230,
+          "endMs": 38270,
+          "text": "Everything is perfect"
+        },
+        {
+          "startMs": 38270,
+          "endMs": 40190,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 40190,
+          "endMs": 42110,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 42110,
+          "endMs": 45660,
+          "text": "All our words were worth it"
+        },
+        {
+          "startMs": 45660,
+          "endMs": 47460,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 47460,
+          "endMs": 49160,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 49160,
+          "endMs": 52280,
+          "text": "Dancing around like a clown at the circus"
+        },
+        {
+          "startMs": 52280,
+          "endMs": 54130,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 54130,
+          "endMs": 55980,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 55980,
+          "endMs": 61180,
+          "text": "Backyard boy, you make me nervous"
+        },
+        {
+          "startMs": 61180,
+          "endMs": 64569,
+          "text": "Dance with me in my backyard, boy"
+        },
+        {
+          "startMs": 64569,
+          "endMs": 68130,
+          "text": "Looking super fine in your corduroy (five, six, seven, eight)"
+        },
+        {
+          "startMs": 68130,
+          "endMs": 69450,
+          "text": "Roll the windows down"
+        },
+        {
+          "startMs": 69450,
+          "endMs": 71160,
+          "text": "Let the bass drop low"
+        },
+        {
+          "startMs": 71160,
+          "endMs": 72700,
+          "text": "And everybody's talking"
+        },
+        {
+          "startMs": 72700,
+          "endMs": 74070,
+          "text": "But I don't wanna know"
+        },
+        {
+          "startMs": 74070,
+          "endMs": 76010,
+          "text": "Feel the fresh air"
+        },
+        {
+          "startMs": 76010,
+          "endMs": 77750,
+          "text": "I can feel your eyes stare"
+        },
+        {
+          "startMs": 77750,
+          "endMs": 79360,
+          "text": "And I'm not gonna lie"
+        },
+        {
+          "startMs": 79360,
+          "endMs": 81370,
+          "text": "I get a little bit scared"
+        },
+        {
+          "startMs": 81370,
+          "endMs": 82930,
+          "text": "My heart is on wings"
+        },
+        {
+          "startMs": 82930,
+          "endMs": 84580,
+          "text": "I'm living in dreams"
+        },
+        {
+          "startMs": 84580,
+          "endMs": 88520,
+          "text": "And at the top of our lungs we sing"
+        },
+        {
+          "startMs": 88520,
+          "endMs": 90480,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 90480,
+          "endMs": 92440,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 92440,
+          "endMs": 95500,
+          "text": "Everything is perfect"
+        },
+        {
+          "startMs": 95500,
+          "endMs": 97300,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 97300,
+          "endMs": 99040,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 99040,
+          "endMs": 102400,
+          "text": "All our words were worth it"
+        },
+        {
+          "startMs": 102400,
+          "endMs": 104200,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 104200,
+          "endMs": 105919,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 105919,
+          "endMs": 109370,
+          "text": "Dancing around like a clown at the circus"
+        },
+        {
+          "startMs": 109370,
+          "endMs": 111280,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 111280,
+          "endMs": 113190,
+          "text": "Da da da da da da"
+        },
+        {
+          "startMs": 113190,
+          "endMs": 120190,
+          "text": "Backyard boy, you make me nervous"
+        },
+        {
+          "startMs": 125550,
+          "endMs": 126210,
+          "text": "Right now?"
+        }
+      ]
+    },
+    {
+      "id": "Cheap Thrills - Sia - K_idN3P5_yk",
+      "title": "Cheap Thrills",
+      "artist": "Sia",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 7480,
+      "renderDurationInFrames": 5882,
+      "durationInFrames": 6329,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY PULSES WITH A SYNTHETIC RHYTHM OF EXCITEMENT.",
+        "rightVertical": "WE ARE DRIVEN BY THE GLOW AND THE ELECTRIC HUM OF NIGHTLIFE.",
+        "bottomLine": "THIS IS WHERE THE MAGIC HAPPENS NOW."
+      },
+      "lyrics": [
+        {
+          "startMs": 3480,
+          "endMs": 10480,
+          "text": "♪"
+        },
+        {
+          "startMs": 10480,
+          "endMs": 13340,
+          "text": "Come on, come on, turn the radio on"
+        },
+        {
+          "startMs": 13340,
+          "endMs": 15920,
+          "text": "It's Friday night and I won't be long"
+        },
+        {
+          "startMs": 15920,
+          "endMs": 18640,
+          "text": "Gotta do my hair, put my make up on"
+        },
+        {
+          "startMs": 18640,
+          "endMs": 21220,
+          "text": "It's Friday night and I won't be long"
+        },
+        {
+          "startMs": 21220,
+          "endMs": 22960,
+          "text": "'Til I hit the dance floor"
+        },
+        {
+          "startMs": 22960,
+          "endMs": 24260,
+          "text": "Hit the dance floor"
+        },
+        {
+          "startMs": 24260,
+          "endMs": 26340,
+          "text": "I got all I need"
+        },
+        {
+          "startMs": 26340,
+          "endMs": 28000,
+          "text": "No, I ain't got cash"
+        },
+        {
+          "startMs": 28160,
+          "endMs": 29380,
+          "text": "I ain't got cash"
+        },
+        {
+          "startMs": 29380,
+          "endMs": 30880,
+          "text": "But I got you, baby"
+        },
+        {
+          "startMs": 31580,
+          "endMs": 36000,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 36000,
+          "endMs": 37230,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 37230,
+          "endMs": 41230,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 41230,
+          "endMs": 42740,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 42740,
+          "endMs": 47930,
+          "text": "But I don't need no money"
+        },
+        {
+          "startMs": 47930,
+          "endMs": 53550,
+          "text": "As long as I can feel the beat"
+        },
+        {
+          "startMs": 53550,
+          "endMs": 58500,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 58500,
+          "endMs": 63880,
+          "text": "As long as I keep dancing"
+        },
+        {
+          "startMs": 63880,
+          "endMs": 66590,
+          "text": "Come on, come on, turn the radio on"
+        },
+        {
+          "startMs": 66590,
+          "endMs": 69200,
+          "text": "It's Saturday and I won't be long"
+        },
+        {
+          "startMs": 69200,
+          "endMs": 72010,
+          "text": "Gotta paint my nails, put my high heels on"
+        },
+        {
+          "startMs": 72010,
+          "endMs": 74520,
+          "text": "It's Saturday and I won't be long"
+        },
+        {
+          "startMs": 74520,
+          "endMs": 76400,
+          "text": "'Til I hit the dance floor"
+        },
+        {
+          "startMs": 76400,
+          "endMs": 77600,
+          "text": "Hit the dance floor"
+        },
+        {
+          "startMs": 77600,
+          "endMs": 79870,
+          "text": "I got all I need"
+        },
+        {
+          "startMs": 79870,
+          "endMs": 81460,
+          "text": "No, I ain't got cash"
+        },
+        {
+          "startMs": 81460,
+          "endMs": 82680,
+          "text": "I ain't got cash"
+        },
+        {
+          "startMs": 82680,
+          "endMs": 85270,
+          "text": "But I got you, baby"
+        },
+        {
+          "startMs": 85270,
+          "endMs": 89190,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 89190,
+          "endMs": 90570,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 90570,
+          "endMs": 94570,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 94570,
+          "endMs": 96060,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 96060,
+          "endMs": 101360,
+          "text": "But I don't need no money"
+        },
+        {
+          "startMs": 101360,
+          "endMs": 106860,
+          "text": "As long as I can feel the beat"
+        },
+        {
+          "startMs": 106860,
+          "endMs": 112030,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 112030,
+          "endMs": 119030,
+          "text": "As long as I keep dancing"
+        },
+        {
+          "startMs": 121230,
+          "endMs": 126630,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 126630,
+          "endMs": 128230,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 128230,
+          "endMs": 133420,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 133420,
+          "endMs": 138710,
+          "text": "As long as I can feel the beat"
+        },
+        {
+          "startMs": 138710,
+          "endMs": 144050,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 144050,
+          "endMs": 148290,
+          "text": "As long as I keep dancing"
+        },
+        {
+          "startMs": 148290,
+          "endMs": 149290,
+          "text": "Oh, oh"
+        },
+        {
+          "startMs": 149290,
+          "endMs": 153350,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 153350,
+          "endMs": 154540,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 154540,
+          "endMs": 158520,
+          "text": "Baby, I don't need dollar bills to have fun tonight"
+        },
+        {
+          "startMs": 158520,
+          "endMs": 160130,
+          "text": "(I love cheap thrills)"
+        },
+        {
+          "startMs": 160130,
+          "endMs": 165220,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 165220,
+          "endMs": 170860,
+          "text": "As long as I can feel the beat"
+        },
+        {
+          "startMs": 170860,
+          "endMs": 176020,
+          "text": "I don't need no money"
+        },
+        {
+          "startMs": 177000,
+          "endMs": 180480,
+          "text": "As long as I keep dancing"
+        },
+        {
+          "startMs": 182400,
+          "endMs": 187660,
+          "text": "La, la, la, la, la, la, la (I love cheap thrills)"
+        },
+        {
+          "startMs": 187660,
+          "endMs": 193220,
+          "text": "La, la, la, la, la, la, la (I love cheap thrills)"
+        },
+        {
+          "startMs": 193220,
+          "endMs": 198360,
+          "text": "La, la, la, la, la, la, la (I love cheap thrills)"
+        },
+        {
+          "startMs": 198360,
+          "endMs": 201560,
+          "text": "La, la, la, la, la, la, la (I love cheap thrills)"
+        }
+      ]
+    },
+    {
+      "id": "girls like me don't cry - thủy - T4gmE2nHA_M",
+      "title": "girls like me don't cry",
+      "artist": "thủy",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 14220,
+      "renderDurationInFrames": 5342,
+      "durationInFrames": 6409,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "WE ARE THE SILENT STORIES THAT NO ONE EVER SEES.",
+        "rightVertical": "THIS IS A SECRET GARDEN WHERE OUR TEARS CAN FALL UNHEARD.",
+        "bottomLine": "A QUIET ECHO OF WHAT WE TRULY FEEL."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 17220,
+          "text": "♪"
+        },
+        {
+          "startMs": 17220,
+          "endMs": 21630,
+          "text": "Tell me that you'll keep me safe and"
+        },
+        {
+          "startMs": 21630,
+          "endMs": 25310,
+          "text": "Never let this fade away"
+        },
+        {
+          "startMs": 25310,
+          "endMs": 34740,
+          "text": "I'm hidin' out, so they don't see this part of me"
+        },
+        {
+          "startMs": 34740,
+          "endMs": 38080,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 38080,
+          "endMs": 43500,
+          "text": "Girls like me pretend we don't cry"
+        },
+        {
+          "startMs": 43500,
+          "endMs": 46780,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 46780,
+          "endMs": 52280,
+          "text": "Girls like me pretend we don't cry"
+        },
+        {
+          "startMs": 52280,
+          "endMs": 55850,
+          "text": "Tell me that you'll keep me safe"
+        },
+        {
+          "startMs": 55850,
+          "endMs": 61040,
+          "text": "And never let this fade away"
+        },
+        {
+          "startMs": 61040,
+          "endMs": 64390,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 64390,
+          "endMs": 70140,
+          "text": "Girls like me pretend that we don't cry"
+        },
+        {
+          "startMs": 70140,
+          "endMs": 71610,
+          "text": "Lost in the city, both eyes wide"
+        },
+        {
+          "startMs": 71610,
+          "endMs": 74400,
+          "text": "Ran right through all my options"
+        },
+        {
+          "startMs": 74400,
+          "endMs": 75950,
+          "text": "Can't seem to keep my eyes both dry"
+        },
+        {
+          "startMs": 75950,
+          "endMs": 79330,
+          "text": "Got tissues in my pocket"
+        },
+        {
+          "startMs": 79330,
+          "endMs": 80620,
+          "text": "I'm sensitive"
+        },
+        {
+          "startMs": 80620,
+          "endMs": 83640,
+          "text": "Prolly wanna duck when I throw a fit"
+        },
+        {
+          "startMs": 83640,
+          "endMs": 84780,
+          "text": "Been through some shit"
+        },
+        {
+          "startMs": 84780,
+          "endMs": 87140,
+          "text": "Wear my heart on my sleeve, so it's hard to miss"
+        },
+        {
+          "startMs": 87140,
+          "endMs": 91680,
+          "text": "Tell me that you'll keep me safe and"
+        },
+        {
+          "startMs": 91680,
+          "endMs": 95340,
+          "text": "Never let this fade away"
+        },
+        {
+          "startMs": 95340,
+          "endMs": 104440,
+          "text": "I'm hidin' out, so they don't see this part of me"
+        },
+        {
+          "startMs": 104440,
+          "endMs": 107990,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 107990,
+          "endMs": 113490,
+          "text": "Girls like me pretend we don't cry (cry, baby)"
+        },
+        {
+          "startMs": 113490,
+          "endMs": 116650,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 116650,
+          "endMs": 121940,
+          "text": "Girls like me pretend we don't cry"
+        },
+        {
+          "startMs": 121940,
+          "endMs": 126510,
+          "text": "Tell me that you'll keep me safe and"
+        },
+        {
+          "startMs": 126510,
+          "endMs": 130730,
+          "text": "Never let this fade away"
+        },
+        {
+          "startMs": 130730,
+          "endMs": 134060,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 134060,
+          "endMs": 140160,
+          "text": "Girls like me pretend that we don't cry (cry)"
+        },
+        {
+          "startMs": 140160,
+          "endMs": 142250,
+          "text": "They say, \"Girl, don't cry\" (don't cry)"
+        },
+        {
+          "startMs": 142250,
+          "endMs": 144410,
+          "text": "Try to keep my head up high (up high)"
+        },
+        {
+          "startMs": 144410,
+          "endMs": 146460,
+          "text": "Smile like it's alright"
+        },
+        {
+          "startMs": 146460,
+          "endMs": 148800,
+          "text": "But all I want to do is hide"
+        },
+        {
+          "startMs": 148800,
+          "endMs": 150490,
+          "text": "Gotta let it go (oh)"
+        },
+        {
+          "startMs": 150490,
+          "endMs": 157160,
+          "text": "I don't wanna keep this all inside"
+        },
+        {
+          "startMs": 157160,
+          "endMs": 160180,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 160180,
+          "endMs": 165870,
+          "text": "Girls like me pretend we don't cry (oh, no, we don't cry, baby)"
+        },
+        {
+          "startMs": 165870,
+          "endMs": 168920,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 168920,
+          "endMs": 174520,
+          "text": "Girls like me pretend we don't cry"
+        },
+        {
+          "startMs": 174520,
+          "endMs": 178970,
+          "text": "Tell me that you'll keep me safe and"
+        },
+        {
+          "startMs": 178970,
+          "endMs": 183260,
+          "text": "Never let this fade away"
+        },
+        {
+          "startMs": 183260,
+          "endMs": 186440,
+          "text": "Girls like me don't cry"
+        },
+        {
+          "startMs": 186440,
+          "endMs": 190300,
+          "text": "Girls like me pretend that we don't cry"
+        }
+      ]
+    },
+    {
+      "id": "Hotel - Claire Rosinkranz - R5dAVAkwpUU",
+      "title": "Hotel",
+      "artist": "Claire Rosinkranz",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4025,
+      "durationInFrames": 4043,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE FACADE IS BUILT OF WHISPERS AND GOLD-PLATED LIES.",
+        "rightVertical": "SECRETS ARE KEPT IN THE QUIET HALLWAYS AFTER MIDNIGHT FALLS.",
+        "bottomLine": "A SUNDAY NIGHT ESCAPE FROM EVERY EXPECTATION."
+      },
+      "lyrics": [
+        {
+          "startMs": 1680,
+          "endMs": 4480,
+          "text": "I keep a lot of secrets to myself"
+        },
+        {
+          "startMs": 4560,
+          "endMs": 8080,
+          "text": "My parents think I'm honest, not like everyone else"
+        },
+        {
+          "startMs": 8080,
+          "endMs": 11600,
+          "text": "Like they could catch me in a lie, they say, they're able to tell"
+        },
+        {
+          "startMs": 11600,
+          "endMs": 15200,
+          "text": "But I'm partying with my friends at some random hotel"
+        },
+        {
+          "startMs": 15740,
+          "endMs": 18840,
+          "text": "And sneaking out the window on a Sunday night"
+        },
+        {
+          "startMs": 18940,
+          "endMs": 21960,
+          "text": "I'd do it on a Friday, but that's obvious"
+        },
+        {
+          "startMs": 21960,
+          "endMs": 26140,
+          "text": "I don't wanna lose my trust, but I do it so well"
+        },
+        {
+          "startMs": 26140,
+          "endMs": 29620,
+          "text": "'Cause I'm partying with my friends at some random hotel"
+        },
+        {
+          "startMs": 31600,
+          "endMs": 35220,
+          "text": "Yeah, it's a little fun, stupid, and like really dumb"
+        },
+        {
+          "startMs": 36180,
+          "endMs": 38660,
+          "text": "Pop six pieces of gum, before I get home"
+        },
+        {
+          "startMs": 38660,
+          "endMs": 45180,
+          "text": "'Cause we do it so well, yeah, no, they'll never tell"
+        },
+        {
+          "startMs": 45180,
+          "endMs": 50000,
+          "text": "And we're driving a little fast, P.C.H. wasted my gas"
+        },
+        {
+          "startMs": 50000,
+          "endMs": 53060,
+          "text": "Eating pasta in the back, spilling our minds out"
+        },
+        {
+          "startMs": 53060,
+          "endMs": 59560,
+          "text": "Wish our secrets farewell, they stay in this random hotel"
+        },
+        {
+          "startMs": 60520,
+          "endMs": 63660,
+          "text": "Screaming out songs like there's nobody there"
+        },
+        {
+          "startMs": 63660,
+          "endMs": 67200,
+          "text": "We're 17 and idiots who play truth or dare"
+        },
+        {
+          "startMs": 67200,
+          "endMs": 70720,
+          "text": "One day I'll write a story that'll sit on a shelf"
+        },
+        {
+          "startMs": 70720,
+          "endMs": 74160,
+          "text": "About me partying with my friends at some random hotel"
+        },
+        {
+          "startMs": 74160,
+          "endMs": 78000,
+          "text": "And sneaking out the window on a Sunday night"
+        },
+        {
+          "startMs": 78160,
+          "endMs": 81020,
+          "text": "I'd do it on a Friday, but that's obvious"
+        },
+        {
+          "startMs": 81540,
+          "endMs": 85100,
+          "text": "I don't wanna lose my trust, but I do it so well"
+        },
+        {
+          "startMs": 85100,
+          "endMs": 88700,
+          "text": "'Cause I'm partying with my friends at some random hotel"
+        },
+        {
+          "startMs": 90720,
+          "endMs": 94280,
+          "text": "Yeah, it's a little fun, stupid, and like really dumb"
+        },
+        {
+          "startMs": 94760,
+          "endMs": 97740,
+          "text": "Pop six pieces of gum, before I get home"
+        },
+        {
+          "startMs": 97740,
+          "endMs": 104340,
+          "text": "'Cause we do it so well, yeah, no, they'll never tell"
+        },
+        {
+          "startMs": 104340,
+          "endMs": 109160,
+          "text": "And we're driving a little fast, P.C.H. wasted my gas"
+        },
+        {
+          "startMs": 109160,
+          "endMs": 112160,
+          "text": "Eating pasta in the back, spilling our minds out"
+        },
+        {
+          "startMs": 113700,
+          "endMs": 118740,
+          "text": "Wish our secrets farewell, they stay in this random hotel"
+        },
+        {
+          "startMs": 119200,
+          "endMs": 125800,
+          "text": "'Cause we do it so well, yeah, no, they'll never tell"
+        },
+        {
+          "startMs": 125800,
+          "endMs": 132200,
+          "text": "Wish our secrets farewell, they stay in this random hotel"
+        }
+      ]
+    },
+    {
+      "id": "Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI",
+      "title": "Are You Bored Yet? (feat. Clairo)",
+      "artist": "Wallows",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 19130,
+      "renderDurationInFrames": 3702,
+      "durationInFrames": 5340,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE UNANSWERED QUESTIONS ALWAYS HAUNT THE EDGE OF OUR CONVERSATION.",
+        "rightVertical": "WE ARE STUCK IN A TIMELESS MOMENT BETWEEN WHISPERS AND LONG GOODBYES.",
+        "bottomLine": "JUST PRETEND WE FALL ASLEEP NOW"
+      },
+      "lyrics": [
+        {
+          "startMs": 15130,
+          "endMs": 22130,
+          "text": "♪"
+        },
+        {
+          "startMs": 22130,
+          "endMs": 25330,
+          "text": "What's wrong, you've been askin'"
+        },
+        {
+          "startMs": 25330,
+          "endMs": 27790,
+          "text": "But I don't have an answer"
+        },
+        {
+          "startMs": 27790,
+          "endMs": 31330,
+          "text": "How come, I'm still thinkin'"
+        },
+        {
+          "startMs": 31330,
+          "endMs": 33810,
+          "text": "Let's pretend to fall asleep now"
+        },
+        {
+          "startMs": 33810,
+          "endMs": 37910,
+          "text": "When we get old, will we regret this?"
+        },
+        {
+          "startMs": 37910,
+          "endMs": 42150,
+          "text": "Too young to think about all that shit"
+        },
+        {
+          "startMs": 42150,
+          "endMs": 45370,
+          "text": "And stalling only goes so far"
+        },
+        {
+          "startMs": 45370,
+          "endMs": 47530,
+          "text": "When you've got a head start"
+        },
+        {
+          "startMs": 47530,
+          "endMs": 51490,
+          "text": "'Cause we could stay at home and watch the sunset"
+        },
+        {
+          "startMs": 51490,
+          "endMs": 55850,
+          "text": "But I can't help from asking, \"Are you bored yet?\""
+        },
+        {
+          "startMs": 55850,
+          "endMs": 59830,
+          "text": "And if you're feelin' lonely you should tell me"
+        },
+        {
+          "startMs": 59830,
+          "endMs": 63810,
+          "text": "Before this ends up as another memory"
+        },
+        {
+          "startMs": 63810,
+          "endMs": 68390,
+          "text": "Will you tell the truth so I don't have to lie"
+        },
+        {
+          "startMs": 72380,
+          "endMs": 76580,
+          "text": "Will you tell the truth so I don't have to lie"
+        },
+        {
+          "startMs": 81520,
+          "endMs": 84180,
+          "text": "Feels like I've known you my whole life"
+        },
+        {
+          "startMs": 84180,
+          "endMs": 86920,
+          "text": "I can see right through your lies"
+        },
+        {
+          "startMs": 87360,
+          "endMs": 91580,
+          "text": "I don't know where we're goin'"
+        },
+        {
+          "startMs": 91840,
+          "endMs": 95280,
+          "text": "But I'd like to be by your side"
+        },
+        {
+          "startMs": 96480,
+          "endMs": 99100,
+          "text": "If you could tell me how you're feelin'"
+        },
+        {
+          "startMs": 99100,
+          "endMs": 103120,
+          "text": "Maybe we could get through this undefeated"
+        },
+        {
+          "startMs": 104400,
+          "endMs": 108780,
+          "text": "Holdin' on for so long, oh"
+        },
+        {
+          "startMs": 112010,
+          "endMs": 115530,
+          "text": "'Cause we could stay at home and watch the sunset"
+        },
+        {
+          "startMs": 115530,
+          "endMs": 119870,
+          "text": "But I can't help from asking, \"Are you bored yet?\""
+        },
+        {
+          "startMs": 119870,
+          "endMs": 123810,
+          "text": "And if you're feelin' lonely you should tell me"
+        },
+        {
+          "startMs": 123810,
+          "endMs": 127870,
+          "text": "Before this ends up as another memory"
+        },
+        {
+          "startMs": 127870,
+          "endMs": 132490,
+          "text": "Will you tell the truth so I don't have to lie"
+        },
+        {
+          "startMs": 135640,
+          "endMs": 140540,
+          "text": "Will you tell the truth so I don't have to lie"
+        }
+      ]
+    },
+    {
+      "id": "Too Sweet (Official Video) - Hozier - NTpbbQUBbuo",
+      "title": "Hozier - Too Sweet (Official Video)",
+      "artist": "Hozier",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 16280,
+      "renderDurationInFrames": 6957,
+      "durationInFrames": 7446,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE DAWN IS A WHISPER OF WHAT WAS NEVER SPOKEN.",
+        "rightVertical": "WE ARE LOST IN THE BLUE HOUR BETWEEN SLEEP AND AWAKENING.",
+        "bottomLine": "SILENCE HOLDS ALL OUR UNTOLD SECRETS."
+      },
+      "lyrics": [
+        {
+          "startMs": 12280,
+          "endMs": 19280,
+          "text": "♪"
+        },
+        {
+          "startMs": 19280,
+          "endMs": 22420,
+          "text": "It can't be said I'm an early bird"
+        },
+        {
+          "startMs": 23280,
+          "endMs": 26380,
+          "text": "It's ten o'clock before I say a word"
+        },
+        {
+          "startMs": 27400,
+          "endMs": 29800,
+          "text": "Baby, I can never tell"
+        },
+        {
+          "startMs": 29800,
+          "endMs": 31760,
+          "text": "How do you sleep so well?"
+        },
+        {
+          "startMs": 31760,
+          "endMs": 34000,
+          "text": "You keep telling me to live right"
+        },
+        {
+          "startMs": 34780,
+          "endMs": 37860,
+          "text": "To go to bed before the daylight"
+        },
+        {
+          "startMs": 39300,
+          "endMs": 42240,
+          "text": "But then you wake up for the sunrise"
+        },
+        {
+          "startMs": 43440,
+          "endMs": 48120,
+          "text": "You know you don't gotta pretend, baby, now and then"
+        },
+        {
+          "startMs": 48120,
+          "endMs": 52180,
+          "text": "Don't you just wanna wake up, dark as a lake?"
+        },
+        {
+          "startMs": 52180,
+          "endMs": 56420,
+          "text": "Smelling like a bonfire, lost in a haze?"
+        },
+        {
+          "startMs": 56420,
+          "endMs": 60240,
+          "text": "If you're drunk on life, babe, I think it's great"
+        },
+        {
+          "startMs": 60240,
+          "endMs": 62340,
+          "text": "But while in this world"
+        },
+        {
+          "startMs": 62340,
+          "endMs": 66120,
+          "text": "I think I'll take my whiskey neat"
+        },
+        {
+          "startMs": 66680,
+          "endMs": 71750,
+          "text": "My coffee black and my bed at three"
+        },
+        {
+          "startMs": 71750,
+          "endMs": 75701,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 75701,
+          "endMs": 79351,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 79351,
+          "endMs": 84191,
+          "text": "I take my whiskey neat"
+        },
+        {
+          "startMs": 84191,
+          "endMs": 88041,
+          "text": "My coffee black and my bed at three"
+        },
+        {
+          "startMs": 88041,
+          "endMs": 92071,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 92071,
+          "endMs": 97521,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 97521,
+          "endMs": 101619,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 101619,
+          "endMs": 105716,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 105716,
+          "endMs": 109814,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 109814,
+          "endMs": 113911,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 113911,
+          "endMs": 116091,
+          "text": "I aim low"
+        },
+        {
+          "startMs": 116091,
+          "endMs": 119881,
+          "text": "I aim true, and the ground's where I go"
+        },
+        {
+          "startMs": 119881,
+          "endMs": 124501,
+          "text": "I work late, where I'm free from the phone"
+        },
+        {
+          "startMs": 124501,
+          "endMs": 129571,
+          "text": "And the job gets done, but you worry some, I know"
+        },
+        {
+          "startMs": 129571,
+          "endMs": 133371,
+          "text": "But who wants to live forever, babe?"
+        },
+        {
+          "startMs": 133371,
+          "endMs": 137471,
+          "text": "You treat your mouth as if it's Heaven's gate"
+        },
+        {
+          "startMs": 137471,
+          "endMs": 141681,
+          "text": "The rest of you like you're the TSA"
+        },
+        {
+          "startMs": 141681,
+          "endMs": 145790,
+          "text": "I wish I could go along, babe, don't get me wrong"
+        },
+        {
+          "startMs": 145790,
+          "endMs": 150351,
+          "text": "You know you're bright as the morning, as soft as the rain"
+        },
+        {
+          "startMs": 150351,
+          "endMs": 154151,
+          "text": "Pretty as a vine, as sweet as a grape"
+        },
+        {
+          "startMs": 154151,
+          "endMs": 158941,
+          "text": "If you can sit in a barrel, maybe I'll wait"
+        },
+        {
+          "startMs": 158941,
+          "endMs": 160811,
+          "text": "Until that day"
+        },
+        {
+          "startMs": 160811,
+          "endMs": 166161,
+          "text": "I'd rather take my whiskey neat"
+        },
+        {
+          "startMs": 166161,
+          "endMs": 170091,
+          "text": "My coffee black and my bed at three"
+        },
+        {
+          "startMs": 170091,
+          "endMs": 174201,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 174201,
+          "endMs": 177821,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 177821,
+          "endMs": 182651,
+          "text": "I take my whiskey neat"
+        },
+        {
+          "startMs": 182651,
+          "endMs": 186541,
+          "text": "My coffee black and my bed at three"
+        },
+        {
+          "startMs": 191850,
+          "endMs": 193850,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 195770,
+          "endMs": 201060,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 201060,
+          "endMs": 204985,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 204985,
+          "endMs": 208910,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 208910,
+          "endMs": 212835,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 212835,
+          "endMs": 216760,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 216760,
+          "endMs": 220685,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 220685,
+          "endMs": 224610,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 224610,
+          "endMs": 228535,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 228535,
+          "endMs": 232460,
+          "text": "Whoa, oh"
+        },
+        {
+          "startMs": 232460,
+          "endMs": 237240,
+          "text": "I take my whiskey neat"
+        },
+        {
+          "startMs": 237240,
+          "endMs": 240960,
+          "text": "My coffee black and my bed at three"
+        },
+        {
+          "startMs": 240960,
+          "endMs": 245110,
+          "text": "You're too sweet for me"
+        },
+        {
+          "startMs": 245110,
+          "endMs": 248310,
+          "text": "You're too sweet for me"
+        }
+      ]
+    },
+    {
+      "id": "Clairo - Sofia - Claire Cottrill - L9l8zCOwEII",
+      "title": "Clairo - Sofia",
+      "artist": "Claire Cottrill",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 13980,
+      "renderDurationInFrames": 5215,
+      "durationInFrames": 5652,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE STARS ALIGN WHEN WE ARE CLOSE ENOUGH TO TOUCH.",
+        "rightVertical": "A WHISPERED PROMISE OF FOREVER IN THE EMBRACE OF NIGHT.",
+        "bottomLine": "SOFIA, OUR MOMENTS BELONG ONLY TO US."
+      },
+      "lyrics": [
+        {
+          "startMs": 9980,
+          "endMs": 16980,
+          "text": "♪"
+        },
+        {
+          "startMs": 16980,
+          "endMs": 19640,
+          "text": "I think we could do it if we tried"
+        },
+        {
+          "startMs": 19640,
+          "endMs": 23620,
+          "text": "If only to say you're mine"
+        },
+        {
+          "startMs": 25900,
+          "endMs": 27860,
+          "text": "Sofia, know that you and I"
+        },
+        {
+          "startMs": 27860,
+          "endMs": 32040,
+          "text": "Shouldn't feel like a crime"
+        },
+        {
+          "startMs": 33750,
+          "endMs": 36720,
+          "text": "I think we could do it if we tried"
+        },
+        {
+          "startMs": 36720,
+          "endMs": 40660,
+          "text": "If only to say you're mine"
+        },
+        {
+          "startMs": 42900,
+          "endMs": 44740,
+          "text": "Sofia, know that you and I"
+        },
+        {
+          "startMs": 44740,
+          "endMs": 49180,
+          "text": "Shouldn't feel like a crime"
+        },
+        {
+          "startMs": 50000,
+          "endMs": 57620,
+          "text": "You know I'll do anything you ask me to"
+        },
+        {
+          "startMs": 57620,
+          "endMs": 66020,
+          "text": "But oh my God, I think I'm in love with you"
+        },
+        {
+          "startMs": 70200,
+          "endMs": 72700,
+          "text": "Standin' here alone now, think that we can drive around"
+        },
+        {
+          "startMs": 72700,
+          "endMs": 76300,
+          "text": "I just wanna say how I love you with your hair down"
+        },
+        {
+          "startMs": 76300,
+          "endMs": 80460,
+          "text": "Baby, you don't gotta fight, I'll be here 'til the end of time"
+        },
+        {
+          "startMs": 80460,
+          "endMs": 84380,
+          "text": "Wishin' that you were mine, pull you in, it's alright"
+        },
+        {
+          "startMs": 84380,
+          "endMs": 87560,
+          "text": "I think we could do it if we tried"
+        },
+        {
+          "startMs": 87560,
+          "endMs": 91520,
+          "text": "If only to say you're mine"
+        },
+        {
+          "startMs": 93960,
+          "endMs": 95660,
+          "text": "Sofia, know that you and I"
+        },
+        {
+          "startMs": 95660,
+          "endMs": 100080,
+          "text": "Shouldn't feel like a crime"
+        },
+        {
+          "startMs": 100080,
+          "endMs": 108480,
+          "text": "♪"
+        },
+        {
+          "startMs": 118030,
+          "endMs": 122100,
+          "text": "Honey, I don't want it to fade"
+        },
+        {
+          "startMs": 122100,
+          "endMs": 126300,
+          "text": "There's things that I know could get in the way"
+        },
+        {
+          "startMs": 126300,
+          "endMs": 130630,
+          "text": "I don't want to say goodbye"
+        },
+        {
+          "startMs": 130630,
+          "endMs": 135050,
+          "text": "And I think that we could do it if we tried"
+        },
+        {
+          "startMs": 135050,
+          "endMs": 138090,
+          "text": "I think we could do it if we tried"
+        },
+        {
+          "startMs": 138090,
+          "endMs": 143450,
+          "text": "If only to say you're mine"
+        },
+        {
+          "startMs": 143450,
+          "endMs": 146620,
+          "text": "Sofia, know that you and I"
+        },
+        {
+          "startMs": 146620,
+          "endMs": 151970,
+          "text": "Shouldn't feel like a crime"
+        },
+        {
+          "startMs": 151970,
+          "endMs": 155030,
+          "text": "I think we could do it (I think we could, I think we could do it, if, if, if)"
+        },
+        {
+          "startMs": 155030,
+          "endMs": 160300,
+          "text": "If we tried (we could, we could, you're mine)"
+        },
+        {
+          "startMs": 160300,
+          "endMs": 163590,
+          "text": "I think we could do it (Sofia, know that you, you, you and I)"
+        },
+        {
+          "startMs": 163590,
+          "endMs": 168830,
+          "text": "If we tried (shouldn't feel like a crime)"
+        },
+        {
+          "startMs": 168830,
+          "endMs": 172520,
+          "text": "Sofia, know that you and I (I think we could, I think we could do it, we could, we could)"
+        },
+        {
+          "startMs": 172520,
+          "endMs": 177290,
+          "text": "Shouldn't feel like a crime (do it, do it, you're mine) (get in the way)"
+        },
+        {
+          "startMs": 177290,
+          "endMs": 182620,
+          "text": "Sofia, know that you and I (Sofia, know that you, you, you and I shouldn't feel)"
+        },
+        {
+          "startMs": 182620,
+          "endMs": 185820,
+          "text": "Oh, oh (like a crime) (do it if we tried)"
+        }
+      ]
     }
   ],
   "queue": [
@@ -7533,69 +10376,96 @@
       "title": "Party In The U.S.A.",
       "artist": "Miley Cyrus",
       "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
+      "title": "We Don't Talk Anymore (feat. Selena Gomez)",
+      "artist": "Charlie Puth",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4",
+      "title": "The Lumineers - Ho Hey (Official Video)",
+      "artist": "The Lumineers",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "2002 [Official Video] - Anne-Marie - Il-an3K9pjg",
+      "title": "Anne-Marie - 2002 [Official Video]",
+      "artist": "Anne-Marie",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Mad at Disney - salem ilese - 4cLaxFWT9iI",
+      "title": "Mad at Disney",
+      "artist": "salem ilese",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Backyard Boy - Claire Rosinkranz - 72L5HWbutzI",
+      "title": "Backyard Boy",
+      "artist": "Claire Rosinkranz",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Cheap Thrills - Sia - K_idN3P5_yk",
+      "title": "Cheap Thrills",
+      "artist": "Sia",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "girls like me don't cry - thủy - T4gmE2nHA_M",
+      "title": "girls like me don't cry",
+      "artist": "thủy",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Hotel - Claire Rosinkranz - R5dAVAkwpUU",
+      "title": "Hotel",
+      "artist": "Claire Rosinkranz",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI",
+      "title": "Are You Bored Yet? (feat. Clairo)",
+      "artist": "Wallows",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Too Sweet (Official Video) - Hozier - NTpbbQUBbuo",
+      "title": "Hozier - Too Sweet (Official Video)",
+      "artist": "Hozier",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Clairo - Sofia - Claire Cottrill - L9l8zCOwEII",
+      "title": "Clairo - Sofia",
+      "artist": "Claire Cottrill",
+      "accent": "rgba(163, 206, 255, 0.7)"
     }
   ],
   "playlists": [
     {
       "id": "liked",
       "name": "Liked Songs",
-      "count": 2,
+      "count": 0,
       "accent": "rgba(255, 196, 170, 0.78)"
-    },
-    {
-      "id": "night-drive",
-      "name": "Night Drive",
-      "count": 2,
-      "accent": "rgba(255,255,255,0.58)",
-      "trackIds": [
-        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
-        "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ"
-      ]
-    },
-    {
-      "id": "city-echoes",
-      "name": "City Echoes",
-      "count": 0,
-      "accent": "rgba(255,255,255,0.58)",
-      "trackIds": []
-    },
-    {
-      "id": "neon-pulse",
-      "name": "Neon Pulse",
-      "count": 0,
-      "accent": "rgba(255,255,255,0.58)",
-      "trackIds": []
-    },
-    {
-      "id": "soft-pages",
-      "name": "Soft Pages",
-      "count": 0,
-      "accent": "rgba(255,255,255,0.58)",
-      "trackIds": []
-    },
-    {
-      "id": "afterglow",
-      "name": "Afterglow",
-      "count": 1,
-      "accent": "rgba(255,255,255,0.58)",
-      "trackIds": [
-        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914"
-      ]
     },
     {
       "id": "new-downloads",
       "name": "New Downloads",
-      "count": 9,
+      "count": 0,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": []
+    },
+    {
+      "id": "alignment-error",
+      "name": "Alignment Error",
+      "count": 3,
       "accent": "rgba(255,255,255,0.58)",
       "trackIds": [
         "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
-        "Drama King - Bellah Mae - zlF-KFWf6c4",
-        "Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4",
-        "Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic",
-        "Pump It - Black Eyed Peas - d77gTBvX0K8",
-        "What Makes You Beautiful - One Direction - d57qSDCxVA4",
-        "My Humps - Black Eyed Peas - opnZlnd3d7U",
-        "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk",
+        "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
         "Just the Way You Are - Bruno Mars - GnUW4AF1LZo"
       ]
     }

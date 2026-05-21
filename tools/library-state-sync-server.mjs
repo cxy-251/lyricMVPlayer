@@ -22,9 +22,12 @@ const readLibraryState = () => {
   if (!fs.existsSync(libraryStatePath)) {
     return {
       nickname: "CleanKsen",
-      selectedPlaylistId: "all",
+      selectedPlaylistId: "new-downloads",
       likedTrackIds: [],
-      customPlaylists: [],
+      customPlaylists: [
+        {id: "new-downloads", name: "New Downloads", trackIds: []},
+        {id: "alignment-error", name: "Alignment Error", trackIds: []},
+      ],
     };
   }
 
@@ -53,7 +56,7 @@ const normalizeLibraryState = (payload) => {
     selectedPlaylistId:
       typeof payload?.selectedPlaylistId === "string" && payload.selectedPlaylistId.trim().length > 0
         ? payload.selectedPlaylistId
-        : "all",
+        : current.selectedPlaylistId ?? "new-downloads",
     likedTrackIds: Array.isArray(payload?.likedTrackIds)
       ? Array.from(new Set(payload.likedTrackIds.filter((trackId) => typeof trackId === "string" && trackId.trim().length > 0)))
       : [],

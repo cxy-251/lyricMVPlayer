@@ -1,46 +1,20 @@
 {
   "nickname": "CleanKsen",
   "selectedPlaylistId": "new-downloads",
-  "likedTrackIds": [
-    "I Got Better - Morgan Wallen - Xc-dEsMbQJM",
-    "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ"
-  ],
+  "likedTrackIds": [],
   "customPlaylists": [
-    {
-      "id": "night-drive",
-      "name": "Night Drive",
-      "trackIds": [
-        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
-        "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ"
-      ]
-    },
-    {
-      "id": "city-echoes",
-      "name": "City Echoes",
-      "trackIds": []
-    },
-    {
-      "id": "neon-pulse",
-      "name": "Neon Pulse",
-      "trackIds": []
-    },
-    {
-      "id": "soft-pages",
-      "name": "Soft Pages",
-      "trackIds": []
-    },
-    {
-      "id": "afterglow",
-      "name": "Afterglow",
-      "trackIds": [
-        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914"
-      ]
-    },
     {
       "id": "new-downloads",
       "name": "New Downloads",
+      "trackIds": []
+    },
+    {
+      "id": "alignment-error",
+      "name": "Alignment Error",
       "trackIds": [
-        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY"
+        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+        "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
+        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo"
       ]
     }
   ]

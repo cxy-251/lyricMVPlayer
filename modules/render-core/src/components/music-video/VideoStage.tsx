@@ -38,6 +38,10 @@ const STORAGE_KEY = "lyricMVPlayer.libraryState.v1";
 const DEFAULT_NICKNAME = "CleanKsen";
 const LIBRARY_STATE_SYNC_URL = "http://127.0.0.1:3210/api/library-state";
 const ALL_TRACKS_SENTINEL = "__ALL__";
+const DEFAULT_CUSTOM_PLAYLISTS = [
+  {id: "new-downloads", name: "New Downloads", trackIds: [] as string[]},
+  {id: "alignment-error", name: "Alignment Error", trackIds: [] as string[]},
+];
 
 const formatDisplayTitle = (title: string, artist: string): string => {
   const strippedArtist = title.replace(new RegExp(`^${artist}\\s*-\\s*`, "i"), "");
@@ -164,13 +168,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         trackIds: playlist.trackIds ?? [],
       }));
     }
-    return [
-      {id: "night-drive", name: "Night Drive", trackIds: initialLibrary.map((item) => item.id)},
-      {id: "city-echoes", name: "City Echoes", trackIds: []},
-      {id: "neon-pulse", name: "Neon Pulse", trackIds: []},
-      {id: "soft-pages", name: "Soft Pages", trackIds: []},
-      {id: "afterglow", name: "Afterglow", trackIds: []},
-    ];
+    return DEFAULT_CUSTOM_PLAYLISTS.map((playlist) => ({
+      ...playlist,
+      trackIds: [...playlist.trackIds],
+    }));
   }, [initialLibrary, props.playlists]);
 
   const initialStoredState = useMemo<StoredLibraryState>(() => {
@@ -219,13 +220,13 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     return {
       likedTrackIds: [],
       customPlaylists: initialCustomPlaylists,
-      selectedPlaylistId: null,
+      selectedPlaylistId: "new-downloads",
     };
   }, [initialCustomPlaylists, initialLibrary]);
 
   const [currentTrackIndex, setCurrentTrackIndex] = useState(initialTrackIndex);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(
-    initialStoredState.selectedPlaylistId ?? "all"
+    initialStoredState.selectedPlaylistId ?? "new-downloads"
   );
   const [likedTrackIds, setLikedTrackIds] = useState<string[]>(initialStoredState.likedTrackIds);
   const [customPlaylists, setCustomPlaylists] = useState<
