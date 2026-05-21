@@ -1,0 +1,4283 @@
+{
+  "selectedSongDirName": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+  "songs": [
+    {
+      "id": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+      "title": "Run Wild (向风而野)",
+      "artist": "是晚星呀 - Topic",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 5820,
+      "renderDurationInFrames": 6119,
+      "durationInFrames": 6294,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 8820,
+          "endMs": 11620,
+          "text": "Da da dum da da dum"
+        },
+        {
+          "startMs": 11620,
+          "endMs": 13740,
+          "text": "Sun on my face, I'm out the door"
+        },
+        {
+          "startMs": 13740,
+          "endMs": 16000,
+          "text": "Shoes in my hand, feet on the floor"
+        },
+        {
+          "startMs": 16000,
+          "endMs": 18340,
+          "text": "City behind me, getting small"
+        },
+        {
+          "startMs": 18340,
+          "endMs": 20760,
+          "text": "I don't look back, not at all"
+        },
+        {
+          "startMs": 20760,
+          "endMs": 22960,
+          "text": "Wind in my hair, heart in the sound"
+        },
+        {
+          "startMs": 22960,
+          "endMs": 25340,
+          "text": "Laughing like I got no doubt"
+        },
+        {
+          "startMs": 25340,
+          "endMs": 27600,
+          "text": "I lost the map, I found the spark"
+        },
+        {
+          "startMs": 27600,
+          "endMs": 30000,
+          "text": "We chase the day into the dark"
+        },
+        {
+          "startMs": 30000,
+          "endMs": 32320,
+          "text": "No more waiting, no more chains"
+        },
+        {
+          "startMs": 32320,
+          "endMs": 34240,
+          "text": "I'm not living in yesterday"
+        },
+        {
+          "startMs": 34240,
+          "endMs": 36920,
+          "text": "Turn the lights down, feel the bass"
+        },
+        {
+          "startMs": 36920,
+          "endMs": 39440,
+          "text": "Let the whole world fade away"
+        },
+        {
+          "startMs": 40220,
+          "endMs": 44120,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 44520,
+          "endMs": 48480,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 49020,
+          "endMs": 53080,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 53460,
+          "endMs": 57880,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 59120,
+          "endMs": 62860,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 62860,
+          "endMs": 65200,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 68880,
+          "endMs": 72120,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 72120,
+          "endMs": 74320,
+          "text": "Lost but so found"
+        },
+        {
+          "startMs": 78680,
+          "endMs": 81040,
+          "text": "Moon on the street, stars in my eyes"
+        },
+        {
+          "startMs": 81040,
+          "endMs": 82960,
+          "text": "We don't need a reason why"
+        },
+        {
+          "startMs": 82960,
+          "endMs": 85240,
+          "text": "Fast little heartbeat, neon glow"
+        },
+        {
+          "startMs": 85240,
+          "endMs": 87640,
+          "text": "Anywhere the night can go"
+        },
+        {
+          "startMs": 87640,
+          "endMs": 89960,
+          "text": "Dancing through the empty road"
+        },
+        {
+          "startMs": 89960,
+          "endMs": 92140,
+          "text": "Letting every feeling show"
+        },
+        {
+          "startMs": 92140,
+          "endMs": 94400,
+          "text": "If I fall, I fall in style"
+        },
+        {
+          "startMs": 94400,
+          "endMs": 96920,
+          "text": "If I'm scared, I run wild"
+        },
+        {
+          "startMs": 96920,
+          "endMs": 99260,
+          "text": "No more waiting, no more chains"
+        },
+        {
+          "startMs": 99260,
+          "endMs": 100940,
+          "text": "I'm not living in yesterday"
+        },
+        {
+          "startMs": 100940,
+          "endMs": 103860,
+          "text": "Turn the lights down, feel the bass"
+        },
+        {
+          "startMs": 103860,
+          "endMs": 106260,
+          "text": "Let the whole world fade away"
+        },
+        {
+          "startMs": 107220,
+          "endMs": 111100,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 113630,
+          "endMs": 115770,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 115770,
+          "endMs": 120310,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 120390,
+          "endMs": 125990,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 126340,
+          "endMs": 129720,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 129720,
+          "endMs": 132180,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 135780,
+          "endMs": 139020,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 139020,
+          "endMs": 141500,
+          "text": "Lost but so found"
+        },
+        {
+          "startMs": 141500,
+          "endMs": 143300,
+          "text": "Ah"
+        },
+        {
+          "startMs": 143300,
+          "endMs": 144380,
+          "text": "Ah"
+        },
+        {
+          "startMs": 144380,
+          "endMs": 144700,
+          "text": "Ah"
+        },
+        {
+          "startMs": 144700,
+          "endMs": 145020,
+          "text": "Ah"
+        },
+        {
+          "startMs": 145020,
+          "endMs": 145340,
+          "text": "Ah"
+        },
+        {
+          "startMs": 145340,
+          "endMs": 145660,
+          "text": "Ah"
+        },
+        {
+          "startMs": 145660,
+          "endMs": 145980,
+          "text": "Maybe I was made to fly"
+        },
+        {
+          "startMs": 145980,
+          "endMs": 146300,
+          "text": "Maybe I was born for this"
+        },
+        {
+          "startMs": 146300,
+          "endMs": 146620,
+          "text": "Every tear I left behind"
+        },
+        {
+          "startMs": 146620,
+          "endMs": 152220,
+          "text": "Turns into a little wish"
+        },
+        {
+          "startMs": 152220,
+          "endMs": 166409,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 166409,
+          "endMs": 178233,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 178233,
+          "endMs": 192421,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 192421,
+          "endMs": 206610,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 206610,
+          "endMs": 206930,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 206930,
+          "endMs": 207250,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 207250,
+          "endMs": 207570,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 207570,
+          "endMs": 209610,
+          "text": "Lost but so found"
+        }
+      ]
+    },
+    {
+      "id": "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ",
+      "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "artist": "Rick Astley",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 15070,
+      "renderDurationInFrames": 5939,
+      "durationInFrames": 6391,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 18070,
+          "endMs": 20810,
+          "text": "We're no strangers to love"
+        },
+        {
+          "startMs": 21970,
+          "endMs": 25870,
+          "text": "You know the rules and so do I"
+        },
+        {
+          "startMs": 27170,
+          "endMs": 30110,
+          "text": "A full commitment's what I'm thinkin' of"
+        },
+        {
+          "startMs": 31010,
+          "endMs": 34370,
+          "text": "You wouldn't get this from any other guy"
+        },
+        {
+          "startMs": 35270,
+          "endMs": 38890,
+          "text": "I just wanna tell you how I'm feeling"
+        },
+        {
+          "startMs": 39810,
+          "endMs": 42430,
+          "text": "Gotta make you understand"
+        },
+        {
+          "startMs": 42930,
+          "endMs": 46910,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 47330,
+          "endMs": 50750,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 51510,
+          "endMs": 55070,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 55750,
+          "endMs": 59370,
+          "text": "Never gonna tell a lie and hurt you"
+        },
+        {
+          "startMs": 60510,
+          "endMs": 64050,
+          "text": "We've known each other for so long"
+        },
+        {
+          "startMs": 64709,
+          "endMs": 68870,
+          "text": "Your heart's been aching, but you're too shy to say it"
+        },
+        {
+          "startMs": 68870,
+          "endMs": 72390,
+          "text": "Inside, we both know what's been going on"
+        },
+        {
+          "startMs": 72930,
+          "endMs": 77090,
+          "text": "We know the game and we're gonna play it"
+        },
+        {
+          "startMs": 79000,
+          "endMs": 82580,
+          "text": "And if you ask me how I'm feeling"
+        },
+        {
+          "startMs": 82580,
+          "endMs": 84840,
+          "text": "Don't tell me you're too blind to see"
+        },
+        {
+          "startMs": 85320,
+          "endMs": 88880,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 89540,
+          "endMs": 93040,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 93680,
+          "endMs": 97340,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 97980,
+          "endMs": 101580,
+          "text": "Never gonna tell a lie and hurt you"
+        },
+        {
+          "startMs": 101760,
+          "endMs": 106020,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 106420,
+          "endMs": 109940,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 110560,
+          "endMs": 114240,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 114900,
+          "endMs": 118480,
+          "text": "Never gonna tell a lie and hurt you"
+        },
+        {
+          "startMs": 119710,
+          "endMs": 123440,
+          "text": "(Ooh, give you up)"
+        },
+        {
+          "startMs": 123440,
+          "endMs": 127500,
+          "text": "(Ooh, give you up)"
+        },
+        {
+          "startMs": 127500,
+          "endMs": 131720,
+          "text": "(Ooh) never gonna give, never gonna give (give you up)"
+        },
+        {
+          "startMs": 131720,
+          "endMs": 136780,
+          "text": "(Ooh) never gonna give, never gonna give (give you up)"
+        },
+        {
+          "startMs": 136780,
+          "endMs": 141070,
+          "text": "We've known each other for so long"
+        },
+        {
+          "startMs": 141070,
+          "endMs": 145370,
+          "text": "Your heart's been aching, but you're too shy to say it"
+        },
+        {
+          "startMs": 145370,
+          "endMs": 149600,
+          "text": "Inside, we both know what's been going on"
+        },
+        {
+          "startMs": 149600,
+          "endMs": 153590,
+          "text": "We know the game and we're gonna play it"
+        },
+        {
+          "startMs": 153590,
+          "endMs": 158770,
+          "text": "I just wanna tell you how I'm feeling"
+        },
+        {
+          "startMs": 158770,
+          "endMs": 161490,
+          "text": "Gotta make you understand"
+        },
+        {
+          "startMs": 161490,
+          "endMs": 165800,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 165800,
+          "endMs": 170010,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 170010,
+          "endMs": 174160,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 174160,
+          "endMs": 178360,
+          "text": "Never gonna tell a lie and hurt you"
+        },
+        {
+          "startMs": 178360,
+          "endMs": 182710,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 182710,
+          "endMs": 186780,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 186780,
+          "endMs": 191040,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 191040,
+          "endMs": 195290,
+          "text": "Never gonna tell a lie and hurt you"
+        },
+        {
+          "startMs": 195290,
+          "endMs": 199640,
+          "text": "Never gonna give you up, never gonna let you down"
+        },
+        {
+          "startMs": 199640,
+          "endMs": 203780,
+          "text": "Never gonna run around and desert you"
+        },
+        {
+          "startMs": 203780,
+          "endMs": 207920,
+          "text": "Never gonna make you cry, never gonna say goodbye"
+        },
+        {
+          "startMs": 207920,
+          "endMs": 211120,
+          "text": "Never gonna tell a lie and hurt you"
+        }
+      ]
+    },
+    {
+      "id": "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
+      "title": "a-ha - Take On Me (Official Video) [4K]",
+      "artist": "a-ha",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 33900,
+      "renderDurationInFrames": 5882,
+      "durationInFrames": 7318,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE AIR IS THIN WITH UNTOLD WORDS AND SILENT PROMISES.",
+        "rightVertical": "A SHADOW OF A TOUCH WHERE THE LIGHT CANNOT REACH.",
+        "bottomLine": "WE ARE ONLY TALKING AWAY."
+      },
+      "lyrics": [
+        {
+          "startMs": 36900,
+          "endMs": 38560,
+          "text": "We're talking away"
+        },
+        {
+          "startMs": 38800,
+          "endMs": 42560,
+          "text": "I don't know what I'm to say"
+        },
+        {
+          "startMs": 42660,
+          "endMs": 44420,
+          "text": "I'll say it anyway"
+        },
+        {
+          "startMs": 45280,
+          "endMs": 48620,
+          "text": "Today is another day to find you"
+        },
+        {
+          "startMs": 48620,
+          "endMs": 50400,
+          "text": "Shyin' away"
+        },
+        {
+          "startMs": 51300,
+          "endMs": 53880,
+          "text": "Oh, I'll be comin' for your love, okay"
+        },
+        {
+          "startMs": 54060,
+          "endMs": 57680,
+          "text": "Take on me"
+        },
+        {
+          "startMs": 58680,
+          "endMs": 59940,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 59990,
+          "endMs": 64130,
+          "text": "Take me on"
+        },
+        {
+          "startMs": 64130,
+          "endMs": 65700,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 65700,
+          "endMs": 70320,
+          "text": "I'll be gone"
+        },
+        {
+          "startMs": 70320,
+          "endMs": 76420,
+          "text": "In a day or two"
+        },
+        {
+          "startMs": 76420,
+          "endMs": 79660,
+          "text": "So needless to say"
+        },
+        {
+          "startMs": 79660,
+          "endMs": 81190,
+          "text": "I'm odds and ends"
+        },
+        {
+          "startMs": 81190,
+          "endMs": 85500,
+          "text": "But I'll be stumblin' away"
+        },
+        {
+          "startMs": 85500,
+          "endMs": 88200,
+          "text": "Slowly learnin' that life is okay"
+        },
+        {
+          "startMs": 88200,
+          "endMs": 91470,
+          "text": "Say after me"
+        },
+        {
+          "startMs": 91470,
+          "endMs": 93960,
+          "text": "It's no better to be safe than sorry"
+        },
+        {
+          "startMs": 93960,
+          "endMs": 98290,
+          "text": "Take on me"
+        },
+        {
+          "startMs": 98290,
+          "endMs": 99860,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 99860,
+          "endMs": 103810,
+          "text": "Take me on"
+        },
+        {
+          "startMs": 103810,
+          "endMs": 105550,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 105550,
+          "endMs": 109950,
+          "text": "I'll be gone"
+        },
+        {
+          "startMs": 109950,
+          "endMs": 116820,
+          "text": "In a day or two"
+        },
+        {
+          "startMs": 155950,
+          "endMs": 159350,
+          "text": "All the things that you say, yeah"
+        },
+        {
+          "startMs": 159350,
+          "endMs": 165050,
+          "text": "Is it life or just to play my worries away?"
+        },
+        {
+          "startMs": 165050,
+          "endMs": 168160,
+          "text": "You're all the things I've got to remember"
+        },
+        {
+          "startMs": 168160,
+          "endMs": 170930,
+          "text": "You're shyin' away"
+        },
+        {
+          "startMs": 170930,
+          "endMs": 173410,
+          "text": "I'll be comin' for you anyway"
+        },
+        {
+          "startMs": 173410,
+          "endMs": 177740,
+          "text": "Take on me"
+        },
+        {
+          "startMs": 179570,
+          "endMs": 196540,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 181020,
+          "endMs": 185180,
+          "text": "Take me on"
+        },
+        {
+          "startMs": 185180,
+          "endMs": 186800,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 186800,
+          "endMs": 191830,
+          "text": "I'll be gone"
+        },
+        {
+          "startMs": 191830,
+          "endMs": 192730,
+          "text": "In a day"
+        },
+        {
+          "startMs": 192030,
+          "endMs": 196690,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 196690,
+          "endMs": 198030,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 198030,
+          "endMs": 202330,
+          "text": "(Take me on)"
+        },
+        {
+          "startMs": 202330,
+          "endMs": 203730,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 203730,
+          "endMs": 208030,
+          "text": "I'll be gone"
+        },
+        {
+          "startMs": 208030,
+          "endMs": 208930,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 208830,
+          "endMs": 209730,
+          "text": "In a day"
+        },
+        {
+          "startMs": 209530,
+          "endMs": 213430,
+          "text": "(Take me on)"
+        },
+        {
+          "startMs": 213430,
+          "endMs": 215130,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 215130,
+          "endMs": 219370,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 219370,
+          "endMs": 220780,
+          "text": "(Take on me)"
+        },
+        {
+          "startMs": 220780,
+          "endMs": 224770,
+          "text": "(Take me on)"
+        },
+        {
+          "startMs": 224770,
+          "endMs": 227970,
+          "text": "(Take on me)"
+        }
+      ]
+    },
+    {
+      "id": "I Want It That Way (Official HD Video) - Backstreet Boys - 4fndeDfaWCg",
+      "title": "Backstreet Boys - I Want It That Way (Official HD Video)",
+      "artist": "Backstreet Boys",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 6490,
+      "renderDurationInFrames": 6255,
+      "durationInFrames": 6577,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 9490,
+          "endMs": 10350,
+          "text": "Yeah"
+        },
+        {
+          "startMs": 15380,
+          "endMs": 19900,
+          "text": "You are my fire"
+        },
+        {
+          "startMs": 19900,
+          "endMs": 24780,
+          "text": "The one desire"
+        },
+        {
+          "startMs": 25540,
+          "endMs": 29900,
+          "text": "Believe when I say"
+        },
+        {
+          "startMs": 29900,
+          "endMs": 34680,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 34720,
+          "endMs": 41000,
+          "text": "But we are two worlds apart"
+        },
+        {
+          "startMs": 42000,
+          "endMs": 45920,
+          "text": "Can't reach to your heart"
+        },
+        {
+          "startMs": 47040,
+          "endMs": 49280,
+          "text": "When you say"
+        },
+        {
+          "startMs": 49880,
+          "endMs": 54080,
+          "text": "That I want it that way"
+        },
+        {
+          "startMs": 54080,
+          "endMs": 58780,
+          "text": "Tell me why (ain't nothin' but a heartache)"
+        },
+        {
+          "startMs": 58780,
+          "endMs": 63560,
+          "text": "Tell me why (ain't nothing but a mistake)"
+        },
+        {
+          "startMs": 63560,
+          "endMs": 68640,
+          "text": "Tell me why (I never wanna hear you say)"
+        },
+        {
+          "startMs": 68640,
+          "endMs": 73520,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 73520,
+          "endMs": 78080,
+          "text": "Am I your fire?"
+        },
+        {
+          "startMs": 78080,
+          "endMs": 82680,
+          "text": "Your one desire"
+        },
+        {
+          "startMs": 83340,
+          "endMs": 89780,
+          "text": "Yes, I know it's too late"
+        },
+        {
+          "startMs": 89780,
+          "endMs": 92900,
+          "text": "But I want it that way"
+        },
+        {
+          "startMs": 93760,
+          "endMs": 102660,
+          "text": "Tell me why (ain't nothin' but a heartache)"
+        },
+        {
+          "startMs": 102660,
+          "endMs": 105660,
+          "text": "Tell me why (ain't nothin' but a mistake)"
+        },
+        {
+          "startMs": 105660,
+          "endMs": 107520,
+          "text": "Tell me why (I never wanna hear you say)"
+        },
+        {
+          "startMs": 107520,
+          "endMs": 113720,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 113720,
+          "endMs": 117260,
+          "text": "Now I can see that we've fallen apart"
+        },
+        {
+          "startMs": 117260,
+          "endMs": 121860,
+          "text": "From the way that it used to be, yeah"
+        },
+        {
+          "startMs": 121860,
+          "endMs": 126940,
+          "text": "No matter the distance, I want you to know"
+        },
+        {
+          "startMs": 126940,
+          "endMs": 130560,
+          "text": "That deep down inside of me"
+        },
+        {
+          "startMs": 132290,
+          "endMs": 136390,
+          "text": "You are my fire"
+        },
+        {
+          "startMs": 136390,
+          "endMs": 141410,
+          "text": "The one desire"
+        },
+        {
+          "startMs": 141330,
+          "endMs": 148330,
+          "text": "You are (you are, you are, you are)"
+        },
+        {
+          "startMs": 149660,
+          "endMs": 152800,
+          "text": "Don't wanna hear you say"
+        },
+        {
+          "startMs": 152800,
+          "endMs": 156810,
+          "text": "Ain't nothin' but a heartache (hey, yeah)"
+        },
+        {
+          "startMs": 156810,
+          "endMs": 161590,
+          "text": "Ain't nothin' but a mistake (don't wanna hear you say)"
+        },
+        {
+          "startMs": 161590,
+          "endMs": 166200,
+          "text": "I never wanna hear you say (oh, yeah)"
+        },
+        {
+          "startMs": 166200,
+          "endMs": 170640,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 170640,
+          "endMs": 175310,
+          "text": "Tell me why (ain't nothin' but a heartache)"
+        },
+        {
+          "startMs": 175310,
+          "endMs": 180170,
+          "text": "Tell me why (ain't nothin' but a mistake)"
+        },
+        {
+          "startMs": 180170,
+          "endMs": 185840,
+          "text": "Tell me why (I never wanna hear you say) (don't wanna hear you say)"
+        },
+        {
+          "startMs": 185840,
+          "endMs": 190010,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 190010,
+          "endMs": 195490,
+          "text": "Tell me why (ain't nothin' but a heartache)"
+        },
+        {
+          "startMs": 195490,
+          "endMs": 199560,
+          "text": "Ain't nothin' but a mistake"
+        },
+        {
+          "startMs": 199560,
+          "endMs": 204940,
+          "text": "Tell me why (I never wanna hear you say) (never wanna hear you say, yeah)"
+        },
+        {
+          "startMs": 204940,
+          "endMs": 209790,
+          "text": "I want it that way"
+        },
+        {
+          "startMs": 209790,
+          "endMs": 212990,
+          "text": "'Cause I want it that way"
+        }
+      ]
+    },
+    {
+      "id": "Hey There Delilah - Plain White Ts - oEeet9t--tI",
+      "title": "Hey There Delilah",
+      "artist": "Plain White Ts",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 6330,
+      "renderDurationInFrames": 6530,
+      "durationInFrames": 6975,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 9330,
+          "endMs": 10710,
+          "text": "Hey there, Delilah"
+        },
+        {
+          "startMs": 11010,
+          "endMs": 13030,
+          "text": "What's it like in New York City?"
+        },
+        {
+          "startMs": 13390,
+          "endMs": 15230,
+          "text": "I'm a thousand miles away"
+        },
+        {
+          "startMs": 15290,
+          "endMs": 17710,
+          "text": "But, girl, tonight you look so pretty"
+        },
+        {
+          "startMs": 17710,
+          "endMs": 19930,
+          "text": "Yes, you do"
+        },
+        {
+          "startMs": 20710,
+          "endMs": 23530,
+          "text": "Times Square can't shine as bright as you"
+        },
+        {
+          "startMs": 24470,
+          "endMs": 25990,
+          "text": "I swear, it's true"
+        },
+        {
+          "startMs": 27890,
+          "endMs": 29130,
+          "text": "Hey there, Delilah"
+        },
+        {
+          "startMs": 29430,
+          "endMs": 31450,
+          "text": "Don't you worry about the distance"
+        },
+        {
+          "startMs": 31830,
+          "endMs": 33790,
+          "text": "I'm right there if you get lonely"
+        },
+        {
+          "startMs": 33790,
+          "endMs": 36070,
+          "text": "Give this song another listen"
+        },
+        {
+          "startMs": 36250,
+          "endMs": 37930,
+          "text": "Close your eyes"
+        },
+        {
+          "startMs": 39230,
+          "endMs": 42130,
+          "text": "Listen to my voice, it's my disguise"
+        },
+        {
+          "startMs": 42770,
+          "endMs": 45210,
+          "text": "I'm by your side"
+        },
+        {
+          "startMs": 46170,
+          "endMs": 48890,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 50870,
+          "endMs": 53350,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 55250,
+          "endMs": 57990,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 60070,
+          "endMs": 62510,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 62510,
+          "endMs": 65610,
+          "text": "What you do to me"
+        },
+        {
+          "startMs": 66950,
+          "endMs": 68370,
+          "text": "Hey there, Delilah"
+        },
+        {
+          "startMs": 68710,
+          "endMs": 70670,
+          "text": "I know times are gettin' hard"
+        },
+        {
+          "startMs": 70790,
+          "endMs": 72330,
+          "text": "But just believe me, girl"
+        },
+        {
+          "startMs": 72470,
+          "endMs": 75270,
+          "text": "Someday I'll pay the bills with this guitar"
+        },
+        {
+          "startMs": 75470,
+          "endMs": 76610,
+          "text": "We'll have it good"
+        },
+        {
+          "startMs": 78430,
+          "endMs": 81270,
+          "text": "We'll have the life we knew we would"
+        },
+        {
+          "startMs": 82190,
+          "endMs": 83670,
+          "text": "My word is good"
+        },
+        {
+          "startMs": 85610,
+          "endMs": 86850,
+          "text": "Hey there, Delilah"
+        },
+        {
+          "startMs": 87230,
+          "endMs": 89150,
+          "text": "I've got so much left to say"
+        },
+        {
+          "startMs": 89150,
+          "endMs": 92090,
+          "text": "If every simple song I wrote to you"
+        },
+        {
+          "startMs": 92090,
+          "endMs": 93650,
+          "text": "Would take your breath away"
+        },
+        {
+          "startMs": 93670,
+          "endMs": 95330,
+          "text": "I'd write it all"
+        },
+        {
+          "startMs": 96850,
+          "endMs": 101030,
+          "text": "Even more in love with me you'd fall"
+        },
+        {
+          "startMs": 101030,
+          "endMs": 102390,
+          "text": "We'd have it all"
+        },
+        {
+          "startMs": 103990,
+          "endMs": 106450,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 108430,
+          "endMs": 111070,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 113030,
+          "endMs": 115850,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 118130,
+          "endMs": 120410,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 121930,
+          "endMs": 124310,
+          "text": "A thousand miles seems pretty far"
+        },
+        {
+          "startMs": 124450,
+          "endMs": 126690,
+          "text": "But they've got planes and trains and cars"
+        },
+        {
+          "startMs": 126690,
+          "endMs": 129630,
+          "text": "I'd walk to you if I had no other way"
+        },
+        {
+          "startMs": 131050,
+          "endMs": 133690,
+          "text": "Our friends would all make fun of us"
+        },
+        {
+          "startMs": 133690,
+          "endMs": 136410,
+          "text": "And we'll just laugh along because we know"
+        },
+        {
+          "startMs": 136410,
+          "endMs": 139110,
+          "text": "That none of them have felt this way"
+        },
+        {
+          "startMs": 140470,
+          "endMs": 142790,
+          "text": "Delilah, I can promise you"
+        },
+        {
+          "startMs": 142790,
+          "endMs": 145050,
+          "text": "That by the time we get through"
+        },
+        {
+          "startMs": 145050,
+          "endMs": 148950,
+          "text": "The world will never ever be the same"
+        },
+        {
+          "startMs": 148950,
+          "endMs": 150870,
+          "text": "And you're to blame"
+        },
+        {
+          "startMs": 154490,
+          "endMs": 156050,
+          "text": "Hey there, Delilah"
+        },
+        {
+          "startMs": 156310,
+          "endMs": 158590,
+          "text": "You be good, and don't you miss me"
+        },
+        {
+          "startMs": 158590,
+          "endMs": 161190,
+          "text": "Two more years and you'll be done with school"
+        },
+        {
+          "startMs": 161190,
+          "endMs": 164330,
+          "text": "And I'll be makin' history like I do"
+        },
+        {
+          "startMs": 165970,
+          "endMs": 168930,
+          "text": "You'll know it's all because of you"
+        },
+        {
+          "startMs": 170450,
+          "endMs": 174070,
+          "text": "We can do whatever we want to"
+        },
+        {
+          "startMs": 175670,
+          "endMs": 178290,
+          "text": "Hey there, Delilah, here's to you"
+        },
+        {
+          "startMs": 179010,
+          "endMs": 180510,
+          "text": "This one's for you"
+        },
+        {
+          "startMs": 184570,
+          "endMs": 187270,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 189310,
+          "endMs": 192070,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 193830,
+          "endMs": 196510,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 198470,
+          "endMs": 201030,
+          "text": "Oh, it's what you do to me"
+        },
+        {
+          "startMs": 201870,
+          "endMs": 203410,
+          "text": "What you do to me"
+        },
+        {
+          "startMs": 204990,
+          "endMs": 212750,
+          "text": "Oh, whoa, whoa"
+        },
+        {
+          "startMs": 211860,
+          "endMs": 218810,
+          "text": "Oh whoa, oh"
+        },
+        {
+          "startMs": 218810,
+          "endMs": 222010,
+          "text": "Oh, oh"
+        }
+      ]
+    },
+    {
+      "id": "From The Start (Official Music Video) - Laufey - lSD_L-xic9o",
+      "title": "Laufey - From The Start (Official Music Video)",
+      "artist": "Laufey",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 1820,
+      "renderDurationInFrames": 4682,
+      "durationInFrames": 5086,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 4820,
+          "endMs": 7700,
+          "text": "Don't you notice how"
+        },
+        {
+          "startMs": 7700,
+          "endMs": 13300,
+          "text": "I get quiet when there's no one else around?"
+        },
+        {
+          "startMs": 14140,
+          "endMs": 17180,
+          "text": "Me and you and awkward silence"
+        },
+        {
+          "startMs": 17720,
+          "endMs": 22280,
+          "text": "Don't you dare look at me that way"
+        },
+        {
+          "startMs": 23060,
+          "endMs": 28120,
+          "text": "I don't need reminders of how you don't feel the same"
+        },
+        {
+          "startMs": 28120,
+          "endMs": 31180,
+          "text": "Oh, the burning pain"
+        },
+        {
+          "startMs": 31700,
+          "endMs": 36960,
+          "text": "Listening to you harp on 'bout some new soulmate"
+        },
+        {
+          "startMs": 37740,
+          "endMs": 40280,
+          "text": "\"She's so perfect,\" blah, blah, blah"
+        },
+        {
+          "startMs": 40280,
+          "endMs": 45560,
+          "text": "Oh, how I wish you'll wake up one day"
+        },
+        {
+          "startMs": 46560,
+          "endMs": 51480,
+          "text": "Run to me, confess your love, at least just let me say"
+        },
+        {
+          "startMs": 51480,
+          "endMs": 58140,
+          "text": "That when I talk to you, oh, Cupid walks right through"
+        },
+        {
+          "startMs": 58140,
+          "endMs": 62240,
+          "text": "And shoots an arrow through my heart"
+        },
+        {
+          "startMs": 63440,
+          "endMs": 69840,
+          "text": "And I sound like a loon, but don't you feel it too?"
+        },
+        {
+          "startMs": 69840,
+          "endMs": 74000,
+          "text": "Confess I loved you from the start"
+        },
+        {
+          "startMs": 97960,
+          "endMs": 101400,
+          "text": "What's a girl to do?"
+        },
+        {
+          "startMs": 101800,
+          "endMs": 107180,
+          "text": "Lying on my bed, staring into the blue"
+        },
+        {
+          "startMs": 108020,
+          "endMs": 110740,
+          "text": "Unrequited, terrifying"
+        },
+        {
+          "startMs": 111260,
+          "endMs": 115900,
+          "text": "Love is driving me a bit insane"
+        },
+        {
+          "startMs": 116400,
+          "endMs": 119340,
+          "text": "Have to get this off my chest"
+        },
+        {
+          "startMs": 119340,
+          "endMs": 121560,
+          "text": "I'm telling you today"
+        },
+        {
+          "startMs": 121560,
+          "endMs": 128380,
+          "text": "That when I talk to you, oh, Cupid walks right through"
+        },
+        {
+          "startMs": 128380,
+          "endMs": 133060,
+          "text": "And shoots an arrow through my heart"
+        },
+        {
+          "startMs": 133660,
+          "endMs": 140060,
+          "text": "And I sound like a loon, but don't you feel it too?"
+        },
+        {
+          "startMs": 140060,
+          "endMs": 144500,
+          "text": "Confess I loved you from the start"
+        },
+        {
+          "startMs": 144500,
+          "endMs": 148420,
+          "text": "Confess I loved you"
+        },
+        {
+          "startMs": 148420,
+          "endMs": 151000,
+          "text": "Just thinking of you"
+        },
+        {
+          "startMs": 152690,
+          "endMs": 155890,
+          "text": "I know I've loved you from the start"
+        }
+      ]
+    },
+    {
+      "id": "Be Around Me (feat. chloe moriondo) - Will Joseph Cook - TtEG06uuJKY",
+      "title": "Be Around Me (feat. chloe moriondo)",
+      "artist": "Will Joseph Cook",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 5437,
+      "durationInFrames": 5437,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 1030,
+          "endMs": 3810,
+          "text": "Hey, hey, how was your day?"
+        },
+        {
+          "startMs": 3810,
+          "endMs": 7690,
+          "text": "Mine was fine, but I think about you all the time"
+        },
+        {
+          "startMs": 7690,
+          "endMs": 9220,
+          "text": "Can't get you out of my brain"
+        },
+        {
+          "startMs": 9220,
+          "endMs": 10690,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 10690,
+          "endMs": 12670,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 12670,
+          "endMs": 15240,
+          "text": "Hi, hi, how was your night?"
+        },
+        {
+          "startMs": 15240,
+          "endMs": 18570,
+          "text": "Mine was wack, then I thought about you, felt alright"
+        },
+        {
+          "startMs": 18570,
+          "endMs": 21010,
+          "text": "Can't get you out of my mind"
+        },
+        {
+          "startMs": 21010,
+          "endMs": 22350,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 22350,
+          "endMs": 24170,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 24170,
+          "endMs": 26810,
+          "text": "Did I fuck it up again?"
+        },
+        {
+          "startMs": 26810,
+          "endMs": 31300,
+          "text": "Are we destined to be friends?"
+        },
+        {
+          "startMs": 31300,
+          "endMs": 35720,
+          "text": "I wanna give you more than that"
+        },
+        {
+          "startMs": 35720,
+          "endMs": 38530,
+          "text": "You a smokey, tenny-ten"
+        },
+        {
+          "startMs": 38530,
+          "endMs": 41410,
+          "text": "And I've got some time to lend"
+        },
+        {
+          "startMs": 41410,
+          "endMs": 45690,
+          "text": "T.L.D.R, we should do this again"
+        },
+        {
+          "startMs": 45690,
+          "endMs": 50120,
+          "text": "Hey, hey, how was your day?"
+        },
+        {
+          "startMs": 50120,
+          "endMs": 53940,
+          "text": "Mine was fine, but I think about you all the time"
+        },
+        {
+          "startMs": 53940,
+          "endMs": 55870,
+          "text": "Can't get you out of my brain"
+        },
+        {
+          "startMs": 55870,
+          "endMs": 57290,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 57290,
+          "endMs": 59100,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 59100,
+          "endMs": 61720,
+          "text": "Hi, hi, how was your night?"
+        },
+        {
+          "startMs": 61720,
+          "endMs": 65050,
+          "text": "Mine was wack, then I thought about you, felt alright"
+        },
+        {
+          "startMs": 65050,
+          "endMs": 67530,
+          "text": "Can't get you out of my mind"
+        },
+        {
+          "startMs": 67530,
+          "endMs": 68830,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 68830,
+          "endMs": 73410,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 73410,
+          "endMs": 76330,
+          "text": "Got me tripping on my tongue"
+        },
+        {
+          "startMs": 76330,
+          "endMs": 80260,
+          "text": "Watching denim come undone"
+        },
+        {
+          "startMs": 80260,
+          "endMs": 85380,
+          "text": "I have an idea, why don't we just"
+        },
+        {
+          "startMs": 85380,
+          "endMs": 87910,
+          "text": "Stop the clocks when I take you home"
+        },
+        {
+          "startMs": 87910,
+          "endMs": 90830,
+          "text": "Sweep you off of your tippy-toes"
+        },
+        {
+          "startMs": 90830,
+          "endMs": 94150,
+          "text": "T.L.D.R, I just wanna let you know"
+        },
+        {
+          "startMs": 94150,
+          "endMs": 96930,
+          "text": "I've fallen for you"
+        },
+        {
+          "startMs": 96930,
+          "endMs": 99610,
+          "text": "Hey, hey, how was your day?"
+        },
+        {
+          "startMs": 99610,
+          "endMs": 103360,
+          "text": "Mine was fine, but I think about you all the time"
+        },
+        {
+          "startMs": 103360,
+          "endMs": 105380,
+          "text": "Can't get you out of my brain"
+        },
+        {
+          "startMs": 105380,
+          "endMs": 106640,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 106640,
+          "endMs": 108470,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 108470,
+          "endMs": 111210,
+          "text": "Hi, hi, how was your night?"
+        },
+        {
+          "startMs": 111210,
+          "endMs": 114680,
+          "text": "Mine was wack, then I thought about you, felt alright"
+        },
+        {
+          "startMs": 114680,
+          "endMs": 116790,
+          "text": "Can't get you out of my mind"
+        },
+        {
+          "startMs": 116790,
+          "endMs": 118100,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 118100,
+          "endMs": 120100,
+          "text": "Come around, be around me"
+        },
+        {
+          "startMs": 120100,
+          "endMs": 123730,
+          "text": "Take my heart and assess the damages"
+        },
+        {
+          "startMs": 123730,
+          "endMs": 124960,
+          "text": "Want you crawling up me"
+        },
+        {
+          "startMs": 124960,
+          "endMs": 126580,
+          "text": "Baby, don't stop now"
+        },
+        {
+          "startMs": 126580,
+          "endMs": 129750,
+          "text": "Days before you are pale in comparison"
+        },
+        {
+          "startMs": 129750,
+          "endMs": 131000,
+          "text": "I must adore you"
+        },
+        {
+          "startMs": 131000,
+          "endMs": 131990,
+          "text": "And honestly"
+        },
+        {
+          "startMs": 131990,
+          "endMs": 133990,
+          "text": "I heard November hates you"
+        },
+        {
+          "startMs": 133990,
+          "endMs": 136710,
+          "text": "And all the cloudy, shit-grey skies you break through"
+        },
+        {
+          "startMs": 136710,
+          "endMs": 143610,
+          "text": "Bet everybody knows you in June"
+        },
+        {
+          "startMs": 143610,
+          "endMs": 145460,
+          "text": "Oh my God, did you call me baby?"
+        },
+        {
+          "startMs": 145460,
+          "endMs": 148360,
+          "text": "Maybe (oh), is that okay?"
+        },
+        {
+          "startMs": 148360,
+          "endMs": 151720,
+          "text": "Yeah, it's cool, I liked it"
+        },
+        {
+          "startMs": 151720,
+          "endMs": 154690,
+          "text": "Cool (ah-ha-ha)"
+        },
+        {
+          "startMs": 154690,
+          "endMs": 159910,
+          "text": "Ah"
+        },
+        {
+          "startMs": 159910,
+          "endMs": 163390,
+          "text": "Be around me"
+        },
+        {
+          "startMs": 163390,
+          "endMs": 169000,
+          "text": "I'm around-'round-'round (ooh, ooh, ooh)"
+        },
+        {
+          "startMs": 169000,
+          "endMs": 174680,
+          "text": "I can't get ya-get ya-get ya-get ya out of my mind"
+        },
+        {
+          "startMs": 174680,
+          "endMs": 176420,
+          "text": "I'm around, be around"
+        },
+        {
+          "startMs": 176420,
+          "endMs": 179520,
+          "text": "Come around, be around me"
+        }
+      ]
+    },
+    {
+      "id": "24 - sundial - Topic - wlg7dhAJkrA",
+      "title": "24",
+      "artist": "sundial - Topic",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4016,
+      "durationInFrames": 4016,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 1840,
+          "endMs": 3480,
+          "text": "I'm 24 now"
+        },
+        {
+          "startMs": 3660,
+          "endMs": 5360,
+          "text": "Still at my parents house"
+        },
+        {
+          "startMs": 5540,
+          "endMs": 7500,
+          "text": "Thought I would have it figured out"
+        },
+        {
+          "startMs": 8680,
+          "endMs": 12200,
+          "text": "Friends getting married, one has a baby"
+        },
+        {
+          "startMs": 12680,
+          "endMs": 14800,
+          "text": "I barely recognize this town"
+        },
+        {
+          "startMs": 16100,
+          "endMs": 19300,
+          "text": "Mama asked me what my plan is for the future"
+        },
+        {
+          "startMs": 19680,
+          "endMs": 22680,
+          "text": "But I don't even know what's going on for dinner"
+        },
+        {
+          "startMs": 22680,
+          "endMs": 27080,
+          "text": "I'm 24 now, thought I could finally settle down"
+        },
+        {
+          "startMs": 31100,
+          "endMs": 33220,
+          "text": "Parties end before I'm drunk"
+        },
+        {
+          "startMs": 33320,
+          "endMs": 36640,
+          "text": "Friday night I'm tired as fuck"
+        },
+        {
+          "startMs": 36640,
+          "endMs": 39620,
+          "text": "I don't know how I ended up like this"
+        },
+        {
+          "startMs": 39620,
+          "endMs": 42880,
+          "text": "Can someone tell me what the hell I missed? (Missed, yeah)"
+        },
+        {
+          "startMs": 44440,
+          "endMs": 47140,
+          "text": "Birthday's here, I'm still depressed"
+        },
+        {
+          "startMs": 47740,
+          "endMs": 50800,
+          "text": "Got no friends, just lots of stress"
+        },
+        {
+          "startMs": 50800,
+          "endMs": 53540,
+          "text": "It feels like yesterday when we were kids"
+        },
+        {
+          "startMs": 53940,
+          "endMs": 56940,
+          "text": "Can someone tell me what the hell I missed?"
+        },
+        {
+          "startMs": 56940,
+          "endMs": 58280,
+          "text": "'Cause I don't know"
+        },
+        {
+          "startMs": 61800,
+          "endMs": 65120,
+          "text": "Sleep till the sun's down, another breakdown"
+        },
+        {
+          "startMs": 65120,
+          "endMs": 67600,
+          "text": "Feels like the days are all the same"
+        },
+        {
+          "startMs": 67860,
+          "endMs": 72340,
+          "text": "New type of anxious, school never taught this"
+        },
+        {
+          "startMs": 72340,
+          "endMs": 74460,
+          "text": "And what the fuck are taxes anyway?"
+        },
+        {
+          "startMs": 75700,
+          "endMs": 79260,
+          "text": "I tell myself I won't be cynical and bitter"
+        },
+        {
+          "startMs": 79860,
+          "endMs": 82780,
+          "text": "And now I see it when I'm looking in the mirror"
+        },
+        {
+          "startMs": 82780,
+          "endMs": 86860,
+          "text": "I'm 24 now, wondering when I will be okay"
+        },
+        {
+          "startMs": 90390,
+          "endMs": 93190,
+          "text": "Parties end before I'm drunk"
+        },
+        {
+          "startMs": 93530,
+          "endMs": 96670,
+          "text": "Friday night I'm tired as fuck"
+        },
+        {
+          "startMs": 96670,
+          "endMs": 99630,
+          "text": "I don't know how I ended up like this"
+        },
+        {
+          "startMs": 99650,
+          "endMs": 102890,
+          "text": "Can someone tell me what the hell I missed?"
+        },
+        {
+          "startMs": 104470,
+          "endMs": 107130,
+          "text": "Birthday's here, I'm still depressed"
+        },
+        {
+          "startMs": 107770,
+          "endMs": 110770,
+          "text": "Got no friends, just lots of stress"
+        },
+        {
+          "startMs": 110770,
+          "endMs": 113490,
+          "text": "It feels like yesterday when we were kids"
+        },
+        {
+          "startMs": 113810,
+          "endMs": 116990,
+          "text": "Can someone tell me what the hell I missed?"
+        },
+        {
+          "startMs": 116990,
+          "endMs": 118330,
+          "text": "'Cause I don't know"
+        },
+        {
+          "startMs": 118430,
+          "endMs": 132380,
+          "text": "(Oh-oh-oh-oh) 'cause I don't know"
+        },
+        {
+          "startMs": 121950,
+          "endMs": 125960,
+          "text": "(Oh-oh-oh-oh) 'cause I don't know"
+        },
+        {
+          "startMs": 125960,
+          "endMs": 128740,
+          "text": "(Oh-oh-oh-oh) yeah"
+        },
+        {
+          "startMs": 128740,
+          "endMs": 131070,
+          "text": "Can someone tell me what the hell I missed?"
+        },
+        {
+          "startMs": 131070,
+          "endMs": 134270,
+          "text": "'Cause I don't know"
+        }
+      ]
+    },
+    {
+      "id": "If We Ever Broke Up (Official Video) - Mae Stephens - TbGT3d0pHgo",
+      "title": "Mae Stephens - If We Ever Broke Up (Official Video)",
+      "artist": "Mae Stephens",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 6300,
+      "renderDurationInFrames": 4064,
+      "durationInFrames": 4510,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 9300,
+          "endMs": 13060,
+          "text": "If you keep wondering if somebody understands"
+        },
+        {
+          "startMs": 13060,
+          "endMs": 15800,
+          "text": "Darling, I don't understand you"
+        },
+        {
+          "startMs": 17060,
+          "endMs": 21600,
+          "text": "If you stay awake at night, waiting for somebody right"
+        },
+        {
+          "startMs": 21600,
+          "endMs": 24060,
+          "text": "Baby, oh, your karma is due"
+        },
+        {
+          "startMs": 24060,
+          "endMs": 28640,
+          "text": "Like, I would never hate you, but only if you want to"
+        },
+        {
+          "startMs": 28640,
+          "endMs": 33880,
+          "text": "So much time like, who knew? (Like, who knew?)"
+        },
+        {
+          "startMs": 33880,
+          "endMs": 36860,
+          "text": "Music we got into, songs we fell in love to"
+        },
+        {
+          "startMs": 37640,
+          "endMs": 42120,
+          "text": "Boy, this feels so wrong too (ah-ah-ah)"
+        },
+        {
+          "startMs": 43240,
+          "endMs": 50250,
+          "text": "If we ever broke up, I'd never be sad"
+        },
+        {
+          "startMs": 45550,
+          "endMs": 51360,
+          "text": "Thinking about everything that we had, if we ever broke up"
+        },
+        {
+          "startMs": 51360,
+          "endMs": 53690,
+          "text": "If we ever broke up, I'd call your dad"
+        },
+        {
+          "startMs": 53690,
+          "endMs": 59620,
+          "text": "And tell him all the shittiest of things you said, if we ever broke up"
+        },
+        {
+          "startMs": 59620,
+          "endMs": 63920,
+          "text": "Boy, don't get emotional 'cause it's not personal"
+        },
+        {
+          "startMs": 63920,
+          "endMs": 68149,
+          "text": "It's just the way, just the way it goes"
+        },
+        {
+          "startMs": 68149,
+          "endMs": 70490,
+          "text": "If we ever broke up, I'd never be sad"
+        },
+        {
+          "startMs": 70490,
+          "endMs": 77340,
+          "text": "Thinking about everything that we had, if we ever broke up"
+        },
+        {
+          "startMs": 77340,
+          "endMs": 81440,
+          "text": "You're living in Wonderland if you think I'll understand"
+        },
+        {
+          "startMs": 81440,
+          "endMs": 85220,
+          "text": "All the shit you put me through"
+        },
+        {
+          "startMs": 85220,
+          "endMs": 89490,
+          "text": "If girls in white dresses and big winter weddings"
+        },
+        {
+          "startMs": 89490,
+          "endMs": 93190,
+          "text": "Is something you want to be true"
+        },
+        {
+          "startMs": 93190,
+          "endMs": 95500,
+          "text": "Then pack up your drama"
+        },
+        {
+          "startMs": 95500,
+          "endMs": 100730,
+          "text": "This selfish dilemma is something this shit can't undo"
+        },
+        {
+          "startMs": 100730,
+          "endMs": 104910,
+          "text": "Like, I would never hate you, but only if you want to"
+        },
+        {
+          "startMs": 104910,
+          "endMs": 109449,
+          "text": "So much time like, who knew? Whoa-oh-oh"
+        },
+        {
+          "startMs": 109449,
+          "endMs": 111840,
+          "text": "If we ever broke up, I'd never be sad"
+        },
+        {
+          "startMs": 111840,
+          "endMs": 117590,
+          "text": "Thinking about everything that we had, if we ever broke up"
+        },
+        {
+          "startMs": 117590,
+          "endMs": 119919,
+          "text": "If we ever broke up, I'd call your dad"
+        },
+        {
+          "startMs": 119919,
+          "endMs": 125560,
+          "text": "And tell him all the shittiest of things you said, if we ever broke up"
+        },
+        {
+          "startMs": 125560,
+          "endMs": 130030,
+          "text": "Boy, don't get emotional 'cause it's not personal"
+        },
+        {
+          "startMs": 130030,
+          "endMs": 134240,
+          "text": "It's just the way, just the way it goes"
+        },
+        {
+          "startMs": 134240,
+          "endMs": 136580,
+          "text": "If we ever broke up, I'd never be sad"
+        },
+        {
+          "startMs": 136580,
+          "endMs": 139780,
+          "text": "Thinking about everything that we had, if we ever broke up"
+        }
+      ]
+    },
+    {
+      "id": "Rema - Selena Gomez - Calm Down (Official Music Video) - Selena Gomez - WcIcVapfqXw",
+      "title": "Calm Down (Official Music Video)",
+      "artist": "Rema - Selena Gomez",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 5530,
+      "renderDurationInFrames": 6926,
+      "durationInFrames": 7181,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 8530,
+          "endMs": 15780,
+          "text": "Vibez (vibez)"
+        },
+        {
+          "startMs": 15780,
+          "endMs": 17410,
+          "text": "Another banger"
+        },
+        {
+          "startMs": 17410,
+          "endMs": 20140,
+          "text": "Baby, calm down, calm down"
+        },
+        {
+          "startMs": 20140,
+          "endMs": 25320,
+          "text": "Girl, this your body e put in my heart for lockdown, for lockdown, oh, lockdown"
+        },
+        {
+          "startMs": 25320,
+          "endMs": 29010,
+          "text": "Girl, you sweet like Fanta, ooh, Fanta, ooh"
+        },
+        {
+          "startMs": 29010,
+          "endMs": 33070,
+          "text": "If I tell you say, \"I love you\", you no dey form yanga, oh, oh, yanga, oh"
+        },
+        {
+          "startMs": 33070,
+          "endMs": 35760,
+          "text": "No, tell me no, no, no, no, woah-woah, woah-woah"
+        },
+        {
+          "startMs": 35760,
+          "endMs": 39250,
+          "text": "Oh-oh-oh-oh-oh-oh-oh-oh-oh-oh-oh"
+        },
+        {
+          "startMs": 39250,
+          "endMs": 44210,
+          "text": "Baby, come gimme your lo-lo-lo-lo-lo-lo-lo-lo, woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 44210,
+          "endMs": 48170,
+          "text": "You got me like woah-woah-woah-woah-woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 48170,
+          "endMs": 54120,
+          "text": "Shawty, come gimme your lo-lo-lo-lo-lo-lo-lo-lo-woah-woah-woah-woah-woah, hmm"
+        },
+        {
+          "startMs": 54120,
+          "endMs": 58590,
+          "text": "I see this fine girl, for my party she wear yellow"
+        },
+        {
+          "startMs": 58590,
+          "endMs": 63130,
+          "text": "Every other girl they dey do too much but this girl mellow"
+        },
+        {
+          "startMs": 63130,
+          "endMs": 67620,
+          "text": "Naim, I dey find situation, I go use take tell am hello"
+        },
+        {
+          "startMs": 67620,
+          "endMs": 71170,
+          "text": "Finally, I find way to talk to the girl but she no wan follow"
+        },
+        {
+          "startMs": 71170,
+          "endMs": 73690,
+          "text": "Who you come dey form for? Woah (mhmm)"
+        },
+        {
+          "startMs": 73690,
+          "endMs": 75300,
+          "text": "Why you no wan' conform? Woah (mhmm)"
+        },
+        {
+          "startMs": 75300,
+          "endMs": 77710,
+          "text": "Then I start to feel her bum-bum (mhmm)"
+        },
+        {
+          "startMs": 77710,
+          "endMs": 79720,
+          "text": "But she dey gimme small, small, woah"
+        },
+        {
+          "startMs": 79720,
+          "endMs": 82020,
+          "text": "I know say she sabi pass that one, one (mhmm)"
+        },
+        {
+          "startMs": 82020,
+          "endMs": 83700,
+          "text": "But she feeling insecure, woah"
+        },
+        {
+          "startMs": 83700,
+          "endMs": 86590,
+          "text": "'Cause her friends go dey gum her like chewing gum, woah (mhmm)"
+        },
+        {
+          "startMs": 86590,
+          "endMs": 91660,
+          "text": "Go dey gum her like chewing gum, oh-woah"
+        },
+        {
+          "startMs": 91660,
+          "endMs": 95960,
+          "text": "Yeah, I know I look shy but for you I get down, oh, woah"
+        },
+        {
+          "startMs": 95960,
+          "endMs": 99440,
+          "text": "And my hips make you cry when I'm moving around you (yeah)"
+        },
+        {
+          "startMs": 99440,
+          "endMs": 101710,
+          "text": "Do it once, do it twice (do it twice)"
+        },
+        {
+          "startMs": 101710,
+          "endMs": 104070,
+          "text": "I push back, you hold me tight"
+        },
+        {
+          "startMs": 104070,
+          "endMs": 105810,
+          "text": "Get a taste for a night"
+        },
+        {
+          "startMs": 105810,
+          "endMs": 109820,
+          "text": "Baby show me you can calm down, calm down"
+        },
+        {
+          "startMs": 109820,
+          "endMs": 114440,
+          "text": "Dance with me and take the lead now, lead now"
+        },
+        {
+          "startMs": 114440,
+          "endMs": 119440,
+          "text": "Got you so high that you can't come down, come down"
+        },
+        {
+          "startMs": 119440,
+          "endMs": 123710,
+          "text": "Don't you ask, you know you're allowed, allowed"
+        },
+        {
+          "startMs": 123710,
+          "endMs": 128850,
+          "text": "When it's you I can't say no-oh-oh-oh-oh-oh-oh-oh-oh-oh-oh"
+        },
+        {
+          "startMs": 128850,
+          "endMs": 133980,
+          "text": "Baby, give me lo-lo-lo-lo-lo-lo-lo-lo-woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 133980,
+          "endMs": 137830,
+          "text": "You got me like woah-woah-woah-woah-woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 137830,
+          "endMs": 145970,
+          "text": "Shawty, come gimme your lo-lo-lo-lo-lo-lo-lo-lo-woah-woah-woah-woah-woah, mm-hmm"
+        },
+        {
+          "startMs": 145970,
+          "endMs": 150160,
+          "text": "As I reach my house, I say make a rest small, oh-woah (make a rest small, oh-woah)"
+        },
+        {
+          "startMs": 150160,
+          "endMs": 154500,
+          "text": "As me I wake up na she dey my mind, oh-woah (na she dey my mind, oh-woah)"
+        },
+        {
+          "startMs": 154500,
+          "endMs": 158720,
+          "text": "Day one, day two-wo, I no fit foc-o-us (I no fit focus)"
+        },
+        {
+          "startMs": 158720,
+          "endMs": 163260,
+          "text": "Na so me I call am, say make we link up, woah (I say make we link up woah)"
+        },
+        {
+          "startMs": 163260,
+          "endMs": 167770,
+          "text": "Got my hand on your heart now, I can feel it race"
+        },
+        {
+          "startMs": 167770,
+          "endMs": 172350,
+          "text": "If I leave then you say you can never love again"
+        },
+        {
+          "startMs": 172350,
+          "endMs": 176360,
+          "text": "Wanna give you it all but can't promise that I'll stay"
+        },
+        {
+          "startMs": 176360,
+          "endMs": 178900,
+          "text": "And that's the risk you take (you take)"
+        },
+        {
+          "startMs": 178900,
+          "endMs": 181370,
+          "text": "Baby, calm down, calm down"
+        },
+        {
+          "startMs": 181370,
+          "endMs": 187030,
+          "text": "Girl, this your body e put in my heart for lockdown, for lockdown, oh, lockdown"
+        },
+        {
+          "startMs": 187030,
+          "endMs": 190300,
+          "text": "Girl, you sweet like Fanta, ooh, Fanta, ooh"
+        },
+        {
+          "startMs": 190300,
+          "endMs": 194670,
+          "text": "If I tell you say, \"I love you\", you no dey form yanga, oh, oh, yanga, oh"
+        },
+        {
+          "startMs": 194670,
+          "endMs": 198550,
+          "text": "No tell me no, no, no, no, woah, woah, woah, woah"
+        },
+        {
+          "startMs": 198550,
+          "endMs": 200820,
+          "text": "Oh-oh-oh-oh-oh-oh-oh-oh-oh-oh-oh (your love, your love)"
+        },
+        {
+          "startMs": 200820,
+          "endMs": 205500,
+          "text": "Baby, come gimme your lo-lo-lo-lo-lo-lo-lo-lo-woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 205500,
+          "endMs": 209550,
+          "text": "You got me like woah-woah-woah-woah-woah-woah-woah-woah-woah"
+        },
+        {
+          "startMs": 209550,
+          "endMs": 230410,
+          "text": "Shawty, come gimme your lo-lo-lo-lo-lo-lo-lo-lo-woah-woah-woah-woah-woah (oh, woah), hmm"
+        },
+        {
+          "startMs": 230410,
+          "endMs": 234410,
+          "text": "Your love"
+        }
+      ]
+    },
+    {
+      "id": "blue - yung kai - MHCsrKA9gh8",
+      "title": "blue",
+      "artist": "yung kai",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 15990,
+      "renderDurationInFrames": 4476,
+      "durationInFrames": 6430,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 18990,
+          "endMs": 24810,
+          "text": "Your morning eyes, I could stare like watching stars"
+        },
+        {
+          "startMs": 25990,
+          "endMs": 32170,
+          "text": "I could walk you by, and I'll tell without a thought"
+        },
+        {
+          "startMs": 32170,
+          "endMs": 39450,
+          "text": "You'd be mine, would you mind if I took your hand tonight?"
+        },
+        {
+          "startMs": 39970,
+          "endMs": 44670,
+          "text": "Know you're all that I want this life"
+        },
+        {
+          "startMs": 45970,
+          "endMs": 50580,
+          "text": "I'll imagine we fell in love"
+        },
+        {
+          "startMs": 51060,
+          "endMs": 54220,
+          "text": "I'll nap under moonlight skies with you"
+        },
+        {
+          "startMs": 54220,
+          "endMs": 58040,
+          "text": "I think I'll picture us, you with the waves"
+        },
+        {
+          "startMs": 58140,
+          "endMs": 61860,
+          "text": "The ocean's colours on your face"
+        },
+        {
+          "startMs": 61860,
+          "endMs": 65720,
+          "text": "I'll leave my heart with your air"
+        },
+        {
+          "startMs": 65720,
+          "endMs": 69200,
+          "text": "So, let me fly with you"
+        },
+        {
+          "startMs": 69200,
+          "endMs": 74580,
+          "text": "Will you be forever with me?"
+        },
+        {
+          "startMs": 108440,
+          "endMs": 113680,
+          "text": "My love will always stay by you"
+        },
+        {
+          "startMs": 113680,
+          "endMs": 118340,
+          "text": "I'll keep it safe, so don't you worry a thing"
+        },
+        {
+          "startMs": 118340,
+          "endMs": 120840,
+          "text": "I'll tell you I love you more"
+        },
+        {
+          "startMs": 120840,
+          "endMs": 128060,
+          "text": "It's stuck with you forever, so promise you won't let it go"
+        },
+        {
+          "startMs": 128060,
+          "endMs": 133900,
+          "text": "I'll trust the universe will always bring me to you"
+        },
+        {
+          "startMs": 133900,
+          "endMs": 139240,
+          "text": "I'll imagine we fell in love"
+        },
+        {
+          "startMs": 139240,
+          "endMs": 142840,
+          "text": "I'll nap under moonlight skies with you"
+        },
+        {
+          "startMs": 142840,
+          "endMs": 146740,
+          "text": "I think I'll picture us, you with the waves"
+        },
+        {
+          "startMs": 146740,
+          "endMs": 150520,
+          "text": "The ocean's colours on your face"
+        },
+        {
+          "startMs": 150520,
+          "endMs": 154300,
+          "text": "I'll leave my heart with your air"
+        },
+        {
+          "startMs": 154650,
+          "endMs": 157700,
+          "text": "So, let me fly with you"
+        },
+        {
+          "startMs": 157700,
+          "endMs": 163200,
+          "text": "Will you be forever with me?"
+        }
+      ]
+    },
+    {
+      "id": "I Got Better - Morgan Wallen - Xc-dEsMbQJM",
+      "title": "I Got Better",
+      "artist": "Morgan Wallen",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 8060,
+      "renderDurationInFrames": 5445,
+      "durationInFrames": 6148,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 11060,
+          "endMs": 14270,
+          "text": "Everything's still pretty much the same 'round here"
+        },
+        {
+          "startMs": 16740,
+          "endMs": 20560,
+          "text": "My neighbors still shootin' all of next year's deer"
+        },
+        {
+          "startMs": 22780,
+          "endMs": 25760,
+          "text": "Boys still lose 'less they're playin' at home"
+        },
+        {
+          "startMs": 28020,
+          "endMs": 31400,
+          "text": "But I got better since you got gone"
+        },
+        {
+          "startMs": 33280,
+          "endMs": 37420,
+          "text": "I'm still a few too many on a Friday night"
+        },
+        {
+          "startMs": 39140,
+          "endMs": 43580,
+          "text": "I still try to step in when it ain't my fight"
+        },
+        {
+          "startMs": 45300,
+          "endMs": 48420,
+          "text": "I'm still me, don't get me wrong"
+        },
+        {
+          "startMs": 50620,
+          "endMs": 54100,
+          "text": "But I got better since you got gone"
+        },
+        {
+          "startMs": 55300,
+          "endMs": 58020,
+          "text": "Swear it was like, \"I'll be damned\""
+        },
+        {
+          "startMs": 58020,
+          "endMs": 60880,
+          "text": "I'm finally back to bein' who I am"
+        },
+        {
+          "startMs": 61180,
+          "endMs": 63560,
+          "text": "When we were over, it was overnight"
+        },
+        {
+          "startMs": 63560,
+          "endMs": 67840,
+          "text": "Light came on, it all felt right, when it all went wrong"
+        },
+        {
+          "startMs": 67840,
+          "endMs": 69340,
+          "text": "You turned me loose"
+        },
+        {
+          "startMs": 69340,
+          "endMs": 72040,
+          "text": "Wasn't no tellin' who I'd turn into"
+        },
+        {
+          "startMs": 72560,
+          "endMs": 76360,
+          "text": "But it turns out me and you together's why it took so long"
+        },
+        {
+          "startMs": 76360,
+          "endMs": 79520,
+          "text": "'Cause I got better since you got gone"
+        },
+        {
+          "startMs": 90030,
+          "endMs": 94030,
+          "text": "For a little while there, you had me convinced"
+        },
+        {
+          "startMs": 95650,
+          "endMs": 98810,
+          "text": "That my mama was the devil, now we're talkin' again"
+        },
+        {
+          "startMs": 101330,
+          "endMs": 105090,
+          "text": "My friends, you hated, ain't said one word"
+        },
+        {
+          "startMs": 106770,
+          "endMs": 110450,
+          "text": "Besides, \"You got better since you lost her\""
+        },
+        {
+          "startMs": 112070,
+          "endMs": 114510,
+          "text": "Swear it was like, \"I'll be damned\""
+        },
+        {
+          "startMs": 114510,
+          "endMs": 117330,
+          "text": "I'm finally back to bein' who I am"
+        },
+        {
+          "startMs": 117330,
+          "endMs": 119450,
+          "text": "When we were over, it was overnight"
+        },
+        {
+          "startMs": 119990,
+          "endMs": 124290,
+          "text": "Light came on, it all felt right, when it all went wrong"
+        },
+        {
+          "startMs": 124290,
+          "endMs": 125830,
+          "text": "You turned me loose"
+        },
+        {
+          "startMs": 125830,
+          "endMs": 128530,
+          "text": "Wasn't no tellin' who I'd turn into"
+        },
+        {
+          "startMs": 128530,
+          "endMs": 132870,
+          "text": "But it turns out me and you together's why it took so long"
+        },
+        {
+          "startMs": 132870,
+          "endMs": 136550,
+          "text": "'Cause I got better since you got gone"
+        },
+        {
+          "startMs": 140460,
+          "endMs": 143000,
+          "text": "Oh, baby, since you got gone"
+        },
+        {
+          "startMs": 146020,
+          "endMs": 148740,
+          "text": "And I ain't sayin' that you're the sleep that I lost"
+        },
+        {
+          "startMs": 148740,
+          "endMs": 151360,
+          "text": "But I never slept this good before"
+        },
+        {
+          "startMs": 151360,
+          "endMs": 154360,
+          "text": "I ain't sayin' you're the weight on my back"
+        },
+        {
+          "startMs": 154360,
+          "endMs": 157900,
+          "text": "I'm just sayin' that it ain't there no more"
+        },
+        {
+          "startMs": 157900,
+          "endMs": 159640,
+          "text": "I'll be damned"
+        },
+        {
+          "startMs": 159640,
+          "endMs": 162500,
+          "text": "I'm finally back to bein' who I am"
+        },
+        {
+          "startMs": 162500,
+          "endMs": 165080,
+          "text": "When we were over, it was overnight"
+        },
+        {
+          "startMs": 165630,
+          "endMs": 169660,
+          "text": "Light came on, it all felt right, when it all went wrong"
+        },
+        {
+          "startMs": 169660,
+          "endMs": 171040,
+          "text": "You turned me loose"
+        },
+        {
+          "startMs": 171040,
+          "endMs": 173680,
+          "text": "Wasn't no tellin' who I'd turn into"
+        },
+        {
+          "startMs": 173680,
+          "endMs": 178080,
+          "text": "But it turns out me and you together's why it took so long"
+        },
+        {
+          "startMs": 178080,
+          "endMs": 181620,
+          "text": "'Cause I got better since you got gone"
+        },
+        {
+          "startMs": 184680,
+          "endMs": 187580,
+          "text": "Yeah, baby, since you got gone"
+        }
+      ]
+    },
+    {
+      "id": "Towards The Sun (From The -Home- Soundtrack) - Rihanna - mhPDe4IyqeU",
+      "title": "Towards The Sun (From The \"Home\" Soundtrack)",
+      "artist": "Rihanna",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 8124,
+      "durationInFrames": 8198,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "LET THE GOLDEN LIGHT GUIDE YOUR PATH ALWAYSWARD.",
+        "rightVertical": "THE SHADOWS WILL NEVER FIND YOU IF YOU KEEP MOVING FORWARD.",
+        "bottomLine": "FOLLOW THE RADIANCE OF TOMORROW'S DAWN."
+      },
+      "lyrics": [
+        {
+          "startMs": 10,
+          "endMs": 5990,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 5990,
+          "endMs": 11510,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 11510,
+          "endMs": 17100,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 17100,
+          "endMs": 22550,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 22550,
+          "endMs": 28170,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 28170,
+          "endMs": 34140,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 34140,
+          "endMs": 39440,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 39440,
+          "endMs": 48470,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 48470,
+          "endMs": 51950,
+          "text": "Lost in the rock and roll"
+        },
+        {
+          "startMs": 51950,
+          "endMs": 59150,
+          "text": "Got lost in a promise of a love I never know"
+        },
+        {
+          "startMs": 59150,
+          "endMs": 63790,
+          "text": "Shadows chase me far from home"
+        },
+        {
+          "startMs": 63790,
+          "endMs": 70400,
+          "text": "I remember when my heart was filled with gold"
+        },
+        {
+          "startMs": 70400,
+          "endMs": 74470,
+          "text": "And you know I've been burned"
+        },
+        {
+          "startMs": 74470,
+          "endMs": 78780,
+          "text": "I've been burned I've been burned"
+        },
+        {
+          "startMs": 78780,
+          "endMs": 84100,
+          "text": "You've seen me lose control"
+        },
+        {
+          "startMs": 84100,
+          "endMs": 89990,
+          "text": "It's not worth it's not worth it's not worth"
+        },
+        {
+          "startMs": 89990,
+          "endMs": 93190,
+          "text": "My soul"
+        },
+        {
+          "startMs": 93190,
+          "endMs": 98420,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 98420,
+          "endMs": 104210,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 104210,
+          "endMs": 109460,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 109460,
+          "endMs": 118960,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 118960,
+          "endMs": 122940,
+          "text": "Lost my faith and trust"
+        },
+        {
+          "startMs": 122940,
+          "endMs": 129660,
+          "text": "You and I know gold don't turn to rust"
+        },
+        {
+          "startMs": 129660,
+          "endMs": 133980,
+          "text": "I still swear that we can reign"
+        },
+        {
+          "startMs": 133980,
+          "endMs": 140700,
+          "text": "Like the kings and queens of better yesterdays"
+        },
+        {
+          "startMs": 140700,
+          "endMs": 144890,
+          "text": "Don't you know I've been burned"
+        },
+        {
+          "startMs": 144890,
+          "endMs": 148990,
+          "text": "I've been burned, I've been burned"
+        },
+        {
+          "startMs": 148990,
+          "endMs": 154480,
+          "text": "You've seen me lose control"
+        },
+        {
+          "startMs": 154480,
+          "endMs": 160330,
+          "text": "It's not worth it's not worth it's not worth"
+        },
+        {
+          "startMs": 160330,
+          "endMs": 163440,
+          "text": "My soul"
+        },
+        {
+          "startMs": 163440,
+          "endMs": 168660,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 168660,
+          "endMs": 174440,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 174440,
+          "endMs": 179770,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 179770,
+          "endMs": 191940,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 191940,
+          "endMs": 197550,
+          "text": "Where you gonna go where you gonna go where you gonna run to"
+        },
+        {
+          "startMs": 197550,
+          "endMs": 202700,
+          "text": "When you get to the edge of the night"
+        },
+        {
+          "startMs": 202700,
+          "endMs": 211180,
+          "text": "Its time you face the sky"
+        },
+        {
+          "startMs": 211180,
+          "endMs": 216990,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 216990,
+          "endMs": 222460,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 222460,
+          "endMs": 227940,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 227940,
+          "endMs": 233920,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 233920,
+          "endMs": 239730,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 239730,
+          "endMs": 244940,
+          "text": "Let the shadows fall behind you"
+        },
+        {
+          "startMs": 244940,
+          "endMs": 250930,
+          "text": "Don't look back, just carry on"
+        },
+        {
+          "startMs": 250930,
+          "endMs": 255970,
+          "text": "And the shadows will never find you"
+        },
+        {
+          "startMs": 255970,
+          "endMs": 261550,
+          "text": "Turn your face towards the sun"
+        },
+        {
+          "startMs": 261550,
+          "endMs": 268800,
+          "text": "Let the shadows fall behind you"
+        }
+      ]
+    },
+    {
+      "id": "Made You Look (Official Music Video) - Meghan Trainor - gPCCYMeXin0",
+      "title": "Meghan Trainor - Made You Look (Official Music Video)",
+      "artist": "Meghan Trainor",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 1260,
+      "renderDurationInFrames": 4124,
+      "durationInFrames": 5227,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "A CURVE OF CONFIDENCE, A GLOWING AFTERMATH.",
+        "rightVertical": "THE WEIGHT OF MY PRESENCE IS AN UNSEEN FORCE.",
+        "bottomLine": "WATCH THE SHIFT. FEEL THE POWER."
+      },
+      "lyrics": [
+        {
+          "startMs": 4260,
+          "endMs": 6440,
+          "text": "I could have my Gucci on"
+        },
+        {
+          "startMs": 7240,
+          "endMs": 10480,
+          "text": "I could wear my Louis Vuitton"
+        },
+        {
+          "startMs": 10480,
+          "endMs": 13080,
+          "text": "But even with nothin' on"
+        },
+        {
+          "startMs": 13080,
+          "endMs": 17020,
+          "text": "Bet I made you look (I made you look)"
+        },
+        {
+          "startMs": 18220,
+          "endMs": 21680,
+          "text": "I'll make you double take soon as I walk away"
+        },
+        {
+          "startMs": 21680,
+          "endMs": 25020,
+          "text": "Call up your chiropractor just in case your neck break"
+        },
+        {
+          "startMs": 25720,
+          "endMs": 28940,
+          "text": "Ooh, tell me what you, what you, what you gon' do, ooh"
+        },
+        {
+          "startMs": 31600,
+          "endMs": 34740,
+          "text": "'Cause I'm 'bout to make a scene, double up that sunscreen"
+        },
+        {
+          "startMs": 34740,
+          "endMs": 38380,
+          "text": "I'm 'bout to turn the heat up, gonna make your glasses steam"
+        },
+        {
+          "startMs": 39180,
+          "endMs": 44420,
+          "text": "Ooh, tell me what you, what you, what you gon' do, ooh"
+        },
+        {
+          "startMs": 44420,
+          "endMs": 47380,
+          "text": "When I do my walk, walk (oh)"
+        },
+        {
+          "startMs": 47380,
+          "endMs": 50210,
+          "text": "I can guarantee your jaw will drop, drop (oh)"
+        },
+        {
+          "startMs": 50210,
+          "endMs": 53620,
+          "text": "'Cause they don't make a lot of what I got, got (ah, ah)"
+        },
+        {
+          "startMs": 53620,
+          "endMs": 57850,
+          "text": "Ladies if you feel me, this your bop, bop (bop-bop-bop)"
+        },
+        {
+          "startMs": 57850,
+          "endMs": 60710,
+          "text": "I could have my Gucci on (Gucci on)"
+        },
+        {
+          "startMs": 60710,
+          "endMs": 64190,
+          "text": "I could wear my Louis Vuitton"
+        },
+        {
+          "startMs": 64190,
+          "endMs": 67220,
+          "text": "But even with nothin' on"
+        },
+        {
+          "startMs": 67220,
+          "endMs": 70530,
+          "text": "Bet I made you look (I made you look)"
+        },
+        {
+          "startMs": 70530,
+          "endMs": 73740,
+          "text": "Yeah, I look good in my Versace dress (take it off)"
+        },
+        {
+          "startMs": 73740,
+          "endMs": 77550,
+          "text": "But I'm hotter when my morning hair's a mess"
+        },
+        {
+          "startMs": 77550,
+          "endMs": 80310,
+          "text": "'Cause even with my hoodie on"
+        },
+        {
+          "startMs": 80310,
+          "endMs": 83600,
+          "text": "Bet I made you look (I made you look)"
+        },
+        {
+          "startMs": 83600,
+          "endMs": 85370,
+          "text": "Mhm-hm-hm"
+        },
+        {
+          "startMs": 85370,
+          "endMs": 88540,
+          "text": "And once you get a taste (woo), you'll never be the same"
+        },
+        {
+          "startMs": 88540,
+          "endMs": 91950,
+          "text": "This ain't that ordinary, this that 14 karat cake"
+        },
+        {
+          "startMs": 91950,
+          "endMs": 97850,
+          "text": "Ooh, tell me what you, what you, what you gon' do, ooh (what you gon' do, ooh, ooh)"
+        },
+        {
+          "startMs": 97850,
+          "endMs": 99950,
+          "text": "When I do my walk, walk (oh)"
+        },
+        {
+          "startMs": 99950,
+          "endMs": 103200,
+          "text": "I can guarantee your jaw will drop, drop (oh) (I guarantee your jaw will drop, drop)"
+        },
+        {
+          "startMs": 103200,
+          "endMs": 106560,
+          "text": "'Cause they don't make a lot of what I got, got (ah, ah)"
+        },
+        {
+          "startMs": 106560,
+          "endMs": 110180,
+          "text": "Ladies if you feel me, this your bop, bop (bop-bop-bop)"
+        },
+        {
+          "startMs": 110180,
+          "endMs": 114020,
+          "text": "Oh, I could have my Gucci on (Gucci on)"
+        },
+        {
+          "startMs": 114020,
+          "endMs": 117430,
+          "text": "I could wear my Louis Vuitton"
+        },
+        {
+          "startMs": 117430,
+          "endMs": 120250,
+          "text": "But even with nothin' on"
+        },
+        {
+          "startMs": 120250,
+          "endMs": 123460,
+          "text": "Bet I made you look (said, I made you look)"
+        },
+        {
+          "startMs": 123460,
+          "endMs": 126890,
+          "text": "Yeah, I look good in my Versace dress (take it off, baby)"
+        },
+        {
+          "startMs": 126890,
+          "endMs": 130560,
+          "text": "But I'm hotter when my morning hair's a mess"
+        },
+        {
+          "startMs": 130560,
+          "endMs": 133530,
+          "text": "'Cause even with my hoodie on"
+        },
+        {
+          "startMs": 133530,
+          "endMs": 136730,
+          "text": "Bet I made you look (said, I made you look)"
+        }
+      ]
+    },
+    {
+      "id": "Price Tag - Jessie J - 5rcmr-eX2-Y",
+      "title": "Price Tag",
+      "artist": "Jessie J",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 6546,
+      "durationInFrames": 6691,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CURRENCY OF SILENCE IS MEASURED IN WINKED GOODBYES.",
+        "rightVertical": "A PRICE TAG ADORNED WITH THE ECHOES OF LOST TRUTHS.",
+        "bottomLine": "THE COST OF A SMILE IS EVERYTHING."
+      },
+      "lyrics": [
+        {
+          "startMs": 2980,
+          "endMs": 10020,
+          "text": "Okay, Coconut man, Moonheads and Pea"
+        },
+        {
+          "startMs": 10100,
+          "endMs": 10860,
+          "text": "You ready?"
+        },
+        {
+          "startMs": 13300,
+          "endMs": 15120,
+          "text": "Seems like everybody's got a price"
+        },
+        {
+          "startMs": 15540,
+          "endMs": 18020,
+          "text": "I wonder how they sleep at night"
+        },
+        {
+          "startMs": 18340,
+          "endMs": 20900,
+          "text": "When the sale comes first and the truth comes second"
+        },
+        {
+          "startMs": 21440,
+          "endMs": 23700,
+          "text": "Just stop for a minute and smile"
+        },
+        {
+          "startMs": 24260,
+          "endMs": 26500,
+          "text": "Why is everybody so serious?"
+        },
+        {
+          "startMs": 27180,
+          "endMs": 29180,
+          "text": "Acting so damn mysterious"
+        },
+        {
+          "startMs": 29180,
+          "endMs": 31020,
+          "text": "Got shades on your eyes"
+        },
+        {
+          "startMs": 31020,
+          "endMs": 34400,
+          "text": "And your heels so high that you can't even have a good time"
+        },
+        {
+          "startMs": 34920,
+          "endMs": 37240,
+          "text": "Everybody look to their left"
+        },
+        {
+          "startMs": 37440,
+          "endMs": 40020,
+          "text": "Everybody look to their right"
+        },
+        {
+          "startMs": 40020,
+          "endMs": 41840,
+          "text": "Can you feel that? Yeah"
+        },
+        {
+          "startMs": 41920,
+          "endMs": 43680,
+          "text": "We're paying with love tonight"
+        },
+        {
+          "startMs": 43680,
+          "endMs": 46460,
+          "text": "It's not about the money, money, money"
+        },
+        {
+          "startMs": 46460,
+          "endMs": 49140,
+          "text": "We don't need your money, money, money"
+        },
+        {
+          "startMs": 49140,
+          "endMs": 52120,
+          "text": "We just wanna make the world dance"
+        },
+        {
+          "startMs": 52160,
+          "endMs": 54180,
+          "text": "Forget about the price tag"
+        },
+        {
+          "startMs": 54720,
+          "endMs": 57980,
+          "text": "Ain't about the, uh, cha-ching cha-ching"
+        },
+        {
+          "startMs": 58080,
+          "endMs": 60700,
+          "text": "Ain't about the, yeah, ba-bling ba-bling"
+        },
+        {
+          "startMs": 61020,
+          "endMs": 62920,
+          "text": "Wanna make the world dance"
+        },
+        {
+          "startMs": 62920,
+          "endMs": 65060,
+          "text": "Forget about the price tag"
+        },
+        {
+          "startMs": 65360,
+          "endMs": 65680,
+          "text": "Okay"
+        },
+        {
+          "startMs": 65680,
+          "endMs": 69960,
+          "text": "We need to take it back in time"
+        },
+        {
+          "startMs": 70210,
+          "endMs": 72730,
+          "text": "When music made us all unite"
+        },
+        {
+          "startMs": 72730,
+          "endMs": 76250,
+          "text": "And it wasn't low blows and video hoes"
+        },
+        {
+          "startMs": 76310,
+          "endMs": 78610,
+          "text": "Am I the only the one getting tired?"
+        },
+        {
+          "startMs": 79190,
+          "endMs": 81510,
+          "text": "Why is everybody so obsessed?"
+        },
+        {
+          "startMs": 82010,
+          "endMs": 84010,
+          "text": "Money can't buy us happiness"
+        },
+        {
+          "startMs": 84010,
+          "endMs": 87110,
+          "text": "Can we all slow down and enjoy right now?"
+        },
+        {
+          "startMs": 87250,
+          "endMs": 89530,
+          "text": "Guarantee we'll be feeling alright"
+        },
+        {
+          "startMs": 90230,
+          "endMs": 94430,
+          "text": "Everybody look to their left (to their left)"
+        },
+        {
+          "startMs": 94430,
+          "endMs": 97710,
+          "text": "Everybody look to their right (to their right)"
+        },
+        {
+          "startMs": 97710,
+          "endMs": 99190,
+          "text": "Can you feel that? Yeah"
+        },
+        {
+          "startMs": 99890,
+          "endMs": 101330,
+          "text": "We're paying with love tonight"
+        },
+        {
+          "startMs": 101330,
+          "endMs": 103470,
+          "text": "It's not about the money, money, money"
+        },
+        {
+          "startMs": 103470,
+          "endMs": 104030,
+          "text": "We don't need your money, money, money"
+        },
+        {
+          "startMs": 104030,
+          "endMs": 106850,
+          "text": "We just wanna make the world dance"
+        },
+        {
+          "startMs": 106850,
+          "endMs": 108950,
+          "text": "Forget about the price tag"
+        },
+        {
+          "startMs": 109690,
+          "endMs": 112850,
+          "text": "Ain't about the, uh, cha-ching cha-ching"
+        },
+        {
+          "startMs": 112950,
+          "endMs": 115590,
+          "text": "Ain't about the, yeah, ba-bling ba-bling"
+        },
+        {
+          "startMs": 115890,
+          "endMs": 117790,
+          "text": "Wanna make the world dance"
+        },
+        {
+          "startMs": 117790,
+          "endMs": 119890,
+          "text": "Forget about the price tag"
+        },
+        {
+          "startMs": 120490,
+          "endMs": 123830,
+          "text": "Yeah, yeah, well, keep the price tag and take the cash back"
+        },
+        {
+          "startMs": 123830,
+          "endMs": 127330,
+          "text": "Just give me six strings (six strings) and a half-stack (half stack)"
+        },
+        {
+          "startMs": 127330,
+          "endMs": 129949,
+          "text": "And you can, can keep the cars, leave me the garage"
+        },
+        {
+          "startMs": 130270,
+          "endMs": 132490,
+          "text": "And all I, yes, all I need are keys and guitars"
+        },
+        {
+          "startMs": 132490,
+          "endMs": 135210,
+          "text": "And guess what? In thirty seconds, I'm leaving to Mars (Mars)"
+        },
+        {
+          "startMs": 135270,
+          "endMs": 137950,
+          "text": "Yeah, we leaping across these undefeatable odds (odds)"
+        },
+        {
+          "startMs": 137950,
+          "endMs": 141030,
+          "text": "It's like this, man, you can't put a price on a life (na-ah)"
+        },
+        {
+          "startMs": 141030,
+          "endMs": 144190,
+          "text": "We do this for the love, so we fight and sacrifice every night"
+        },
+        {
+          "startMs": 144190,
+          "endMs": 146310,
+          "text": "So we ain't gon' stumble and fall, never (nah)"
+        },
+        {
+          "startMs": 146370,
+          "endMs": 148910,
+          "text": "Waiting to see this in the sign of defeat, uh-uh"
+        },
+        {
+          "startMs": 148910,
+          "endMs": 151210,
+          "text": "So we gon' keep everyone moving their feet"
+        },
+        {
+          "startMs": 151270,
+          "endMs": 153890,
+          "text": "So bring back the beat and then everyone sing"
+        },
+        {
+          "startMs": 153890,
+          "endMs": 156170,
+          "text": "It's not about the money, money, money"
+        },
+        {
+          "startMs": 156170,
+          "endMs": 158910,
+          "text": "We don't need your money, money, money"
+        },
+        {
+          "startMs": 158910,
+          "endMs": 161650,
+          "text": "We just wanna make the world dance"
+        },
+        {
+          "startMs": 161990,
+          "endMs": 163810,
+          "text": "Forget about the price tag"
+        },
+        {
+          "startMs": 164430,
+          "endMs": 167710,
+          "text": "Ain't about the, uh, cha-ching, cha-ching"
+        },
+        {
+          "startMs": 167750,
+          "endMs": 170430,
+          "text": "Ain't about the, yeah, ba-bling, ba-bling"
+        },
+        {
+          "startMs": 170710,
+          "endMs": 172690,
+          "text": "Wanna make the world dance"
+        },
+        {
+          "startMs": 172890,
+          "endMs": 175410,
+          "text": "Forget about the price tag (hey, hey)"
+        },
+        {
+          "startMs": 175410,
+          "endMs": 179250,
+          "text": "It's not about the money, money, money (we don't need it)"
+        },
+        {
+          "startMs": 179250,
+          "endMs": 181490,
+          "text": "We don't need your money, money, money (no, no)"
+        },
+        {
+          "startMs": 181490,
+          "endMs": 182750,
+          "text": "(We don't need it) we just wanna make the world dance (dance)"
+        },
+        {
+          "startMs": 182750,
+          "endMs": 185240,
+          "text": "Forget about the price tag (dance, dance, dance)"
+        },
+        {
+          "startMs": 185240,
+          "endMs": 188150,
+          "text": "Ain't about the, uh, cha-ching cha-ching"
+        },
+        {
+          "startMs": 188150,
+          "endMs": 190250,
+          "text": "Ain't about the (it ain't about), yeah, ba-bling ba-bling"
+        },
+        {
+          "startMs": 190250,
+          "endMs": 193840,
+          "text": "Wanna make the world dance (yeah, yeah)"
+        },
+        {
+          "startMs": 193840,
+          "endMs": 196650,
+          "text": "Forget about the price tag (forget about the price tag)"
+        },
+        {
+          "startMs": 196650,
+          "endMs": 199500,
+          "text": "(Ahh, ahh, ahh, ahh)"
+        },
+        {
+          "startMs": 199500,
+          "endMs": 206500,
+          "text": "Yeah, yeah (ahh)"
+        },
+        {
+          "startMs": 210480,
+          "endMs": 213020,
+          "text": "Ooh, ooh, ooh (ahh)"
+        },
+        {
+          "startMs": 213020,
+          "endMs": 216220,
+          "text": "Forget about the price tag, yeah (ahh, ahh)"
+        }
+      ]
+    },
+    {
+      "id": "Without Me - Halsey - Tk7WFyHUr1E",
+      "title": "Without Me",
+      "artist": "Halsey",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 11060,
+      "renderDurationInFrames": 5572,
+      "durationInFrames": 6049,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "WE FOUND YOU WHEN YOUR HEART WAS SHATTERED AND BROKE",
+        "rightVertical": "I FILLED YOUR CUP UNTIL IT OVERFLOWED WITH MY LOVE",
+        "bottomLine": "THE GRIP IS TIGHTER THAN BEFORE"
+      },
+      "lyrics": [
+        {
+          "startMs": 7060,
+          "endMs": 14060,
+          "text": "♪"
+        },
+        {
+          "startMs": 14060,
+          "endMs": 17020,
+          "text": "Found you when your heart was broke"
+        },
+        {
+          "startMs": 17700,
+          "endMs": 20060,
+          "text": "I filled your cup until it overflowed"
+        },
+        {
+          "startMs": 20640,
+          "endMs": 25600,
+          "text": "Took it so far to keep you close (keep you close)"
+        },
+        {
+          "startMs": 25600,
+          "endMs": 27920,
+          "text": "I was afraid to leave you on your own"
+        },
+        {
+          "startMs": 27920,
+          "endMs": 31580,
+          "text": "Said I'd catch you if you fall (fall)"
+        },
+        {
+          "startMs": 31580,
+          "endMs": 35280,
+          "text": "And if they laugh, then fuck 'em all (all)"
+        },
+        {
+          "startMs": 35280,
+          "endMs": 36740,
+          "text": "And then I got you off your knees"
+        },
+        {
+          "startMs": 36740,
+          "endMs": 38480,
+          "text": "Put you right back on your feet"
+        },
+        {
+          "startMs": 38480,
+          "endMs": 41040,
+          "text": "Just so you can take advantage of me"
+        },
+        {
+          "startMs": 41040,
+          "endMs": 44700,
+          "text": "Tell me, how's it feel sitting up there?"
+        },
+        {
+          "startMs": 44920,
+          "endMs": 48540,
+          "text": "Feeling so high, but too far away to hold me"
+        },
+        {
+          "startMs": 48540,
+          "endMs": 51760,
+          "text": "You know I'm the one who put you up there"
+        },
+        {
+          "startMs": 51760,
+          "endMs": 55380,
+          "text": "Name in the sky, does it ever get lonely?"
+        },
+        {
+          "startMs": 55380,
+          "endMs": 59000,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 59000,
+          "endMs": 62500,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 63140,
+          "endMs": 65900,
+          "text": "Baby, I'm the one who put you up there"
+        },
+        {
+          "startMs": 66320,
+          "endMs": 69500,
+          "text": "I don't know why (yeah, I don't know why)"
+        },
+        {
+          "startMs": 69500,
+          "endMs": 73640,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 73640,
+          "endMs": 76740,
+          "text": "Live without me"
+        },
+        {
+          "startMs": 76740,
+          "endMs": 80009,
+          "text": "Baby, I'm the one who put you up there"
+        },
+        {
+          "startMs": 80009,
+          "endMs": 84800,
+          "text": "I don't know why (I don't know why, yeah, yeah)"
+        },
+        {
+          "startMs": 84800,
+          "endMs": 88120,
+          "text": "Gave love 'bout a hundred tries (hundred tries)"
+        },
+        {
+          "startMs": 88120,
+          "endMs": 91220,
+          "text": "Just running from the demons in your mind"
+        },
+        {
+          "startMs": 91220,
+          "endMs": 95180,
+          "text": "Then I took yours and made 'em mine (made 'em mine)"
+        },
+        {
+          "startMs": 95180,
+          "endMs": 98449,
+          "text": "I didn't notice 'cause my love was blind"
+        },
+        {
+          "startMs": 98449,
+          "endMs": 101580,
+          "text": "Said I'd catch you if you fall (fall)"
+        },
+        {
+          "startMs": 101580,
+          "endMs": 104940,
+          "text": "And if they laugh, then fuck 'em all (all)"
+        },
+        {
+          "startMs": 104940,
+          "endMs": 107170,
+          "text": "And then I got you off your knees"
+        },
+        {
+          "startMs": 107170,
+          "endMs": 108670,
+          "text": "Put you right back on your feet"
+        },
+        {
+          "startMs": 108670,
+          "endMs": 111900,
+          "text": "Just so you can take advantage of me"
+        },
+        {
+          "startMs": 111900,
+          "endMs": 115290,
+          "text": "Tell me, how's it feel sitting up there?"
+        },
+        {
+          "startMs": 115290,
+          "endMs": 118979,
+          "text": "Feeling so high, but too far away to hold me"
+        },
+        {
+          "startMs": 118979,
+          "endMs": 122190,
+          "text": "You know I'm the one who put you up there"
+        },
+        {
+          "startMs": 122190,
+          "endMs": 126180,
+          "text": "Name in the sky, does it ever get lonely?"
+        },
+        {
+          "startMs": 126180,
+          "endMs": 129540,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 129540,
+          "endMs": 132930,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 132930,
+          "endMs": 136380,
+          "text": "Baby, I'm the one who put you up there"
+        },
+        {
+          "startMs": 136380,
+          "endMs": 140060,
+          "text": "I don't know why (yeah, I don't know why)"
+        },
+        {
+          "startMs": 140060,
+          "endMs": 144610,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 144610,
+          "endMs": 147270,
+          "text": "Live without me"
+        },
+        {
+          "startMs": 147270,
+          "endMs": 150720,
+          "text": "Baby, I'm the one who put you up there"
+        },
+        {
+          "startMs": 150720,
+          "endMs": 155040,
+          "text": "I don't know why, yeah"
+        },
+        {
+          "startMs": 155040,
+          "endMs": 158600,
+          "text": "You don't have to say just what you did"
+        },
+        {
+          "startMs": 158600,
+          "endMs": 160350,
+          "text": "I already know (I know)"
+        },
+        {
+          "startMs": 160350,
+          "endMs": 164700,
+          "text": "I had to go and find out from them (oh-whoa)"
+        },
+        {
+          "startMs": 164700,
+          "endMs": 168570,
+          "text": "So tell me, how's it feel? (Oh-whoa-oh)"
+        },
+        {
+          "startMs": 168570,
+          "endMs": 171750,
+          "text": "Tell me, how's it feel sitting up there?"
+        },
+        {
+          "startMs": 171750,
+          "endMs": 175390,
+          "text": "Feeling so high, but too far away to hold me"
+        },
+        {
+          "startMs": 175390,
+          "endMs": 178690,
+          "text": "You know I'm the one who put you up there"
+        },
+        {
+          "startMs": 178690,
+          "endMs": 182570,
+          "text": "Name in the sky, does it ever get lonely?"
+        },
+        {
+          "startMs": 182570,
+          "endMs": 186280,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 186280,
+          "endMs": 189380,
+          "text": "Thinking you could live without me"
+        },
+        {
+          "startMs": 189380,
+          "endMs": 192970,
+          "text": "Baby, I'm the one who put you up there"
+        },
+        {
+          "startMs": 192970,
+          "endMs": 194810,
+          "text": "I don't know why (yeah, I don't know why)"
+        }
+      ]
+    }
+  ],
+  "queue": [
+    {
+      "id": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+      "title": "Run Wild (向风而野)",
+      "artist": "是晚星呀 - Topic",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ",
+      "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "artist": "Rick Astley",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
+      "title": "a-ha - Take On Me (Official Video) [4K]",
+      "artist": "a-ha",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "I Want It That Way (Official HD Video) - Backstreet Boys - 4fndeDfaWCg",
+      "title": "Backstreet Boys - I Want It That Way (Official HD Video)",
+      "artist": "Backstreet Boys",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Hey There Delilah - Plain White Ts - oEeet9t--tI",
+      "title": "Hey There Delilah",
+      "artist": "Plain White Ts",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "From The Start (Official Music Video) - Laufey - lSD_L-xic9o",
+      "title": "Laufey - From The Start (Official Music Video)",
+      "artist": "Laufey",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Be Around Me (feat. chloe moriondo) - Will Joseph Cook - TtEG06uuJKY",
+      "title": "Be Around Me (feat. chloe moriondo)",
+      "artist": "Will Joseph Cook",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "24 - sundial - Topic - wlg7dhAJkrA",
+      "title": "24",
+      "artist": "sundial - Topic",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "If We Ever Broke Up (Official Video) - Mae Stephens - TbGT3d0pHgo",
+      "title": "Mae Stephens - If We Ever Broke Up (Official Video)",
+      "artist": "Mae Stephens",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Rema - Selena Gomez - Calm Down (Official Music Video) - Selena Gomez - WcIcVapfqXw",
+      "title": "Calm Down (Official Music Video)",
+      "artist": "Rema - Selena Gomez",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "blue - yung kai - MHCsrKA9gh8",
+      "title": "blue",
+      "artist": "yung kai",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "I Got Better - Morgan Wallen - Xc-dEsMbQJM",
+      "title": "I Got Better",
+      "artist": "Morgan Wallen",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Towards The Sun (From The -Home- Soundtrack) - Rihanna - mhPDe4IyqeU",
+      "title": "Towards The Sun (From The \"Home\" Soundtrack)",
+      "artist": "Rihanna",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Made You Look (Official Music Video) - Meghan Trainor - gPCCYMeXin0",
+      "title": "Meghan Trainor - Made You Look (Official Music Video)",
+      "artist": "Meghan Trainor",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Price Tag - Jessie J - 5rcmr-eX2-Y",
+      "title": "Price Tag",
+      "artist": "Jessie J",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Without Me - Halsey - Tk7WFyHUr1E",
+      "title": "Without Me",
+      "artist": "Halsey",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    }
+  ],
+  "playlists": [
+    {
+      "id": "liked",
+      "name": "Liked Songs",
+      "count": 2,
+      "accent": "rgba(255, 196, 170, 0.78)"
+    },
+    {
+      "id": "night-drive",
+      "name": "Night Drive",
+      "count": 2,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": [
+        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
+        "Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ"
+      ]
+    },
+    {
+      "id": "city-echoes",
+      "name": "City Echoes",
+      "count": 0,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": []
+    },
+    {
+      "id": "neon-pulse",
+      "name": "Neon Pulse",
+      "count": 0,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": []
+    },
+    {
+      "id": "soft-pages",
+      "name": "Soft Pages",
+      "count": 0,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": []
+    },
+    {
+      "id": "afterglow",
+      "name": "Afterglow",
+      "count": 1,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": [
+        "Take On Me (Official Video) [4K] - a-ha - djV11Xbc914"
+      ]
+    },
+    {
+      "id": "new-downloads",
+      "name": "New Downloads",
+      "count": 1,
+      "accent": "rgba(255,255,255,0.58)",
+      "trackIds": [
+        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY"
+      ]
+    }
+  ]
+}
