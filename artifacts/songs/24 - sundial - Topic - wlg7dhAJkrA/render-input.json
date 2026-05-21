@@ -1,0 +1,216 @@
+{
+  "title": "24",
+  "artist": "sundial - Topic",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/24 - sundial - Topic - wlg7dhAJkrA/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 4016,
+  "durationInFrames": 4016,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/24 - sundial - Topic - wlg7dhAJkrA/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 1840,
+      "endMs": 3480,
+      "text": "I'm 24 now"
+    },
+    {
+      "startMs": 3660,
+      "endMs": 5360,
+      "text": "Still at my parents house"
+    },
+    {
+      "startMs": 5540,
+      "endMs": 7500,
+      "text": "Thought I would have it figured out"
+    },
+    {
+      "startMs": 8680,
+      "endMs": 12200,
+      "text": "Friends getting married, one has a baby"
+    },
+    {
+      "startMs": 12680,
+      "endMs": 14800,
+      "text": "I barely recognize this town"
+    },
+    {
+      "startMs": 16100,
+      "endMs": 19300,
+      "text": "Mama asked me what my plan is for the future"
+    },
+    {
+      "startMs": 19680,
+      "endMs": 22680,
+      "text": "But I don't even know what's going on for dinner"
+    },
+    {
+      "startMs": 22680,
+      "endMs": 27080,
+      "text": "I'm 24 now, thought I could finally settle down"
+    },
+    {
+      "startMs": 31100,
+      "endMs": 33220,
+      "text": "Parties end before I'm drunk"
+    },
+    {
+      "startMs": 33320,
+      "endMs": 36640,
+      "text": "Friday night I'm tired as fuck"
+    },
+    {
+      "startMs": 36640,
+      "endMs": 39620,
+      "text": "I don't know how I ended up like this"
+    },
+    {
+      "startMs": 39620,
+      "endMs": 42880,
+      "text": "Can someone tell me what the hell I missed? (Missed, yeah)"
+    },
+    {
+      "startMs": 44440,
+      "endMs": 47140,
+      "text": "Birthday's here, I'm still depressed"
+    },
+    {
+      "startMs": 47740,
+      "endMs": 50800,
+      "text": "Got no friends, just lots of stress"
+    },
+    {
+      "startMs": 50800,
+      "endMs": 53540,
+      "text": "It feels like yesterday when we were kids"
+    },
+    {
+      "startMs": 53940,
+      "endMs": 56940,
+      "text": "Can someone tell me what the hell I missed?"
+    },
+    {
+      "startMs": 56940,
+      "endMs": 58280,
+      "text": "'Cause I don't know"
+    },
+    {
+      "startMs": 61800,
+      "endMs": 65120,
+      "text": "Sleep till the sun's down, another breakdown"
+    },
+    {
+      "startMs": 65120,
+      "endMs": 67600,
+      "text": "Feels like the days are all the same"
+    },
+    {
+      "startMs": 67860,
+      "endMs": 72340,
+      "text": "New type of anxious, school never taught this"
+    },
+    {
+      "startMs": 72340,
+      "endMs": 74460,
+      "text": "And what the fuck are taxes anyway?"
+    },
+    {
+      "startMs": 75700,
+      "endMs": 79260,
+      "text": "I tell myself I won't be cynical and bitter"
+    },
+    {
+      "startMs": 79860,
+      "endMs": 82780,
+      "text": "And now I see it when I'm looking in the mirror"
+    },
+    {
+      "startMs": 82780,
+      "endMs": 86860,
+      "text": "I'm 24 now, wondering when I will be okay"
+    },
+    {
+      "startMs": 90390,
+      "endMs": 93190,
+      "text": "Parties end before I'm drunk"
+    },
+    {
+      "startMs": 93530,
+      "endMs": 96670,
+      "text": "Friday night I'm tired as fuck"
+    },
+    {
+      "startMs": 96670,
+      "endMs": 99630,
+      "text": "I don't know how I ended up like this"
+    },
+    {
+      "startMs": 99650,
+      "endMs": 102890,
+      "text": "Can someone tell me what the hell I missed?"
+    },
+    {
+      "startMs": 104470,
+      "endMs": 107130,
+      "text": "Birthday's here, I'm still depressed"
+    },
+    {
+      "startMs": 107770,
+      "endMs": 110770,
+      "text": "Got no friends, just lots of stress"
+    },
+    {
+      "startMs": 110770,
+      "endMs": 113490,
+      "text": "It feels like yesterday when we were kids"
+    },
+    {
+      "startMs": 113810,
+      "endMs": 116990,
+      "text": "Can someone tell me what the hell I missed?"
+    },
+    {
+      "startMs": 116990,
+      "endMs": 118330,
+      "text": "'Cause I don't know"
+    },
+    {
+      "startMs": 118430,
+      "endMs": 132380,
+      "text": "(Oh-oh-oh-oh) 'cause I don't know"
+    },
+    {
+      "startMs": 121950,
+      "endMs": 125960,
+      "text": "(Oh-oh-oh-oh) 'cause I don't know"
+    },
+    {
+      "startMs": 125960,
+      "endMs": 128740,
+      "text": "(Oh-oh-oh-oh) yeah"
+    },
+    {
+      "startMs": 128740,
+      "endMs": 131070,
+      "text": "Can someone tell me what the hell I missed?"
+    },
+    {
+      "startMs": 131070,
+      "endMs": 134270,
+      "text": "'Cause I don't know"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/24 - sundial - Topic - wlg7dhAJkrA",
+  "outputMp4Name": "24 - sundial - Topic.mp4"
+}

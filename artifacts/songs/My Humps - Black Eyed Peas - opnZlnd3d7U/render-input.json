@@ -1,0 +1,596 @@
+{
+  "title": "My Humps",
+  "artist": "Black Eyed Peas",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 12640,
+  "renderDurationInFrames": 9065,
+  "durationInFrames": 9808,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF WHAT YOU CARRY IS A SILENT PROMISE TO BE REVEALED.",
+    "rightVertical": "THERE LIES AN UNTOLD GEOGRAPHY BENEATH THE SURFACE OF YOUR SKIN.",
+    "bottomLine": "DRUNK ON THE MOMENTUM WE HAVE FOUND."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 15640,
+      "text": "♪"
+    },
+    {
+      "startMs": 15640,
+      "endMs": 17610,
+      "text": "Whatcha gon' do with all that junk"
+    },
+    {
+      "startMs": 17620,
+      "endMs": 19540,
+      "text": "All that junk inside your trunk?"
+    },
+    {
+      "startMs": 19560,
+      "endMs": 21420,
+      "text": "I'ma get, get, get, get you drunk"
+    },
+    {
+      "startMs": 21470,
+      "endMs": 23600,
+      "text": "Get you love drunk off my hump"
+    },
+    {
+      "startMs": 23620,
+      "endMs": 26980,
+      "text": "My hump, my hump, my hump, my hump, my hump"
+    },
+    {
+      "startMs": 27030,
+      "endMs": 30660,
+      "text": "My hump, my hump, my hump, my lovely little lumps"
+    },
+    {
+      "startMs": 30680,
+      "endMs": 31910,
+      "text": "Check it out"
+    },
+    {
+      "startMs": 31920,
+      "endMs": 33770,
+      "text": "I drive these brothers crazy"
+    },
+    {
+      "startMs": 33780,
+      "endMs": 35750,
+      "text": "I do it on the daily"
+    },
+    {
+      "startMs": 35800,
+      "endMs": 37720,
+      "text": "They treat me really nicely"
+    },
+    {
+      "startMs": 37770,
+      "endMs": 39690,
+      "text": "They buy me all these iceys"
+    },
+    {
+      "startMs": 39840,
+      "endMs": 41600,
+      "text": "Dolce & Gabbana"
+    },
+    {
+      "startMs": 41800,
+      "endMs": 43680,
+      "text": "Fendi and that Donna"
+    },
+    {
+      "startMs": 43690,
+      "endMs": 45180,
+      "text": "Karan they be sharin'"
+    },
+    {
+      "startMs": 45200,
+      "endMs": 47570,
+      "text": "All their money got me wearing fly"
+    },
+    {
+      "startMs": 47600,
+      "endMs": 49340,
+      "text": "Gear but I ain't askin'"
+    },
+    {
+      "startMs": 49350,
+      "endMs": 51280,
+      "text": "They say they love my ass in"
+    },
+    {
+      "startMs": 51430,
+      "endMs": 53440,
+      "text": "Seven Jeans, True Religion"
+    },
+    {
+      "startMs": 53450,
+      "endMs": 55260,
+      "text": "I say no but they keep givin'"
+    },
+    {
+      "startMs": 55280,
+      "endMs": 57050,
+      "text": "So I keep on takin'"
+    },
+    {
+      "startMs": 57070,
+      "endMs": 58770,
+      "text": "And no I ain't taken"
+    },
+    {
+      "startMs": 59220,
+      "endMs": 60870,
+      "text": "We can keep on datin'"
+    },
+    {
+      "startMs": 60880,
+      "endMs": 62860,
+      "text": "Now keep on demonstratin'"
+    },
+    {
+      "startMs": 62870,
+      "endMs": 65690,
+      "text": "My love (love), my love, my love, my love (love)"
+    },
+    {
+      "startMs": 65710,
+      "endMs": 67710,
+      "text": "You love my lady lumps (love)"
+    },
+    {
+      "startMs": 67720,
+      "endMs": 69610,
+      "text": "My hump, my hump, my hump (love)"
+    },
+    {
+      "startMs": 69620,
+      "endMs": 71150,
+      "text": "My humps they got you"
+    },
+    {
+      "startMs": 71160,
+      "endMs": 74040,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 74060,
+      "endMs": 76650,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 76660,
+      "endMs": 78790,
+      "text": "And spending time on me"
+    },
+    {
+      "startMs": 79040,
+      "endMs": 81790,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 81810,
+      "endMs": 84520,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 84530,
+      "endMs": 85450,
+      "text": "On-on me, on me"
+    },
+    {
+      "startMs": 85460,
+      "endMs": 87320,
+      "text": "Whatcha gon' do with all that junk"
+    },
+    {
+      "startMs": 87330,
+      "endMs": 89030,
+      "text": "All that junk inside that trunk?"
+    },
+    {
+      "startMs": 89050,
+      "endMs": 91170,
+      "text": "I'ma get, get, get, get you drunk"
+    },
+    {
+      "startMs": 91180,
+      "endMs": 93050,
+      "text": "Get you love drunk off my hump"
+    },
+    {
+      "startMs": 93060,
+      "endMs": 95040,
+      "text": "Whatcha gon' do with all that ass"
+    },
+    {
+      "startMs": 95060,
+      "endMs": 96770,
+      "text": "All that ass inside them jeans?"
+    },
+    {
+      "startMs": 96780,
+      "endMs": 98820,
+      "text": "I'ma make, make, make, make you scream"
+    },
+    {
+      "startMs": 98840,
+      "endMs": 101000,
+      "text": "Make you scream, make you scream"
+    },
+    {
+      "startMs": 101020,
+      "endMs": 104430,
+      "text": "'Cause of my hump (hump), my hump, my hump, my hump (what?)"
+    },
+    {
+      "startMs": 104450,
+      "endMs": 108170,
+      "text": "My hump, my hump, my hump (hump), my lovely lady lumps"
+    },
+    {
+      "startMs": 108190,
+      "endMs": 109110,
+      "text": "Check it out"
+    },
+    {
+      "startMs": 109560,
+      "endMs": 111520,
+      "text": "I met a girl down at the disco"
+    },
+    {
+      "startMs": 111530,
+      "endMs": 113360,
+      "text": "She said, \"Hey, hey, hey, yeah, let's go\""
+    },
+    {
+      "startMs": 113380,
+      "endMs": 115400,
+      "text": "I could be ya baby, you could be my honey"
+    },
+    {
+      "startMs": 115420,
+      "endMs": 116690,
+      "text": "Let's spend time not money"
+    },
+    {
+      "startMs": 116700,
+      "endMs": 119180,
+      "text": "And mix your milk with my coco puff"
+    },
+    {
+      "startMs": 119200,
+      "endMs": 120720,
+      "text": "Milky, milky coco"
+    },
+    {
+      "startMs": 120730,
+      "endMs": 123010,
+      "text": "Mix your milk with my coco puff"
+    },
+    {
+      "startMs": 123020,
+      "endMs": 124170,
+      "text": "Milky, milky"
+    },
+    {
+      "startMs": 124180,
+      "endMs": 124790,
+      "text": "Right"
+    },
+    {
+      "startMs": 124800,
+      "endMs": 126720,
+      "text": "They say I'm really sexy"
+    },
+    {
+      "startMs": 126730,
+      "endMs": 128670,
+      "text": "The boys they wanna sex me"
+    },
+    {
+      "startMs": 128680,
+      "endMs": 130630,
+      "text": "They always standin' next to me"
+    },
+    {
+      "startMs": 130880,
+      "endMs": 132660,
+      "text": "Always dancin' next to me"
+    },
+    {
+      "startMs": 132760,
+      "endMs": 134620,
+      "text": "Tryin' to feel my hump, hump"
+    },
+    {
+      "startMs": 134630,
+      "endMs": 136730,
+      "text": "Lookin' at my lump, lump"
+    },
+    {
+      "startMs": 137130,
+      "endMs": 139010,
+      "text": "You can look but you can't touch it"
+    },
+    {
+      "startMs": 139030,
+      "endMs": 140110,
+      "text": "If you touch it"
+    },
+    {
+      "startMs": 140560,
+      "endMs": 142240,
+      "text": "I'ma start some drama"
+    },
+    {
+      "startMs": 142440,
+      "endMs": 144130,
+      "text": "You don't want no drama"
+    },
+    {
+      "startMs": 144830,
+      "endMs": 147810,
+      "text": "No, no drama, no, no, no, no drama"
+    },
+    {
+      "startMs": 147820,
+      "endMs": 150220,
+      "text": "So don't pull on my hand, boy"
+    },
+    {
+      "startMs": 150420,
+      "endMs": 152150,
+      "text": "You ain't my man, boy"
+    },
+    {
+      "startMs": 152160,
+      "endMs": 154040,
+      "text": "I'm just tryin' to dance, boy"
+    },
+    {
+      "startMs": 154290,
+      "endMs": 155540,
+      "text": "And move my hump"
+    },
+    {
+      "startMs": 155740,
+      "endMs": 158600,
+      "text": "My hump, my hump, my hump, my hump"
+    },
+    {
+      "startMs": 159160,
+      "endMs": 162540,
+      "text": "My hump, my hump, my hump, my hump, my hump, my hump"
+    },
+    {
+      "startMs": 162550,
+      "endMs": 164420,
+      "text": "My lovely lady lumps (lump)"
+    },
+    {
+      "startMs": 164430,
+      "endMs": 168140,
+      "text": "My lovely lady lumps my lovely lady lumps (lump)"
+    },
+    {
+      "startMs": 168160,
+      "endMs": 169830,
+      "text": "In the back and in the front"
+    },
+    {
+      "startMs": 169850,
+      "endMs": 171530,
+      "text": "(Lump) My loving got you"
+    },
+    {
+      "startMs": 171790,
+      "endMs": 174560,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 174570,
+      "endMs": 177320,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 177330,
+      "endMs": 179210,
+      "text": "And spending time on me"
+    },
+    {
+      "startMs": 179560,
+      "endMs": 182270,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 182290,
+      "endMs": 185000,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 185020,
+      "endMs": 186190,
+      "text": "On-on me, on me"
+    },
+    {
+      "startMs": 186200,
+      "endMs": 187900,
+      "text": "Whatcha gon' do with all that junk"
+    },
+    {
+      "startMs": 187920,
+      "endMs": 189840,
+      "text": "All that junk inside that trunk?"
+    },
+    {
+      "startMs": 189860,
+      "endMs": 191790,
+      "text": "I'ma get, get, get, get you drunk"
+    },
+    {
+      "startMs": 191800,
+      "endMs": 193770,
+      "text": "Get you love drunk off my hump"
+    },
+    {
+      "startMs": 193790,
+      "endMs": 195660,
+      "text": "Whatcha gon' do with all that ass"
+    },
+    {
+      "startMs": 195670,
+      "endMs": 197610,
+      "text": "All that ass inside them jeans?"
+    },
+    {
+      "startMs": 197620,
+      "endMs": 199570,
+      "text": "I'ma make, make, make, make you scream"
+    },
+    {
+      "startMs": 199580,
+      "endMs": 201530,
+      "text": "Make you scream, make you scream"
+    },
+    {
+      "startMs": 201540,
+      "endMs": 203480,
+      "text": "Whatcha gon' do with all that junk"
+    },
+    {
+      "startMs": 203500,
+      "endMs": 205310,
+      "text": "All that junk inside that trunk?"
+    },
+    {
+      "startMs": 205320,
+      "endMs": 207250,
+      "text": "I'ma get, get, get, get you drunk"
+    },
+    {
+      "startMs": 207270,
+      "endMs": 209260,
+      "text": "Get you love drunk off this hump"
+    },
+    {
+      "startMs": 209270,
+      "endMs": 211150,
+      "text": "Whatcha gon' do with all that breast"
+    },
+    {
+      "startMs": 211160,
+      "endMs": 212970,
+      "text": "All that breast inside that shirt?"
+    },
+    {
+      "startMs": 212980,
+      "endMs": 215050,
+      "text": "I'ma make, make, make, make, you work"
+    },
+    {
+      "startMs": 215070,
+      "endMs": 216860,
+      "text": "Make you work, work, make you work"
+    },
+    {
+      "startMs": 216860,
+      "endMs": 233610,
+      "text": "♪"
+    },
+    {
+      "startMs": 233610,
+      "endMs": 236580,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 236600,
+      "endMs": 239190,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 239200,
+      "endMs": 241590,
+      "text": "And spending time on me"
+    },
+    {
+      "startMs": 241610,
+      "endMs": 244370,
+      "text": "She's got me spending"
+    },
+    {
+      "startMs": 244380,
+      "endMs": 246900,
+      "text": "Oh, spending all your money on me"
+    },
+    {
+      "startMs": 246950,
+      "endMs": 248740,
+      "text": "On-on me, on me"
+    },
+    {
+      "startMs": 248740,
+      "endMs": 278600,
+      "text": "♪"
+    },
+    {
+      "startMs": 278600,
+      "endMs": 282680,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 282690,
+      "endMs": 286920,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 286930,
+      "endMs": 290740,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 290760,
+      "endMs": 294660,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 294670,
+      "endMs": 298550,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 298570,
+      "endMs": 302730,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 302740,
+      "endMs": 306660,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 306670,
+      "endMs": 310620,
+      "text": "So real (so real), so real (so real)"
+    },
+    {
+      "startMs": 310630,
+      "endMs": 312810,
+      "text": "So real (so real)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U",
+  "outputMp4Name": "My Humps - Black Eyed Peas.mp4"
+}

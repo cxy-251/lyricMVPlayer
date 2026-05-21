@@ -1,0 +1,291 @@
+{
+  "title": "Run Wild (向风而野)",
+  "artist": "是晚星呀 - Topic",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 6240,
+  "durationInFrames": 6294,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY DISSOLVES INTO A BLUR OF GOLD AND GREY.",
+    "rightVertical": "LEAVING BEHIND ONLY THE ECHO OF MY OWN FREEDOM.",
+    "bottomLine": "CHASING THE WIND'S UNCEASING CALL."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 320,
+      "text": "Da da dum da da dum"
+    },
+    {
+      "startMs": 320,
+      "endMs": 5920,
+      "text": "Sun on my face, I'm out the door"
+    },
+    {
+      "startMs": 13740,
+      "endMs": 15980,
+      "text": "Shoes in my hand, feet on the floor"
+    },
+    {
+      "startMs": 16320,
+      "endMs": 18300,
+      "text": "City behind me, getting small"
+    },
+    {
+      "startMs": 18300,
+      "endMs": 20760,
+      "text": "I don't look back, not at all"
+    },
+    {
+      "startMs": 20760,
+      "endMs": 22960,
+      "text": "Wind in my hair, heart in the sound"
+    },
+    {
+      "startMs": 22960,
+      "endMs": 25740,
+      "text": "Laughing like I got no doubt"
+    },
+    {
+      "startMs": 25740,
+      "endMs": 27600,
+      "text": "I lost the map, I found the spark"
+    },
+    {
+      "startMs": 27600,
+      "endMs": 29900,
+      "text": "We chase the day into the dark"
+    },
+    {
+      "startMs": 29900,
+      "endMs": 32320,
+      "text": "No more waiting, no more chains"
+    },
+    {
+      "startMs": 32320,
+      "endMs": 34240,
+      "text": "I'm not living in yesterday"
+    },
+    {
+      "startMs": 34240,
+      "endMs": 36920,
+      "text": "Turn the lights down, feel the bass"
+    },
+    {
+      "startMs": 36920,
+      "endMs": 39440,
+      "text": "Let the whole world fade away"
+    },
+    {
+      "startMs": 40560,
+      "endMs": 44260,
+      "text": "I run wild, I feel alive"
+    },
+    {
+      "startMs": 45600,
+      "endMs": 48460,
+      "text": "No goodbye, just open sky"
+    },
+    {
+      "startMs": 50060,
+      "endMs": 53120,
+      "text": "I run free, I'm finally me"
+    },
+    {
+      "startMs": 53120,
+      "endMs": 57780,
+      "text": "No gravity, just you and me"
+    },
+    {
+      "startMs": 59060,
+      "endMs": 62860,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 62860,
+      "endMs": 65200,
+      "text": "Hands up, heart loud"
+    },
+    {
+      "startMs": 68720,
+      "endMs": 71940,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 71940,
+      "endMs": 74380,
+      "text": "Lost but so found"
+    },
+    {
+      "startMs": 77060,
+      "endMs": 80780,
+      "text": "Moon on the street, stars in my eyes"
+    },
+    {
+      "startMs": 80780,
+      "endMs": 82940,
+      "text": "We don't need a reason why"
+    },
+    {
+      "startMs": 82940,
+      "endMs": 85200,
+      "text": "Fast little heartbeat, neon glow"
+    },
+    {
+      "startMs": 85200,
+      "endMs": 87600,
+      "text": "Anywhere the night can go"
+    },
+    {
+      "startMs": 87600,
+      "endMs": 89960,
+      "text": "Dancing through the empty road"
+    },
+    {
+      "startMs": 89960,
+      "endMs": 92100,
+      "text": "Letting every feeling show"
+    },
+    {
+      "startMs": 92100,
+      "endMs": 94440,
+      "text": "If I fall, I fall in style"
+    },
+    {
+      "startMs": 94440,
+      "endMs": 96920,
+      "text": "If I'm scared, I run wild"
+    },
+    {
+      "startMs": 96920,
+      "endMs": 99240,
+      "text": "No more waiting, no more chains"
+    },
+    {
+      "startMs": 99240,
+      "endMs": 100880,
+      "text": "I'm not living in yesterday"
+    },
+    {
+      "startMs": 101520,
+      "endMs": 103860,
+      "text": "Turn the lights down, feel the bass"
+    },
+    {
+      "startMs": 103860,
+      "endMs": 106260,
+      "text": "Let the whole world fade away"
+    },
+    {
+      "startMs": 107180,
+      "endMs": 111120,
+      "text": "I run wild, I feel alive"
+    },
+    {
+      "startMs": 113650,
+      "endMs": 115710,
+      "text": "No goodbye, just open sky"
+    },
+    {
+      "startMs": 116990,
+      "endMs": 120070,
+      "text": "I run free, I'm finally me"
+    },
+    {
+      "startMs": 120070,
+      "endMs": 125670,
+      "text": "No gravity, just you and me"
+    },
+    {
+      "startMs": 126420,
+      "endMs": 129720,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 129720,
+      "endMs": 132160,
+      "text": "Hands up, heart loud"
+    },
+    {
+      "startMs": 135720,
+      "endMs": 139020,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 139020,
+      "endMs": 141520,
+      "text": "Lost but so found"
+    },
+    {
+      "startMs": 141520,
+      "endMs": 144020,
+      "text": "Maybe I was made to fly"
+    },
+    {
+      "startMs": 144020,
+      "endMs": 148651,
+      "text": "Maybe I was born for this"
+    },
+    {
+      "startMs": 148651,
+      "endMs": 154251,
+      "text": "Every tear I left behind"
+    },
+    {
+      "startMs": 154593,
+      "endMs": 160193,
+      "text": "Turns into a little wish"
+    },
+    {
+      "startMs": 160535,
+      "endMs": 166135,
+      "text": "I run wild, I feel alive"
+    },
+    {
+      "startMs": 167666,
+      "endMs": 173266,
+      "text": "No goodbye, just open sky"
+    },
+    {
+      "startMs": 173608,
+      "endMs": 179208,
+      "text": "I run free, I'm finally me"
+    },
+    {
+      "startMs": 180739,
+      "endMs": 186339,
+      "text": "No gravity, just you and me"
+    },
+    {
+      "startMs": 187869,
+      "endMs": 193469,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 195000,
+      "endMs": 196740,
+      "text": "Hands up, heart loud"
+    },
+    {
+      "startMs": 196740,
+      "endMs": 202340,
+      "text": "Run wild, run wild, run wild"
+    },
+    {
+      "startMs": 203610,
+      "endMs": 206010,
+      "text": "Lost but so found"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+  "outputMp4Name": "Run Wild (向风而野) - 是晚星呀 - Topic.mp4"
+}

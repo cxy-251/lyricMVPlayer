@@ -1,0 +1,236 @@
+{
+  "title": "I Got Better",
+  "artist": "Morgan Wallen",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Got Better - Morgan Wallen - Xc-dEsMbQJM/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 8060,
+  "renderDurationInFrames": 5445,
+  "durationInFrames": 6148,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Got Better - Morgan Wallen - Xc-dEsMbQJM/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 11060,
+      "endMs": 14270,
+      "text": "Everything's still pretty much the same 'round here"
+    },
+    {
+      "startMs": 16740,
+      "endMs": 20560,
+      "text": "My neighbors still shootin' all of next year's deer"
+    },
+    {
+      "startMs": 22780,
+      "endMs": 25760,
+      "text": "Boys still lose 'less they're playin' at home"
+    },
+    {
+      "startMs": 28020,
+      "endMs": 31400,
+      "text": "But I got better since you got gone"
+    },
+    {
+      "startMs": 33280,
+      "endMs": 37420,
+      "text": "I'm still a few too many on a Friday night"
+    },
+    {
+      "startMs": 39140,
+      "endMs": 43580,
+      "text": "I still try to step in when it ain't my fight"
+    },
+    {
+      "startMs": 45300,
+      "endMs": 48420,
+      "text": "I'm still me, don't get me wrong"
+    },
+    {
+      "startMs": 50620,
+      "endMs": 54100,
+      "text": "But I got better since you got gone"
+    },
+    {
+      "startMs": 55300,
+      "endMs": 58020,
+      "text": "Swear it was like, \"I'll be damned\""
+    },
+    {
+      "startMs": 58020,
+      "endMs": 60880,
+      "text": "I'm finally back to bein' who I am"
+    },
+    {
+      "startMs": 61180,
+      "endMs": 63560,
+      "text": "When we were over, it was overnight"
+    },
+    {
+      "startMs": 63560,
+      "endMs": 67840,
+      "text": "Light came on, it all felt right, when it all went wrong"
+    },
+    {
+      "startMs": 67840,
+      "endMs": 69340,
+      "text": "You turned me loose"
+    },
+    {
+      "startMs": 69340,
+      "endMs": 72040,
+      "text": "Wasn't no tellin' who I'd turn into"
+    },
+    {
+      "startMs": 72560,
+      "endMs": 76360,
+      "text": "But it turns out me and you together's why it took so long"
+    },
+    {
+      "startMs": 76360,
+      "endMs": 79520,
+      "text": "'Cause I got better since you got gone"
+    },
+    {
+      "startMs": 90030,
+      "endMs": 94030,
+      "text": "For a little while there, you had me convinced"
+    },
+    {
+      "startMs": 95650,
+      "endMs": 98810,
+      "text": "That my mama was the devil, now we're talkin' again"
+    },
+    {
+      "startMs": 101330,
+      "endMs": 105090,
+      "text": "My friends, you hated, ain't said one word"
+    },
+    {
+      "startMs": 106770,
+      "endMs": 110450,
+      "text": "Besides, \"You got better since you lost her\""
+    },
+    {
+      "startMs": 112070,
+      "endMs": 114510,
+      "text": "Swear it was like, \"I'll be damned\""
+    },
+    {
+      "startMs": 114510,
+      "endMs": 117330,
+      "text": "I'm finally back to bein' who I am"
+    },
+    {
+      "startMs": 117330,
+      "endMs": 119450,
+      "text": "When we were over, it was overnight"
+    },
+    {
+      "startMs": 119990,
+      "endMs": 124290,
+      "text": "Light came on, it all felt right, when it all went wrong"
+    },
+    {
+      "startMs": 124290,
+      "endMs": 125830,
+      "text": "You turned me loose"
+    },
+    {
+      "startMs": 125830,
+      "endMs": 128530,
+      "text": "Wasn't no tellin' who I'd turn into"
+    },
+    {
+      "startMs": 128530,
+      "endMs": 132870,
+      "text": "But it turns out me and you together's why it took so long"
+    },
+    {
+      "startMs": 132870,
+      "endMs": 136550,
+      "text": "'Cause I got better since you got gone"
+    },
+    {
+      "startMs": 140460,
+      "endMs": 143000,
+      "text": "Oh, baby, since you got gone"
+    },
+    {
+      "startMs": 146020,
+      "endMs": 148740,
+      "text": "And I ain't sayin' that you're the sleep that I lost"
+    },
+    {
+      "startMs": 148740,
+      "endMs": 151360,
+      "text": "But I never slept this good before"
+    },
+    {
+      "startMs": 151360,
+      "endMs": 154360,
+      "text": "I ain't sayin' you're the weight on my back"
+    },
+    {
+      "startMs": 154360,
+      "endMs": 157900,
+      "text": "I'm just sayin' that it ain't there no more"
+    },
+    {
+      "startMs": 157900,
+      "endMs": 159640,
+      "text": "I'll be damned"
+    },
+    {
+      "startMs": 159640,
+      "endMs": 162500,
+      "text": "I'm finally back to bein' who I am"
+    },
+    {
+      "startMs": 162500,
+      "endMs": 165080,
+      "text": "When we were over, it was overnight"
+    },
+    {
+      "startMs": 165630,
+      "endMs": 169660,
+      "text": "Light came on, it all felt right, when it all went wrong"
+    },
+    {
+      "startMs": 169660,
+      "endMs": 171040,
+      "text": "You turned me loose"
+    },
+    {
+      "startMs": 171040,
+      "endMs": 173680,
+      "text": "Wasn't no tellin' who I'd turn into"
+    },
+    {
+      "startMs": 173680,
+      "endMs": 178080,
+      "text": "But it turns out me and you together's why it took so long"
+    },
+    {
+      "startMs": 178080,
+      "endMs": 181620,
+      "text": "'Cause I got better since you got gone"
+    },
+    {
+      "startMs": 184680,
+      "endMs": 187580,
+      "text": "Yeah, baby, since you got gone"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Got Better - Morgan Wallen - Xc-dEsMbQJM",
+  "outputMp4Name": "I Got Better - Morgan Wallen.mp4"
+}

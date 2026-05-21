@@ -1,0 +1,341 @@
+{
+  "title": "Hey There Delilah",
+  "artist": "Plain White Ts",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Hey There Delilah - Plain White Ts - oEeet9t--tI/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 6330,
+  "renderDurationInFrames": 6530,
+  "durationInFrames": 6975,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Hey There Delilah - Plain White Ts - oEeet9t--tI/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 9330,
+      "endMs": 10710,
+      "text": "Hey there, Delilah"
+    },
+    {
+      "startMs": 11010,
+      "endMs": 13030,
+      "text": "What's it like in New York City?"
+    },
+    {
+      "startMs": 13390,
+      "endMs": 15230,
+      "text": "I'm a thousand miles away"
+    },
+    {
+      "startMs": 15290,
+      "endMs": 17710,
+      "text": "But, girl, tonight you look so pretty"
+    },
+    {
+      "startMs": 17710,
+      "endMs": 19930,
+      "text": "Yes, you do"
+    },
+    {
+      "startMs": 20710,
+      "endMs": 23530,
+      "text": "Times Square can't shine as bright as you"
+    },
+    {
+      "startMs": 24470,
+      "endMs": 25990,
+      "text": "I swear, it's true"
+    },
+    {
+      "startMs": 27890,
+      "endMs": 29130,
+      "text": "Hey there, Delilah"
+    },
+    {
+      "startMs": 29430,
+      "endMs": 31450,
+      "text": "Don't you worry about the distance"
+    },
+    {
+      "startMs": 31830,
+      "endMs": 33790,
+      "text": "I'm right there if you get lonely"
+    },
+    {
+      "startMs": 33790,
+      "endMs": 36070,
+      "text": "Give this song another listen"
+    },
+    {
+      "startMs": 36250,
+      "endMs": 37930,
+      "text": "Close your eyes"
+    },
+    {
+      "startMs": 39230,
+      "endMs": 42130,
+      "text": "Listen to my voice, it's my disguise"
+    },
+    {
+      "startMs": 42770,
+      "endMs": 45210,
+      "text": "I'm by your side"
+    },
+    {
+      "startMs": 46170,
+      "endMs": 48890,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 50870,
+      "endMs": 53350,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 55250,
+      "endMs": 57990,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 60070,
+      "endMs": 62510,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 62510,
+      "endMs": 65610,
+      "text": "What you do to me"
+    },
+    {
+      "startMs": 66950,
+      "endMs": 68370,
+      "text": "Hey there, Delilah"
+    },
+    {
+      "startMs": 68710,
+      "endMs": 70670,
+      "text": "I know times are gettin' hard"
+    },
+    {
+      "startMs": 70790,
+      "endMs": 72330,
+      "text": "But just believe me, girl"
+    },
+    {
+      "startMs": 72470,
+      "endMs": 75270,
+      "text": "Someday I'll pay the bills with this guitar"
+    },
+    {
+      "startMs": 75470,
+      "endMs": 76610,
+      "text": "We'll have it good"
+    },
+    {
+      "startMs": 78430,
+      "endMs": 81270,
+      "text": "We'll have the life we knew we would"
+    },
+    {
+      "startMs": 82190,
+      "endMs": 83670,
+      "text": "My word is good"
+    },
+    {
+      "startMs": 85610,
+      "endMs": 86850,
+      "text": "Hey there, Delilah"
+    },
+    {
+      "startMs": 87230,
+      "endMs": 89150,
+      "text": "I've got so much left to say"
+    },
+    {
+      "startMs": 89150,
+      "endMs": 92090,
+      "text": "If every simple song I wrote to you"
+    },
+    {
+      "startMs": 92090,
+      "endMs": 93650,
+      "text": "Would take your breath away"
+    },
+    {
+      "startMs": 93670,
+      "endMs": 95330,
+      "text": "I'd write it all"
+    },
+    {
+      "startMs": 96850,
+      "endMs": 101030,
+      "text": "Even more in love with me you'd fall"
+    },
+    {
+      "startMs": 101030,
+      "endMs": 102390,
+      "text": "We'd have it all"
+    },
+    {
+      "startMs": 103990,
+      "endMs": 106450,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 108430,
+      "endMs": 111070,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 113030,
+      "endMs": 115850,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 118130,
+      "endMs": 120410,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 121930,
+      "endMs": 124310,
+      "text": "A thousand miles seems pretty far"
+    },
+    {
+      "startMs": 124450,
+      "endMs": 126690,
+      "text": "But they've got planes and trains and cars"
+    },
+    {
+      "startMs": 126690,
+      "endMs": 129630,
+      "text": "I'd walk to you if I had no other way"
+    },
+    {
+      "startMs": 131050,
+      "endMs": 133690,
+      "text": "Our friends would all make fun of us"
+    },
+    {
+      "startMs": 133690,
+      "endMs": 136410,
+      "text": "And we'll just laugh along because we know"
+    },
+    {
+      "startMs": 136410,
+      "endMs": 139110,
+      "text": "That none of them have felt this way"
+    },
+    {
+      "startMs": 140470,
+      "endMs": 142790,
+      "text": "Delilah, I can promise you"
+    },
+    {
+      "startMs": 142790,
+      "endMs": 145050,
+      "text": "That by the time we get through"
+    },
+    {
+      "startMs": 145050,
+      "endMs": 148950,
+      "text": "The world will never ever be the same"
+    },
+    {
+      "startMs": 148950,
+      "endMs": 150870,
+      "text": "And you're to blame"
+    },
+    {
+      "startMs": 154490,
+      "endMs": 156050,
+      "text": "Hey there, Delilah"
+    },
+    {
+      "startMs": 156310,
+      "endMs": 158590,
+      "text": "You be good, and don't you miss me"
+    },
+    {
+      "startMs": 158590,
+      "endMs": 161190,
+      "text": "Two more years and you'll be done with school"
+    },
+    {
+      "startMs": 161190,
+      "endMs": 164330,
+      "text": "And I'll be makin' history like I do"
+    },
+    {
+      "startMs": 165970,
+      "endMs": 168930,
+      "text": "You'll know it's all because of you"
+    },
+    {
+      "startMs": 170450,
+      "endMs": 174070,
+      "text": "We can do whatever we want to"
+    },
+    {
+      "startMs": 175670,
+      "endMs": 178290,
+      "text": "Hey there, Delilah, here's to you"
+    },
+    {
+      "startMs": 179010,
+      "endMs": 180510,
+      "text": "This one's for you"
+    },
+    {
+      "startMs": 184570,
+      "endMs": 187270,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 189310,
+      "endMs": 192070,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 193830,
+      "endMs": 196510,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 198470,
+      "endMs": 201030,
+      "text": "Oh, it's what you do to me"
+    },
+    {
+      "startMs": 201870,
+      "endMs": 203410,
+      "text": "What you do to me"
+    },
+    {
+      "startMs": 204990,
+      "endMs": 212750,
+      "text": "Oh, whoa, whoa"
+    },
+    {
+      "startMs": 211860,
+      "endMs": 218810,
+      "text": "Oh whoa, oh"
+    },
+    {
+      "startMs": 218810,
+      "endMs": 222010,
+      "text": "Oh, oh"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Hey There Delilah - Plain White Ts - oEeet9t--tI",
+  "outputMp4Name": "Hey There Delilah - Plain White Ts.mp4"
+}

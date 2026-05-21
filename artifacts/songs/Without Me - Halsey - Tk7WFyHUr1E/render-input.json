@@ -1,0 +1,301 @@
+{
+  "title": "Without Me",
+  "artist": "Halsey",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 11060,
+  "renderDurationInFrames": 5572,
+  "durationInFrames": 6049,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE FOUND YOU WHEN YOUR HEART WAS SHATTERED AND BROKE",
+    "rightVertical": "I FILLED YOUR CUP UNTIL IT OVERFLOWED WITH MY LOVE",
+    "bottomLine": "THE GRIP IS TIGHTER THAN BEFORE"
+  },
+  "lyrics": [
+    {
+      "startMs": 7060,
+      "endMs": 14060,
+      "text": "♪"
+    },
+    {
+      "startMs": 14060,
+      "endMs": 17020,
+      "text": "Found you when your heart was broke"
+    },
+    {
+      "startMs": 17700,
+      "endMs": 20060,
+      "text": "I filled your cup until it overflowed"
+    },
+    {
+      "startMs": 20640,
+      "endMs": 25600,
+      "text": "Took it so far to keep you close (keep you close)"
+    },
+    {
+      "startMs": 25600,
+      "endMs": 27920,
+      "text": "I was afraid to leave you on your own"
+    },
+    {
+      "startMs": 27920,
+      "endMs": 31580,
+      "text": "Said I'd catch you if you fall (fall)"
+    },
+    {
+      "startMs": 31580,
+      "endMs": 35280,
+      "text": "And if they laugh, then fuck 'em all (all)"
+    },
+    {
+      "startMs": 35280,
+      "endMs": 36740,
+      "text": "And then I got you off your knees"
+    },
+    {
+      "startMs": 36740,
+      "endMs": 38480,
+      "text": "Put you right back on your feet"
+    },
+    {
+      "startMs": 38480,
+      "endMs": 41040,
+      "text": "Just so you can take advantage of me"
+    },
+    {
+      "startMs": 41040,
+      "endMs": 44700,
+      "text": "Tell me, how's it feel sitting up there?"
+    },
+    {
+      "startMs": 44920,
+      "endMs": 48540,
+      "text": "Feeling so high, but too far away to hold me"
+    },
+    {
+      "startMs": 48540,
+      "endMs": 51760,
+      "text": "You know I'm the one who put you up there"
+    },
+    {
+      "startMs": 51760,
+      "endMs": 55380,
+      "text": "Name in the sky, does it ever get lonely?"
+    },
+    {
+      "startMs": 55380,
+      "endMs": 59000,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 59000,
+      "endMs": 62500,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 63140,
+      "endMs": 65900,
+      "text": "Baby, I'm the one who put you up there"
+    },
+    {
+      "startMs": 66320,
+      "endMs": 69500,
+      "text": "I don't know why (yeah, I don't know why)"
+    },
+    {
+      "startMs": 69500,
+      "endMs": 73640,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 73640,
+      "endMs": 76740,
+      "text": "Live without me"
+    },
+    {
+      "startMs": 76740,
+      "endMs": 80009,
+      "text": "Baby, I'm the one who put you up there"
+    },
+    {
+      "startMs": 80009,
+      "endMs": 84800,
+      "text": "I don't know why (I don't know why, yeah, yeah)"
+    },
+    {
+      "startMs": 84800,
+      "endMs": 88120,
+      "text": "Gave love 'bout a hundred tries (hundred tries)"
+    },
+    {
+      "startMs": 88120,
+      "endMs": 91220,
+      "text": "Just running from the demons in your mind"
+    },
+    {
+      "startMs": 91220,
+      "endMs": 95180,
+      "text": "Then I took yours and made 'em mine (made 'em mine)"
+    },
+    {
+      "startMs": 95180,
+      "endMs": 98449,
+      "text": "I didn't notice 'cause my love was blind"
+    },
+    {
+      "startMs": 98449,
+      "endMs": 101580,
+      "text": "Said I'd catch you if you fall (fall)"
+    },
+    {
+      "startMs": 101580,
+      "endMs": 104940,
+      "text": "And if they laugh, then fuck 'em all (all)"
+    },
+    {
+      "startMs": 104940,
+      "endMs": 107170,
+      "text": "And then I got you off your knees"
+    },
+    {
+      "startMs": 107170,
+      "endMs": 108670,
+      "text": "Put you right back on your feet"
+    },
+    {
+      "startMs": 108670,
+      "endMs": 111900,
+      "text": "Just so you can take advantage of me"
+    },
+    {
+      "startMs": 111900,
+      "endMs": 115290,
+      "text": "Tell me, how's it feel sitting up there?"
+    },
+    {
+      "startMs": 115290,
+      "endMs": 118979,
+      "text": "Feeling so high, but too far away to hold me"
+    },
+    {
+      "startMs": 118979,
+      "endMs": 122190,
+      "text": "You know I'm the one who put you up there"
+    },
+    {
+      "startMs": 122190,
+      "endMs": 126180,
+      "text": "Name in the sky, does it ever get lonely?"
+    },
+    {
+      "startMs": 126180,
+      "endMs": 129540,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 129540,
+      "endMs": 132930,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 132930,
+      "endMs": 136380,
+      "text": "Baby, I'm the one who put you up there"
+    },
+    {
+      "startMs": 136380,
+      "endMs": 140060,
+      "text": "I don't know why (yeah, I don't know why)"
+    },
+    {
+      "startMs": 140060,
+      "endMs": 144610,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 144610,
+      "endMs": 147270,
+      "text": "Live without me"
+    },
+    {
+      "startMs": 147270,
+      "endMs": 150720,
+      "text": "Baby, I'm the one who put you up there"
+    },
+    {
+      "startMs": 150720,
+      "endMs": 155040,
+      "text": "I don't know why, yeah"
+    },
+    {
+      "startMs": 155040,
+      "endMs": 158600,
+      "text": "You don't have to say just what you did"
+    },
+    {
+      "startMs": 158600,
+      "endMs": 160350,
+      "text": "I already know (I know)"
+    },
+    {
+      "startMs": 160350,
+      "endMs": 164700,
+      "text": "I had to go and find out from them (oh-whoa)"
+    },
+    {
+      "startMs": 164700,
+      "endMs": 168570,
+      "text": "So tell me, how's it feel? (Oh-whoa-oh)"
+    },
+    {
+      "startMs": 168570,
+      "endMs": 171750,
+      "text": "Tell me, how's it feel sitting up there?"
+    },
+    {
+      "startMs": 171750,
+      "endMs": 175390,
+      "text": "Feeling so high, but too far away to hold me"
+    },
+    {
+      "startMs": 175390,
+      "endMs": 178690,
+      "text": "You know I'm the one who put you up there"
+    },
+    {
+      "startMs": 178690,
+      "endMs": 182570,
+      "text": "Name in the sky, does it ever get lonely?"
+    },
+    {
+      "startMs": 182570,
+      "endMs": 186280,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 186280,
+      "endMs": 189380,
+      "text": "Thinking you could live without me"
+    },
+    {
+      "startMs": 189380,
+      "endMs": 192970,
+      "text": "Baby, I'm the one who put you up there"
+    },
+    {
+      "startMs": 192970,
+      "endMs": 194810,
+      "text": "I don't know why (yeah, I don't know why)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E",
+  "outputMp4Name": "Without Me - Halsey.mp4"
+}

@@ -1,0 +1,31 @@
+{
+  "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
+  "generated_at": "2026-05-21T05:36:46.243Z",
+  "count": 4,
+  "items": [
+    {
+      "video_id": null,
+      "source_url": null,
+      "song_dir": "What Makes You Beautiful - One Direction - d57qSDCxVA4",
+      "ok": true
+    },
+    {
+      "video_id": null,
+      "source_url": null,
+      "song_dir": "My Humps - Black Eyed Peas - opnZlnd3d7U",
+      "ok": true
+    },
+    {
+      "video_id": null,
+      "source_url": null,
+      "song_dir": "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk",
+      "ok": true
+    },
+    {
+      "video_id": null,
+      "source_url": null,
+      "song_dir": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+      "ok": true
+    }
+  ]
+}

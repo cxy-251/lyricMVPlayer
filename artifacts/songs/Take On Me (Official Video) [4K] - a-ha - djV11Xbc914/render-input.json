@@ -1,0 +1,266 @@
+{
+  "title": "a-ha - Take On Me (Official Video) [4K]",
+  "artist": "a-ha",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 33900,
+  "renderDurationInFrames": 5882,
+  "durationInFrames": 7318,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE AIR IS THIN WITH UNTOLD WORDS AND SILENT PROMISES.",
+    "rightVertical": "A SHADOW OF A TOUCH WHERE THE LIGHT CANNOT REACH.",
+    "bottomLine": "WE ARE ONLY TALKING AWAY."
+  },
+  "lyrics": [
+    {
+      "startMs": 36900,
+      "endMs": 38560,
+      "text": "We're talking away"
+    },
+    {
+      "startMs": 38800,
+      "endMs": 42560,
+      "text": "I don't know what I'm to say"
+    },
+    {
+      "startMs": 42660,
+      "endMs": 44420,
+      "text": "I'll say it anyway"
+    },
+    {
+      "startMs": 45280,
+      "endMs": 48620,
+      "text": "Today is another day to find you"
+    },
+    {
+      "startMs": 48620,
+      "endMs": 50400,
+      "text": "Shyin' away"
+    },
+    {
+      "startMs": 51300,
+      "endMs": 53880,
+      "text": "Oh, I'll be comin' for your love, okay"
+    },
+    {
+      "startMs": 54060,
+      "endMs": 57680,
+      "text": "Take on me"
+    },
+    {
+      "startMs": 58680,
+      "endMs": 59940,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 59990,
+      "endMs": 64130,
+      "text": "Take me on"
+    },
+    {
+      "startMs": 64130,
+      "endMs": 65700,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 65700,
+      "endMs": 70320,
+      "text": "I'll be gone"
+    },
+    {
+      "startMs": 70320,
+      "endMs": 76420,
+      "text": "In a day or two"
+    },
+    {
+      "startMs": 76420,
+      "endMs": 79660,
+      "text": "So needless to say"
+    },
+    {
+      "startMs": 79660,
+      "endMs": 81190,
+      "text": "I'm odds and ends"
+    },
+    {
+      "startMs": 81190,
+      "endMs": 85500,
+      "text": "But I'll be stumblin' away"
+    },
+    {
+      "startMs": 85500,
+      "endMs": 88200,
+      "text": "Slowly learnin' that life is okay"
+    },
+    {
+      "startMs": 88200,
+      "endMs": 91470,
+      "text": "Say after me"
+    },
+    {
+      "startMs": 91470,
+      "endMs": 93960,
+      "text": "It's no better to be safe than sorry"
+    },
+    {
+      "startMs": 93960,
+      "endMs": 98290,
+      "text": "Take on me"
+    },
+    {
+      "startMs": 98290,
+      "endMs": 99860,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 99860,
+      "endMs": 103810,
+      "text": "Take me on"
+    },
+    {
+      "startMs": 103810,
+      "endMs": 105550,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 105550,
+      "endMs": 109950,
+      "text": "I'll be gone"
+    },
+    {
+      "startMs": 109950,
+      "endMs": 116820,
+      "text": "In a day or two"
+    },
+    {
+      "startMs": 155950,
+      "endMs": 159350,
+      "text": "All the things that you say, yeah"
+    },
+    {
+      "startMs": 159350,
+      "endMs": 165050,
+      "text": "Is it life or just to play my worries away?"
+    },
+    {
+      "startMs": 165050,
+      "endMs": 168160,
+      "text": "You're all the things I've got to remember"
+    },
+    {
+      "startMs": 168160,
+      "endMs": 170930,
+      "text": "You're shyin' away"
+    },
+    {
+      "startMs": 170930,
+      "endMs": 173410,
+      "text": "I'll be comin' for you anyway"
+    },
+    {
+      "startMs": 173410,
+      "endMs": 177740,
+      "text": "Take on me"
+    },
+    {
+      "startMs": 179570,
+      "endMs": 196540,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 181020,
+      "endMs": 185180,
+      "text": "Take me on"
+    },
+    {
+      "startMs": 185180,
+      "endMs": 186800,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 186800,
+      "endMs": 191830,
+      "text": "I'll be gone"
+    },
+    {
+      "startMs": 191830,
+      "endMs": 192730,
+      "text": "In a day"
+    },
+    {
+      "startMs": 192030,
+      "endMs": 196690,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 196690,
+      "endMs": 198030,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 198030,
+      "endMs": 202330,
+      "text": "(Take me on)"
+    },
+    {
+      "startMs": 202330,
+      "endMs": 203730,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 203730,
+      "endMs": 208030,
+      "text": "I'll be gone"
+    },
+    {
+      "startMs": 208030,
+      "endMs": 208930,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 208830,
+      "endMs": 209730,
+      "text": "In a day"
+    },
+    {
+      "startMs": 209530,
+      "endMs": 213430,
+      "text": "(Take me on)"
+    },
+    {
+      "startMs": 213430,
+      "endMs": 215130,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 215130,
+      "endMs": 219370,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 219370,
+      "endMs": 220780,
+      "text": "(Take on me)"
+    },
+    {
+      "startMs": 220780,
+      "endMs": 224770,
+      "text": "(Take me on)"
+    },
+    {
+      "startMs": 224770,
+      "endMs": 227970,
+      "text": "(Take on me)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Take On Me (Official Video) [4K] - a-ha - djV11Xbc914",
+  "outputMp4Name": "Take On Me (Official Video) [4K] - a-ha.mp4"
+}

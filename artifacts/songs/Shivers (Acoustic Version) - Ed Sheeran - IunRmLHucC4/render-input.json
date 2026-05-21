@@ -1,0 +1,321 @@
+{
+  "title": "Shivers (Acoustic Version)",
+  "artist": "Ed Sheeran",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 9270,
+  "renderDurationInFrames": 5849,
+  "durationInFrames": 6209,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "MY HEART IS A CANVAS PAINTED WITH THE COLORS OF YOUR EMBRACE.",
+    "rightVertical": "WE ARE DRAWN TO THIS TRAIN BY AN UNSEEN AND MAGNETIC FORCE.",
+    "bottomLine": "DREAMING OF DISTANT HORIZONS TOGETHER"
+  },
+  "lyrics": [
+    {
+      "startMs": 12270,
+      "endMs": 14310,
+      "text": "I took an arrow to the heart"
+    },
+    {
+      "startMs": 15330,
+      "endMs": 18690,
+      "text": "I never kissed a mouth that tastes like yours"
+    },
+    {
+      "startMs": 18690,
+      "endMs": 22030,
+      "text": "Strawberries and a somethin' more"
+    },
+    {
+      "startMs": 22590,
+      "endMs": 24750,
+      "text": "Oh yeah, I want it all"
+    },
+    {
+      "startMs": 26170,
+      "endMs": 27930,
+      "text": "Lipstick on my guitar, ooh"
+    },
+    {
+      "startMs": 29130,
+      "endMs": 32549,
+      "text": "Fill up the engine, we can drive real far"
+    },
+    {
+      "startMs": 32549,
+      "endMs": 35950,
+      "text": "Go dancin' underneath the stars"
+    },
+    {
+      "startMs": 36210,
+      "endMs": 37970,
+      "text": "Oh yeah, I want it all"
+    },
+    {
+      "startMs": 39350,
+      "endMs": 41310,
+      "text": "Mmm, you got me feelin' like"
+    },
+    {
+      "startMs": 41310,
+      "endMs": 44990,
+      "text": "I wanna be that guy, I wanna kiss your eyes"
+    },
+    {
+      "startMs": 45110,
+      "endMs": 48270,
+      "text": "I wanna drink that smile, I wanna feel like I'm"
+    },
+    {
+      "startMs": 48850,
+      "endMs": 52890,
+      "text": "Like my soul's on fire, I wanna stay up all day and all night"
+    },
+    {
+      "startMs": 52890,
+      "endMs": 55030,
+      "text": "Yeah, you got me singin' like"
+    },
+    {
+      "startMs": 55030,
+      "endMs": 58030,
+      "text": "Ooh, I love it when you do it like that"
+    },
+    {
+      "startMs": 58030,
+      "endMs": 60810,
+      "text": "And when you're close up, give me the shivers"
+    },
+    {
+      "startMs": 61350,
+      "endMs": 64709,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 64709,
+      "endMs": 68190,
+      "text": "And when they say, \"The party's over\", then we'll bring it right back"
+    },
+    {
+      "startMs": 68190,
+      "endMs": 71630,
+      "text": "We'll say, \"Ooh, I love it when you do it like that\""
+    },
+    {
+      "startMs": 71630,
+      "endMs": 74390,
+      "text": "And when you're close up, give me the shivers"
+    },
+    {
+      "startMs": 75110,
+      "endMs": 78270,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 78270,
+      "endMs": 81710,
+      "text": "When they say, \"The party's over\", then we'll bring it right back"
+    },
+    {
+      "startMs": 81710,
+      "endMs": 82830,
+      "text": "Into the car"
+    },
+    {
+      "startMs": 83850,
+      "endMs": 87750,
+      "text": "On the back seat in the moonlit dark"
+    },
+    {
+      "startMs": 87750,
+      "endMs": 90490,
+      "text": "Wrap me up between your legs and arms"
+    },
+    {
+      "startMs": 90570,
+      "endMs": 92550,
+      "text": "Oh, I can't get enough"
+    },
+    {
+      "startMs": 93750,
+      "endMs": 95990,
+      "text": "You know you could tear me apart, ooh"
+    },
+    {
+      "startMs": 96630,
+      "endMs": 100290,
+      "text": "Put me back together and take my heart"
+    },
+    {
+      "startMs": 100490,
+      "endMs": 103590,
+      "text": "I never thought that I could love this hard"
+    },
+    {
+      "startMs": 103590,
+      "endMs": 105930,
+      "text": "Oh, I can't get enough"
+    },
+    {
+      "startMs": 106890,
+      "endMs": 108730,
+      "text": "Mmm, you got me feelin' like"
+    },
+    {
+      "startMs": 108730,
+      "endMs": 112330,
+      "text": "I wanna be that guy, I wanna kiss your eyes"
+    },
+    {
+      "startMs": 112530,
+      "endMs": 115790,
+      "text": "I wanna drink that smile, I wanna feel like I'm"
+    },
+    {
+      "startMs": 115790,
+      "endMs": 120210,
+      "text": "Like my soul's on fire, I wanna stay up all day and all night"
+    },
+    {
+      "startMs": 120610,
+      "endMs": 122250,
+      "text": "Yeah, you got me singin' like"
+    },
+    {
+      "startMs": 122250,
+      "endMs": 125150,
+      "text": "Ooh, I love it when you do it like that"
+    },
+    {
+      "startMs": 125150,
+      "endMs": 127870,
+      "text": "And when you're close up, give me the shivers"
+    },
+    {
+      "startMs": 128449,
+      "endMs": 131710,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 131710,
+      "endMs": 135150,
+      "text": "And when they say, \"The party's over\", then we'll bring it right back"
+    },
+    {
+      "startMs": 135370,
+      "endMs": 138570,
+      "text": "We'll say, \"Ooh, I love it when you do it like that\""
+    },
+    {
+      "startMs": 138570,
+      "endMs": 141310,
+      "text": "And when you're close up, give me the shivers"
+    },
+    {
+      "startMs": 142030,
+      "endMs": 145090,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 145090,
+      "endMs": 148550,
+      "text": "And when they say, \"The party's over\", then we'll bring it right back"
+    },
+    {
+      "startMs": 148550,
+      "endMs": 152010,
+      "text": "Baby, you burn so hot, you make me shiver"
+    },
+    {
+      "startMs": 152010,
+      "endMs": 155270,
+      "text": "With the fire you got this thing we started"
+    },
+    {
+      "startMs": 155530,
+      "endMs": 157510,
+      "text": "I don't want it to stop"
+    },
+    {
+      "startMs": 157590,
+      "endMs": 161650,
+      "text": "You know you make me shiver-er-er"
+    },
+    {
+      "startMs": 161770,
+      "endMs": 165190,
+      "text": "Baby, you burn so hot, you make me shiver"
+    },
+    {
+      "startMs": 165190,
+      "endMs": 168450,
+      "text": "With the fire you got, this thing we started"
+    },
+    {
+      "startMs": 168810,
+      "endMs": 170670,
+      "text": "I don't want it to stop"
+    },
+    {
+      "startMs": 171010,
+      "endMs": 172250,
+      "text": "You know you make me shiver"
+    },
+    {
+      "startMs": 173410,
+      "endMs": 175450,
+      "text": "Yeah, you got me feelin' like"
+    },
+    {
+      "startMs": 175450,
+      "endMs": 178450,
+      "text": "Ooh, I love it when you do it like that"
+    },
+    {
+      "startMs": 178450,
+      "endMs": 181110,
+      "text": "When you're close up, give me the shivers"
+    },
+    {
+      "startMs": 181790,
+      "endMs": 184890,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 184890,
+      "endMs": 188270,
+      "text": "When they say, \"The party's over\", then we'll bring it right back"
+    },
+    {
+      "startMs": 188270,
+      "endMs": 191650,
+      "text": "Baby, ooh, I love it when you do it like that"
+    },
+    {
+      "startMs": 191650,
+      "endMs": 194310,
+      "text": "And when you're close up, give me the shivers"
+    },
+    {
+      "startMs": 194310,
+      "endMs": 198150,
+      "text": "Baby, you wanna dance 'til the sunlight cracks"
+    },
+    {
+      "startMs": 198150,
+      "endMs": 202250,
+      "text": "When they say, \"The party's over\", then we'll bring it right back, yeah"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4",
+  "outputMp4Name": "Shivers (Acoustic Version) - Ed Sheeran.mp4"
+}

@@ -1,0 +1,336 @@
+{
+  "title": "Be Around Me (feat. chloe moriondo)",
+  "artist": "Will Joseph Cook",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Be Around Me (feat. chloe moriondo) - Will Joseph Cook - TtEG06uuJKY/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5437,
+  "durationInFrames": 5437,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Be Around Me (feat. chloe moriondo) - Will Joseph Cook - TtEG06uuJKY/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 1030,
+      "endMs": 3810,
+      "text": "Hey, hey, how was your day?"
+    },
+    {
+      "startMs": 3810,
+      "endMs": 7690,
+      "text": "Mine was fine, but I think about you all the time"
+    },
+    {
+      "startMs": 7690,
+      "endMs": 9220,
+      "text": "Can't get you out of my brain"
+    },
+    {
+      "startMs": 9220,
+      "endMs": 10690,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 10690,
+      "endMs": 12670,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 12670,
+      "endMs": 15240,
+      "text": "Hi, hi, how was your night?"
+    },
+    {
+      "startMs": 15240,
+      "endMs": 18570,
+      "text": "Mine was wack, then I thought about you, felt alright"
+    },
+    {
+      "startMs": 18570,
+      "endMs": 21010,
+      "text": "Can't get you out of my mind"
+    },
+    {
+      "startMs": 21010,
+      "endMs": 22350,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 22350,
+      "endMs": 24170,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 24170,
+      "endMs": 26810,
+      "text": "Did I fuck it up again?"
+    },
+    {
+      "startMs": 26810,
+      "endMs": 31300,
+      "text": "Are we destined to be friends?"
+    },
+    {
+      "startMs": 31300,
+      "endMs": 35720,
+      "text": "I wanna give you more than that"
+    },
+    {
+      "startMs": 35720,
+      "endMs": 38530,
+      "text": "You a smokey, tenny-ten"
+    },
+    {
+      "startMs": 38530,
+      "endMs": 41410,
+      "text": "And I've got some time to lend"
+    },
+    {
+      "startMs": 41410,
+      "endMs": 45690,
+      "text": "T.L.D.R, we should do this again"
+    },
+    {
+      "startMs": 45690,
+      "endMs": 50120,
+      "text": "Hey, hey, how was your day?"
+    },
+    {
+      "startMs": 50120,
+      "endMs": 53940,
+      "text": "Mine was fine, but I think about you all the time"
+    },
+    {
+      "startMs": 53940,
+      "endMs": 55870,
+      "text": "Can't get you out of my brain"
+    },
+    {
+      "startMs": 55870,
+      "endMs": 57290,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 57290,
+      "endMs": 59100,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 59100,
+      "endMs": 61720,
+      "text": "Hi, hi, how was your night?"
+    },
+    {
+      "startMs": 61720,
+      "endMs": 65050,
+      "text": "Mine was wack, then I thought about you, felt alright"
+    },
+    {
+      "startMs": 65050,
+      "endMs": 67530,
+      "text": "Can't get you out of my mind"
+    },
+    {
+      "startMs": 67530,
+      "endMs": 68830,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 68830,
+      "endMs": 73410,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 73410,
+      "endMs": 76330,
+      "text": "Got me tripping on my tongue"
+    },
+    {
+      "startMs": 76330,
+      "endMs": 80260,
+      "text": "Watching denim come undone"
+    },
+    {
+      "startMs": 80260,
+      "endMs": 85380,
+      "text": "I have an idea, why don't we just"
+    },
+    {
+      "startMs": 85380,
+      "endMs": 87910,
+      "text": "Stop the clocks when I take you home"
+    },
+    {
+      "startMs": 87910,
+      "endMs": 90830,
+      "text": "Sweep you off of your tippy-toes"
+    },
+    {
+      "startMs": 90830,
+      "endMs": 94150,
+      "text": "T.L.D.R, I just wanna let you know"
+    },
+    {
+      "startMs": 94150,
+      "endMs": 96930,
+      "text": "I've fallen for you"
+    },
+    {
+      "startMs": 96930,
+      "endMs": 99610,
+      "text": "Hey, hey, how was your day?"
+    },
+    {
+      "startMs": 99610,
+      "endMs": 103360,
+      "text": "Mine was fine, but I think about you all the time"
+    },
+    {
+      "startMs": 103360,
+      "endMs": 105380,
+      "text": "Can't get you out of my brain"
+    },
+    {
+      "startMs": 105380,
+      "endMs": 106640,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 106640,
+      "endMs": 108470,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 108470,
+      "endMs": 111210,
+      "text": "Hi, hi, how was your night?"
+    },
+    {
+      "startMs": 111210,
+      "endMs": 114680,
+      "text": "Mine was wack, then I thought about you, felt alright"
+    },
+    {
+      "startMs": 114680,
+      "endMs": 116790,
+      "text": "Can't get you out of my mind"
+    },
+    {
+      "startMs": 116790,
+      "endMs": 118100,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 118100,
+      "endMs": 120100,
+      "text": "Come around, be around me"
+    },
+    {
+      "startMs": 120100,
+      "endMs": 123730,
+      "text": "Take my heart and assess the damages"
+    },
+    {
+      "startMs": 123730,
+      "endMs": 124960,
+      "text": "Want you crawling up me"
+    },
+    {
+      "startMs": 124960,
+      "endMs": 126580,
+      "text": "Baby, don't stop now"
+    },
+    {
+      "startMs": 126580,
+      "endMs": 129750,
+      "text": "Days before you are pale in comparison"
+    },
+    {
+      "startMs": 129750,
+      "endMs": 131000,
+      "text": "I must adore you"
+    },
+    {
+      "startMs": 131000,
+      "endMs": 131990,
+      "text": "And honestly"
+    },
+    {
+      "startMs": 131990,
+      "endMs": 133990,
+      "text": "I heard November hates you"
+    },
+    {
+      "startMs": 133990,
+      "endMs": 136710,
+      "text": "And all the cloudy, shit-grey skies you break through"
+    },
+    {
+      "startMs": 136710,
+      "endMs": 143610,
+      "text": "Bet everybody knows you in June"
+    },
+    {
+      "startMs": 143610,
+      "endMs": 145460,
+      "text": "Oh my God, did you call me baby?"
+    },
+    {
+      "startMs": 145460,
+      "endMs": 148360,
+      "text": "Maybe (oh), is that okay?"
+    },
+    {
+      "startMs": 148360,
+      "endMs": 151720,
+      "text": "Yeah, it's cool, I liked it"
+    },
+    {
+      "startMs": 151720,
+      "endMs": 154690,
+      "text": "Cool (ah-ha-ha)"
+    },
+    {
+      "startMs": 154690,
+      "endMs": 159910,
+      "text": "Ah"
+    },
+    {
+      "startMs": 159910,
+      "endMs": 163390,
+      "text": "Be around me"
+    },
+    {
+      "startMs": 163390,
+      "endMs": 169000,
+      "text": "I'm around-'round-'round (ooh, ooh, ooh)"
+    },
+    {
+      "startMs": 169000,
+      "endMs": 174680,
+      "text": "I can't get ya-get ya-get ya-get ya out of my mind"
+    },
+    {
+      "startMs": 174680,
+      "endMs": 176420,
+      "text": "I'm around, be around"
+    },
+    {
+      "startMs": 176420,
+      "endMs": 179520,
+      "text": "Come around, be around me"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Be Around Me (feat. chloe moriondo) - Will Joseph Cook - TtEG06uuJKY",
+  "outputMp4Name": "Be Around Me (feat. chloe moriondo) - Will Joseph Cook.mp4"
+}

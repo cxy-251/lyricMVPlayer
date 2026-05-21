@@ -1,0 +1,401 @@
+{
+  "title": "Price Tag",
+  "artist": "Jessie J",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Price Tag - Jessie J - 5rcmr-eX2-Y/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 6546,
+  "durationInFrames": 6691,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Price Tag - Jessie J - 5rcmr-eX2-Y/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CURRENCY OF SILENCE IS MEASURED IN WINKED GOODBYES.",
+    "rightVertical": "A PRICE TAG ADORNED WITH THE ECHOES OF LOST TRUTHS.",
+    "bottomLine": "THE COST OF A SMILE IS EVERYTHING."
+  },
+  "lyrics": [
+    {
+      "startMs": 2980,
+      "endMs": 10020,
+      "text": "Okay, Coconut man, Moonheads and Pea"
+    },
+    {
+      "startMs": 10100,
+      "endMs": 10860,
+      "text": "You ready?"
+    },
+    {
+      "startMs": 13300,
+      "endMs": 15120,
+      "text": "Seems like everybody's got a price"
+    },
+    {
+      "startMs": 15540,
+      "endMs": 18020,
+      "text": "I wonder how they sleep at night"
+    },
+    {
+      "startMs": 18340,
+      "endMs": 20900,
+      "text": "When the sale comes first and the truth comes second"
+    },
+    {
+      "startMs": 21440,
+      "endMs": 23700,
+      "text": "Just stop for a minute and smile"
+    },
+    {
+      "startMs": 24260,
+      "endMs": 26500,
+      "text": "Why is everybody so serious?"
+    },
+    {
+      "startMs": 27180,
+      "endMs": 29180,
+      "text": "Acting so damn mysterious"
+    },
+    {
+      "startMs": 29180,
+      "endMs": 31020,
+      "text": "Got shades on your eyes"
+    },
+    {
+      "startMs": 31020,
+      "endMs": 34400,
+      "text": "And your heels so high that you can't even have a good time"
+    },
+    {
+      "startMs": 34920,
+      "endMs": 37240,
+      "text": "Everybody look to their left"
+    },
+    {
+      "startMs": 37440,
+      "endMs": 40020,
+      "text": "Everybody look to their right"
+    },
+    {
+      "startMs": 40020,
+      "endMs": 41840,
+      "text": "Can you feel that? Yeah"
+    },
+    {
+      "startMs": 41920,
+      "endMs": 43680,
+      "text": "We're paying with love tonight"
+    },
+    {
+      "startMs": 43680,
+      "endMs": 46460,
+      "text": "It's not about the money, money, money"
+    },
+    {
+      "startMs": 46460,
+      "endMs": 49140,
+      "text": "We don't need your money, money, money"
+    },
+    {
+      "startMs": 49140,
+      "endMs": 52120,
+      "text": "We just wanna make the world dance"
+    },
+    {
+      "startMs": 52160,
+      "endMs": 54180,
+      "text": "Forget about the price tag"
+    },
+    {
+      "startMs": 54720,
+      "endMs": 57980,
+      "text": "Ain't about the, uh, cha-ching cha-ching"
+    },
+    {
+      "startMs": 58080,
+      "endMs": 60700,
+      "text": "Ain't about the, yeah, ba-bling ba-bling"
+    },
+    {
+      "startMs": 61020,
+      "endMs": 62920,
+      "text": "Wanna make the world dance"
+    },
+    {
+      "startMs": 62920,
+      "endMs": 65060,
+      "text": "Forget about the price tag"
+    },
+    {
+      "startMs": 65360,
+      "endMs": 65680,
+      "text": "Okay"
+    },
+    {
+      "startMs": 65680,
+      "endMs": 69960,
+      "text": "We need to take it back in time"
+    },
+    {
+      "startMs": 70210,
+      "endMs": 72730,
+      "text": "When music made us all unite"
+    },
+    {
+      "startMs": 72730,
+      "endMs": 76250,
+      "text": "And it wasn't low blows and video hoes"
+    },
+    {
+      "startMs": 76310,
+      "endMs": 78610,
+      "text": "Am I the only the one getting tired?"
+    },
+    {
+      "startMs": 79190,
+      "endMs": 81510,
+      "text": "Why is everybody so obsessed?"
+    },
+    {
+      "startMs": 82010,
+      "endMs": 84010,
+      "text": "Money can't buy us happiness"
+    },
+    {
+      "startMs": 84010,
+      "endMs": 87110,
+      "text": "Can we all slow down and enjoy right now?"
+    },
+    {
+      "startMs": 87250,
+      "endMs": 89530,
+      "text": "Guarantee we'll be feeling alright"
+    },
+    {
+      "startMs": 90230,
+      "endMs": 94430,
+      "text": "Everybody look to their left (to their left)"
+    },
+    {
+      "startMs": 94430,
+      "endMs": 97710,
+      "text": "Everybody look to their right (to their right)"
+    },
+    {
+      "startMs": 97710,
+      "endMs": 99190,
+      "text": "Can you feel that? Yeah"
+    },
+    {
+      "startMs": 99890,
+      "endMs": 101330,
+      "text": "We're paying with love tonight"
+    },
+    {
+      "startMs": 101330,
+      "endMs": 103470,
+      "text": "It's not about the money, money, money"
+    },
+    {
+      "startMs": 103470,
+      "endMs": 104030,
+      "text": "We don't need your money, money, money"
+    },
+    {
+      "startMs": 104030,
+      "endMs": 106850,
+      "text": "We just wanna make the world dance"
+    },
+    {
+      "startMs": 106850,
+      "endMs": 108950,
+      "text": "Forget about the price tag"
+    },
+    {
+      "startMs": 109690,
+      "endMs": 112850,
+      "text": "Ain't about the, uh, cha-ching cha-ching"
+    },
+    {
+      "startMs": 112950,
+      "endMs": 115590,
+      "text": "Ain't about the, yeah, ba-bling ba-bling"
+    },
+    {
+      "startMs": 115890,
+      "endMs": 117790,
+      "text": "Wanna make the world dance"
+    },
+    {
+      "startMs": 117790,
+      "endMs": 119890,
+      "text": "Forget about the price tag"
+    },
+    {
+      "startMs": 120490,
+      "endMs": 123830,
+      "text": "Yeah, yeah, well, keep the price tag and take the cash back"
+    },
+    {
+      "startMs": 123830,
+      "endMs": 127330,
+      "text": "Just give me six strings (six strings) and a half-stack (half stack)"
+    },
+    {
+      "startMs": 127330,
+      "endMs": 129949,
+      "text": "And you can, can keep the cars, leave me the garage"
+    },
+    {
+      "startMs": 130270,
+      "endMs": 132490,
+      "text": "And all I, yes, all I need are keys and guitars"
+    },
+    {
+      "startMs": 132490,
+      "endMs": 135210,
+      "text": "And guess what? In thirty seconds, I'm leaving to Mars (Mars)"
+    },
+    {
+      "startMs": 135270,
+      "endMs": 137950,
+      "text": "Yeah, we leaping across these undefeatable odds (odds)"
+    },
+    {
+      "startMs": 137950,
+      "endMs": 141030,
+      "text": "It's like this, man, you can't put a price on a life (na-ah)"
+    },
+    {
+      "startMs": 141030,
+      "endMs": 144190,
+      "text": "We do this for the love, so we fight and sacrifice every night"
+    },
+    {
+      "startMs": 144190,
+      "endMs": 146310,
+      "text": "So we ain't gon' stumble and fall, never (nah)"
+    },
+    {
+      "startMs": 146370,
+      "endMs": 148910,
+      "text": "Waiting to see this in the sign of defeat, uh-uh"
+    },
+    {
+      "startMs": 148910,
+      "endMs": 151210,
+      "text": "So we gon' keep everyone moving their feet"
+    },
+    {
+      "startMs": 151270,
+      "endMs": 153890,
+      "text": "So bring back the beat and then everyone sing"
+    },
+    {
+      "startMs": 153890,
+      "endMs": 156170,
+      "text": "It's not about the money, money, money"
+    },
+    {
+      "startMs": 156170,
+      "endMs": 158910,
+      "text": "We don't need your money, money, money"
+    },
+    {
+      "startMs": 158910,
+      "endMs": 161650,
+      "text": "We just wanna make the world dance"
+    },
+    {
+      "startMs": 161990,
+      "endMs": 163810,
+      "text": "Forget about the price tag"
+    },
+    {
+      "startMs": 164430,
+      "endMs": 167710,
+      "text": "Ain't about the, uh, cha-ching, cha-ching"
+    },
+    {
+      "startMs": 167750,
+      "endMs": 170430,
+      "text": "Ain't about the, yeah, ba-bling, ba-bling"
+    },
+    {
+      "startMs": 170710,
+      "endMs": 172690,
+      "text": "Wanna make the world dance"
+    },
+    {
+      "startMs": 172890,
+      "endMs": 175410,
+      "text": "Forget about the price tag (hey, hey)"
+    },
+    {
+      "startMs": 175410,
+      "endMs": 179250,
+      "text": "It's not about the money, money, money (we don't need it)"
+    },
+    {
+      "startMs": 179250,
+      "endMs": 181490,
+      "text": "We don't need your money, money, money (no, no)"
+    },
+    {
+      "startMs": 181490,
+      "endMs": 182750,
+      "text": "(We don't need it) we just wanna make the world dance (dance)"
+    },
+    {
+      "startMs": 182750,
+      "endMs": 185240,
+      "text": "Forget about the price tag (dance, dance, dance)"
+    },
+    {
+      "startMs": 185240,
+      "endMs": 188150,
+      "text": "Ain't about the, uh, cha-ching cha-ching"
+    },
+    {
+      "startMs": 188150,
+      "endMs": 190250,
+      "text": "Ain't about the (it ain't about), yeah, ba-bling ba-bling"
+    },
+    {
+      "startMs": 190250,
+      "endMs": 193840,
+      "text": "Wanna make the world dance (yeah, yeah)"
+    },
+    {
+      "startMs": 193840,
+      "endMs": 196650,
+      "text": "Forget about the price tag (forget about the price tag)"
+    },
+    {
+      "startMs": 196650,
+      "endMs": 199500,
+      "text": "(Ahh, ahh, ahh, ahh)"
+    },
+    {
+      "startMs": 199500,
+      "endMs": 206500,
+      "text": "Yeah, yeah (ahh)"
+    },
+    {
+      "startMs": 210480,
+      "endMs": 213020,
+      "text": "Ooh, ooh, ooh (ahh)"
+    },
+    {
+      "startMs": 213020,
+      "endMs": 216220,
+      "text": "Forget about the price tag, yeah (ahh, ahh)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Price Tag - Jessie J - 5rcmr-eX2-Y",
+  "outputMp4Name": "Price Tag - Jessie J.mp4"
+}

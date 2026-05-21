@@ -1,0 +1,141 @@
+{
+  "title": "blue",
+  "artist": "yung kai",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/blue - yung kai - MHCsrKA9gh8/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 15990,
+  "renderDurationInFrames": 4476,
+  "durationInFrames": 6430,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/blue - yung kai - MHCsrKA9gh8/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 18990,
+      "endMs": 24810,
+      "text": "Your morning eyes, I could stare like watching stars"
+    },
+    {
+      "startMs": 25990,
+      "endMs": 32170,
+      "text": "I could walk you by, and I'll tell without a thought"
+    },
+    {
+      "startMs": 32170,
+      "endMs": 39450,
+      "text": "You'd be mine, would you mind if I took your hand tonight?"
+    },
+    {
+      "startMs": 39970,
+      "endMs": 44670,
+      "text": "Know you're all that I want this life"
+    },
+    {
+      "startMs": 45970,
+      "endMs": 50580,
+      "text": "I'll imagine we fell in love"
+    },
+    {
+      "startMs": 51060,
+      "endMs": 54220,
+      "text": "I'll nap under moonlight skies with you"
+    },
+    {
+      "startMs": 54220,
+      "endMs": 58040,
+      "text": "I think I'll picture us, you with the waves"
+    },
+    {
+      "startMs": 58140,
+      "endMs": 61860,
+      "text": "The ocean's colours on your face"
+    },
+    {
+      "startMs": 61860,
+      "endMs": 65720,
+      "text": "I'll leave my heart with your air"
+    },
+    {
+      "startMs": 65720,
+      "endMs": 69200,
+      "text": "So, let me fly with you"
+    },
+    {
+      "startMs": 69200,
+      "endMs": 74580,
+      "text": "Will you be forever with me?"
+    },
+    {
+      "startMs": 108440,
+      "endMs": 113680,
+      "text": "My love will always stay by you"
+    },
+    {
+      "startMs": 113680,
+      "endMs": 118340,
+      "text": "I'll keep it safe, so don't you worry a thing"
+    },
+    {
+      "startMs": 118340,
+      "endMs": 120840,
+      "text": "I'll tell you I love you more"
+    },
+    {
+      "startMs": 120840,
+      "endMs": 128060,
+      "text": "It's stuck with you forever, so promise you won't let it go"
+    },
+    {
+      "startMs": 128060,
+      "endMs": 133900,
+      "text": "I'll trust the universe will always bring me to you"
+    },
+    {
+      "startMs": 133900,
+      "endMs": 139240,
+      "text": "I'll imagine we fell in love"
+    },
+    {
+      "startMs": 139240,
+      "endMs": 142840,
+      "text": "I'll nap under moonlight skies with you"
+    },
+    {
+      "startMs": 142840,
+      "endMs": 146740,
+      "text": "I think I'll picture us, you with the waves"
+    },
+    {
+      "startMs": 146740,
+      "endMs": 150520,
+      "text": "The ocean's colours on your face"
+    },
+    {
+      "startMs": 150520,
+      "endMs": 154300,
+      "text": "I'll leave my heart with your air"
+    },
+    {
+      "startMs": 154650,
+      "endMs": 157700,
+      "text": "So, let me fly with you"
+    },
+    {
+      "startMs": 157700,
+      "endMs": 163200,
+      "text": "Will you be forever with me?"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/blue - yung kai - MHCsrKA9gh8",
+  "outputMp4Name": "blue - yung kai.mp4"
+}

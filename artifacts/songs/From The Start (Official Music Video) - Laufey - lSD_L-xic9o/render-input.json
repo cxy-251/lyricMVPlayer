@@ -1,0 +1,161 @@
+{
+  "title": "Laufey - From The Start (Official Music Video)",
+  "artist": "Laufey",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/From The Start (Official Music Video) - Laufey - lSD_L-xic9o/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 1820,
+  "renderDurationInFrames": 4682,
+  "durationInFrames": 5086,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/From The Start (Official Music Video) - Laufey - lSD_L-xic9o/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+  },
+  "lyrics": [
+    {
+      "startMs": 4820,
+      "endMs": 7700,
+      "text": "Don't you notice how"
+    },
+    {
+      "startMs": 7700,
+      "endMs": 13300,
+      "text": "I get quiet when there's no one else around?"
+    },
+    {
+      "startMs": 14140,
+      "endMs": 17180,
+      "text": "Me and you and awkward silence"
+    },
+    {
+      "startMs": 17720,
+      "endMs": 22280,
+      "text": "Don't you dare look at me that way"
+    },
+    {
+      "startMs": 23060,
+      "endMs": 28120,
+      "text": "I don't need reminders of how you don't feel the same"
+    },
+    {
+      "startMs": 28120,
+      "endMs": 31180,
+      "text": "Oh, the burning pain"
+    },
+    {
+      "startMs": 31700,
+      "endMs": 36960,
+      "text": "Listening to you harp on 'bout some new soulmate"
+    },
+    {
+      "startMs": 37740,
+      "endMs": 40280,
+      "text": "\"She's so perfect,\" blah, blah, blah"
+    },
+    {
+      "startMs": 40280,
+      "endMs": 45560,
+      "text": "Oh, how I wish you'll wake up one day"
+    },
+    {
+      "startMs": 46560,
+      "endMs": 51480,
+      "text": "Run to me, confess your love, at least just let me say"
+    },
+    {
+      "startMs": 51480,
+      "endMs": 58140,
+      "text": "That when I talk to you, oh, Cupid walks right through"
+    },
+    {
+      "startMs": 58140,
+      "endMs": 62240,
+      "text": "And shoots an arrow through my heart"
+    },
+    {
+      "startMs": 63440,
+      "endMs": 69840,
+      "text": "And I sound like a loon, but don't you feel it too?"
+    },
+    {
+      "startMs": 69840,
+      "endMs": 74000,
+      "text": "Confess I loved you from the start"
+    },
+    {
+      "startMs": 97960,
+      "endMs": 101400,
+      "text": "What's a girl to do?"
+    },
+    {
+      "startMs": 101800,
+      "endMs": 107180,
+      "text": "Lying on my bed, staring into the blue"
+    },
+    {
+      "startMs": 108020,
+      "endMs": 110740,
+      "text": "Unrequited, terrifying"
+    },
+    {
+      "startMs": 111260,
+      "endMs": 115900,
+      "text": "Love is driving me a bit insane"
+    },
+    {
+      "startMs": 116400,
+      "endMs": 119340,
+      "text": "Have to get this off my chest"
+    },
+    {
+      "startMs": 119340,
+      "endMs": 121560,
+      "text": "I'm telling you today"
+    },
+    {
+      "startMs": 121560,
+      "endMs": 128380,
+      "text": "That when I talk to you, oh, Cupid walks right through"
+    },
+    {
+      "startMs": 128380,
+      "endMs": 133060,
+      "text": "And shoots an arrow through my heart"
+    },
+    {
+      "startMs": 133660,
+      "endMs": 140060,
+      "text": "And I sound like a loon, but don't you feel it too?"
+    },
+    {
+      "startMs": 140060,
+      "endMs": 144500,
+      "text": "Confess I loved you from the start"
+    },
+    {
+      "startMs": 144500,
+      "endMs": 148420,
+      "text": "Confess I loved you"
+    },
+    {
+      "startMs": 148420,
+      "endMs": 151000,
+      "text": "Just thinking of you"
+    },
+    {
+      "startMs": 152690,
+      "endMs": 155890,
+      "text": "I know I've loved you from the start"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/From The Start (Official Music Video) - Laufey - lSD_L-xic9o",
+  "outputMp4Name": "From The Start (Official Music Video) - Laufey.mp4"
+}
