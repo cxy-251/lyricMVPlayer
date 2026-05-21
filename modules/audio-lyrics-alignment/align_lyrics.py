@@ -94,8 +94,46 @@ def _parse_lrc_or_plain_text(lyrics_text: str, lyrics_format: str) -> list[Parse
     raw_lines = [line.strip() for line in lyrics_text.splitlines()]
     raw_lines = [line for line in raw_lines if line]
 
+    def parse_time_token(token: str) -> int | None:
+        parts = token.strip().split(":")
+        if len(parts) != 2:
+            return None
+        try:
+            minutes = int(parts[0])
+            seconds = float(parts[1])
+        except ValueError:
+            return None
+        return int((minutes * 60 + seconds) * 1000)
+
+    def parse_plain_line_with_anchor(line: str) -> ParsedLyricEntry:
+        if "||" not in line:
+            return ParsedLyricEntry(text=line)
+        content, token = line.rsplit("||", 1)
+        reference_start_ms = parse_time_token(token)
+        return ParsedLyricEntry(
+            text=content.strip(),
+            reference_start_ms=reference_start_ms,
+        )
+
     if lyrics_format == "plain":
-        return [ParsedLyricEntry(text=line) for line in raw_lines]
+        parsed = [parse_plain_line_with_anchor(line) for line in raw_lines]
+        return [
+            ParsedLyricEntry(
+                text=entry.text,
+                reference_start_ms=entry.reference_start_ms,
+                reference_end_ms=next(
+                    (
+                        candidate.reference_start_ms
+                        for candidate in parsed[index + 1 :]
+                        if candidate.reference_start_ms is not None
+                    ),
+                    entry.reference_start_ms + 3200 if entry.reference_start_ms is not None else None,
+                ),
+            )
+            if entry.reference_start_ms is not None
+            else entry
+            for index, entry in enumerate(parsed)
+        ]
 
     if lyrics_format == "lrc" or (lyrics_format == "auto" and any("]" in line and "[" in line for line in raw_lines)):
         parsed: list[ParsedLyricEntry] = []
@@ -108,9 +146,7 @@ def _parse_lrc_or_plain_text(lyrics_text: str, lyrics_format: str) -> list[Parse
                     token = timestamps[0]
                     parts = token.split(":")
                     if len(parts) == 2:
-                        minutes = int(parts[0])
-                        seconds = float(parts[1])
-                        reference_start_ms = int((minutes * 60 + seconds) * 1000)
+                        reference_start_ms = parse_time_token(token)
                 parsed.append(
                     ParsedLyricEntry(
                         text=content,

@@ -1,14 +1,14 @@
 {
-  "selectedSongDirName": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+  "selectedSongDirName": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
   "songs": [
     {
-      "id": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
-      "title": "Run Wild (向风而野)",
-      "artist": "是晚星呀 - Topic",
+      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 5820,
-      "renderDurationInFrames": 6119,
-      "durationInFrames": 6294,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 6622,
+      "durationInFrames": 6622,
       "fps": 30,
       "background": {
         "kind": "image",
@@ -17,305 +17,345 @@
       "poetryFrame": {
         "nickname": "@xcai43323",
         "topLabel": "@xcai43323 · AUDIO DIARY",
-        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
-        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
-        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+        "leftVertical": "NEVER LET THE WORLD PAINT YOU INTO A SHAPE THAT DOESN'T FIT.",
+        "rightVertical": "EMBRACE THE COLORS THEY CANNOT TRULY UNDERSTAND OR CONTAIN.",
+        "bottomLine": "YOU ARE GOOD AT WHAT THEY CANNOT SEE."
       },
       "lyrics": [
         {
-          "startMs": 8820,
-          "endMs": 11620,
-          "text": "Da da dum da da dum"
+          "startMs": 580,
+          "endMs": 2700,
+          "text": "First rule, never let 'em change you"
         },
         {
-          "startMs": 11620,
-          "endMs": 13740,
-          "text": "Sun on my face, I'm out the door"
+          "startMs": 2700,
+          "endMs": 5650,
+          "text": "Rule two, do you to the fullest (To the fullest)"
         },
         {
-          "startMs": 13740,
-          "endMs": 16000,
-          "text": "Shoes in my hand, feet on the floor"
+          "startMs": 5650,
+          "endMs": 7150,
+          "text": "And never be ashamed to"
         },
         {
-          "startMs": 16000,
-          "endMs": 18340,
-          "text": "City behind me, getting small"
+          "startMs": 7150,
+          "endMs": 9350,
+          "text": "You just good at what they can't do"
         },
         {
-          "startMs": 18340,
-          "endMs": 20760,
-          "text": "I don't look back, not at all"
+          "startMs": 9350,
+          "endMs": 11550,
+          "text": "And they hate that, they wanna paint you"
         },
         {
-          "startMs": 20760,
-          "endMs": 22960,
-          "text": "Wind in my hair, heart in the sound"
+          "startMs": 11550,
+          "endMs": 13380,
+          "text": "In they color, put you in another"
         },
         {
-          "startMs": 22960,
-          "endMs": 25340,
-          "text": "Laughing like I got no doubt"
+          "startMs": 13380,
+          "endMs": 15520,
+          "text": "But what they don't accept (Uh) and what they don't see (Yeah)"
         },
         {
-          "startMs": 25340,
-          "endMs": 27600,
-          "text": "I lost the map, I found the spark"
+          "startMs": 15520,
+          "endMs": 17620,
+          "text": "The best thing is what you already be"
         },
         {
-          "startMs": 27600,
-          "endMs": 30000,
-          "text": "We chase the day into the dark"
+          "startMs": 17620,
+          "endMs": 19830,
+          "text": "Oh, her eyes, her eyes"
         },
         {
-          "startMs": 30000,
-          "endMs": 32320,
-          "text": "No more waiting, no more chains"
+          "startMs": 19830,
+          "endMs": 22580,
+          "text": "Make the stars look like they're not shinin'"
         },
         {
-          "startMs": 32320,
-          "endMs": 34240,
-          "text": "I'm not living in yesterday"
+          "startMs": 22580,
+          "endMs": 24130,
+          "text": "Her hair, her hair"
         },
         {
-          "startMs": 34240,
-          "endMs": 36920,
-          "text": "Turn the lights down, feel the bass"
+          "startMs": 24130,
+          "endMs": 27200,
+          "text": "Falls perfectly without her tryin'"
         },
         {
-          "startMs": 36920,
-          "endMs": 39440,
-          "text": "Let the whole world fade away"
+          "startMs": 27200,
+          "endMs": 29620,
+          "text": "She's so beautiful"
         },
         {
-          "startMs": 40220,
-          "endMs": 44120,
-          "text": "I run wild, I feel alive"
+          "startMs": 29620,
+          "endMs": 34630,
+          "text": "And I tell her every day"
         },
         {
-          "startMs": 44520,
-          "endMs": 48480,
-          "text": "No goodbye, just open sky"
+          "startMs": 34630,
+          "endMs": 37480,
+          "text": "Yeah, I know, I know"
         },
         {
-          "startMs": 49020,
-          "endMs": 53080,
-          "text": "I run free, I'm finally me"
+          "startMs": 37480,
+          "endMs": 40070,
+          "text": "When I compliment her, she won't believe me"
         },
         {
-          "startMs": 53460,
-          "endMs": 57880,
-          "text": "No gravity, just you and me"
+          "startMs": 40070,
+          "endMs": 41750,
+          "text": "And it's so, it's so"
         },
         {
-          "startMs": 59120,
-          "endMs": 62860,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 41750,
+          "endMs": 44790,
+          "text": "Sad to think that she don't see what I see"
         },
         {
-          "startMs": 62860,
-          "endMs": 65200,
-          "text": "Hands up, heart loud"
+          "startMs": 44790,
+          "endMs": 51430,
+          "text": "But every time she asks me, \"Do I look okay?\" I say"
         },
         {
-          "startMs": 68880,
-          "endMs": 72120,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 51430,
+          "endMs": 56070,
+          "text": "When I see your face"
         },
         {
-          "startMs": 72120,
-          "endMs": 74320,
-          "text": "Lost but so found"
+          "startMs": 56070,
+          "endMs": 60760,
+          "text": "There's not a thing that I would change"
         },
         {
-          "startMs": 78680,
-          "endMs": 81040,
-          "text": "Moon on the street, stars in my eyes"
+          "startMs": 60760,
+          "endMs": 63850,
+          "text": "'Cause you're amazing (Amazing)"
         },
         {
-          "startMs": 81040,
-          "endMs": 82960,
-          "text": "We don't need a reason why"
+          "startMs": 63850,
+          "endMs": 69340,
+          "text": "Just the way you are"
         },
         {
-          "startMs": 82960,
-          "endMs": 85240,
-          "text": "Fast little heartbeat, neon glow"
+          "startMs": 69340,
+          "endMs": 73750,
+          "text": "And when you smile"
         },
         {
-          "startMs": 85240,
-          "endMs": 87640,
-          "text": "Anywhere the night can go"
+          "startMs": 73750,
+          "endMs": 78140,
+          "text": "The whole world stops and stares for a while"
         },
         {
-          "startMs": 87640,
-          "endMs": 89960,
-          "text": "Dancing through the empty road"
+          "startMs": 78140,
+          "endMs": 81400,
+          "text": "'Cause, girl, you're amazing (Amazing)"
         },
         {
-          "startMs": 89960,
-          "endMs": 92140,
-          "text": "Letting every feeling show"
+          "startMs": 81400,
+          "endMs": 88560,
+          "text": "Just the way you are (Yeah)"
         },
         {
-          "startMs": 92140,
-          "endMs": 94400,
-          "text": "If I fall, I fall in style"
+          "startMs": 88560,
+          "endMs": 90370,
+          "text": "Her lips, her lips"
         },
         {
-          "startMs": 94400,
-          "endMs": 96920,
-          "text": "If I'm scared, I run wild"
+          "startMs": 90370,
+          "endMs": 93010,
+          "text": "I could kiss them all day if she'd let me"
         },
         {
-          "startMs": 96920,
-          "endMs": 99260,
-          "text": "No more waiting, no more chains"
+          "startMs": 93010,
+          "endMs": 94780,
+          "text": "Her laugh, her laugh"
         },
         {
-          "startMs": 99260,
-          "endMs": 100940,
-          "text": "I'm not living in yesterday"
+          "startMs": 94780,
+          "endMs": 97650,
+          "text": "She hates, but I think it's so sexy"
         },
         {
-          "startMs": 100940,
-          "endMs": 103860,
-          "text": "Turn the lights down, feel the bass"
+          "startMs": 97650,
+          "endMs": 100110,
+          "text": "She's so beautiful"
         },
         {
-          "startMs": 103860,
-          "endMs": 106260,
-          "text": "Let the whole world fade away"
+          "startMs": 100110,
+          "endMs": 105230,
+          "text": "And I tell her every day"
         },
         {
-          "startMs": 107220,
-          "endMs": 111100,
-          "text": "I run wild, I feel alive"
+          "startMs": 105230,
+          "endMs": 107410,
+          "text": "Oh, you know, you know, you know"
         },
         {
-          "startMs": 113630,
-          "endMs": 115770,
-          "text": "No goodbye, just open sky"
+          "startMs": 107410,
+          "endMs": 110170,
+          "text": "I'd never ask you to change"
         },
         {
-          "startMs": 115770,
-          "endMs": 120310,
-          "text": "I run free, I'm finally me"
+          "startMs": 110170,
+          "endMs": 112390,
+          "text": "If perfect's what you're searching for"
         },
         {
-          "startMs": 120390,
-          "endMs": 125990,
-          "text": "No gravity, just you and me"
+          "startMs": 112390,
+          "endMs": 114590,
+          "text": "Then just stay the same"
         },
         {
-          "startMs": 126340,
-          "endMs": 129720,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 114590,
+          "endMs": 118490,
+          "text": "So don't even bother askin' if you look okay"
         },
         {
-          "startMs": 129720,
-          "endMs": 132180,
-          "text": "Hands up, heart loud"
+          "startMs": 118490,
+          "endMs": 121920,
+          "text": "You know I'll say"
         },
         {
-          "startMs": 135780,
-          "endMs": 139020,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 121920,
+          "endMs": 126530,
+          "text": "When I see your face"
         },
         {
-          "startMs": 139020,
-          "endMs": 141500,
-          "text": "Lost but so found"
+          "startMs": 126530,
+          "endMs": 131180,
+          "text": "There's not a thing that I would change"
         },
         {
-          "startMs": 141500,
-          "endMs": 143300,
-          "text": "Ah"
+          "startMs": 131180,
+          "endMs": 134350,
+          "text": "'Cause you're amazing (Amazing)"
         },
         {
-          "startMs": 143300,
-          "endMs": 144380,
-          "text": "Ah"
+          "startMs": 134350,
+          "endMs": 139740,
+          "text": "Just the way you are"
         },
         {
-          "startMs": 144380,
-          "endMs": 144700,
-          "text": "Ah"
+          "startMs": 139740,
+          "endMs": 144110,
+          "text": "And when you smile"
         },
         {
-          "startMs": 144700,
-          "endMs": 145020,
-          "text": "Ah"
+          "startMs": 144110,
+          "endMs": 148690,
+          "text": "The whole world stops and stares for a while"
         },
         {
-          "startMs": 145020,
-          "endMs": 145340,
-          "text": "Ah"
+          "startMs": 148690,
+          "endMs": 151820,
+          "text": "'Cause, girl, you're amazing (Amazing)"
         },
         {
-          "startMs": 145340,
-          "endMs": 145660,
-          "text": "Ah"
+          "startMs": 151820,
+          "endMs": 158680,
+          "text": "Just the way you are (Yeah)"
         },
         {
-          "startMs": 145660,
-          "endMs": 145980,
-          "text": "Maybe I was made to fly"
+          "startMs": 158680,
+          "endMs": 161250,
+          "text": "Uh, yeah, the definition of real is"
         },
         {
-          "startMs": 145980,
-          "endMs": 146300,
-          "text": "Maybe I was born for this"
+          "startMs": 161250,
+          "endMs": 163420,
+          "text": "If you don't feel it, then you don't feel it"
         },
         {
-          "startMs": 146300,
-          "endMs": 146620,
-          "text": "Every tear I left behind"
+          "startMs": 163420,
+          "endMs": 165610,
+          "text": "Don't conceal it, don't be fake"
         },
         {
-          "startMs": 146620,
-          "endMs": 152220,
-          "text": "Turns into a little wish"
+          "startMs": 165610,
+          "endMs": 167520,
+          "text": "You look great, don't need silicone to build it (Uh)"
         },
         {
-          "startMs": 152220,
-          "endMs": 166409,
-          "text": "I run wild, I feel alive"
+          "startMs": 167520,
+          "endMs": 170090,
+          "text": "Or Botox to kill it (Yeah), you just killin' off spirit (Uh)"
         },
         {
-          "startMs": 166409,
-          "endMs": 178233,
-          "text": "No goodbye, just open sky"
+          "startMs": 170090,
+          "endMs": 172370,
+          "text": "And you the one that you gotta live with (Uh, yeah)"
         },
         {
-          "startMs": 178233,
-          "endMs": 192421,
-          "text": "I run free, I'm finally me"
+          "startMs": 172370,
+          "endMs": 174150,
+          "text": "So don't get caught up in appearances"
         },
         {
-          "startMs": 192421,
-          "endMs": 206610,
-          "text": "No gravity, just you and me"
+          "startMs": 174150,
+          "endMs": 179140,
+          "text": "See the inner beauty when you look off in the mirrors"
         },
         {
-          "startMs": 206610,
-          "endMs": 206930,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 179140,
+          "endMs": 180110,
+          "text": "The way you are"
         },
         {
-          "startMs": 206930,
-          "endMs": 207250,
-          "text": "Hands up, heart loud"
+          "startMs": 180110,
+          "endMs": 184050,
+          "text": "The way you are"
         },
         {
-          "startMs": 207250,
-          "endMs": 207570,
-          "text": "Run wild, run wild, run wild"
+          "startMs": 184050,
+          "endMs": 187100,
+          "text": "Girl, you're amazing (Amazing)"
         },
         {
-          "startMs": 207570,
-          "endMs": 209610,
-          "text": "Lost but so found"
+          "startMs": 187100,
+          "endMs": 192380,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 192380,
+          "endMs": 197060,
+          "text": "When I see your face"
+        },
+        {
+          "startMs": 197060,
+          "endMs": 201680,
+          "text": "There's not a thing that I would change"
+        },
+        {
+          "startMs": 201680,
+          "endMs": 204740,
+          "text": "'Cause you're amazing (Amazing)"
+        },
+        {
+          "startMs": 204740,
+          "endMs": 210280,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 210280,
+          "endMs": 214620,
+          "text": "And when you smile"
+        },
+        {
+          "startMs": 214620,
+          "endMs": 219050,
+          "text": "The whole world stops and stares for a while"
+        },
+        {
+          "startMs": 219050,
+          "endMs": 222460,
+          "text": "'Cause, girl, you're amazing (Amazing)"
+        },
+        {
+          "startMs": 222460,
+          "endMs": 238010,
+          "text": "Just the way you are (Yeah)"
         }
       ]
     },
@@ -4123,13 +4163,3237 @@
           "text": "I don't know why (yeah, I don't know why)"
         }
       ]
-    }
-  ],
-  "queue": [
+    },
     {
       "id": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
       "title": "Run Wild (向风而野)",
       "artist": "是晚星呀 - Topic",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 6240,
+      "durationInFrames": 6294,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY DISSOLVES INTO A BLUR OF GOLD AND GREY.",
+        "rightVertical": "LEAVING BEHIND ONLY THE ECHO OF MY OWN FREEDOM.",
+        "bottomLine": "CHASING THE WIND'S UNCEASING CALL."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 320,
+          "text": "Da da dum da da dum"
+        },
+        {
+          "startMs": 320,
+          "endMs": 5920,
+          "text": "Sun on my face, I'm out the door"
+        },
+        {
+          "startMs": 13740,
+          "endMs": 15980,
+          "text": "Shoes in my hand, feet on the floor"
+        },
+        {
+          "startMs": 16320,
+          "endMs": 18300,
+          "text": "City behind me, getting small"
+        },
+        {
+          "startMs": 18300,
+          "endMs": 20760,
+          "text": "I don't look back, not at all"
+        },
+        {
+          "startMs": 20760,
+          "endMs": 22960,
+          "text": "Wind in my hair, heart in the sound"
+        },
+        {
+          "startMs": 22960,
+          "endMs": 25740,
+          "text": "Laughing like I got no doubt"
+        },
+        {
+          "startMs": 25740,
+          "endMs": 27600,
+          "text": "I lost the map, I found the spark"
+        },
+        {
+          "startMs": 27600,
+          "endMs": 29900,
+          "text": "We chase the day into the dark"
+        },
+        {
+          "startMs": 29900,
+          "endMs": 32320,
+          "text": "No more waiting, no more chains"
+        },
+        {
+          "startMs": 32320,
+          "endMs": 34240,
+          "text": "I'm not living in yesterday"
+        },
+        {
+          "startMs": 34240,
+          "endMs": 36920,
+          "text": "Turn the lights down, feel the bass"
+        },
+        {
+          "startMs": 36920,
+          "endMs": 39440,
+          "text": "Let the whole world fade away"
+        },
+        {
+          "startMs": 40560,
+          "endMs": 44260,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 45600,
+          "endMs": 48460,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 50060,
+          "endMs": 53120,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 53120,
+          "endMs": 57780,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 59060,
+          "endMs": 62860,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 62860,
+          "endMs": 65200,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 68720,
+          "endMs": 71940,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 71940,
+          "endMs": 74380,
+          "text": "Lost but so found"
+        },
+        {
+          "startMs": 77060,
+          "endMs": 80780,
+          "text": "Moon on the street, stars in my eyes"
+        },
+        {
+          "startMs": 80780,
+          "endMs": 82940,
+          "text": "We don't need a reason why"
+        },
+        {
+          "startMs": 82940,
+          "endMs": 85200,
+          "text": "Fast little heartbeat, neon glow"
+        },
+        {
+          "startMs": 85200,
+          "endMs": 87600,
+          "text": "Anywhere the night can go"
+        },
+        {
+          "startMs": 87600,
+          "endMs": 89960,
+          "text": "Dancing through the empty road"
+        },
+        {
+          "startMs": 89960,
+          "endMs": 92100,
+          "text": "Letting every feeling show"
+        },
+        {
+          "startMs": 92100,
+          "endMs": 94440,
+          "text": "If I fall, I fall in style"
+        },
+        {
+          "startMs": 94440,
+          "endMs": 96920,
+          "text": "If I'm scared, I run wild"
+        },
+        {
+          "startMs": 96920,
+          "endMs": 99240,
+          "text": "No more waiting, no more chains"
+        },
+        {
+          "startMs": 99240,
+          "endMs": 100880,
+          "text": "I'm not living in yesterday"
+        },
+        {
+          "startMs": 101520,
+          "endMs": 103860,
+          "text": "Turn the lights down, feel the bass"
+        },
+        {
+          "startMs": 103860,
+          "endMs": 106260,
+          "text": "Let the whole world fade away"
+        },
+        {
+          "startMs": 107180,
+          "endMs": 111120,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 113650,
+          "endMs": 115710,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 116990,
+          "endMs": 120070,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 120070,
+          "endMs": 125670,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 126420,
+          "endMs": 129720,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 129720,
+          "endMs": 132160,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 135720,
+          "endMs": 139020,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 139020,
+          "endMs": 141520,
+          "text": "Lost but so found"
+        },
+        {
+          "startMs": 141520,
+          "endMs": 144020,
+          "text": "Maybe I was made to fly"
+        },
+        {
+          "startMs": 144020,
+          "endMs": 148651,
+          "text": "Maybe I was born for this"
+        },
+        {
+          "startMs": 148651,
+          "endMs": 154251,
+          "text": "Every tear I left behind"
+        },
+        {
+          "startMs": 154593,
+          "endMs": 160193,
+          "text": "Turns into a little wish"
+        },
+        {
+          "startMs": 160535,
+          "endMs": 166135,
+          "text": "I run wild, I feel alive"
+        },
+        {
+          "startMs": 167666,
+          "endMs": 173266,
+          "text": "No goodbye, just open sky"
+        },
+        {
+          "startMs": 173608,
+          "endMs": 179208,
+          "text": "I run free, I'm finally me"
+        },
+        {
+          "startMs": 180739,
+          "endMs": 186339,
+          "text": "No gravity, just you and me"
+        },
+        {
+          "startMs": 187869,
+          "endMs": 193469,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 195000,
+          "endMs": 196740,
+          "text": "Hands up, heart loud"
+        },
+        {
+          "startMs": 196740,
+          "endMs": 202340,
+          "text": "Run wild, run wild, run wild"
+        },
+        {
+          "startMs": 203610,
+          "endMs": 206010,
+          "text": "Lost but so found"
+        }
+      ]
+    },
+    {
+      "id": "Drama King - Bellah Mae - zlF-KFWf6c4",
+      "title": "Drama King",
+      "artist": "Bellah Mae",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4720,
+      "durationInFrames": 4720,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE SILENCE YOU LEAVE IS A WEIGHT ON THE AIR WE SHARE.",
+        "rightVertical": "WE ARE ONLY TRYING TO CONFIRM THAT YOUR LIGHT STILL SHINES BRIGHTLY.",
+        "bottomLine": "ALL HELL BREAKS LOOSE IN THE ECHOES OF LIES."
+      },
+      "lyrics": [
+        {
+          "startMs": 620,
+          "endMs": 4120,
+          "text": "You take as long as you like to send a reply"
+        },
+        {
+          "startMs": 4120,
+          "endMs": 7200,
+          "text": "Only tryna call you just to check you're alive"
+        },
+        {
+          "startMs": 7200,
+          "endMs": 9000,
+          "text": "But when I do it to you"
+        },
+        {
+          "startMs": 9000,
+          "endMs": 12260,
+          "text": "You're straight on my case, and then all hell breaks loose"
+        },
+        {
+          "startMs": 12260,
+          "endMs": 13560,
+          "text": "(All hell breaks loose)"
+        },
+        {
+          "startMs": 13560,
+          "endMs": 16940,
+          "text": "You follow Instаgram models one after the other"
+        },
+        {
+          "startMs": 17180,
+          "endMs": 20080,
+          "text": "But God forbid I follow back my best friend's brother"
+        },
+        {
+          "startMs": 20080,
+          "endMs": 21760,
+          "text": "Then you lose your head"
+        },
+        {
+          "startMs": 22700,
+          "endMs": 24680,
+          "text": "Send a text saying, \"How's your new boyfriend?\""
+        },
+        {
+          "startMs": 24680,
+          "endMs": 26140,
+          "text": "(How's your new boyfriend?)"
+        },
+        {
+          "startMs": 26140,
+          "endMs": 29580,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 29580,
+          "endMs": 32980,
+          "text": "This ain't how you love me, take a chill pill, honey, yeah"
+        },
+        {
+          "startMs": 32980,
+          "endMs": 35580,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 35580,
+          "endMs": 38060,
+          "text": "And I just think it's funny how"
+        },
+        {
+          "startMs": 38720,
+          "endMs": 43240,
+          "text": "You triple text, then 27 question marks"
+        },
+        {
+          "startMs": 43240,
+          "endMs": 46320,
+          "text": "Take a breath, well, look at how obsessed you are"
+        },
+        {
+          "startMs": 46320,
+          "endMs": 49000,
+          "text": "Sugarcoat, tippy-toe 'round your emotions"
+        },
+        {
+          "startMs": 49000,
+          "endMs": 52140,
+          "text": "You're still upset? Oh, you gotta be jokin'"
+        },
+        {
+          "startMs": 52140,
+          "endMs": 55280,
+          "text": "I don't get how the girl is the psycho"
+        },
+        {
+          "startMs": 55280,
+          "endMs": 59060,
+          "text": "No disrespect, but you should check yourself out, bro"
+        },
+        {
+          "startMs": 59220,
+          "endMs": 61420,
+          "text": "These boys throwing toys in their mood swings"
+        },
+        {
+          "startMs": 61840,
+          "endMs": 64980,
+          "text": "Oh my God, you're such a drama king"
+        },
+        {
+          "startMs": 65960,
+          "endMs": 69420,
+          "text": "I don't wear tight dresses to try to make you jealous"
+        },
+        {
+          "startMs": 69420,
+          "endMs": 72620,
+          "text": "Not everything's about you, but while we're confessin'"
+        },
+        {
+          "startMs": 72620,
+          "endMs": 75460,
+          "text": "And I get it, you're sensitive, but you're being pathetic"
+        },
+        {
+          "startMs": 75460,
+          "endMs": 78920,
+          "text": "And you hate my ex, but I was like 14 when I met him"
+        },
+        {
+          "startMs": 78920,
+          "endMs": 81900,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 81900,
+          "endMs": 85820,
+          "text": "You're on my last nerve, buddy, so would you shut up for me? Yeah"
+        },
+        {
+          "startMs": 85820,
+          "endMs": 89040,
+          "text": "Ooh"
+        },
+        {
+          "startMs": 89040,
+          "endMs": 90580,
+          "text": "'Cause I just think it's funny how"
+        },
+        {
+          "startMs": 91340,
+          "endMs": 95660,
+          "text": "You triple text, then 27 question marks"
+        },
+        {
+          "startMs": 95660,
+          "endMs": 98780,
+          "text": "Take a breath, well, look at how obsessed you are"
+        },
+        {
+          "startMs": 98780,
+          "endMs": 101420,
+          "text": "Sugarcoat, tippy-toe 'round your emotions"
+        },
+        {
+          "startMs": 101420,
+          "endMs": 104600,
+          "text": "You're still upset? Oh, you gotta be jokin'"
+        },
+        {
+          "startMs": 104600,
+          "endMs": 107740,
+          "text": "I don't get how the girl is the psycho"
+        },
+        {
+          "startMs": 107740,
+          "endMs": 111500,
+          "text": "No disrespect, but you should check yourself out, bro"
+        },
+        {
+          "startMs": 111680,
+          "endMs": 113860,
+          "text": "These boys throwing toys in their mood swings"
+        },
+        {
+          "startMs": 114300,
+          "endMs": 117420,
+          "text": "Oh my God, you're such a drama king"
+        },
+        {
+          "startMs": 117420,
+          "endMs": 120600,
+          "text": "Calm down, baby, you're such a drama king"
+        },
+        {
+          "startMs": 120600,
+          "endMs": 123640,
+          "text": "Always makin' a fuss outta nothing"
+        },
+        {
+          "startMs": 123640,
+          "endMs": 127700,
+          "text": "This ain't 1923, I'm not getting on my knees"
+        },
+        {
+          "startMs": 127700,
+          "endMs": 129880,
+          "text": "For a drama king"
+        },
+        {
+          "startMs": 129880,
+          "endMs": 133320,
+          "text": "Calm down, baby, you're such a drama king"
+        },
+        {
+          "startMs": 133320,
+          "endMs": 136240,
+          "text": "Always makin' a fuss outta nothing"
+        },
+        {
+          "startMs": 136240,
+          "endMs": 139960,
+          "text": "This ain't 1923, and I'm not the property"
+        },
+        {
+          "startMs": 139960,
+          "endMs": 142680,
+          "text": "Of a drama king"
+        },
+        {
+          "startMs": 142680,
+          "endMs": 145900,
+          "text": "I don't get how the girl is the psycho"
+        },
+        {
+          "startMs": 145900,
+          "endMs": 149620,
+          "text": "No disrespect, but you should check yourself out, bro"
+        },
+        {
+          "startMs": 149740,
+          "endMs": 153920,
+          "text": "These boys throwing toys in their mood swings (hm)"
+        },
+        {
+          "startMs": 153920,
+          "endMs": 155800,
+          "text": "And all these drama kings"
+        }
+      ]
+    },
+    {
+      "id": "Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4",
+      "title": "Shivers (Acoustic Version)",
+      "artist": "Ed Sheeran",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 9270,
+      "renderDurationInFrames": 5849,
+      "durationInFrames": 6209,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "MY HEART IS A CANVAS PAINTED WITH THE COLORS OF YOUR EMBRACE.",
+        "rightVertical": "WE ARE DRAWN TO THIS TRAIN BY AN UNSEEN AND MAGNETIC FORCE.",
+        "bottomLine": "DREAMING OF DISTANT HORIZONS TOGETHER"
+      },
+      "lyrics": [
+        {
+          "startMs": 12270,
+          "endMs": 14310,
+          "text": "I took an arrow to the heart"
+        },
+        {
+          "startMs": 15330,
+          "endMs": 18690,
+          "text": "I never kissed a mouth that tastes like yours"
+        },
+        {
+          "startMs": 18690,
+          "endMs": 22030,
+          "text": "Strawberries and a somethin' more"
+        },
+        {
+          "startMs": 22590,
+          "endMs": 24750,
+          "text": "Oh yeah, I want it all"
+        },
+        {
+          "startMs": 26170,
+          "endMs": 27930,
+          "text": "Lipstick on my guitar, ooh"
+        },
+        {
+          "startMs": 29130,
+          "endMs": 32549,
+          "text": "Fill up the engine, we can drive real far"
+        },
+        {
+          "startMs": 32549,
+          "endMs": 35950,
+          "text": "Go dancin' underneath the stars"
+        },
+        {
+          "startMs": 36210,
+          "endMs": 37970,
+          "text": "Oh yeah, I want it all"
+        },
+        {
+          "startMs": 39350,
+          "endMs": 41310,
+          "text": "Mmm, you got me feelin' like"
+        },
+        {
+          "startMs": 41310,
+          "endMs": 44990,
+          "text": "I wanna be that guy, I wanna kiss your eyes"
+        },
+        {
+          "startMs": 45110,
+          "endMs": 48270,
+          "text": "I wanna drink that smile, I wanna feel like I'm"
+        },
+        {
+          "startMs": 48850,
+          "endMs": 52890,
+          "text": "Like my soul's on fire, I wanna stay up all day and all night"
+        },
+        {
+          "startMs": 52890,
+          "endMs": 55030,
+          "text": "Yeah, you got me singin' like"
+        },
+        {
+          "startMs": 55030,
+          "endMs": 58030,
+          "text": "Ooh, I love it when you do it like that"
+        },
+        {
+          "startMs": 58030,
+          "endMs": 60810,
+          "text": "And when you're close up, give me the shivers"
+        },
+        {
+          "startMs": 61350,
+          "endMs": 64709,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 64709,
+          "endMs": 68190,
+          "text": "And when they say, \"The party's over\", then we'll bring it right back"
+        },
+        {
+          "startMs": 68190,
+          "endMs": 71630,
+          "text": "We'll say, \"Ooh, I love it when you do it like that\""
+        },
+        {
+          "startMs": 71630,
+          "endMs": 74390,
+          "text": "And when you're close up, give me the shivers"
+        },
+        {
+          "startMs": 75110,
+          "endMs": 78270,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 78270,
+          "endMs": 81710,
+          "text": "When they say, \"The party's over\", then we'll bring it right back"
+        },
+        {
+          "startMs": 81710,
+          "endMs": 82830,
+          "text": "Into the car"
+        },
+        {
+          "startMs": 83850,
+          "endMs": 87750,
+          "text": "On the back seat in the moonlit dark"
+        },
+        {
+          "startMs": 87750,
+          "endMs": 90490,
+          "text": "Wrap me up between your legs and arms"
+        },
+        {
+          "startMs": 90570,
+          "endMs": 92550,
+          "text": "Oh, I can't get enough"
+        },
+        {
+          "startMs": 93750,
+          "endMs": 95990,
+          "text": "You know you could tear me apart, ooh"
+        },
+        {
+          "startMs": 96630,
+          "endMs": 100290,
+          "text": "Put me back together and take my heart"
+        },
+        {
+          "startMs": 100490,
+          "endMs": 103590,
+          "text": "I never thought that I could love this hard"
+        },
+        {
+          "startMs": 103590,
+          "endMs": 105930,
+          "text": "Oh, I can't get enough"
+        },
+        {
+          "startMs": 106890,
+          "endMs": 108730,
+          "text": "Mmm, you got me feelin' like"
+        },
+        {
+          "startMs": 108730,
+          "endMs": 112330,
+          "text": "I wanna be that guy, I wanna kiss your eyes"
+        },
+        {
+          "startMs": 112530,
+          "endMs": 115790,
+          "text": "I wanna drink that smile, I wanna feel like I'm"
+        },
+        {
+          "startMs": 115790,
+          "endMs": 120210,
+          "text": "Like my soul's on fire, I wanna stay up all day and all night"
+        },
+        {
+          "startMs": 120610,
+          "endMs": 122250,
+          "text": "Yeah, you got me singin' like"
+        },
+        {
+          "startMs": 122250,
+          "endMs": 125150,
+          "text": "Ooh, I love it when you do it like that"
+        },
+        {
+          "startMs": 125150,
+          "endMs": 127870,
+          "text": "And when you're close up, give me the shivers"
+        },
+        {
+          "startMs": 128449,
+          "endMs": 131710,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 131710,
+          "endMs": 135150,
+          "text": "And when they say, \"The party's over\", then we'll bring it right back"
+        },
+        {
+          "startMs": 135370,
+          "endMs": 138570,
+          "text": "We'll say, \"Ooh, I love it when you do it like that\""
+        },
+        {
+          "startMs": 138570,
+          "endMs": 141310,
+          "text": "And when you're close up, give me the shivers"
+        },
+        {
+          "startMs": 142030,
+          "endMs": 145090,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 145090,
+          "endMs": 148550,
+          "text": "And when they say, \"The party's over\", then we'll bring it right back"
+        },
+        {
+          "startMs": 148550,
+          "endMs": 152010,
+          "text": "Baby, you burn so hot, you make me shiver"
+        },
+        {
+          "startMs": 152010,
+          "endMs": 155270,
+          "text": "With the fire you got this thing we started"
+        },
+        {
+          "startMs": 155530,
+          "endMs": 157510,
+          "text": "I don't want it to stop"
+        },
+        {
+          "startMs": 157590,
+          "endMs": 161650,
+          "text": "You know you make me shiver-er-er"
+        },
+        {
+          "startMs": 161770,
+          "endMs": 165190,
+          "text": "Baby, you burn so hot, you make me shiver"
+        },
+        {
+          "startMs": 165190,
+          "endMs": 168450,
+          "text": "With the fire you got, this thing we started"
+        },
+        {
+          "startMs": 168810,
+          "endMs": 170670,
+          "text": "I don't want it to stop"
+        },
+        {
+          "startMs": 171010,
+          "endMs": 172250,
+          "text": "You know you make me shiver"
+        },
+        {
+          "startMs": 173410,
+          "endMs": 175450,
+          "text": "Yeah, you got me feelin' like"
+        },
+        {
+          "startMs": 175450,
+          "endMs": 178450,
+          "text": "Ooh, I love it when you do it like that"
+        },
+        {
+          "startMs": 178450,
+          "endMs": 181110,
+          "text": "When you're close up, give me the shivers"
+        },
+        {
+          "startMs": 181790,
+          "endMs": 184890,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 184890,
+          "endMs": 188270,
+          "text": "When they say, \"The party's over\", then we'll bring it right back"
+        },
+        {
+          "startMs": 188270,
+          "endMs": 191650,
+          "text": "Baby, ooh, I love it when you do it like that"
+        },
+        {
+          "startMs": 191650,
+          "endMs": 194310,
+          "text": "And when you're close up, give me the shivers"
+        },
+        {
+          "startMs": 194310,
+          "endMs": 198150,
+          "text": "Baby, you wanna dance 'til the sunlight cracks"
+        },
+        {
+          "startMs": 198150,
+          "endMs": 202250,
+          "text": "When they say, \"The party's over\", then we'll bring it right back, yeah"
+        }
+      ]
+    },
+    {
+      "id": "Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic",
+      "title": "Carly Rae Jepsen - Call Me Maybe",
+      "artist": "Carly Rae Jepsen",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 1370,
+      "renderDurationInFrames": 5533,
+      "durationInFrames": 5982,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "A WHISPER OF WISHES CAST INTO THE DEEP UNKNOWN.",
+        "rightVertical": "YOUR GLANCE WAS A SUDDEN, IRRESISTIBLE FORCE IN MY DAY.",
+        "bottomLine": "THE MAGIC BEGINS WHEN YOU LOOK AT ME."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 4370,
+          "text": "♪"
+        },
+        {
+          "startMs": 4370,
+          "endMs": 6210,
+          "text": "I threw a wish in the well"
+        },
+        {
+          "startMs": 6210,
+          "endMs": 8250,
+          "text": "Don't ask me, I'll never tell"
+        },
+        {
+          "startMs": 8250,
+          "endMs": 10230,
+          "text": "I looked to you as it fell"
+        },
+        {
+          "startMs": 10230,
+          "endMs": 12290,
+          "text": "And now you're in my way"
+        },
+        {
+          "startMs": 12290,
+          "endMs": 14250,
+          "text": "I'd trade my soul for a wish"
+        },
+        {
+          "startMs": 14250,
+          "endMs": 16190,
+          "text": "Pennies and dimes for a kiss"
+        },
+        {
+          "startMs": 16190,
+          "endMs": 18230,
+          "text": "I wasn't looking for this"
+        },
+        {
+          "startMs": 18230,
+          "endMs": 20350,
+          "text": "But now you're in my way"
+        },
+        {
+          "startMs": 20350,
+          "endMs": 22010,
+          "text": "Your stare was holdin'"
+        },
+        {
+          "startMs": 22010,
+          "endMs": 23930,
+          "text": "Ripped jeans, smile was showin'"
+        },
+        {
+          "startMs": 23930,
+          "endMs": 25930,
+          "text": "Hot night, wind was blowin'"
+        },
+        {
+          "startMs": 25930,
+          "endMs": 28130,
+          "text": "Where do you think you're going, baby?"
+        },
+        {
+          "startMs": 28130,
+          "endMs": 30190,
+          "text": "Hey, I just met you"
+        },
+        {
+          "startMs": 30190,
+          "endMs": 32170,
+          "text": "And this is crazy"
+        },
+        {
+          "startMs": 32170,
+          "endMs": 34170,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 34170,
+          "endMs": 36110,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 36110,
+          "endMs": 38390,
+          "text": "It's hard to look right"
+        },
+        {
+          "startMs": 38390,
+          "endMs": 40270,
+          "text": "At you baby"
+        },
+        {
+          "startMs": 40270,
+          "endMs": 42250,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 42250,
+          "endMs": 44130,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 44130,
+          "endMs": 46190,
+          "text": "Hey, I just met you"
+        },
+        {
+          "startMs": 46190,
+          "endMs": 48070,
+          "text": "And this is crazy"
+        },
+        {
+          "startMs": 48070,
+          "endMs": 50390,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 50390,
+          "endMs": 52410,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 52410,
+          "endMs": 54490,
+          "text": "And all the other boys"
+        },
+        {
+          "startMs": 54490,
+          "endMs": 56940,
+          "text": "Try to chase me"
+        },
+        {
+          "startMs": 56940,
+          "endMs": 58690,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 58690,
+          "endMs": 63790,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 63790,
+          "endMs": 66210,
+          "text": "You took your time with the call"
+        },
+        {
+          "startMs": 66210,
+          "endMs": 68149,
+          "text": "I took no time with the fall"
+        },
+        {
+          "startMs": 68149,
+          "endMs": 70399,
+          "text": "You gave me nothing at all"
+        },
+        {
+          "startMs": 70399,
+          "endMs": 72120,
+          "text": "But still, you're in my way"
+        },
+        {
+          "startMs": 72120,
+          "endMs": 74360,
+          "text": "I beg, and borrow and feel"
+        },
+        {
+          "startMs": 74360,
+          "endMs": 76330,
+          "text": "Have foresight and it's real"
+        },
+        {
+          "startMs": 76330,
+          "endMs": 78370,
+          "text": "I didn't know I would feel it"
+        },
+        {
+          "startMs": 78370,
+          "endMs": 80320,
+          "text": "But it's in my way"
+        },
+        {
+          "startMs": 80320,
+          "endMs": 81720,
+          "text": "Your stare was holdin'"
+        },
+        {
+          "startMs": 81720,
+          "endMs": 83860,
+          "text": "Ripped jeans, smile was showin'"
+        },
+        {
+          "startMs": 83860,
+          "endMs": 85980,
+          "text": "Hot night, wind was blowin'"
+        },
+        {
+          "startMs": 85980,
+          "endMs": 88290,
+          "text": "Where you think you're going, baby?"
+        },
+        {
+          "startMs": 88290,
+          "endMs": 90250,
+          "text": "Hey, I just met you"
+        },
+        {
+          "startMs": 90250,
+          "endMs": 92130,
+          "text": "And this is crazy"
+        },
+        {
+          "startMs": 92130,
+          "endMs": 94580,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 94580,
+          "endMs": 96350,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 96350,
+          "endMs": 98250,
+          "text": "It's hard to look right"
+        },
+        {
+          "startMs": 98250,
+          "endMs": 100640,
+          "text": "At you baby"
+        },
+        {
+          "startMs": 100640,
+          "endMs": 102560,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 102560,
+          "endMs": 104280,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 104280,
+          "endMs": 106440,
+          "text": "Hey, I just met you"
+        },
+        {
+          "startMs": 106440,
+          "endMs": 108410,
+          "text": "And this is crazy"
+        },
+        {
+          "startMs": 108410,
+          "endMs": 110460,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 110460,
+          "endMs": 112390,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 112390,
+          "endMs": 114380,
+          "text": "And all the other boys"
+        },
+        {
+          "startMs": 114380,
+          "endMs": 116600,
+          "text": "Try to chase me"
+        },
+        {
+          "startMs": 116600,
+          "endMs": 118420,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 118420,
+          "endMs": 119690,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 119690,
+          "endMs": 121870,
+          "text": "Before you came into my life"
+        },
+        {
+          "startMs": 121870,
+          "endMs": 123610,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 123610,
+          "endMs": 125840,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 125840,
+          "endMs": 127770,
+          "text": "I missed you so, so bad"
+        },
+        {
+          "startMs": 127770,
+          "endMs": 129640,
+          "text": "Before you came into my life"
+        },
+        {
+          "startMs": 129640,
+          "endMs": 131620,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 131620,
+          "endMs": 133710,
+          "text": "And you should know that"
+        },
+        {
+          "startMs": 133710,
+          "endMs": 140710,
+          "text": "I missed you so, so bad"
+        },
+        {
+          "startMs": 143680,
+          "endMs": 145960,
+          "text": "It's hard to look right"
+        },
+        {
+          "startMs": 145960,
+          "endMs": 148240,
+          "text": "At you baby"
+        },
+        {
+          "startMs": 148240,
+          "endMs": 150010,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 150010,
+          "endMs": 151900,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 151900,
+          "endMs": 153840,
+          "text": "Hey, I just met you"
+        },
+        {
+          "startMs": 153840,
+          "endMs": 155800,
+          "text": "And this is crazy"
+        },
+        {
+          "startMs": 155800,
+          "endMs": 157930,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 157930,
+          "endMs": 159640,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 159640,
+          "endMs": 161850,
+          "text": "It's hard to look right"
+        },
+        {
+          "startMs": 161850,
+          "endMs": 164050,
+          "text": "At you baby"
+        },
+        {
+          "startMs": 164050,
+          "endMs": 166040,
+          "text": "But here's my number"
+        },
+        {
+          "startMs": 166040,
+          "endMs": 167700,
+          "text": "So call me, maybe?"
+        },
+        {
+          "startMs": 167700,
+          "endMs": 170010,
+          "text": "Before you came into my life"
+        },
+        {
+          "startMs": 170010,
+          "endMs": 171710,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 171710,
+          "endMs": 173720,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 173720,
+          "endMs": 175700,
+          "text": "I missed you so, so bad"
+        },
+        {
+          "startMs": 175700,
+          "endMs": 177820,
+          "text": "Before you came into my life"
+        },
+        {
+          "startMs": 177820,
+          "endMs": 179720,
+          "text": "I missed you so bad"
+        },
+        {
+          "startMs": 179720,
+          "endMs": 182180,
+          "text": "And you should know that"
+        },
+        {
+          "startMs": 182180,
+          "endMs": 183830,
+          "text": "So call me, maybe?"
+        }
+      ]
+    },
+    {
+      "id": "Pump It - Black Eyed Peas - d77gTBvX0K8",
+      "title": "Pump It",
+      "artist": "Black Eyed Peas",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 1370,
+      "renderDurationInFrames": 6350,
+      "durationInFrames": 6391,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE BEAT IS A PULSE THROUGH THE VEINS OF THE CITY NIGHT.",
+        "rightVertical": "LET THE RHYTHM TAKE HOLD, UNLEASHING ENERGY AND LIGHT.",
+        "bottomLine": "FEEL THE VIBRATION. LET IT CONSUME YOU."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 4370,
+          "text": "♪"
+        },
+        {
+          "startMs": 4370,
+          "endMs": 9800,
+          "text": "Ha ha ha"
+        },
+        {
+          "startMs": 9800,
+          "endMs": 11350,
+          "text": "Pump it"
+        },
+        {
+          "startMs": 11350,
+          "endMs": 15850,
+          "text": "Ha ha ha"
+        },
+        {
+          "startMs": 15850,
+          "endMs": 17410,
+          "text": "And pump it (louder)"
+        },
+        {
+          "startMs": 17410,
+          "endMs": 19000,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 19000,
+          "endMs": 20580,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 20580,
+          "endMs": 22410,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 22410,
+          "endMs": 23870,
+          "text": "Turn up the radio"
+        },
+        {
+          "startMs": 23870,
+          "endMs": 25350,
+          "text": "Blast your stereo"
+        },
+        {
+          "startMs": 25350,
+          "endMs": 28830,
+          "text": "Right"
+        },
+        {
+          "startMs": 28830,
+          "endMs": 30170,
+          "text": "Niggas wanna hate on us (who)"
+        },
+        {
+          "startMs": 30170,
+          "endMs": 31930,
+          "text": "Niggas be envious (who)"
+        },
+        {
+          "startMs": 31930,
+          "endMs": 33120,
+          "text": "I know why they hatin' on us (why)"
+        },
+        {
+          "startMs": 33120,
+          "endMs": 34730,
+          "text": "'Cause that's so fabulous (what)"
+        },
+        {
+          "startMs": 34730,
+          "endMs": 36270,
+          "text": "I'm a be real on us (c'mon)"
+        },
+        {
+          "startMs": 36270,
+          "endMs": 38230,
+          "text": "Nobody got nuttin' on us (no)"
+        },
+        {
+          "startMs": 38230,
+          "endMs": 41620,
+          "text": "Girls be all on us, from London back down to the US (S, S)"
+        },
+        {
+          "startMs": 41620,
+          "endMs": 43130,
+          "text": "We rockin', it's contagious"
+        },
+        {
+          "startMs": 43130,
+          "endMs": 44680,
+          "text": "Monkey business outrageous"
+        },
+        {
+          "startMs": 44680,
+          "endMs": 47210,
+          "text": "Just confess, your girl admits that we the shit"
+        },
+        {
+          "startMs": 47210,
+          "endMs": 48790,
+          "text": "F-R-E-S-H (fresh)"
+        },
+        {
+          "startMs": 48790,
+          "endMs": 50930,
+          "text": "D-E-F, that's right we def (rock)"
+        },
+        {
+          "startMs": 50930,
+          "endMs": 53460,
+          "text": "We definite B-E-P, we reppin' it"
+        },
+        {
+          "startMs": 53460,
+          "endMs": 55640,
+          "text": "So, turn me up (turn it up)"
+        },
+        {
+          "startMs": 55640,
+          "endMs": 57180,
+          "text": "Turn me up (turn it up)"
+        },
+        {
+          "startMs": 57180,
+          "endMs": 58710,
+          "text": "Turn me up"
+        },
+        {
+          "startMs": 58710,
+          "endMs": 59600,
+          "text": "C'mon baby, just"
+        },
+        {
+          "startMs": 59600,
+          "endMs": 61220,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 61220,
+          "endMs": 62870,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 62870,
+          "endMs": 64320,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 64320,
+          "endMs": 65840,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 65840,
+          "endMs": 67470,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 67470,
+          "endMs": 68870,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 68870,
+          "endMs": 70580,
+          "text": "And say, oh oh oh oh"
+        },
+        {
+          "startMs": 70580,
+          "endMs": 72090,
+          "text": "Say, oh oh oh oh"
+        },
+        {
+          "startMs": 72090,
+          "endMs": 72460,
+          "text": "Yo, yo"
+        },
+        {
+          "startMs": 72460,
+          "endMs": 73920,
+          "text": "Turn up the radio"
+        },
+        {
+          "startMs": 73920,
+          "endMs": 75300,
+          "text": "Blast your stereo"
+        },
+        {
+          "startMs": 75300,
+          "endMs": 78610,
+          "text": "Right now"
+        },
+        {
+          "startMs": 78610,
+          "endMs": 80530,
+          "text": "This joint is fizzlin'"
+        },
+        {
+          "startMs": 80530,
+          "endMs": 81480,
+          "text": "It's sizzlin'"
+        },
+        {
+          "startMs": 81480,
+          "endMs": 83400,
+          "text": "Right"
+        },
+        {
+          "startMs": 83400,
+          "endMs": 85150,
+          "text": "(Yo, check this out right here)"
+        },
+        {
+          "startMs": 85150,
+          "endMs": 86680,
+          "text": "Dude wanna hate on us (dude)"
+        },
+        {
+          "startMs": 86680,
+          "endMs": 88210,
+          "text": "Dude needa ease on up (dude)"
+        },
+        {
+          "startMs": 88210,
+          "endMs": 89230,
+          "text": "Dude wanna act on up"
+        },
+        {
+          "startMs": 89230,
+          "endMs": 91370,
+          "text": "But dude get shut like Flava shut (shut 'em down)"
+        },
+        {
+          "startMs": 91370,
+          "endMs": 92350,
+          "text": "Chicks say, she ain't down"
+        },
+        {
+          "startMs": 92350,
+          "endMs": 94510,
+          "text": "But chick backstage when we in town (ha)"
+        },
+        {
+          "startMs": 94510,
+          "endMs": 96010,
+          "text": "She like man on drunk (fool)"
+        },
+        {
+          "startMs": 96010,
+          "endMs": 97580,
+          "text": "She wanna hit n' run (errr)"
+        },
+        {
+          "startMs": 97580,
+          "endMs": 98720,
+          "text": "Yeah, that's the speed"
+        },
+        {
+          "startMs": 98720,
+          "endMs": 99460,
+          "text": "That's what we do"
+        },
+        {
+          "startMs": 99460,
+          "endMs": 100770,
+          "text": "That's who we be"
+        },
+        {
+          "startMs": 100770,
+          "endMs": 105020,
+          "text": "B-L-A-C-K-E-Y-E-D-P to the E, then the A to the S"
+        },
+        {
+          "startMs": 105020,
+          "endMs": 106610,
+          "text": "When we play you shake your ass"
+        },
+        {
+          "startMs": 106610,
+          "endMs": 108090,
+          "text": "Shake it, shake it, shake it girl"
+        },
+        {
+          "startMs": 108090,
+          "endMs": 109600,
+          "text": "Make sure you don't break it, girl"
+        },
+        {
+          "startMs": 109600,
+          "endMs": 110350,
+          "text": "'Cause we gonna"
+        },
+        {
+          "startMs": 110350,
+          "endMs": 111910,
+          "text": "Turn it up (turn it up)"
+        },
+        {
+          "startMs": 111910,
+          "endMs": 113470,
+          "text": "Turn it up (turn it up)"
+        },
+        {
+          "startMs": 113470,
+          "endMs": 115040,
+          "text": "Turn it up"
+        },
+        {
+          "startMs": 115040,
+          "endMs": 115800,
+          "text": "C'mon baby, just"
+        },
+        {
+          "startMs": 115800,
+          "endMs": 117450,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 117450,
+          "endMs": 118980,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 118980,
+          "endMs": 120590,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 120590,
+          "endMs": 122160,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 122160,
+          "endMs": 123720,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 123720,
+          "endMs": 125080,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 125080,
+          "endMs": 126800,
+          "text": "And say, oh oh oh oh"
+        },
+        {
+          "startMs": 126800,
+          "endMs": 128270,
+          "text": "Say, oh oh oh oh"
+        },
+        {
+          "startMs": 128270,
+          "endMs": 128710,
+          "text": "Yo, yo"
+        },
+        {
+          "startMs": 128710,
+          "endMs": 130230,
+          "text": "Turn up the radio"
+        },
+        {
+          "startMs": 130230,
+          "endMs": 131440,
+          "text": "Blast your stereo"
+        },
+        {
+          "startMs": 131440,
+          "endMs": 134850,
+          "text": "Right now"
+        },
+        {
+          "startMs": 134850,
+          "endMs": 136790,
+          "text": "This joint is fizzlin'"
+        },
+        {
+          "startMs": 136790,
+          "endMs": 137730,
+          "text": "It's sizzlin'"
+        },
+        {
+          "startMs": 137730,
+          "endMs": 141520,
+          "text": "Right"
+        },
+        {
+          "startMs": 141520,
+          "endMs": 143070,
+          "text": "Damn (damn)"
+        },
+        {
+          "startMs": 143070,
+          "endMs": 144570,
+          "text": "Damn (damn)"
+        },
+        {
+          "startMs": 144570,
+          "endMs": 146170,
+          "text": "Damn (damn)"
+        },
+        {
+          "startMs": 146170,
+          "endMs": 147780,
+          "text": "Damn (damn)"
+        },
+        {
+          "startMs": 147780,
+          "endMs": 150370,
+          "text": "Damn (damn)"
+        },
+        {
+          "startMs": 150370,
+          "endMs": 151710,
+          "text": "Apl.de.ap from the Philippines"
+        },
+        {
+          "startMs": 151710,
+          "endMs": 153350,
+          "text": "Live and direct, rocking this scene"
+        },
+        {
+          "startMs": 153350,
+          "endMs": 154630,
+          "text": "Breakin' on down for the B-boys"
+        },
+        {
+          "startMs": 154630,
+          "endMs": 156530,
+          "text": "And B-girls waitin' to do their thing"
+        },
+        {
+          "startMs": 156530,
+          "endMs": 158140,
+          "text": "Pump it, louder come on"
+        },
+        {
+          "startMs": 158140,
+          "endMs": 159700,
+          "text": "Don't stop, and keep it goin'"
+        },
+        {
+          "startMs": 159700,
+          "endMs": 161210,
+          "text": "Do it, lets get it on"
+        },
+        {
+          "startMs": 161210,
+          "endMs": 161650,
+          "text": "Move it"
+        },
+        {
+          "startMs": 161650,
+          "endMs": 163450,
+          "text": "Come on, baby, do it"
+        },
+        {
+          "startMs": 163450,
+          "endMs": 166930,
+          "text": "La-da-di-da-da di da"
+        },
+        {
+          "startMs": 166930,
+          "endMs": 169760,
+          "text": "On the stereo"
+        },
+        {
+          "startMs": 169760,
+          "endMs": 172560,
+          "text": "Let those speakers blow your mind"
+        },
+        {
+          "startMs": 172560,
+          "endMs": 173580,
+          "text": "(Blow my mind, baby)"
+        },
+        {
+          "startMs": 173580,
+          "endMs": 174940,
+          "text": "Just let it go, let it go"
+        },
+        {
+          "startMs": 174940,
+          "endMs": 175920,
+          "text": "Here we go"
+        },
+        {
+          "startMs": 175920,
+          "endMs": 179510,
+          "text": "La-da-di-da-da di da (c'mon, we're there)"
+        },
+        {
+          "startMs": 179510,
+          "endMs": 182120,
+          "text": "On the radio"
+        },
+        {
+          "startMs": 182120,
+          "endMs": 187800,
+          "text": "The system's gonna feel so fine"
+        },
+        {
+          "startMs": 187800,
+          "endMs": 189350,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 189350,
+          "endMs": 190870,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 190870,
+          "endMs": 192440,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 192440,
+          "endMs": 194030,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 194030,
+          "endMs": 195470,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 195470,
+          "endMs": 196900,
+          "text": "Pump it (louder)"
+        },
+        {
+          "startMs": 196900,
+          "endMs": 198540,
+          "text": "And say, oh oh oh oh"
+        },
+        {
+          "startMs": 198540,
+          "endMs": 200030,
+          "text": "Say, oh oh oh oh"
+        },
+        {
+          "startMs": 200030,
+          "endMs": 200470,
+          "text": "Yo, yo"
+        },
+        {
+          "startMs": 200470,
+          "endMs": 201900,
+          "text": "Turn up the radio"
+        },
+        {
+          "startMs": 201900,
+          "endMs": 203270,
+          "text": "Blast your stereo"
+        },
+        {
+          "startMs": 203270,
+          "endMs": 206640,
+          "text": "Right now"
+        },
+        {
+          "startMs": 206640,
+          "endMs": 208600,
+          "text": "This joint is fizzlin'"
+        },
+        {
+          "startMs": 208600,
+          "endMs": 209570,
+          "text": "It's sizzlin'"
+        },
+        {
+          "startMs": 209570,
+          "endMs": 211810,
+          "text": "Right"
+        }
+      ]
+    },
+    {
+      "id": "What Makes You Beautiful - One Direction - d57qSDCxVA4",
+      "title": "What Makes You Beautiful",
+      "artist": "One Direction",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 4220,
+      "renderDurationInFrames": 5872,
+      "durationInFrames": 5999,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "YOU ARE A RADIANCE THAT SHIMMERS BEYOND THE VEIL OF DOUBT.",
+        "rightVertical": "A NATURAL GRACE THAT CAPTIVATES ALL GAZE AND HEART.",
+        "bottomLine": "THE TRUTH IS IN YOUR UNFILTERED LIGHT."
+      },
+      "lyrics": [
+        {
+          "startMs": 220,
+          "endMs": 7220,
+          "text": "♪"
+        },
+        {
+          "startMs": 7220,
+          "endMs": 10560,
+          "text": "You're insecure, don't know what for"
+        },
+        {
+          "startMs": 11100,
+          "endMs": 14380,
+          "text": "You're turnin' heads when you walk through the door"
+        },
+        {
+          "startMs": 15120,
+          "endMs": 18420,
+          "text": "Don't need make-up to cover up"
+        },
+        {
+          "startMs": 19000,
+          "endMs": 22040,
+          "text": "Bein' the way that you are is enough"
+        },
+        {
+          "startMs": 23520,
+          "endMs": 27120,
+          "text": "Everyone else in the room can see it"
+        },
+        {
+          "startMs": 27120,
+          "endMs": 29820,
+          "text": "Everyone else but you"
+        },
+        {
+          "startMs": 29820,
+          "endMs": 34340,
+          "text": "Baby, you light up my world like nobody else"
+        },
+        {
+          "startMs": 34340,
+          "endMs": 37980,
+          "text": "The way that you flip your hair gets me overwhelmed"
+        },
+        {
+          "startMs": 37980,
+          "endMs": 42000,
+          "text": "But when you smile at the ground, it ain't hard to tell"
+        },
+        {
+          "startMs": 42000,
+          "endMs": 45260,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 45260,
+          "endMs": 46900,
+          "text": "You don't know you're beautiful"
+        },
+        {
+          "startMs": 46900,
+          "endMs": 49600,
+          "text": "If only you saw what I can see"
+        },
+        {
+          "startMs": 49600,
+          "endMs": 53140,
+          "text": "You'll understand why I want you so desperately"
+        },
+        {
+          "startMs": 53140,
+          "endMs": 57200,
+          "text": "Right now I'm lookin' at you and I can't believe"
+        },
+        {
+          "startMs": 57820,
+          "endMs": 60480,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 60480,
+          "endMs": 64330,
+          "text": "You don't know you're beautiful, oh-oh"
+        },
+        {
+          "startMs": 64330,
+          "endMs": 69340,
+          "text": "That's what makes you beautiful"
+        },
+        {
+          "startMs": 69340,
+          "endMs": 73170,
+          "text": "So c-come on, you got it wrong"
+        },
+        {
+          "startMs": 73170,
+          "endMs": 77060,
+          "text": "To prove I'm right, I put it in a song"
+        },
+        {
+          "startMs": 77060,
+          "endMs": 80880,
+          "text": "I don't know why, you're being shy"
+        },
+        {
+          "startMs": 80880,
+          "endMs": 85440,
+          "text": "And turn away when I look into your eyes"
+        },
+        {
+          "startMs": 85440,
+          "endMs": 89299,
+          "text": "Everyone else in the room can see it"
+        },
+        {
+          "startMs": 89299,
+          "endMs": 92390,
+          "text": "Everyone else but you"
+        },
+        {
+          "startMs": 92390,
+          "endMs": 96200,
+          "text": "Baby, you light up my world like nobody else"
+        },
+        {
+          "startMs": 96200,
+          "endMs": 100100,
+          "text": "The way that you flip your hair gets me overwhelmed"
+        },
+        {
+          "startMs": 100100,
+          "endMs": 103910,
+          "text": "But when you smile at the ground, it ain't hard to tell"
+        },
+        {
+          "startMs": 103910,
+          "endMs": 106570,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 106570,
+          "endMs": 108460,
+          "text": "You don't know you're beautiful"
+        },
+        {
+          "startMs": 108460,
+          "endMs": 111620,
+          "text": "If only you saw what I can see"
+        },
+        {
+          "startMs": 111620,
+          "endMs": 115400,
+          "text": "You'll understand why I want you so desperately"
+        },
+        {
+          "startMs": 115400,
+          "endMs": 119299,
+          "text": "Right now I'm lookin' at you and I can't believe"
+        },
+        {
+          "startMs": 119299,
+          "endMs": 121930,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 121930,
+          "endMs": 125790,
+          "text": "You don't know you're beautiful, oh-oh"
+        },
+        {
+          "startMs": 125790,
+          "endMs": 127760,
+          "text": "That's what makes you beautiful"
+        },
+        {
+          "startMs": 127760,
+          "endMs": 131519,
+          "text": "Na, na-na-na, na-na-na, na-na"
+        },
+        {
+          "startMs": 131519,
+          "endMs": 135320,
+          "text": "Na, na-na-na, na-na"
+        },
+        {
+          "startMs": 135320,
+          "endMs": 139150,
+          "text": "Na, na-na-na, na-na-na, na-na"
+        },
+        {
+          "startMs": 139150,
+          "endMs": 142290,
+          "text": "Na, na-na-na, na-na"
+        },
+        {
+          "startMs": 142290,
+          "endMs": 146160,
+          "text": "Baby, you light up my world like nobody else"
+        },
+        {
+          "startMs": 146160,
+          "endMs": 150040,
+          "text": "The way that you flip your hair gets me overwhelmed"
+        },
+        {
+          "startMs": 150040,
+          "endMs": 153860,
+          "text": "But when you smile at the ground, it ain't hard to tell"
+        },
+        {
+          "startMs": 153860,
+          "endMs": 156490,
+          "text": "(You don't know, oh-oh)"
+        },
+        {
+          "startMs": 156490,
+          "endMs": 157710,
+          "text": "You don't know you're beautiful"
+        },
+        {
+          "startMs": 157710,
+          "endMs": 161560,
+          "text": "Baby, you light up my world like nobody else"
+        },
+        {
+          "startMs": 161560,
+          "endMs": 165339,
+          "text": "The way that you flip your hair (c'mon) gets me overwhelmed"
+        },
+        {
+          "startMs": 165339,
+          "endMs": 169200,
+          "text": "But when you smile at the ground, it ain't hard to tell"
+        },
+        {
+          "startMs": 169200,
+          "endMs": 171839,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 171839,
+          "endMs": 173800,
+          "text": "You don't know you're beautiful"
+        },
+        {
+          "startMs": 173800,
+          "endMs": 176880,
+          "text": "If only you saw what I can see"
+        },
+        {
+          "startMs": 176880,
+          "endMs": 180700,
+          "text": "You'll understand why I want you so desperately (desperately)"
+        },
+        {
+          "startMs": 180700,
+          "endMs": 184550,
+          "text": "Right now I'm lookin' at you and I can't believe"
+        },
+        {
+          "startMs": 185320,
+          "endMs": 187970,
+          "text": "You don't know, oh-oh"
+        },
+        {
+          "startMs": 187970,
+          "endMs": 191790,
+          "text": "You don't know you're beautiful, oh-oh"
+        },
+        {
+          "startMs": 191790,
+          "endMs": 195680,
+          "text": "You don't know you're beautiful, oh-oh"
+        },
+        {
+          "startMs": 195680,
+          "endMs": 198880,
+          "text": "That's what makes you beautiful"
+        }
+      ]
+    },
+    {
+      "id": "My Humps - Black Eyed Peas - opnZlnd3d7U",
+      "title": "My Humps",
+      "artist": "Black Eyed Peas",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 12640,
+      "renderDurationInFrames": 9065,
+      "durationInFrames": 9808,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE WEIGHT OF WHAT YOU CARRY IS A SILENT PROMISE TO BE REVEALED.",
+        "rightVertical": "THERE LIES AN UNTOLD GEOGRAPHY BENEATH THE SURFACE OF YOUR SKIN.",
+        "bottomLine": "DRUNK ON THE MOMENTUM WE HAVE FOUND."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 15640,
+          "text": "♪"
+        },
+        {
+          "startMs": 15640,
+          "endMs": 17610,
+          "text": "Whatcha gon' do with all that junk"
+        },
+        {
+          "startMs": 17620,
+          "endMs": 19540,
+          "text": "All that junk inside your trunk?"
+        },
+        {
+          "startMs": 19560,
+          "endMs": 21420,
+          "text": "I'ma get, get, get, get you drunk"
+        },
+        {
+          "startMs": 21470,
+          "endMs": 23600,
+          "text": "Get you love drunk off my hump"
+        },
+        {
+          "startMs": 23620,
+          "endMs": 26980,
+          "text": "My hump, my hump, my hump, my hump, my hump"
+        },
+        {
+          "startMs": 27030,
+          "endMs": 30660,
+          "text": "My hump, my hump, my hump, my lovely little lumps"
+        },
+        {
+          "startMs": 30680,
+          "endMs": 31910,
+          "text": "Check it out"
+        },
+        {
+          "startMs": 31920,
+          "endMs": 33770,
+          "text": "I drive these brothers crazy"
+        },
+        {
+          "startMs": 33780,
+          "endMs": 35750,
+          "text": "I do it on the daily"
+        },
+        {
+          "startMs": 35800,
+          "endMs": 37720,
+          "text": "They treat me really nicely"
+        },
+        {
+          "startMs": 37770,
+          "endMs": 39690,
+          "text": "They buy me all these iceys"
+        },
+        {
+          "startMs": 39840,
+          "endMs": 41600,
+          "text": "Dolce & Gabbana"
+        },
+        {
+          "startMs": 41800,
+          "endMs": 43680,
+          "text": "Fendi and that Donna"
+        },
+        {
+          "startMs": 43690,
+          "endMs": 45180,
+          "text": "Karan they be sharin'"
+        },
+        {
+          "startMs": 45200,
+          "endMs": 47570,
+          "text": "All their money got me wearing fly"
+        },
+        {
+          "startMs": 47600,
+          "endMs": 49340,
+          "text": "Gear but I ain't askin'"
+        },
+        {
+          "startMs": 49350,
+          "endMs": 51280,
+          "text": "They say they love my ass in"
+        },
+        {
+          "startMs": 51430,
+          "endMs": 53440,
+          "text": "Seven Jeans, True Religion"
+        },
+        {
+          "startMs": 53450,
+          "endMs": 55260,
+          "text": "I say no but they keep givin'"
+        },
+        {
+          "startMs": 55280,
+          "endMs": 57050,
+          "text": "So I keep on takin'"
+        },
+        {
+          "startMs": 57070,
+          "endMs": 58770,
+          "text": "And no I ain't taken"
+        },
+        {
+          "startMs": 59220,
+          "endMs": 60870,
+          "text": "We can keep on datin'"
+        },
+        {
+          "startMs": 60880,
+          "endMs": 62860,
+          "text": "Now keep on demonstratin'"
+        },
+        {
+          "startMs": 62870,
+          "endMs": 65690,
+          "text": "My love (love), my love, my love, my love (love)"
+        },
+        {
+          "startMs": 65710,
+          "endMs": 67710,
+          "text": "You love my lady lumps (love)"
+        },
+        {
+          "startMs": 67720,
+          "endMs": 69610,
+          "text": "My hump, my hump, my hump (love)"
+        },
+        {
+          "startMs": 69620,
+          "endMs": 71150,
+          "text": "My humps they got you"
+        },
+        {
+          "startMs": 71160,
+          "endMs": 74040,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 74060,
+          "endMs": 76650,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 76660,
+          "endMs": 78790,
+          "text": "And spending time on me"
+        },
+        {
+          "startMs": 79040,
+          "endMs": 81790,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 81810,
+          "endMs": 84520,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 84530,
+          "endMs": 85450,
+          "text": "On-on me, on me"
+        },
+        {
+          "startMs": 85460,
+          "endMs": 87320,
+          "text": "Whatcha gon' do with all that junk"
+        },
+        {
+          "startMs": 87330,
+          "endMs": 89030,
+          "text": "All that junk inside that trunk?"
+        },
+        {
+          "startMs": 89050,
+          "endMs": 91170,
+          "text": "I'ma get, get, get, get you drunk"
+        },
+        {
+          "startMs": 91180,
+          "endMs": 93050,
+          "text": "Get you love drunk off my hump"
+        },
+        {
+          "startMs": 93060,
+          "endMs": 95040,
+          "text": "Whatcha gon' do with all that ass"
+        },
+        {
+          "startMs": 95060,
+          "endMs": 96770,
+          "text": "All that ass inside them jeans?"
+        },
+        {
+          "startMs": 96780,
+          "endMs": 98820,
+          "text": "I'ma make, make, make, make you scream"
+        },
+        {
+          "startMs": 98840,
+          "endMs": 101000,
+          "text": "Make you scream, make you scream"
+        },
+        {
+          "startMs": 101020,
+          "endMs": 104430,
+          "text": "'Cause of my hump (hump), my hump, my hump, my hump (what?)"
+        },
+        {
+          "startMs": 104450,
+          "endMs": 108170,
+          "text": "My hump, my hump, my hump (hump), my lovely lady lumps"
+        },
+        {
+          "startMs": 108190,
+          "endMs": 109110,
+          "text": "Check it out"
+        },
+        {
+          "startMs": 109560,
+          "endMs": 111520,
+          "text": "I met a girl down at the disco"
+        },
+        {
+          "startMs": 111530,
+          "endMs": 113360,
+          "text": "She said, \"Hey, hey, hey, yeah, let's go\""
+        },
+        {
+          "startMs": 113380,
+          "endMs": 115400,
+          "text": "I could be ya baby, you could be my honey"
+        },
+        {
+          "startMs": 115420,
+          "endMs": 116690,
+          "text": "Let's spend time not money"
+        },
+        {
+          "startMs": 116700,
+          "endMs": 119180,
+          "text": "And mix your milk with my coco puff"
+        },
+        {
+          "startMs": 119200,
+          "endMs": 120720,
+          "text": "Milky, milky coco"
+        },
+        {
+          "startMs": 120730,
+          "endMs": 123010,
+          "text": "Mix your milk with my coco puff"
+        },
+        {
+          "startMs": 123020,
+          "endMs": 124170,
+          "text": "Milky, milky"
+        },
+        {
+          "startMs": 124180,
+          "endMs": 124790,
+          "text": "Right"
+        },
+        {
+          "startMs": 124800,
+          "endMs": 126720,
+          "text": "They say I'm really sexy"
+        },
+        {
+          "startMs": 126730,
+          "endMs": 128670,
+          "text": "The boys they wanna sex me"
+        },
+        {
+          "startMs": 128680,
+          "endMs": 130630,
+          "text": "They always standin' next to me"
+        },
+        {
+          "startMs": 130880,
+          "endMs": 132660,
+          "text": "Always dancin' next to me"
+        },
+        {
+          "startMs": 132760,
+          "endMs": 134620,
+          "text": "Tryin' to feel my hump, hump"
+        },
+        {
+          "startMs": 134630,
+          "endMs": 136730,
+          "text": "Lookin' at my lump, lump"
+        },
+        {
+          "startMs": 137130,
+          "endMs": 139010,
+          "text": "You can look but you can't touch it"
+        },
+        {
+          "startMs": 139030,
+          "endMs": 140110,
+          "text": "If you touch it"
+        },
+        {
+          "startMs": 140560,
+          "endMs": 142240,
+          "text": "I'ma start some drama"
+        },
+        {
+          "startMs": 142440,
+          "endMs": 144130,
+          "text": "You don't want no drama"
+        },
+        {
+          "startMs": 144830,
+          "endMs": 147810,
+          "text": "No, no drama, no, no, no, no drama"
+        },
+        {
+          "startMs": 147820,
+          "endMs": 150220,
+          "text": "So don't pull on my hand, boy"
+        },
+        {
+          "startMs": 150420,
+          "endMs": 152150,
+          "text": "You ain't my man, boy"
+        },
+        {
+          "startMs": 152160,
+          "endMs": 154040,
+          "text": "I'm just tryin' to dance, boy"
+        },
+        {
+          "startMs": 154290,
+          "endMs": 155540,
+          "text": "And move my hump"
+        },
+        {
+          "startMs": 155740,
+          "endMs": 158600,
+          "text": "My hump, my hump, my hump, my hump"
+        },
+        {
+          "startMs": 159160,
+          "endMs": 162540,
+          "text": "My hump, my hump, my hump, my hump, my hump, my hump"
+        },
+        {
+          "startMs": 162550,
+          "endMs": 164420,
+          "text": "My lovely lady lumps (lump)"
+        },
+        {
+          "startMs": 164430,
+          "endMs": 168140,
+          "text": "My lovely lady lumps my lovely lady lumps (lump)"
+        },
+        {
+          "startMs": 168160,
+          "endMs": 169830,
+          "text": "In the back and in the front"
+        },
+        {
+          "startMs": 169850,
+          "endMs": 171530,
+          "text": "(Lump) My loving got you"
+        },
+        {
+          "startMs": 171790,
+          "endMs": 174560,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 174570,
+          "endMs": 177320,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 177330,
+          "endMs": 179210,
+          "text": "And spending time on me"
+        },
+        {
+          "startMs": 179560,
+          "endMs": 182270,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 182290,
+          "endMs": 185000,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 185020,
+          "endMs": 186190,
+          "text": "On-on me, on me"
+        },
+        {
+          "startMs": 186200,
+          "endMs": 187900,
+          "text": "Whatcha gon' do with all that junk"
+        },
+        {
+          "startMs": 187920,
+          "endMs": 189840,
+          "text": "All that junk inside that trunk?"
+        },
+        {
+          "startMs": 189860,
+          "endMs": 191790,
+          "text": "I'ma get, get, get, get you drunk"
+        },
+        {
+          "startMs": 191800,
+          "endMs": 193770,
+          "text": "Get you love drunk off my hump"
+        },
+        {
+          "startMs": 193790,
+          "endMs": 195660,
+          "text": "Whatcha gon' do with all that ass"
+        },
+        {
+          "startMs": 195670,
+          "endMs": 197610,
+          "text": "All that ass inside them jeans?"
+        },
+        {
+          "startMs": 197620,
+          "endMs": 199570,
+          "text": "I'ma make, make, make, make you scream"
+        },
+        {
+          "startMs": 199580,
+          "endMs": 201530,
+          "text": "Make you scream, make you scream"
+        },
+        {
+          "startMs": 201540,
+          "endMs": 203480,
+          "text": "Whatcha gon' do with all that junk"
+        },
+        {
+          "startMs": 203500,
+          "endMs": 205310,
+          "text": "All that junk inside that trunk?"
+        },
+        {
+          "startMs": 205320,
+          "endMs": 207250,
+          "text": "I'ma get, get, get, get you drunk"
+        },
+        {
+          "startMs": 207270,
+          "endMs": 209260,
+          "text": "Get you love drunk off this hump"
+        },
+        {
+          "startMs": 209270,
+          "endMs": 211150,
+          "text": "Whatcha gon' do with all that breast"
+        },
+        {
+          "startMs": 211160,
+          "endMs": 212970,
+          "text": "All that breast inside that shirt?"
+        },
+        {
+          "startMs": 212980,
+          "endMs": 215050,
+          "text": "I'ma make, make, make, make, you work"
+        },
+        {
+          "startMs": 215070,
+          "endMs": 216860,
+          "text": "Make you work, work, make you work"
+        },
+        {
+          "startMs": 216860,
+          "endMs": 233610,
+          "text": "♪"
+        },
+        {
+          "startMs": 233610,
+          "endMs": 236580,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 236600,
+          "endMs": 239190,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 239200,
+          "endMs": 241590,
+          "text": "And spending time on me"
+        },
+        {
+          "startMs": 241610,
+          "endMs": 244370,
+          "text": "She's got me spending"
+        },
+        {
+          "startMs": 244380,
+          "endMs": 246900,
+          "text": "Oh, spending all your money on me"
+        },
+        {
+          "startMs": 246950,
+          "endMs": 248740,
+          "text": "On-on me, on me"
+        },
+        {
+          "startMs": 248740,
+          "endMs": 278600,
+          "text": "♪"
+        },
+        {
+          "startMs": 278600,
+          "endMs": 282680,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 282690,
+          "endMs": 286920,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 286930,
+          "endMs": 290740,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 290760,
+          "endMs": 294660,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 294670,
+          "endMs": 298550,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 298570,
+          "endMs": 302730,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 302740,
+          "endMs": 306660,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 306670,
+          "endMs": 310620,
+          "text": "So real (so real), so real (so real)"
+        },
+        {
+          "startMs": 310630,
+          "endMs": 312810,
+          "text": "So real (so real)"
+        }
+      ]
+    },
+    {
+      "id": "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk",
+      "title": "Party In The U.S.A.",
+      "artist": "Miley Cyrus",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 6840,
+      "renderDurationInFrames": 5797,
+      "durationInFrames": 6061,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE AIR WAS THICK WITH GOLDEN PROMISES AND UNSEEN DREAMS.",
+        "rightVertical": "A WHIRLWIND OF ASPHALT, STARDUST, AND UNCONTAINED CONFESSIONAL NIGHTS.",
+        "bottomLine": "WELCOME TO THE GLITTERING AMERICAN DREAM."
+      },
+      "lyrics": [
+        {
+          "startMs": 2840,
+          "endMs": 9840,
+          "text": "♪"
+        },
+        {
+          "startMs": 9840,
+          "endMs": 12180,
+          "text": "I hopped off the plane at LAX"
+        },
+        {
+          "startMs": 12220,
+          "endMs": 14020,
+          "text": "With a dream and my cardigan"
+        },
+        {
+          "startMs": 14780,
+          "endMs": 18140,
+          "text": "Welcome to the land of fame excess (whoa)"
+        },
+        {
+          "startMs": 18140,
+          "endMs": 19400,
+          "text": "Am I gonna fit in?"
+        },
+        {
+          "startMs": 20020,
+          "endMs": 21040,
+          "text": "Jumped in a cab"
+        },
+        {
+          "startMs": 21080,
+          "endMs": 22700,
+          "text": "Here I am for the first time"
+        },
+        {
+          "startMs": 22700,
+          "endMs": 25120,
+          "text": "Look to my right, and I see the Hollywood sign"
+        },
+        {
+          "startMs": 25120,
+          "endMs": 26760,
+          "text": "This is all so crazy"
+        },
+        {
+          "startMs": 27340,
+          "endMs": 29440,
+          "text": "Everybody seems so famous"
+        },
+        {
+          "startMs": 29440,
+          "endMs": 32640,
+          "text": "My tummy's turnin' and I'm feelin' kinda home sick"
+        },
+        {
+          "startMs": 32640,
+          "endMs": 34340,
+          "text": "Too much pressure and I'm nervous"
+        },
+        {
+          "startMs": 34340,
+          "endMs": 36980,
+          "text": "That's when the taxi man turned on the radio"
+        },
+        {
+          "startMs": 36980,
+          "endMs": 39240,
+          "text": "And a Jay-Z song was on"
+        },
+        {
+          "startMs": 39240,
+          "endMs": 42000,
+          "text": "And a Jay-Z song was on"
+        },
+        {
+          "startMs": 42000,
+          "endMs": 44360,
+          "text": "And a Jay-Z song was on"
+        },
+        {
+          "startMs": 44360,
+          "endMs": 45780,
+          "text": "So I put my hands up"
+        },
+        {
+          "startMs": 45880,
+          "endMs": 47300,
+          "text": "They're playing my song"
+        },
+        {
+          "startMs": 47300,
+          "endMs": 49820,
+          "text": "The butterflies fly away"
+        },
+        {
+          "startMs": 49820,
+          "endMs": 52540,
+          "text": "I'm noddin' my head like, yeah"
+        },
+        {
+          "startMs": 52540,
+          "endMs": 54590,
+          "text": "Movin' my hips like, yeah"
+        },
+        {
+          "startMs": 54590,
+          "endMs": 55970,
+          "text": "I got my hands up"
+        },
+        {
+          "startMs": 55970,
+          "endMs": 57240,
+          "text": "They're playin' my song"
+        },
+        {
+          "startMs": 57240,
+          "endMs": 60000,
+          "text": "They know I'm gonna be okay"
+        },
+        {
+          "startMs": 60000,
+          "endMs": 64929,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 64929,
+          "endMs": 70140,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 70140,
+          "endMs": 72170,
+          "text": "Get to the club in my taxi cab"
+        },
+        {
+          "startMs": 72170,
+          "endMs": 74620,
+          "text": "Everybody's looking at me now"
+        },
+        {
+          "startMs": 74620,
+          "endMs": 77300,
+          "text": "Like, \"who's that chick, that's rockin' kicks?"
+        },
+        {
+          "startMs": 77300,
+          "endMs": 80160,
+          "text": "She's gotta be from out of town\""
+        },
+        {
+          "startMs": 80160,
+          "endMs": 82700,
+          "text": "So hard with my girls not around me"
+        },
+        {
+          "startMs": 82700,
+          "endMs": 85170,
+          "text": "Its definitely not a Nashville party"
+        },
+        {
+          "startMs": 85170,
+          "endMs": 87600,
+          "text": "'Cause all I see are stilettos"
+        },
+        {
+          "startMs": 87600,
+          "endMs": 90110,
+          "text": "I guess I never got the memo"
+        },
+        {
+          "startMs": 90110,
+          "endMs": 92670,
+          "text": "My tummy's turnin' and I'm feelin' kinda home sick"
+        },
+        {
+          "startMs": 92670,
+          "endMs": 94510,
+          "text": "Too much pressure and I'm nervous"
+        },
+        {
+          "startMs": 94510,
+          "endMs": 97220,
+          "text": "That's when the DJ dropped my favorite tune"
+        },
+        {
+          "startMs": 97220,
+          "endMs": 99660,
+          "text": "And a Britney song was on"
+        },
+        {
+          "startMs": 99660,
+          "endMs": 102050,
+          "text": "And a Britney song was on"
+        },
+        {
+          "startMs": 102050,
+          "endMs": 104240,
+          "text": "And a Britney song was on"
+        },
+        {
+          "startMs": 104240,
+          "endMs": 105890,
+          "text": "So I put my hands up"
+        },
+        {
+          "startMs": 105890,
+          "endMs": 107270,
+          "text": "They're playing my song"
+        },
+        {
+          "startMs": 107270,
+          "endMs": 109839,
+          "text": "The butterflies fly away"
+        },
+        {
+          "startMs": 109839,
+          "endMs": 112390,
+          "text": "I'm noddin' my head like, yeah"
+        },
+        {
+          "startMs": 112390,
+          "endMs": 114520,
+          "text": "Movin' my hips like, yeah"
+        },
+        {
+          "startMs": 114520,
+          "endMs": 115850,
+          "text": "I got my hands up"
+        },
+        {
+          "startMs": 115850,
+          "endMs": 117220,
+          "text": "They're playin' my song"
+        },
+        {
+          "startMs": 117220,
+          "endMs": 119930,
+          "text": "They know I'm gonna be okay"
+        },
+        {
+          "startMs": 119930,
+          "endMs": 124920,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 124920,
+          "endMs": 130610,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 130610,
+          "endMs": 135540,
+          "text": "Feel like hoppin' on a flight (on a flight)"
+        },
+        {
+          "startMs": 135540,
+          "endMs": 140460,
+          "text": "Back to my hometown tonight (town tonight)"
+        },
+        {
+          "startMs": 140460,
+          "endMs": 144820,
+          "text": "Something stops me every time (every time)"
+        },
+        {
+          "startMs": 144820,
+          "endMs": 149300,
+          "text": "The DJ plays my song and I feel alright"
+        },
+        {
+          "startMs": 149300,
+          "endMs": 150930,
+          "text": "So I put my hands up"
+        },
+        {
+          "startMs": 150930,
+          "endMs": 152220,
+          "text": "They're playing my song"
+        },
+        {
+          "startMs": 152220,
+          "endMs": 154790,
+          "text": "The butterflies fly away"
+        },
+        {
+          "startMs": 154790,
+          "endMs": 157350,
+          "text": "I'm noddin' my head like, yeah"
+        },
+        {
+          "startMs": 157350,
+          "endMs": 159520,
+          "text": "Movin' my hips like, yeah"
+        },
+        {
+          "startMs": 159520,
+          "endMs": 160910,
+          "text": "I got my hands up"
+        },
+        {
+          "startMs": 160910,
+          "endMs": 162220,
+          "text": "They're playin' my song"
+        },
+        {
+          "startMs": 162220,
+          "endMs": 164939,
+          "text": "They know I'm gonna be okay"
+        },
+        {
+          "startMs": 164939,
+          "endMs": 170000,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 170000,
+          "endMs": 174350,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 174350,
+          "endMs": 175780,
+          "text": "So I put my hands up"
+        },
+        {
+          "startMs": 175780,
+          "endMs": 177290,
+          "text": "They're playing my song"
+        },
+        {
+          "startMs": 177290,
+          "endMs": 179810,
+          "text": "The butterflies fly away"
+        },
+        {
+          "startMs": 179810,
+          "endMs": 182410,
+          "text": "I'm noddin' my head like, yeah"
+        },
+        {
+          "startMs": 182410,
+          "endMs": 184560,
+          "text": "Movin' my hips like, yeah"
+        },
+        {
+          "startMs": 184560,
+          "endMs": 185880,
+          "text": "I got my hands up"
+        },
+        {
+          "startMs": 185880,
+          "endMs": 187280,
+          "text": "They're playin' my song"
+        },
+        {
+          "startMs": 187280,
+          "endMs": 189940,
+          "text": "They know I'm gonna be okay"
+        },
+        {
+          "startMs": 189940,
+          "endMs": 194900,
+          "text": "Yeah, it's a party in the USA"
+        },
+        {
+          "startMs": 194900,
+          "endMs": 198100,
+          "text": "Yeah, it's a party in the USA"
+        }
+      ]
+    }
+  ],
+  "queue": [
+    {
+      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
       "accent": "rgba(163, 206, 255, 0.7)"
     },
     {
@@ -4221,6 +7485,54 @@
       "title": "Without Me",
       "artist": "Halsey",
       "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+      "title": "Run Wild (向风而野)",
+      "artist": "是晚星呀 - Topic",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Drama King - Bellah Mae - zlF-KFWf6c4",
+      "title": "Drama King",
+      "artist": "Bellah Mae",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4",
+      "title": "Shivers (Acoustic Version)",
+      "artist": "Ed Sheeran",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic",
+      "title": "Carly Rae Jepsen - Call Me Maybe",
+      "artist": "Carly Rae Jepsen",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Pump It - Black Eyed Peas - d77gTBvX0K8",
+      "title": "Pump It",
+      "artist": "Black Eyed Peas",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "What Makes You Beautiful - One Direction - d57qSDCxVA4",
+      "title": "What Makes You Beautiful",
+      "artist": "One Direction",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "My Humps - Black Eyed Peas - opnZlnd3d7U",
+      "title": "My Humps",
+      "artist": "Black Eyed Peas",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk",
+      "title": "Party In The U.S.A.",
+      "artist": "Miley Cyrus",
+      "accent": "rgba(163, 206, 255, 0.7)"
     }
   ],
   "playlists": [
@@ -4273,10 +7585,18 @@
     {
       "id": "new-downloads",
       "name": "New Downloads",
-      "count": 1,
+      "count": 9,
       "accent": "rgba(255,255,255,0.58)",
       "trackIds": [
-        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY"
+        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+        "Drama King - Bellah Mae - zlF-KFWf6c4",
+        "Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4",
+        "Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic",
+        "Pump It - Black Eyed Peas - d77gTBvX0K8",
+        "What Makes You Beautiful - One Direction - d57qSDCxVA4",
+        "My Humps - Black Eyed Peas - opnZlnd3d7U",
+        "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk",
+        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo"
       ]
     }
   ]

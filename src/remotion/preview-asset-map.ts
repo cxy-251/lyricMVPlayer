@@ -1,8 +1,8 @@
 import type {AudioFeatureTrack} from "../../modules/render-core/src";
 
-import audioSrc0 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/audio.mp3";
-import rawAudioFeatures0 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/audio-features.json";
-import backgroundSrc0 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/background.png";
+import audioSrc0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio.mp3";
+import rawAudioFeatures0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio-features.json";
+import backgroundSrc0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/background.png";
 import audioSrc1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/audio.mp3";
 import rawAudioFeatures1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/audio-features.json";
 import backgroundSrc1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/background.png";
@@ -48,9 +48,33 @@ import backgroundSrc14 from "../../artifacts/songs/Price Tag - Jessie J - 5rcmr-
 import audioSrc15 from "../../artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E/audio.mp3";
 import rawAudioFeatures15 from "../../artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E/audio-features.json";
 import backgroundSrc15 from "../../artifacts/songs/Without Me - Halsey - Tk7WFyHUr1E/background.png";
+import audioSrc16 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/audio.mp3";
+import rawAudioFeatures16 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/audio-features.json";
+import backgroundSrc16 from "../../artifacts/songs/Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY/background.png";
+import audioSrc17 from "../../artifacts/songs/Drama King - Bellah Mae - zlF-KFWf6c4/audio.mp3";
+import rawAudioFeatures17 from "../../artifacts/songs/Drama King - Bellah Mae - zlF-KFWf6c4/audio-features.json";
+import backgroundSrc17 from "../../artifacts/songs/Drama King - Bellah Mae - zlF-KFWf6c4/background.png";
+import audioSrc18 from "../../artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4/audio.mp3";
+import rawAudioFeatures18 from "../../artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4/audio-features.json";
+import backgroundSrc18 from "../../artifacts/songs/Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4/background.png";
+import audioSrc19 from "../../artifacts/songs/Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic/audio.mp3";
+import rawAudioFeatures19 from "../../artifacts/songs/Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic/audio-features.json";
+import backgroundSrc19 from "../../artifacts/songs/Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic/background.png";
+import audioSrc20 from "../../artifacts/songs/Pump It - Black Eyed Peas - d77gTBvX0K8/audio.mp3";
+import rawAudioFeatures20 from "../../artifacts/songs/Pump It - Black Eyed Peas - d77gTBvX0K8/audio-features.json";
+import backgroundSrc20 from "../../artifacts/songs/Pump It - Black Eyed Peas - d77gTBvX0K8/background.png";
+import audioSrc21 from "../../artifacts/songs/What Makes You Beautiful - One Direction - d57qSDCxVA4/audio.mp3";
+import rawAudioFeatures21 from "../../artifacts/songs/What Makes You Beautiful - One Direction - d57qSDCxVA4/audio-features.json";
+import backgroundSrc21 from "../../artifacts/songs/What Makes You Beautiful - One Direction - d57qSDCxVA4/background.png";
+import audioSrc22 from "../../artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U/audio.mp3";
+import rawAudioFeatures22 from "../../artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U/audio-features.json";
+import backgroundSrc22 from "../../artifacts/songs/My Humps - Black Eyed Peas - opnZlnd3d7U/background.png";
+import audioSrc23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/audio.mp3";
+import rawAudioFeatures23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/audio-features.json";
+import backgroundSrc23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/background.png";
 
 export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures: AudioFeatureTrack; backgroundSrc?: string}> = {
-  "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY": {
+  "Just the Way You Are - Bruno Mars - GnUW4AF1LZo": {
     audioSrc: audioSrc0,
     audioFeatures: rawAudioFeatures0 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc0,
@@ -129,5 +153,45 @@ export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures: A
     audioSrc: audioSrc15,
     audioFeatures: rawAudioFeatures15 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc15,
+  },
+  "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY": {
+    audioSrc: audioSrc16,
+    audioFeatures: rawAudioFeatures16 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc16,
+  },
+  "Drama King - Bellah Mae - zlF-KFWf6c4": {
+    audioSrc: audioSrc17,
+    audioFeatures: rawAudioFeatures17 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc17,
+  },
+  "Shivers (Acoustic Version) - Ed Sheeran - IunRmLHucC4": {
+    audioSrc: audioSrc18,
+    audioFeatures: rawAudioFeatures18 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc18,
+  },
+  "Call Me Maybe - Carly Rae Jepsen - fWNaR-rxAic": {
+    audioSrc: audioSrc19,
+    audioFeatures: rawAudioFeatures19 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc19,
+  },
+  "Pump It - Black Eyed Peas - d77gTBvX0K8": {
+    audioSrc: audioSrc20,
+    audioFeatures: rawAudioFeatures20 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc20,
+  },
+  "What Makes You Beautiful - One Direction - d57qSDCxVA4": {
+    audioSrc: audioSrc21,
+    audioFeatures: rawAudioFeatures21 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc21,
+  },
+  "My Humps - Black Eyed Peas - opnZlnd3d7U": {
+    audioSrc: audioSrc22,
+    audioFeatures: rawAudioFeatures22 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc22,
+  },
+  "Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk": {
+    audioSrc: audioSrc23,
+    audioFeatures: rawAudioFeatures23 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc23,
   }
 };
