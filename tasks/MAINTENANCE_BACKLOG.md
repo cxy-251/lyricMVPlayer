@@ -31,6 +31,7 @@ Updated: 2026-05-21
   - Problem: the original Vite web build bundled the entire preview library into a 42 MiB JS chunk, which exceeded Cloudflare Pages' 25 MiB per-file limit.
   - Progress: the web app now fetches a generated static manifest plus per-song JSON/audio/background assets at runtime, and it only eagerly loads the current song before caching remaining songs one-by-one in the background.
   - Progress update: the web app now also prioritizes the current song's immediate neighbors, prefetching the next/previous song metadata plus audio/background assets before continuing with low-priority sequential background caching.
+  - Progress update: the website now shows a splash overlay that uses the first song's dynamic `poetryFrame.bottomLine` and only fades out after the first background image is actually loaded, which hides the heaviest initial media delay.
   - Next step: if the library keeps growing, move from serial background caching toward true on-demand fetch for selected songs and nearby neighbors only.
 
 ## Resolved Recently

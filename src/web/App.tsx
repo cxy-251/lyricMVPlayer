@@ -121,6 +121,22 @@ const normalizePoetryFrame = (
 export const App: React.FC = () => {
   const [props, setProps] = useState<LyricVideoCompositionProps | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [splashText, setSplashText] = useState<string>("LET THE WAVEFORM BREATHE BELOW THE SONG");
+  const [showSplash, setShowSplash] = useState(true);
+
+  const preloadImage = async (src: string | undefined): Promise<void> => {
+    if (!src) {
+      return;
+    }
+
+    await new Promise<void>((resolve) => {
+      const image = new Image();
+      const settle = () => resolve();
+      image.onload = settle;
+      image.onerror = settle;
+      image.src = src;
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -239,6 +255,8 @@ export const App: React.FC = () => {
         }
 
         const initialSong = await loadSongData(initialManifestSong, nickname);
+        setSplashText(initialSong.poetryFrame?.bottomLine?.trim() || "LET THE WAVEFORM BREATHE BELOW THE SONG");
+        await preloadImage(initialSong.background?.kind === "image" ? initialSong.background.src : undefined);
         const initialLibrary = placeholders.map((song) => (song.id === initialSong.id ? initialSong : song));
         const queue = buildQueue(placeholders);
         const playlists = buildPlaylists(placeholders, manifest);
@@ -268,6 +286,11 @@ export const App: React.FC = () => {
             queue,
             playlists,
           });
+          window.setTimeout(() => {
+            if (!cancelled) {
+              setShowSplash(false);
+            }
+          }, 260);
         }
 
         const prioritySongs = [
@@ -365,7 +388,15 @@ export const App: React.FC = () => {
 
   return (
     <div className="web-shell">
-      <div className="web-stage-frame">{body}</div>
+      <div className="web-stage-frame">
+        {body}
+        <div className={`web-splash ${showSplash ? "is-visible" : "is-hidden"}`}>
+          <div className="web-splash__inner">
+            <div className="web-splash__label">CLEANKSEN · AUDIO DIARY</div>
+            <div className="web-splash__text">{splashText}</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
