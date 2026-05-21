@@ -4,9 +4,11 @@ import {Player} from "@remotion/player";
 import {MusicVideoComposition} from "../../modules/render-core/src";
 import type {
   AudioFeatureTrack,
+  BackgroundAsset,
   LyricVideoCompositionProps,
   PlaylistSummary,
   QueueTrack,
+  PoetryFrame,
   SongLibraryItem,
   TimedLyricLine,
 } from "../../modules/render-core/src";
@@ -53,6 +55,14 @@ type RenderInputPayload = {
 };
 
 const ALL_TRACKS_SENTINEL = "__ALL__";
+const DEFAULT_BACKGROUND: BackgroundAsset = {kind: "color", color: "#101828"};
+const DEFAULT_POETRY_FRAME: PoetryFrame = {
+  nickname: "CleanKsen",
+  topLabel: "CLEANKSEN · AUDIO DIARY",
+  leftVertical: "",
+  rightVertical: "",
+  bottomLine: "",
+};
 
 const buildQueue = (library: SongLibraryItem[]): QueueTrack[] =>
   library.map((song) => ({
@@ -115,6 +125,67 @@ export const App: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
 
+    const createPlaceholderSong = (
+      song: ManifestSong,
+      nickname: string
+    ): SongLibraryItem => ({
+      id: song.id,
+      title: song.title,
+      artist: song.artist,
+      lyricOffsetMs: 0,
+      renderTrimStartMs: 0,
+      renderDurationInFrames: 1,
+      durationInFrames: 1,
+      fps: 30,
+      background: DEFAULT_BACKGROUND,
+      poetryFrame: {
+        ...DEFAULT_POETRY_FRAME,
+        nickname,
+        topLabel: `${nickname.toUpperCase()} · AUDIO DIARY`,
+      },
+      lyrics: [{startMs: 0, endMs: 1000, text: "Loading..."}],
+    });
+
+    const loadSongData = async (
+      song: ManifestSong,
+      nickname: string
+    ): Promise<SongLibraryItem> => {
+      const [renderInputResponse, audioFeaturesResponse] = await Promise.all([
+        fetch(song.renderInputUrl),
+        fetch(song.audioFeaturesUrl),
+      ]);
+
+      if (!renderInputResponse.ok) {
+        throw new Error(`Failed to load ${song.renderInputUrl}: ${renderInputResponse.status}`);
+      }
+      if (!audioFeaturesResponse.ok) {
+        throw new Error(`Failed to load ${song.audioFeaturesUrl}: ${audioFeaturesResponse.status}`);
+      }
+
+      const renderInput = (await renderInputResponse.json()) as RenderInputPayload;
+      const audioFeatures = (await audioFeaturesResponse.json()) as AudioFeatureTrack;
+
+      return {
+        id: song.id,
+        title: renderInput.title,
+        artist: renderInput.artist,
+        audioSrc: renderInput.audioSrc,
+        lyricOffsetMs: renderInput.lyricOffsetMs ?? 0,
+        renderTrimStartMs: renderInput.renderTrimStartMs ?? 0,
+        renderDurationInFrames: renderInput.renderDurationInFrames ?? renderInput.durationInFrames,
+        durationInFrames: renderInput.durationInFrames,
+        fps: renderInput.fps,
+        background: {
+          kind: renderInput.background?.kind ?? (renderInput.background?.src ? "image" : "color"),
+          src: renderInput.background?.src,
+          color: renderInput.background?.color ?? "#101828",
+        },
+        poetryFrame: normalizePoetryFrame(renderInput.poetryFrame, nickname),
+        lyrics: renderInput.lyrics as TimedLyricLine[],
+        audioFeatures,
+      } satisfies SongLibraryItem;
+    };
+
     const load = async () => {
       try {
         const manifestResponse = await fetch("/library-manifest.json");
@@ -123,48 +194,19 @@ export const App: React.FC = () => {
         }
 
         const manifest = (await manifestResponse.json()) as WebManifest;
-        const library = await Promise.all(
-          manifest.songs.map(async (song) => {
-            const [renderInputResponse, audioFeaturesResponse] = await Promise.all([
-              fetch(song.renderInputUrl),
-              fetch(song.audioFeaturesUrl),
-            ]);
+        const nickname = manifest.nickname ?? "CleanKsen";
+        const placeholders = manifest.songs.map((song) => createPlaceholderSong(song, nickname));
+        const initialManifestSong =
+          manifest.songs.find((song) => song.id === manifest.currentSongDirName) ?? manifest.songs[0];
 
-            if (!renderInputResponse.ok) {
-              throw new Error(`Failed to load ${song.renderInputUrl}: ${renderInputResponse.status}`);
-            }
-            if (!audioFeaturesResponse.ok) {
-              throw new Error(`Failed to load ${song.audioFeaturesUrl}: ${audioFeaturesResponse.status}`);
-            }
+        if (!initialManifestSong) {
+          throw new Error("No songs available in web manifest.");
+        }
 
-            const renderInput = (await renderInputResponse.json()) as RenderInputPayload;
-            const audioFeatures = (await audioFeaturesResponse.json()) as AudioFeatureTrack;
-
-            return {
-              id: song.id,
-              title: renderInput.title,
-              artist: renderInput.artist,
-              audioSrc: renderInput.audioSrc,
-              lyricOffsetMs: renderInput.lyricOffsetMs ?? 0,
-              renderTrimStartMs: renderInput.renderTrimStartMs ?? 0,
-              renderDurationInFrames: renderInput.renderDurationInFrames ?? renderInput.durationInFrames,
-              durationInFrames: renderInput.durationInFrames,
-              fps: renderInput.fps,
-              background: {
-                kind: renderInput.background?.kind ?? (renderInput.background?.src ? "image" : "color"),
-                src: renderInput.background?.src,
-                color: renderInput.background?.color ?? "#101828",
-              },
-              poetryFrame: normalizePoetryFrame(renderInput.poetryFrame, manifest.nickname ?? "CleanKsen"),
-              lyrics: renderInput.lyrics as TimedLyricLine[],
-              audioFeatures,
-            } satisfies SongLibraryItem;
-          })
-        );
-
-        const queue = buildQueue(library);
-        const playlists = buildPlaylists(library, manifest);
-        const initialSong = library.find((item) => item.id === manifest.currentSongDirName) ?? library[0];
+        const initialSong = await loadSongData(initialManifestSong, nickname);
+        const initialLibrary = placeholders.map((song) => (song.id === initialSong.id ? initialSong : song));
+        const queue = buildQueue(placeholders);
+        const playlists = buildPlaylists(placeholders, manifest);
 
         if (!initialSong) {
           throw new Error("No songs available in web manifest.");
@@ -185,11 +227,34 @@ export const App: React.FC = () => {
             poetryFrame: initialSong.poetryFrame,
             lyrics: initialSong.lyrics,
             audioFeatures: initialSong.audioFeatures,
-            library,
+            library: initialLibrary,
             initialTrackId: initialSong.id,
             queue,
             playlists,
           });
+        }
+
+        const remainingSongs = manifest.songs.filter((song) => song.id !== initialSong.id);
+        for (const song of remainingSongs) {
+          if (cancelled) {
+            break;
+          }
+          try {
+            const loadedSong = await loadSongData(song, nickname);
+            if (!cancelled) {
+              setProps((current) => {
+                if (!current?.library) {
+                  return current;
+                }
+                return {
+                  ...current,
+                  library: current.library.map((item) => (item.id === loadedSong.id ? loadedSong : item)),
+                };
+              });
+            }
+          } catch {
+            // keep placeholder song and continue loading the rest
+          }
         }
       } catch (loadError) {
         if (!cancelled) {

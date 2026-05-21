@@ -12,7 +12,8 @@ Updated: 2026-05-21
 - Web deploy bundle size
   - Status: `improving`
   - Problem: the original Vite web build bundled the entire preview library into a 42 MiB JS chunk, which exceeded Cloudflare Pages' 25 MiB per-file limit.
-  - Next step: continue slimming the runtime asset strategy after switching the web app to fetch a generated static manifest and per-song JSON/audio/background files from `public-web/`.
+  - Progress: the web app now fetches a generated static manifest plus per-song JSON/audio/background assets at runtime, and it only eagerly loads the current song before caching remaining songs one-by-one in the background.
+  - Next step: if the library keeps growing, move from serial background caching toward true on-demand fetch for selected songs and nearby neighbors only.
 
 ## Resolved Recently
 
