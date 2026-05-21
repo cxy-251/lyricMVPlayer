@@ -124,6 +124,10 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+    const renderInputCache = new Map<string, Promise<RenderInputPayload>>();
+    const audioFeaturesCache = new Map<string, Promise<AudioFeatureTrack>>();
+    const mediaPrefetchCache = new Set<string>();
+    const songDataCache = new Map<string, Promise<SongLibraryItem>>();
 
     const createPlaceholderSong = (
       song: ManifestSong,
@@ -143,47 +147,78 @@ export const App: React.FC = () => {
         nickname,
         topLabel: `${nickname.toUpperCase()} · AUDIO DIARY`,
       },
-      lyrics: [{startMs: 0, endMs: 1000, text: "Loading..."}],
+        lyrics: [{startMs: 0, endMs: 1000, text: "Loading..."}],
     });
+
+    const fetchJson = async <T,>(url: string): Promise<T> => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${url}: ${response.status}`);
+      }
+      return (await response.json()) as T;
+    };
+
+    const prefetchMedia = (url: string | undefined) => {
+      if (!url || mediaPrefetchCache.has(url)) {
+        return;
+      }
+      mediaPrefetchCache.add(url);
+      void fetch(url, {cache: "force-cache"}).catch(() => {
+        mediaPrefetchCache.delete(url);
+      });
+    };
+
+    const prefetchRenderAssets = (renderInput: RenderInputPayload) => {
+      prefetchMedia(renderInput.audioSrc);
+      if (renderInput.background?.kind === "image" || renderInput.background?.kind === "video") {
+        prefetchMedia(renderInput.background?.src);
+      }
+    };
 
     const loadSongData = async (
       song: ManifestSong,
       nickname: string
     ): Promise<SongLibraryItem> => {
-      const [renderInputResponse, audioFeaturesResponse] = await Promise.all([
-        fetch(song.renderInputUrl),
-        fetch(song.audioFeaturesUrl),
-      ]);
-
-      if (!renderInputResponse.ok) {
-        throw new Error(`Failed to load ${song.renderInputUrl}: ${renderInputResponse.status}`);
-      }
-      if (!audioFeaturesResponse.ok) {
-        throw new Error(`Failed to load ${song.audioFeaturesUrl}: ${audioFeaturesResponse.status}`);
+      const existing = songDataCache.get(song.id);
+      if (existing) {
+        return existing;
       }
 
-      const renderInput = (await renderInputResponse.json()) as RenderInputPayload;
-      const audioFeatures = (await audioFeaturesResponse.json()) as AudioFeatureTrack;
+      const promise = (async () => {
+        const renderInputPromise =
+          renderInputCache.get(song.id) ?? fetchJson<RenderInputPayload>(song.renderInputUrl);
+        renderInputCache.set(song.id, renderInputPromise);
 
-      return {
-        id: song.id,
-        title: renderInput.title,
-        artist: renderInput.artist,
-        audioSrc: renderInput.audioSrc,
-        lyricOffsetMs: renderInput.lyricOffsetMs ?? 0,
-        renderTrimStartMs: renderInput.renderTrimStartMs ?? 0,
-        renderDurationInFrames: renderInput.renderDurationInFrames ?? renderInput.durationInFrames,
-        durationInFrames: renderInput.durationInFrames,
-        fps: renderInput.fps,
-        background: {
-          kind: renderInput.background?.kind ?? (renderInput.background?.src ? "image" : "color"),
-          src: renderInput.background?.src,
-          color: renderInput.background?.color ?? "#101828",
-        },
-        poetryFrame: normalizePoetryFrame(renderInput.poetryFrame, nickname),
-        lyrics: renderInput.lyrics as TimedLyricLine[],
-        audioFeatures,
-      } satisfies SongLibraryItem;
+        const audioFeaturesPromise =
+          audioFeaturesCache.get(song.id) ?? fetchJson<AudioFeatureTrack>(song.audioFeaturesUrl);
+        audioFeaturesCache.set(song.id, audioFeaturesPromise);
+
+        const [renderInput, audioFeatures] = await Promise.all([renderInputPromise, audioFeaturesPromise]);
+        prefetchRenderAssets(renderInput);
+
+        return {
+          id: song.id,
+          title: renderInput.title,
+          artist: renderInput.artist,
+          audioSrc: renderInput.audioSrc,
+          lyricOffsetMs: renderInput.lyricOffsetMs ?? 0,
+          renderTrimStartMs: renderInput.renderTrimStartMs ?? 0,
+          renderDurationInFrames: renderInput.renderDurationInFrames ?? renderInput.durationInFrames,
+          durationInFrames: renderInput.durationInFrames,
+          fps: renderInput.fps,
+          background: {
+            kind: renderInput.background?.kind ?? (renderInput.background?.src ? "image" : "color"),
+            src: renderInput.background?.src,
+            color: renderInput.background?.color ?? "#101828",
+          },
+          poetryFrame: normalizePoetryFrame(renderInput.poetryFrame, nickname),
+          lyrics: renderInput.lyrics as TimedLyricLine[],
+          audioFeatures,
+        } satisfies SongLibraryItem;
+      })();
+
+      songDataCache.set(song.id, promise);
+      return promise;
     };
 
     const load = async () => {
@@ -207,6 +242,7 @@ export const App: React.FC = () => {
         const initialLibrary = placeholders.map((song) => (song.id === initialSong.id ? initialSong : song));
         const queue = buildQueue(placeholders);
         const playlists = buildPlaylists(placeholders, manifest);
+        const initialIndex = manifest.songs.findIndex((song) => song.id === initialSong.id);
 
         if (!initialSong) {
           throw new Error("No songs available in web manifest.");
@@ -234,7 +270,35 @@ export const App: React.FC = () => {
           });
         }
 
-        const remainingSongs = manifest.songs.filter((song) => song.id !== initialSong.id);
+        const prioritySongs = [
+          manifest.songs[initialIndex + 1],
+          manifest.songs[initialIndex - 1],
+        ].filter((song): song is ManifestSong => Boolean(song && song.id !== initialSong.id));
+
+        await Promise.all(
+          prioritySongs.map(async (song) => {
+            try {
+              const loadedSong = await loadSongData(song, nickname);
+              if (!cancelled) {
+                setProps((current) => {
+                  if (!current?.library) {
+                    return current;
+                  }
+                  return {
+                    ...current,
+                    library: current.library.map((item) => (item.id === loadedSong.id ? loadedSong : item)),
+                  };
+                });
+              }
+            } catch {
+              // keep placeholder for failed neighbor prefetch
+            }
+          })
+        );
+
+        const remainingSongs = manifest.songs.filter(
+          (song) => song.id !== initialSong.id && !prioritySongs.some((prioritySong) => prioritySong.id === song.id)
+        );
         for (const song of remainingSongs) {
           if (cancelled) {
             break;
