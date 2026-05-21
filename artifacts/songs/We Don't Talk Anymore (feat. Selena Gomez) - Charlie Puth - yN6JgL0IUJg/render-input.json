@@ -1,0 +1,361 @@
+{
+  "title": "We Don't Talk Anymore (feat. Selena Gomez)",
+  "artist": "Charlie Puth",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 6531,
+  "durationInFrames": 6531,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE ECHO OF WHAT ONCE WAS IS A SILENT HAUNTING.",
+    "rightVertical": "A GHOST OF MEMORY WHERE WORDS USED TO DANCE.",
+    "bottomLine": "JUST THE AFTERGLOW OF US"
+  },
+  "lyrics": [
+    {
+      "startMs": 300,
+      "endMs": 4240,
+      "text": "We don't talk anymore, we don't talk anymore"
+    },
+    {
+      "startMs": 5040,
+      "endMs": 9360,
+      "text": "We don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 9360,
+      "endMs": 13960,
+      "text": "We don't love anymore, what was all of it for?"
+    },
+    {
+      "startMs": 14880,
+      "endMs": 19020,
+      "text": "Ooh, we don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 20000,
+      "endMs": 22580,
+      "text": "I just heard you found the one you've been lookin'"
+    },
+    {
+      "startMs": 22580,
+      "endMs": 24940,
+      "text": "You've been lookin' for"
+    },
+    {
+      "startMs": 24940,
+      "endMs": 28420,
+      "text": "I wish I would have known that wasn't me"
+    },
+    {
+      "startMs": 28420,
+      "endMs": 32200,
+      "text": "'Cause even after all this time, I still wonder"
+    },
+    {
+      "startMs": 32200,
+      "endMs": 34640,
+      "text": "Why I can't move on"
+    },
+    {
+      "startMs": 34640,
+      "endMs": 37680,
+      "text": "Just the way you did so easily"
+    },
+    {
+      "startMs": 38920,
+      "endMs": 40640,
+      "text": "Don't wanna know"
+    },
+    {
+      "startMs": 40640,
+      "endMs": 42900,
+      "text": "What kinda dress you're wearin' tonight"
+    },
+    {
+      "startMs": 43560,
+      "endMs": 45420,
+      "text": "If he's holdin' on to you so tight"
+    },
+    {
+      "startMs": 45420,
+      "endMs": 47740,
+      "text": "The way I did before"
+    },
+    {
+      "startMs": 48920,
+      "endMs": 50200,
+      "text": "I overdosed"
+    },
+    {
+      "startMs": 50200,
+      "endMs": 52600,
+      "text": "Should've known your love was a game"
+    },
+    {
+      "startMs": 52600,
+      "endMs": 55100,
+      "text": "Now I can't get you out of my brain"
+    },
+    {
+      "startMs": 55100,
+      "endMs": 57400,
+      "text": "Ooh, it's such a shame"
+    },
+    {
+      "startMs": 57400,
+      "endMs": 61900,
+      "text": "That we don't talk anymore, we don't talk anymore"
+    },
+    {
+      "startMs": 61900,
+      "endMs": 66980,
+      "text": "We don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 66980,
+      "endMs": 71520,
+      "text": "We don't love anymore, what was all of it for?"
+    },
+    {
+      "startMs": 72440,
+      "endMs": 76640,
+      "text": "Ooh, we don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 77620,
+      "endMs": 80200,
+      "text": "I just hope you're lyin' next to somebody"
+    },
+    {
+      "startMs": 80920,
+      "endMs": 82620,
+      "text": "Who knows how to love you like me"
+    },
+    {
+      "startMs": 82620,
+      "endMs": 86180,
+      "text": "There must be a good reason that you're gone"
+    },
+    {
+      "startMs": 86180,
+      "endMs": 88380,
+      "text": "Every now and then"
+    },
+    {
+      "startMs": 88380,
+      "endMs": 92280,
+      "text": "I think you might want me to come show up at your door"
+    },
+    {
+      "startMs": 92280,
+      "endMs": 95540,
+      "text": "But I'm just too afraid that I'll be wrong"
+    },
+    {
+      "startMs": 96500,
+      "endMs": 98220,
+      "text": "Don't wanna know"
+    },
+    {
+      "startMs": 98220,
+      "endMs": 100840,
+      "text": "If you're lookin' into her eyes"
+    },
+    {
+      "startMs": 100840,
+      "endMs": 103140,
+      "text": "If she's holdin' on to you so tight"
+    },
+    {
+      "startMs": 103140,
+      "endMs": 105340,
+      "text": "The way I did before"
+    },
+    {
+      "startMs": 106180,
+      "endMs": 107980,
+      "text": "I overdosed"
+    },
+    {
+      "startMs": 107980,
+      "endMs": 110300,
+      "text": "Should've known your love was a game"
+    },
+    {
+      "startMs": 110300,
+      "endMs": 112440,
+      "text": "Now I can't get you out of my brain"
+    },
+    {
+      "startMs": 112900,
+      "endMs": 114960,
+      "text": "Ooh, it's such a shame"
+    },
+    {
+      "startMs": 114960,
+      "endMs": 118860,
+      "text": "That we don't talk anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 119460,
+      "endMs": 121680,
+      "text": "We don't talk anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 121680,
+      "endMs": 126630,
+      "text": "We don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 129979,
+      "endMs": 132279,
+      "text": "We don't love anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 132279,
+      "endMs": 133879,
+      "text": "What was all of it for? (We don't, we don't)"
+    },
+    {
+      "startMs": 133879,
+      "endMs": 139829,
+      "text": "Ooh, we don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 139829,
+      "endMs": 148229,
+      "text": "♪"
+    },
+    {
+      "startMs": 148289,
+      "endMs": 152119,
+      "text": "Like we used to do"
+    },
+    {
+      "startMs": 152119,
+      "endMs": 159009,
+      "text": "♪"
+    },
+    {
+      "startMs": 159009,
+      "endMs": 160549,
+      "text": "Don't wanna know"
+    },
+    {
+      "startMs": 160549,
+      "endMs": 163059,
+      "text": "What kinda dress you're wearin' tonight"
+    },
+    {
+      "startMs": 163059,
+      "endMs": 165659,
+      "text": "If he's givin' it to you just right"
+    },
+    {
+      "startMs": 165659,
+      "endMs": 168509,
+      "text": "The way I did before"
+    },
+    {
+      "startMs": 168509,
+      "endMs": 170259,
+      "text": "I overdosed"
+    },
+    {
+      "startMs": 170259,
+      "endMs": 172629,
+      "text": "Should've known your love was a game"
+    },
+    {
+      "startMs": 172629,
+      "endMs": 175249,
+      "text": "Now I can't get you out of my brain"
+    },
+    {
+      "startMs": 175249,
+      "endMs": 177759,
+      "text": "Ooh, it's such a shame"
+    },
+    {
+      "startMs": 177759,
+      "endMs": 180309,
+      "text": "That we don't talk anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 180309,
+      "endMs": 182699,
+      "text": "We don't talk anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 182699,
+      "endMs": 187479,
+      "text": "We don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 187479,
+      "endMs": 190019,
+      "text": "We don't love anymore (we don't, we don't)"
+    },
+    {
+      "startMs": 190019,
+      "endMs": 191459,
+      "text": "What was all of it for? (We don't, we don't)"
+    },
+    {
+      "startMs": 191459,
+      "endMs": 197199,
+      "text": "Ooh, we don't talk anymore like we used to do"
+    },
+    {
+      "startMs": 197199,
+      "endMs": 199089,
+      "text": "We don't talk anymore (don't wanna know)"
+    },
+    {
+      "startMs": 199089,
+      "endMs": 201579,
+      "text": "(What kinda dress you're wearin' tonight) oh"
+    },
+    {
+      "startMs": 201579,
+      "endMs": 204259,
+      "text": "(If he's holdin' on to you so tight) oh"
+    },
+    {
+      "startMs": 204259,
+      "endMs": 206779,
+      "text": "The way I did before"
+    },
+    {
+      "startMs": 211610,
+      "endMs": 212980,
+      "text": "We don't talk anymore (I overdosed)"
+    },
+    {
+      "startMs": 213400,
+      "endMs": 215960,
+      "text": "(Should've known your love was a game) oh"
+    },
+    {
+      "startMs": 215960,
+      "endMs": 218620,
+      "text": "(Now I can't get you out of my brain) whoa"
+    },
+    {
+      "startMs": 218620,
+      "endMs": 221820,
+      "text": "Ooh, it's such a shame that we don't talk anymore"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
+  "outputMp4Name": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth.mp4"
+}

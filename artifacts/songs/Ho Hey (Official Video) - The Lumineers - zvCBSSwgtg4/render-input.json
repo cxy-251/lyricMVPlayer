@@ -1,0 +1,266 @@
+{
+  "title": "The Lumineers - Ho Hey (Official Video)",
+  "artist": "The Lumineers",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 4624,
+  "durationInFrames": 4845,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "I HAVE BEEN TRYING TO DO IT RIGHT, THROUGH THE SHADOWS OF YOUR LIGHT.",
+    "rightVertical": "A LONELY LIFE HAS BOUND ME HERE, WHISPERING SECRETS NO ONE HEARS.",
+    "bottomLine": "OH HO, OH HEY, IN THIS QUIET SPACE."
+  },
+  "lyrics": [
+    {
+      "startMs": 2730,
+      "endMs": 5970,
+      "text": "(Ho!)"
+    },
+    {
+      "startMs": 5970,
+      "endMs": 9150,
+      "text": "(Hey!)"
+    },
+    {
+      "startMs": 9150,
+      "endMs": 11950,
+      "text": "(Ho!)"
+    },
+    {
+      "startMs": 11950,
+      "endMs": 14400,
+      "text": "(Hey!)"
+    },
+    {
+      "startMs": 14400,
+      "endMs": 18070,
+      "text": "(Ho!) I've been tryin' to do it right"
+    },
+    {
+      "startMs": 18070,
+      "endMs": 21200,
+      "text": "(Hey!) I've been livin' a lonely life"
+    },
+    {
+      "startMs": 21200,
+      "endMs": 24400,
+      "text": "(Ho!) I've been sleepin' here instead"
+    },
+    {
+      "startMs": 24400,
+      "endMs": 27460,
+      "text": "(Hey!) I've been sleepin' in my bed"
+    },
+    {
+      "startMs": 27460,
+      "endMs": 30890,
+      "text": "(Ho!) Sleepin' in my bed"
+    },
+    {
+      "startMs": 30890,
+      "endMs": 33780,
+      "text": "(Hey!)"
+    },
+    {
+      "startMs": 33780,
+      "endMs": 36930,
+      "text": "(Ho!)"
+    },
+    {
+      "startMs": 36930,
+      "endMs": 39830,
+      "text": "(Ho!) So show me family"
+    },
+    {
+      "startMs": 39830,
+      "endMs": 42680,
+      "text": "(Hey!) All the blood that I will bleed"
+    },
+    {
+      "startMs": 42680,
+      "endMs": 45660,
+      "text": "(Ho!) I don't know where I belong"
+    },
+    {
+      "startMs": 45660,
+      "endMs": 49050,
+      "text": "(Hey!) I don't know where I went wrong"
+    },
+    {
+      "startMs": 49050,
+      "endMs": 52970,
+      "text": "(Ho!) But I can write a song"
+    },
+    {
+      "startMs": 52970,
+      "endMs": 54310,
+      "text": "(Hey!) Two, three"
+    },
+    {
+      "startMs": 54310,
+      "endMs": 57160,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 57160,
+      "endMs": 60390,
+      "text": "You're my sweetheart"
+    },
+    {
+      "startMs": 60390,
+      "endMs": 63270,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 63270,
+      "endMs": 65550,
+      "text": "You're my sweet-"
+    },
+    {
+      "startMs": 65550,
+      "endMs": 67140,
+      "text": "(Ho!)"
+    },
+    {
+      "startMs": 67140,
+      "endMs": 70050,
+      "text": "(Hey!) (Come on, now)"
+    },
+    {
+      "startMs": 70050,
+      "endMs": 72910,
+      "text": "(Ho!) (Hey)"
+    },
+    {
+      "startMs": 72910,
+      "endMs": 75480,
+      "text": "(Hey!)"
+    },
+    {
+      "startMs": 75480,
+      "endMs": 78940,
+      "text": "(Ho!) I don't think you're right for him"
+    },
+    {
+      "startMs": 78940,
+      "endMs": 82490,
+      "text": "(Hey!) Think of what it might've been if we"
+    },
+    {
+      "startMs": 82490,
+      "endMs": 85330,
+      "text": "(Ho!) Took a bus to Chinatown"
+    },
+    {
+      "startMs": 85330,
+      "endMs": 88280,
+      "text": "(Hey!) I'd be standin' on Canal"
+    },
+    {
+      "startMs": 88280,
+      "endMs": 91110,
+      "text": "(Ho!) And Bowery"
+    },
+    {
+      "startMs": 91110,
+      "endMs": 94160,
+      "text": "(Hey!) Hey"
+    },
+    {
+      "startMs": 94160,
+      "endMs": 97960,
+      "text": "(Ho!) She'd be standin' next to me"
+    },
+    {
+      "startMs": 97960,
+      "endMs": 99270,
+      "text": "(Hey!) Two, three"
+    },
+    {
+      "startMs": 99270,
+      "endMs": 102130,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 102130,
+      "endMs": 105060,
+      "text": "You're my sweetheart"
+    },
+    {
+      "startMs": 105060,
+      "endMs": 108230,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 108230,
+      "endMs": 111030,
+      "text": "You're my sweetheart"
+    },
+    {
+      "startMs": 111030,
+      "endMs": 117050,
+      "text": "Love, we need it now"
+    },
+    {
+      "startMs": 117050,
+      "endMs": 121910,
+      "text": "Let's hope for some"
+    },
+    {
+      "startMs": 121910,
+      "endMs": 129400,
+      "text": "'Cause oh, we're bleedin' out"
+    },
+    {
+      "startMs": 129400,
+      "endMs": 132210,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 132210,
+      "endMs": 135020,
+      "text": "You're my sweetheart"
+    },
+    {
+      "startMs": 135020,
+      "endMs": 138040,
+      "text": "I belong with you, you belong with me"
+    },
+    {
+      "startMs": 138040,
+      "endMs": 140290,
+      "text": "You're my sweet"
+    },
+    {
+      "startMs": 140290,
+      "endMs": 142280,
+      "text": "(Ho!)"
+    },
+    {
+      "startMs": 142280,
+      "endMs": 145070,
+      "text": "(Hey!)"
+    },
+    {
+      "startMs": 145070,
+      "endMs": 148150,
+      "text": "(Ho!) (Last one)"
+    },
+    {
+      "startMs": 148150,
+      "endMs": 152150,
+      "text": "(Hey!)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4",
+  "outputMp4Name": "Ho Hey (Official Video) - The Lumineers.mp4"
+}

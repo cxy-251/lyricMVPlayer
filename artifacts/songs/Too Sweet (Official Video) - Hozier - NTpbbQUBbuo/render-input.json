@@ -1,0 +1,311 @@
+{
+  "title": "Hozier - Too Sweet (Official Video)",
+  "artist": "Hozier",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 16280,
+  "renderDurationInFrames": 6957,
+  "durationInFrames": 7446,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE DAWN IS A WHISPER OF WHAT WAS NEVER SPOKEN.",
+    "rightVertical": "WE ARE LOST IN THE BLUE HOUR BETWEEN SLEEP AND AWAKENING.",
+    "bottomLine": "SILENCE HOLDS ALL OUR UNTOLD SECRETS."
+  },
+  "lyrics": [
+    {
+      "startMs": 12280,
+      "endMs": 19280,
+      "text": "♪"
+    },
+    {
+      "startMs": 19280,
+      "endMs": 22420,
+      "text": "It can't be said I'm an early bird"
+    },
+    {
+      "startMs": 23280,
+      "endMs": 26380,
+      "text": "It's ten o'clock before I say a word"
+    },
+    {
+      "startMs": 27400,
+      "endMs": 29800,
+      "text": "Baby, I can never tell"
+    },
+    {
+      "startMs": 29800,
+      "endMs": 31760,
+      "text": "How do you sleep so well?"
+    },
+    {
+      "startMs": 31760,
+      "endMs": 34000,
+      "text": "You keep telling me to live right"
+    },
+    {
+      "startMs": 34780,
+      "endMs": 37860,
+      "text": "To go to bed before the daylight"
+    },
+    {
+      "startMs": 39300,
+      "endMs": 42240,
+      "text": "But then you wake up for the sunrise"
+    },
+    {
+      "startMs": 43440,
+      "endMs": 48120,
+      "text": "You know you don't gotta pretend, baby, now and then"
+    },
+    {
+      "startMs": 48120,
+      "endMs": 52180,
+      "text": "Don't you just wanna wake up, dark as a lake?"
+    },
+    {
+      "startMs": 52180,
+      "endMs": 56420,
+      "text": "Smelling like a bonfire, lost in a haze?"
+    },
+    {
+      "startMs": 56420,
+      "endMs": 60240,
+      "text": "If you're drunk on life, babe, I think it's great"
+    },
+    {
+      "startMs": 60240,
+      "endMs": 62340,
+      "text": "But while in this world"
+    },
+    {
+      "startMs": 62340,
+      "endMs": 66120,
+      "text": "I think I'll take my whiskey neat"
+    },
+    {
+      "startMs": 66680,
+      "endMs": 71750,
+      "text": "My coffee black and my bed at three"
+    },
+    {
+      "startMs": 71750,
+      "endMs": 75701,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 75701,
+      "endMs": 79351,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 79351,
+      "endMs": 84191,
+      "text": "I take my whiskey neat"
+    },
+    {
+      "startMs": 84191,
+      "endMs": 88041,
+      "text": "My coffee black and my bed at three"
+    },
+    {
+      "startMs": 88041,
+      "endMs": 92071,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 92071,
+      "endMs": 97521,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 97521,
+      "endMs": 101619,
+      "text": "Ooh"
+    },
+    {
+      "startMs": 101619,
+      "endMs": 105716,
+      "text": "Ooh"
+    },
+    {
+      "startMs": 105716,
+      "endMs": 109814,
+      "text": "Ooh"
+    },
+    {
+      "startMs": 109814,
+      "endMs": 113911,
+      "text": "Ooh"
+    },
+    {
+      "startMs": 113911,
+      "endMs": 116091,
+      "text": "I aim low"
+    },
+    {
+      "startMs": 116091,
+      "endMs": 119881,
+      "text": "I aim true, and the ground's where I go"
+    },
+    {
+      "startMs": 119881,
+      "endMs": 124501,
+      "text": "I work late, where I'm free from the phone"
+    },
+    {
+      "startMs": 124501,
+      "endMs": 129571,
+      "text": "And the job gets done, but you worry some, I know"
+    },
+    {
+      "startMs": 129571,
+      "endMs": 133371,
+      "text": "But who wants to live forever, babe?"
+    },
+    {
+      "startMs": 133371,
+      "endMs": 137471,
+      "text": "You treat your mouth as if it's Heaven's gate"
+    },
+    {
+      "startMs": 137471,
+      "endMs": 141681,
+      "text": "The rest of you like you're the TSA"
+    },
+    {
+      "startMs": 141681,
+      "endMs": 145790,
+      "text": "I wish I could go along, babe, don't get me wrong"
+    },
+    {
+      "startMs": 145790,
+      "endMs": 150351,
+      "text": "You know you're bright as the morning, as soft as the rain"
+    },
+    {
+      "startMs": 150351,
+      "endMs": 154151,
+      "text": "Pretty as a vine, as sweet as a grape"
+    },
+    {
+      "startMs": 154151,
+      "endMs": 158941,
+      "text": "If you can sit in a barrel, maybe I'll wait"
+    },
+    {
+      "startMs": 158941,
+      "endMs": 160811,
+      "text": "Until that day"
+    },
+    {
+      "startMs": 160811,
+      "endMs": 166161,
+      "text": "I'd rather take my whiskey neat"
+    },
+    {
+      "startMs": 166161,
+      "endMs": 170091,
+      "text": "My coffee black and my bed at three"
+    },
+    {
+      "startMs": 170091,
+      "endMs": 174201,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 174201,
+      "endMs": 177821,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 177821,
+      "endMs": 182651,
+      "text": "I take my whiskey neat"
+    },
+    {
+      "startMs": 182651,
+      "endMs": 186541,
+      "text": "My coffee black and my bed at three"
+    },
+    {
+      "startMs": 191850,
+      "endMs": 193850,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 195770,
+      "endMs": 201060,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 201060,
+      "endMs": 204985,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 204985,
+      "endMs": 208910,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 208910,
+      "endMs": 212835,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 212835,
+      "endMs": 216760,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 216760,
+      "endMs": 220685,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 220685,
+      "endMs": 224610,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 224610,
+      "endMs": 228535,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 228535,
+      "endMs": 232460,
+      "text": "Whoa, oh"
+    },
+    {
+      "startMs": 232460,
+      "endMs": 237240,
+      "text": "I take my whiskey neat"
+    },
+    {
+      "startMs": 237240,
+      "endMs": 240960,
+      "text": "My coffee black and my bed at three"
+    },
+    {
+      "startMs": 240960,
+      "endMs": 245110,
+      "text": "You're too sweet for me"
+    },
+    {
+      "startMs": 245110,
+      "endMs": 248310,
+      "text": "You're too sweet for me"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo",
+  "outputMp4Name": "Too Sweet (Official Video) - Hozier.mp4"
+}

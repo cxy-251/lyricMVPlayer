@@ -1,0 +1,286 @@
+{
+  "title": "Backyard Boy",
+  "artist": "Claire Rosinkranz",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 3846,
+  "durationInFrames": 3877,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE SUMMER AIR HANGS HEAVY WITH UNTOLD PROMISES.",
+    "rightVertical": "A LOOP OF MEMORIES DANCED OUT BENEATH THE SUNSET SKY.",
+    "bottomLine": "FIVE, SIX, SEVEN, EIGHT. LET IT PLAY ON."
+  },
+  "lyrics": [
+    {
+      "startMs": 1550,
+      "endMs": 3370,
+      "text": "Five, six, seven, eight"
+    },
+    {
+      "startMs": 3370,
+      "endMs": 6490,
+      "text": "Dance with me in my backyard, boy"
+    },
+    {
+      "startMs": 6490,
+      "endMs": 9350,
+      "text": "Looking super fine in your corduroy"
+    },
+    {
+      "startMs": 10110,
+      "endMs": 11750,
+      "text": "Drive me 'round the block"
+    },
+    {
+      "startMs": 12190,
+      "endMs": 13190,
+      "text": "We can go in a loop"
+    },
+    {
+      "startMs": 13190,
+      "endMs": 15410,
+      "text": "And we'll turn the volume up"
+    },
+    {
+      "startMs": 15410,
+      "endMs": 16750,
+      "text": "On some good boy band tunes"
+    },
+    {
+      "startMs": 16750,
+      "endMs": 18730,
+      "text": "Love to feel the fresh air"
+    },
+    {
+      "startMs": 18730,
+      "endMs": 20470,
+      "text": "I can feel your eyes stare"
+    },
+    {
+      "startMs": 21130,
+      "endMs": 22530,
+      "text": "And I'm not gonna lie"
+    },
+    {
+      "startMs": 22530,
+      "endMs": 23850,
+      "text": "I get a little bit scared"
+    },
+    {
+      "startMs": 23850,
+      "endMs": 25650,
+      "text": "My heart is on wings"
+    },
+    {
+      "startMs": 26090,
+      "endMs": 27270,
+      "text": "I'm living in dreams"
+    },
+    {
+      "startMs": 27270,
+      "endMs": 30050,
+      "text": "And at the top of our lungs we sing"
+    },
+    {
+      "startMs": 30050,
+      "endMs": 32640,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 32640,
+      "endMs": 35230,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 35230,
+      "endMs": 38270,
+      "text": "Everything is perfect"
+    },
+    {
+      "startMs": 38270,
+      "endMs": 40190,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 40190,
+      "endMs": 42110,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 42110,
+      "endMs": 45660,
+      "text": "All our words were worth it"
+    },
+    {
+      "startMs": 45660,
+      "endMs": 47460,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 47460,
+      "endMs": 49160,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 49160,
+      "endMs": 52280,
+      "text": "Dancing around like a clown at the circus"
+    },
+    {
+      "startMs": 52280,
+      "endMs": 54130,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 54130,
+      "endMs": 55980,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 55980,
+      "endMs": 61180,
+      "text": "Backyard boy, you make me nervous"
+    },
+    {
+      "startMs": 61180,
+      "endMs": 64569,
+      "text": "Dance with me in my backyard, boy"
+    },
+    {
+      "startMs": 64569,
+      "endMs": 68130,
+      "text": "Looking super fine in your corduroy (five, six, seven, eight)"
+    },
+    {
+      "startMs": 68130,
+      "endMs": 69450,
+      "text": "Roll the windows down"
+    },
+    {
+      "startMs": 69450,
+      "endMs": 71160,
+      "text": "Let the bass drop low"
+    },
+    {
+      "startMs": 71160,
+      "endMs": 72700,
+      "text": "And everybody's talking"
+    },
+    {
+      "startMs": 72700,
+      "endMs": 74070,
+      "text": "But I don't wanna know"
+    },
+    {
+      "startMs": 74070,
+      "endMs": 76010,
+      "text": "Feel the fresh air"
+    },
+    {
+      "startMs": 76010,
+      "endMs": 77750,
+      "text": "I can feel your eyes stare"
+    },
+    {
+      "startMs": 77750,
+      "endMs": 79360,
+      "text": "And I'm not gonna lie"
+    },
+    {
+      "startMs": 79360,
+      "endMs": 81370,
+      "text": "I get a little bit scared"
+    },
+    {
+      "startMs": 81370,
+      "endMs": 82930,
+      "text": "My heart is on wings"
+    },
+    {
+      "startMs": 82930,
+      "endMs": 84580,
+      "text": "I'm living in dreams"
+    },
+    {
+      "startMs": 84580,
+      "endMs": 88520,
+      "text": "And at the top of our lungs we sing"
+    },
+    {
+      "startMs": 88520,
+      "endMs": 90480,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 90480,
+      "endMs": 92440,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 92440,
+      "endMs": 95500,
+      "text": "Everything is perfect"
+    },
+    {
+      "startMs": 95500,
+      "endMs": 97300,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 97300,
+      "endMs": 99040,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 99040,
+      "endMs": 102400,
+      "text": "All our words were worth it"
+    },
+    {
+      "startMs": 102400,
+      "endMs": 104200,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 104200,
+      "endMs": 105919,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 105919,
+      "endMs": 109370,
+      "text": "Dancing around like a clown at the circus"
+    },
+    {
+      "startMs": 109370,
+      "endMs": 111280,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 111280,
+      "endMs": 113190,
+      "text": "Da da da da da da"
+    },
+    {
+      "startMs": 113190,
+      "endMs": 120190,
+      "text": "Backyard boy, you make me nervous"
+    },
+    {
+      "startMs": 125550,
+      "endMs": 126210,
+      "text": "Right now?"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI",
+  "outputMp4Name": "Backyard Boy - Claire Rosinkranz.mp4"
+}

@@ -1,0 +1,251 @@
+{
+  "title": "girls like me don't cry",
+  "artist": "thủy",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 14220,
+  "renderDurationInFrames": 5342,
+  "durationInFrames": 6409,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE ARE THE SILENT STORIES THAT NO ONE EVER SEES.",
+    "rightVertical": "THIS IS A SECRET GARDEN WHERE OUR TEARS CAN FALL UNHEARD.",
+    "bottomLine": "A QUIET ECHO OF WHAT WE TRULY FEEL."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 17220,
+      "text": "♪"
+    },
+    {
+      "startMs": 17220,
+      "endMs": 21630,
+      "text": "Tell me that you'll keep me safe and"
+    },
+    {
+      "startMs": 21630,
+      "endMs": 25310,
+      "text": "Never let this fade away"
+    },
+    {
+      "startMs": 25310,
+      "endMs": 34740,
+      "text": "I'm hidin' out, so they don't see this part of me"
+    },
+    {
+      "startMs": 34740,
+      "endMs": 38080,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 38080,
+      "endMs": 43500,
+      "text": "Girls like me pretend we don't cry"
+    },
+    {
+      "startMs": 43500,
+      "endMs": 46780,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 46780,
+      "endMs": 52280,
+      "text": "Girls like me pretend we don't cry"
+    },
+    {
+      "startMs": 52280,
+      "endMs": 55850,
+      "text": "Tell me that you'll keep me safe"
+    },
+    {
+      "startMs": 55850,
+      "endMs": 61040,
+      "text": "And never let this fade away"
+    },
+    {
+      "startMs": 61040,
+      "endMs": 64390,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 64390,
+      "endMs": 70140,
+      "text": "Girls like me pretend that we don't cry"
+    },
+    {
+      "startMs": 70140,
+      "endMs": 71610,
+      "text": "Lost in the city, both eyes wide"
+    },
+    {
+      "startMs": 71610,
+      "endMs": 74400,
+      "text": "Ran right through all my options"
+    },
+    {
+      "startMs": 74400,
+      "endMs": 75950,
+      "text": "Can't seem to keep my eyes both dry"
+    },
+    {
+      "startMs": 75950,
+      "endMs": 79330,
+      "text": "Got tissues in my pocket"
+    },
+    {
+      "startMs": 79330,
+      "endMs": 80620,
+      "text": "I'm sensitive"
+    },
+    {
+      "startMs": 80620,
+      "endMs": 83640,
+      "text": "Prolly wanna duck when I throw a fit"
+    },
+    {
+      "startMs": 83640,
+      "endMs": 84780,
+      "text": "Been through some shit"
+    },
+    {
+      "startMs": 84780,
+      "endMs": 87140,
+      "text": "Wear my heart on my sleeve, so it's hard to miss"
+    },
+    {
+      "startMs": 87140,
+      "endMs": 91680,
+      "text": "Tell me that you'll keep me safe and"
+    },
+    {
+      "startMs": 91680,
+      "endMs": 95340,
+      "text": "Never let this fade away"
+    },
+    {
+      "startMs": 95340,
+      "endMs": 104440,
+      "text": "I'm hidin' out, so they don't see this part of me"
+    },
+    {
+      "startMs": 104440,
+      "endMs": 107990,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 107990,
+      "endMs": 113490,
+      "text": "Girls like me pretend we don't cry (cry, baby)"
+    },
+    {
+      "startMs": 113490,
+      "endMs": 116650,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 116650,
+      "endMs": 121940,
+      "text": "Girls like me pretend we don't cry"
+    },
+    {
+      "startMs": 121940,
+      "endMs": 126510,
+      "text": "Tell me that you'll keep me safe and"
+    },
+    {
+      "startMs": 126510,
+      "endMs": 130730,
+      "text": "Never let this fade away"
+    },
+    {
+      "startMs": 130730,
+      "endMs": 134060,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 134060,
+      "endMs": 140160,
+      "text": "Girls like me pretend that we don't cry (cry)"
+    },
+    {
+      "startMs": 140160,
+      "endMs": 142250,
+      "text": "They say, \"Girl, don't cry\" (don't cry)"
+    },
+    {
+      "startMs": 142250,
+      "endMs": 144410,
+      "text": "Try to keep my head up high (up high)"
+    },
+    {
+      "startMs": 144410,
+      "endMs": 146460,
+      "text": "Smile like it's alright"
+    },
+    {
+      "startMs": 146460,
+      "endMs": 148800,
+      "text": "But all I want to do is hide"
+    },
+    {
+      "startMs": 148800,
+      "endMs": 150490,
+      "text": "Gotta let it go (oh)"
+    },
+    {
+      "startMs": 150490,
+      "endMs": 157160,
+      "text": "I don't wanna keep this all inside"
+    },
+    {
+      "startMs": 157160,
+      "endMs": 160180,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 160180,
+      "endMs": 165870,
+      "text": "Girls like me pretend we don't cry (oh, no, we don't cry, baby)"
+    },
+    {
+      "startMs": 165870,
+      "endMs": 168920,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 168920,
+      "endMs": 174520,
+      "text": "Girls like me pretend we don't cry"
+    },
+    {
+      "startMs": 174520,
+      "endMs": 178970,
+      "text": "Tell me that you'll keep me safe and"
+    },
+    {
+      "startMs": 178970,
+      "endMs": 183260,
+      "text": "Never let this fade away"
+    },
+    {
+      "startMs": 183260,
+      "endMs": 186440,
+      "text": "Girls like me don't cry"
+    },
+    {
+      "startMs": 186440,
+      "endMs": 190300,
+      "text": "Girls like me pretend that we don't cry"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M",
+  "outputMp4Name": "girls like me don't cry - thủy.mp4"
+}
