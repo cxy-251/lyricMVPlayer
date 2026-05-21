@@ -3,6 +3,7 @@
 @source "../remotion/**/*.{ts,tsx}";
 @source "../../modules/render-core/src/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
+@source "../web/**/*.{ts,tsx}";
 
 html,
 body,
