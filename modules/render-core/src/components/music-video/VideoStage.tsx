@@ -291,6 +291,19 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     ];
   }, [customPlaylists, likedTrackIds.length]);
 
+  const trackPlaylistIds = useMemo(() => {
+    const ids: string[] = [];
+    if (likedTrackIds.includes(currentSong.id)) {
+      ids.push("liked");
+    }
+    customPlaylists.forEach((playlist) => {
+      if (playlist.trackIds.includes(currentSong.id)) {
+        ids.push(playlist.id);
+      }
+    });
+    return ids;
+  }, [currentSong.id, customPlaylists, likedTrackIds]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -793,12 +806,14 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         <AddToPlaylistPanel
           open={addToPlaylistOpen}
           playlists={playlists.filter((playlist) => playlist.id !== "all")}
-          selectedPlaylistId={selectedPlaylistId}
+          trackPlaylistIds={trackPlaylistIds}
           onClose={() => setAddToPlaylistOpen(false)}
           onSelectPlaylist={(playlistId) => {
             if (playlistId === "liked") {
               setLikedTrackIds((value) =>
-                value.includes(currentSong.id) ? value : [...value, currentSong.id]
+                value.includes(currentSong.id)
+                  ? value.filter((id) => id !== currentSong.id)
+                  : [...value, currentSong.id]
               );
             } else {
               setCustomPlaylists((value) =>
@@ -807,14 +822,13 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
                     ? {
                         ...playlist,
                         trackIds: playlist.trackIds.includes(currentSong.id)
-                          ? playlist.trackIds
+                          ? playlist.trackIds.filter((trackId) => trackId !== currentSong.id)
                           : [...playlist.trackIds, currentSong.id],
                       }
                     : playlist
                 )
               );
             }
-            setAddToPlaylistOpen(false);
           }}
         />
 

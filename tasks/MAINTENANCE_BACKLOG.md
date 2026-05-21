@@ -11,6 +11,9 @@ Updated: 2026-05-21
 
 ## Resolved Recently
 
+- Playlist membership toggle
+  - Fixed `Add to Playlist` so clicking a playlist now toggles membership for the current song instead of only adding tracks. `Liked Songs` now also toggles on/off from the same panel.
+
 - Preview library loading
   - Replaced the oversized generated `preview-composition-props.ts` approach with a manifest-based structure:
     - `src/remotion/preview-library-manifest.json`

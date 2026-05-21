@@ -7,7 +7,7 @@ import {cn} from "../../lib/cn";
 type AddToPlaylistPanelProps = {
   open: boolean;
   playlists: PlaylistSummary[];
-  selectedPlaylistId: string | null;
+  trackPlaylistIds: string[];
   onClose: () => void;
   onSelectPlaylist: (playlistId: string) => void;
 };
@@ -15,7 +15,7 @@ type AddToPlaylistPanelProps = {
 export const AddToPlaylistPanel: React.FC<AddToPlaylistPanelProps> = ({
   open,
   playlists,
-  selectedPlaylistId,
+  trackPlaylistIds,
   onClose,
   onSelectPlaylist
 }) => {
@@ -38,22 +38,26 @@ export const AddToPlaylistPanel: React.FC<AddToPlaylistPanelProps> = ({
         </div>
         <div className="mt-[20px] flex flex-col gap-[10px]">
           {playlists.map((playlist) => (
-            <button
-              key={playlist.id}
-              className={cn(
-                "flex w-full items-center justify-between rounded-[20px] border px-[18px] py-[16px] text-left transition",
-                selectedPlaylistId === playlist.id
-                  ? "border-blue-300/60 bg-blue-300/10"
-                  : "border-white/8 bg-white/4"
-              )}
-              onClick={() => onSelectPlaylist(playlist.id)}
-            >
-              <div>
-                <div className="text-[18px] text-white/94">{playlist.name}</div>
-                <div className="mt-[4px] text-[14px] text-white/54">{playlist.count} tracks</div>
-              </div>
-              {selectedPlaylistId === playlist.id ? <Check size={18} strokeWidth={2} className="text-blue-300" /> : null}
-            </button>
+            (() => {
+              const isIncluded = trackPlaylistIds.includes(playlist.id);
+
+              return (
+                <button
+                  key={playlist.id}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-[20px] border px-[18px] py-[16px] text-left transition",
+                    isIncluded ? "border-blue-300/60 bg-blue-300/10" : "border-white/8 bg-white/4"
+                  )}
+                  onClick={() => onSelectPlaylist(playlist.id)}
+                >
+                  <div>
+                    <div className="text-[18px] text-white/94">{playlist.name}</div>
+                    <div className="mt-[4px] text-[14px] text-white/54">{playlist.count} tracks</div>
+                  </div>
+                  {isIncluded ? <Check size={18} strokeWidth={2} className="text-blue-300" /> : null}
+                </button>
+              );
+            })()
           ))}
         </div>
       </div>
