@@ -78,6 +78,7 @@ const libraryState = fs.existsSync(libraryStatePath)
       likedTrackIds: [],
       customPlaylists: [
         {id: "new-downloads", name: "New Downloads", trackIds: []},
+        {id: "lyrics-review", name: "Lyrics Review", trackIds: []},
         {id: "alignment-error", name: "Alignment Error", trackIds: []},
       ],
     };

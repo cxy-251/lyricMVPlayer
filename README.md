@@ -74,13 +74,19 @@ Common commands for the frontend preview and render layer:
   This file is the project-level seed for playlist definitions and the default nickname.
   If you want to add, rename, or reorder playlists, edit this file directly.
   The preview player no longer provides create/delete playlist UI.
-  The fixed playlist `New Downloads` is also maintained automatically:
+  The fixed playlist `New Downloads` is maintained automatically:
   each time `prepare:playlist` succeeds, newly prepared songs are appended to that playlist so you can review and later remove them manually.
+  The fixed playlist `Lyrics Review` is also maintained automatically:
+  if the pipeline cannot find reliable synced lyrics, or detects that a YouTube Music lyric source points to a different video ID than the downloaded audio, the song is added to this playlist for manual review.
+  The fixed playlist `Alignment Error` is for songs whose lyric source may be correct but whose listening result still needs alignment review.
 
 - `npm run prepare:playlist -- "<playlist-url>" [default-render-batch]`
   Run the playlist preparation pipeline.
   This downloads and prepares each song package, resolves lyrics, aligns lyrics, generates prompt/workflow assets for the future background step, generates `audio-features.json`, and writes or updates:
   `artifacts/common/production-queue.csv`
+  It also writes:
+  `artifacts/common/recent-downloads.json`
+  This file lists the latest downloaded song IDs and includes `lyrics_review_items` when a song needs lyric-source review.
   It also refreshes the current web preview library so newly prepared songs appear in the player after a page refresh.
   It does not generate background images and does not render MP4 files.
   The CSV keeps:
@@ -108,6 +114,11 @@ Common commands for the frontend preview and render layer:
 
 - `npm run apply:manual-lyrics -- "<song-folder-name>"`
   If a song folder contains `lyrics.manual.txt`, use that file as the preferred lyric source, realign it against the song audio, overwrite `lyrics.json`, refresh `alignedLRC.json`, regenerate background prompt / poetry / workflow assets, and refresh `render-input.json`.
+  Manual lyrics can include per-line start anchors with:
+  `Lyric text || mm:ss.xx`
+  You only need anchors on lines that are audibly wrong.
+  Songs with no reliable LRC, mismatched lyric source, duet/bridge issues, or manually supplied lyrics should use this path.
+  The audio alignment step no longer invents missing lyric timings with mathematical interpolation; lines must be backed by downloaded LRC timing, a manual anchor, or model matching.
 
 - `npm run render:queue -- [batch-value]`
   Read `artifacts/common/production-queue.csv` and render only rows where:

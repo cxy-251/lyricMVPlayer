@@ -9,6 +9,13 @@
       "trackIds": []
     },
     {
+      "id": "lyrics-review",
+      "name": "Lyrics Review",
+      "trackIds": [
+        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo"
+      ]
+    },
+    {
       "id": "alignment-error",
       "name": "Alignment Error",
       "trackIds": [

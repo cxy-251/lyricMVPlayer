@@ -40,6 +40,7 @@ const LIBRARY_STATE_SYNC_URL = "http://127.0.0.1:3210/api/library-state";
 const ALL_TRACKS_SENTINEL = "__ALL__";
 const DEFAULT_CUSTOM_PLAYLISTS = [
   {id: "new-downloads", name: "New Downloads", trackIds: [] as string[]},
+  {id: "lyrics-review", name: "Lyrics Review", trackIds: [] as string[]},
   {id: "alignment-error", name: "Alignment Error", trackIds: [] as string[]},
 ];
 

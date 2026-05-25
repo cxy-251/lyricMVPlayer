@@ -10,6 +10,10 @@ const playlistPipelineResultPath = path.join(projectRoot, "artifacts", "common",
 const libraryStatePath = path.join(projectRoot, "artifacts", "common", "library-state.json");
 const NEW_DOWNLOADS_PLAYLIST_ID = "new-downloads";
 const NEW_DOWNLOADS_PLAYLIST_NAME = "New Downloads";
+const LYRICS_REVIEW_PLAYLIST_ID = "lyrics-review";
+const LYRICS_REVIEW_PLAYLIST_NAME = "Lyrics Review";
+const ALIGNMENT_ERROR_PLAYLIST_ID = "alignment-error";
+const ALIGNMENT_ERROR_PLAYLIST_NAME = "Alignment Error";
 
 if (!playlistUrl) {
   throw new Error('Usage: npm run prepare:playlist -- "<playlist-url>" [default-render-batch]');
@@ -29,22 +33,120 @@ if ((result.status ?? 1) !== 0) {
   process.exit(result.status ?? 1);
 }
 
+const getSourceRecord = (entry) => entry?.source?.record ?? {};
+
+const getSourceVideoId = (entry) =>
+  getSourceRecord(entry)?.source_identity?.video_id ??
+  entry?.source?.source_identity?.video_id ??
+  null;
+
+const getSourceUrl = (entry) =>
+  getSourceRecord(entry)?.watch_url ??
+  getSourceRecord(entry)?.canonical_url ??
+  entry?.source_url ??
+  null;
+
+const extractVideoIdFromText = (value) => {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const matches = [...value.matchAll(/(?:v=|youtu\.be\/|->\s*)([A-Za-z0-9_-]{8,})/g)];
+  return matches.length > 0 ? matches.at(-1)?.[1] ?? null : null;
+};
+
+const getLyricsReview = (entry) => {
+  const songDir = entry?.song_dir ? path.basename(entry.song_dir) : null;
+  if (!songDir) {
+    return null;
+  }
+
+  if (!entry?.ok && entry?.stage === "lyrics") {
+    return {
+      song_dir: songDir,
+      reason: "lyrics_resolution_failed",
+      detail: entry?.error?.message ?? null,
+    };
+  }
+
+  const document = entry?.timed_lyrics?.document;
+  const lines = Array.isArray(document?.lines) ? document.lines : [];
+  if (!document || lines.length === 0) {
+    return {
+      song_dir: songDir,
+      reason: "lyrics_missing",
+      detail: null,
+    };
+  }
+
+  const sourceVideoId = getSourceVideoId(entry);
+  const lyricVideoId = extractVideoIdFromText(document.source_detail);
+  if (
+    document.source === "youtube-music" &&
+    sourceVideoId &&
+    lyricVideoId &&
+    sourceVideoId !== lyricVideoId
+  ) {
+    return {
+      song_dir: songDir,
+      reason: "lyrics_source_video_mismatch",
+      expected_video_id: sourceVideoId,
+      lyric_video_id: lyricVideoId,
+      detail: document.source_detail,
+    };
+  }
+
+  return null;
+};
+
+const normalizeTrackIds = (trackIds) =>
+  Array.from(new Set(Array.isArray(trackIds) ? trackIds.filter((trackId) => typeof trackId === "string" && trackId) : []));
+
+const ensurePlaylist = (playlists, playlistId, playlistName, trackIdsToAdd = []) => {
+  const playlistIndex = playlists.findIndex((playlist) => playlist?.id === playlistId);
+  const existingTrackIds = playlistIndex >= 0 ? playlists[playlistIndex]?.trackIds : [];
+  const nextTrackIds = Array.from(new Set([...normalizeTrackIds(existingTrackIds), ...trackIdsToAdd]));
+
+  if (playlistIndex >= 0) {
+    return playlists.map((playlist, index) =>
+      index === playlistIndex
+        ? {
+            ...playlist,
+            name: playlistName,
+            trackIds: nextTrackIds,
+          }
+        : playlist
+    );
+  }
+
+  return [
+    ...playlists,
+    {
+      id: playlistId,
+      name: playlistName,
+      trackIds: nextTrackIds,
+    },
+  ];
+};
+
 try {
   if (fs.existsSync(playlistPipelineResultPath)) {
     const pipelineResult = JSON.parse(fs.readFileSync(playlistPipelineResultPath, "utf-8"));
     const downloaded = Array.isArray(pipelineResult.results)
       ? pipelineResult.results
       .map((entry) => {
-        const source = entry?.source ?? {};
+        const lyricsReview = getLyricsReview(entry);
         return {
-          video_id: source.video_id ?? null,
-          source_url: source.watch_url ?? entry?.source_url ?? null,
+          video_id: getSourceVideoId(entry),
+          source_url: getSourceUrl(entry),
           song_dir: entry?.song_dir ? path.basename(entry.song_dir) : null,
           ok: Boolean(entry?.ok),
+          lyrics_review: lyricsReview,
         };
       })
       .filter((entry) => entry.video_id || entry.song_dir)
       : [];
+    const lyricsReviewItems = downloaded.map((entry) => entry.lyrics_review).filter(Boolean);
 
     fs.writeFileSync(
       recentDownloadsPath,
@@ -53,7 +155,9 @@ try {
           playlist_url: playlistUrl,
           generated_at: new Date().toISOString(),
           count: downloaded.length,
+          lyrics_review_count: lyricsReviewItems.length,
           items: downloaded,
+          lyrics_review_items: lyricsReviewItems,
         },
         null,
         2
@@ -61,57 +165,34 @@ try {
       "utf-8"
     );
 
-    if (fs.existsSync(libraryStatePath)) {
-      const libraryState = JSON.parse(fs.readFileSync(libraryStatePath, "utf-8"));
-      const customPlaylists = Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [];
-      const newSongDirs = downloaded.map((entry) => entry.song_dir).filter(Boolean);
+    const libraryState = fs.existsSync(libraryStatePath)
+      ? JSON.parse(fs.readFileSync(libraryStatePath, "utf-8"))
+      : {
+          nickname: "CleanKsen",
+          selectedPlaylistId: NEW_DOWNLOADS_PLAYLIST_ID,
+          likedTrackIds: [],
+          customPlaylists: [],
+        };
+    const customPlaylists = Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [];
+    const newSongDirs = downloaded.map((entry) => entry.song_dir).filter(Boolean);
+    const lyricsReviewSongDirs = lyricsReviewItems.map((entry) => entry.song_dir).filter(Boolean);
+    let updatedPlaylists = ensurePlaylist(customPlaylists, NEW_DOWNLOADS_PLAYLIST_ID, NEW_DOWNLOADS_PLAYLIST_NAME, newSongDirs);
+    updatedPlaylists = ensurePlaylist(updatedPlaylists, LYRICS_REVIEW_PLAYLIST_ID, LYRICS_REVIEW_PLAYLIST_NAME, lyricsReviewSongDirs);
+    updatedPlaylists = ensurePlaylist(updatedPlaylists, ALIGNMENT_ERROR_PLAYLIST_ID, ALIGNMENT_ERROR_PLAYLIST_NAME, []);
 
-      const updatedPlaylists = (() => {
-        const playlistIndex = customPlaylists.findIndex((playlist) => playlist?.id === NEW_DOWNLOADS_PLAYLIST_ID);
-        const nextTrackIds = Array.from(
-          new Set([
-            ...(playlistIndex >= 0 && Array.isArray(customPlaylists[playlistIndex]?.trackIds)
-              ? customPlaylists[playlistIndex].trackIds
-              : []),
-            ...newSongDirs,
-          ])
-        );
-
-        if (playlistIndex >= 0) {
-          return customPlaylists.map((playlist, index) =>
-            index === playlistIndex
-              ? {
-                  ...playlist,
-                  name: NEW_DOWNLOADS_PLAYLIST_NAME,
-                  trackIds: nextTrackIds,
-                }
-              : playlist
-          );
-        }
-
-        return [
-          ...customPlaylists,
-          {
-            id: NEW_DOWNLOADS_PLAYLIST_ID,
-            name: NEW_DOWNLOADS_PLAYLIST_NAME,
-            trackIds: nextTrackIds,
-          },
-        ];
-      })();
-
-      fs.writeFileSync(
-        libraryStatePath,
-        JSON.stringify(
-          {
-            ...libraryState,
-            customPlaylists: updatedPlaylists,
-          },
-          null,
-          2
-        ) + "\n",
-        "utf-8"
-      );
-    }
+    fs.writeFileSync(
+      libraryStatePath,
+      JSON.stringify(
+        {
+          ...libraryState,
+          selectedPlaylistId: libraryState.selectedPlaylistId ?? NEW_DOWNLOADS_PLAYLIST_ID,
+          customPlaylists: updatedPlaylists,
+        },
+        null,
+        2
+      ) + "\n",
+      "utf-8"
+    );
   }
 } catch {
   // ignore recent-downloads write failure; main pipeline already succeeded

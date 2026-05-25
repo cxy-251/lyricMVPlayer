@@ -11,9 +11,13 @@ Updated: 2026-05-21
   - Next step: verify the next Pages deploy visually matches the local web build.
 
 - `Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY`
-  - Status: `investigating`
-  - Problem: the manual-lyrics alignment is much better than before, but the bridge/tail section after `Lost but so found` still starts too early. Continuous filler lines like `Ah` no longer collapse the tail, but they still do not express long instrumental timing accurately enough on their own.
-  - Next step: support stronger manual timing hints for difficult songs, preferably manual LRC timestamps or explicit gap markers, instead of relying on filler-word interpolation alone.
+  - Status: `improving`
+  - Problem: bridge/tail timing remains the main fragile area. Pure filler-word interpolation is not reliable enough for long instrumental gaps, even when the rest of the song aligns well.
+  - Progress: manual plain-text lyrics now support per-line time anchors using `|| mm:ss.xx`, and those anchors are now treated as hard constraints during final stabilization instead of being overwritten by later auto-alignment passes.
+  - Progress: VAD filtering has been added ahead of alignment so no-speech regions are less likely to produce false lyric anchors from bridge/percussion sections.
+  - Progress: manual-anchored plain lyrics now use a model-first path. Lines are kept when they are anchored manually or matched to faster-whisper transcript words/segments; long-range mathematical interpolation is no longer used for this path.
+  - Tradeoff: if the model does not hear a lyric line, that line may be omitted instead of being given a guessed timestamp. This avoids dragging the rest of the song out of sync.
+  - Next step: evaluate whether omitted-but-important lines should be restored by adding manual anchors, or by moving to true forced alignment instead of transcription matching.
 
 - `render_batch == 1` lyric-review queue
   - Status: `analyzed`
