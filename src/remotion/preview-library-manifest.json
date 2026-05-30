@@ -1,14 +1,14 @@
 {
-  "selectedSongDirName": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+  "selectedSongDirName": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
   "songs": [
     {
-      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
-      "title": "Just the Way You Are",
-      "artist": "Bruno Mars",
+      "id": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+      "title": "Christina Perri - A Thousand Years [Official Music Video]",
+      "artist": "Christina Perri",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 0,
-      "renderDurationInFrames": 6622,
-      "durationInFrames": 6622,
+      "renderTrimStartMs": 16380,
+      "renderDurationInFrames": 4281,
+      "durationInFrames": 8633,
       "fps": 30,
       "background": {
         "kind": "image",
@@ -17,345 +17,155 @@
       "poetryFrame": {
         "nickname": "@xcai43323",
         "topLabel": "@xcai43323 · AUDIO DIARY",
-        "leftVertical": "NEVER LET THE WORLD PAINT YOU INTO A SHAPE THAT DOESN'T FIT.",
-        "rightVertical": "EMBRACE THE COLORS THEY CANNOT TRULY UNDERSTAND OR CONTAIN.",
-        "bottomLine": "YOU ARE GOOD AT WHAT THEY CANNOT SEE."
+        "leftVertical": "A THOUSAND YEARS OF SILENCE ECHOING IN THE VEIL.",
+        "rightVertical": "THE HEARTBEAT ACCELERATES, A PULSE AGAINST THE TURNING TIDE.",
+        "bottomLine": "THIS IS WHERE FOREVER BEGINS TO UNFOLD."
       },
       "lyrics": [
         {
-          "startMs": 580,
-          "endMs": 2700,
-          "text": "First rule, never let 'em change you"
+          "startMs": 0,
+          "endMs": 4200,
+          "text": "♪"
         },
         {
-          "startMs": 2700,
-          "endMs": 5650,
-          "text": "Rule two, do you to the fullest (To the fullest)"
+          "startMs": 19380,
+          "endMs": 23060,
+          "text": "Heart beats fast"
         },
         {
-          "startMs": 5650,
-          "endMs": 7150,
-          "text": "And never be ashamed to"
+          "startMs": 23060,
+          "endMs": 26180,
+          "text": "Colors and promises"
         },
         {
-          "startMs": 7150,
-          "endMs": 9350,
-          "text": "You just good at what they can't do"
+          "startMs": 27550,
+          "endMs": 29530,
+          "text": "How to be brave?"
         },
         {
-          "startMs": 9350,
-          "endMs": 11550,
-          "text": "And they hate that, they wanna paint you"
+          "startMs": 30060,
+          "endMs": 37020,
+          "text": "How can I love when I'm afraid to fall"
         },
         {
-          "startMs": 11550,
-          "endMs": 13380,
-          "text": "In they color, put you in another"
+          "startMs": 37160,
+          "endMs": 42040,
+          "text": "But watching you stand alone?"
         },
         {
-          "startMs": 13380,
-          "endMs": 15520,
-          "text": "But what they don't accept (Uh) and what they don't see (Yeah)"
+          "startMs": 42040,
+          "endMs": 49700,
+          "text": "All of my doubt suddenly goes away somehow"
         },
         {
-          "startMs": 15520,
-          "endMs": 17620,
-          "text": "The best thing is what you already be"
+          "startMs": 51010,
+          "endMs": 55210,
+          "text": "One step closer"
         },
         {
-          "startMs": 17620,
-          "endMs": 19830,
-          "text": "Oh, her eyes, her eyes"
+          "startMs": 57930,
+          "endMs": 62130,
+          "text": "I have died everyday waiting for you"
         },
         {
-          "startMs": 19830,
-          "endMs": 22580,
-          "text": "Make the stars look like they're not shinin'"
+          "startMs": 62760,
+          "endMs": 66960,
+          "text": "Darling don't be afraid I have loved you"
         },
         {
-          "startMs": 22580,
-          "endMs": 24130,
-          "text": "Her hair, her hair"
+          "startMs": 67270,
+          "endMs": 71260,
+          "text": "For a thousand years"
         },
         {
-          "startMs": 24130,
-          "endMs": 27200,
-          "text": "Falls perfectly without her tryin'"
+          "startMs": 71260,
+          "endMs": 75460,
+          "text": "I'll love you for a thousand more"
         },
         {
-          "startMs": 27200,
-          "endMs": 29620,
-          "text": "She's so beautiful"
+          "startMs": 77700,
+          "endMs": 81900,
+          "text": "♪"
         },
         {
-          "startMs": 29620,
-          "endMs": 34630,
-          "text": "And I tell her every day"
+          "startMs": 82470,
+          "endMs": 86060,
+          "text": "Time stands still"
         },
         {
-          "startMs": 34630,
-          "endMs": 37480,
-          "text": "Yeah, I know, I know"
+          "startMs": 86060,
+          "endMs": 90260,
+          "text": "Beauty in all she is"
         },
         {
-          "startMs": 37480,
-          "endMs": 40070,
-          "text": "When I compliment her, she won't believe me"
+          "startMs": 90950,
+          "endMs": 93340,
+          "text": "I will be brave"
         },
         {
-          "startMs": 40070,
-          "endMs": 41750,
-          "text": "And it's so, it's so"
+          "startMs": 93340,
+          "endMs": 97540,
+          "text": "I will not let anything take away"
         },
         {
-          "startMs": 41750,
-          "endMs": 44790,
-          "text": "Sad to think that she don't see what I see"
+          "startMs": 100360,
+          "endMs": 104560,
+          "text": "What's standing in front of me"
         },
         {
-          "startMs": 44790,
-          "endMs": 51430,
-          "text": "But every time she asks me, \"Do I look okay?\" I say"
+          "startMs": 105310,
+          "endMs": 107509,
+          "text": "Every breath"
         },
         {
-          "startMs": 51430,
-          "endMs": 56070,
-          "text": "When I see your face"
+          "startMs": 107509,
+          "endMs": 111709,
+          "text": "Every hour has come to this"
         },
         {
-          "startMs": 56070,
-          "endMs": 60760,
-          "text": "There's not a thing that I would change"
+          "startMs": 113960,
+          "endMs": 118160,
+          "text": "One step closer"
         },
         {
-          "startMs": 60760,
-          "endMs": 63850,
-          "text": "'Cause you're amazing (Amazing)"
+          "startMs": 121330,
+          "endMs": 125530,
+          "text": "I have died everyday waiting for you"
         },
         {
-          "startMs": 63850,
-          "endMs": 69340,
-          "text": "Just the way you are"
+          "startMs": 125990,
+          "endMs": 130190,
+          "text": "Darling don't be afraid I have loved you"
         },
         {
-          "startMs": 69340,
-          "endMs": 73750,
-          "text": "And when you smile"
+          "startMs": 130620,
+          "endMs": 134820,
+          "text": "For a thousand years"
         },
         {
-          "startMs": 73750,
-          "endMs": 78140,
-          "text": "The whole world stops and stares for a while"
+          "startMs": 134910,
+          "endMs": 139110,
+          "text": "I'll love you for a thousand more"
         },
         {
-          "startMs": 78140,
-          "endMs": 81400,
-          "text": "'Cause, girl, you're amazing (Amazing)"
+          "startMs": 140620,
+          "endMs": 144820,
+          "text": "And all along I believed I would find you"
         },
         {
-          "startMs": 81400,
-          "endMs": 88560,
-          "text": "Just the way you are (Yeah)"
+          "startMs": 145450,
+          "endMs": 148050,
+          "text": "Time has brought your heart to me"
         },
         {
-          "startMs": 88560,
-          "endMs": 90370,
-          "text": "Her lips, her lips"
+          "startMs": 148050,
+          "endMs": 152250,
+          "text": "I have loved you for a thousand years"
         },
         {
-          "startMs": 90370,
-          "endMs": 93010,
-          "text": "I could kiss them all day if she'd let me"
-        },
-        {
-          "startMs": 93010,
-          "endMs": 94780,
-          "text": "Her laugh, her laugh"
-        },
-        {
-          "startMs": 94780,
-          "endMs": 97650,
-          "text": "She hates, but I think it's so sexy"
-        },
-        {
-          "startMs": 97650,
-          "endMs": 100110,
-          "text": "She's so beautiful"
-        },
-        {
-          "startMs": 100110,
-          "endMs": 105230,
-          "text": "And I tell her every day"
-        },
-        {
-          "startMs": 105230,
-          "endMs": 107410,
-          "text": "Oh, you know, you know, you know"
-        },
-        {
-          "startMs": 107410,
-          "endMs": 110170,
-          "text": "I'd never ask you to change"
-        },
-        {
-          "startMs": 110170,
-          "endMs": 112390,
-          "text": "If perfect's what you're searching for"
-        },
-        {
-          "startMs": 112390,
-          "endMs": 114590,
-          "text": "Then just stay the same"
-        },
-        {
-          "startMs": 114590,
-          "endMs": 118490,
-          "text": "So don't even bother askin' if you look okay"
-        },
-        {
-          "startMs": 118490,
-          "endMs": 121920,
-          "text": "You know I'll say"
-        },
-        {
-          "startMs": 121920,
-          "endMs": 126530,
-          "text": "When I see your face"
-        },
-        {
-          "startMs": 126530,
-          "endMs": 131180,
-          "text": "There's not a thing that I would change"
-        },
-        {
-          "startMs": 131180,
-          "endMs": 134350,
-          "text": "'Cause you're amazing (Amazing)"
-        },
-        {
-          "startMs": 134350,
-          "endMs": 139740,
-          "text": "Just the way you are"
-        },
-        {
-          "startMs": 139740,
-          "endMs": 144110,
-          "text": "And when you smile"
-        },
-        {
-          "startMs": 144110,
-          "endMs": 148690,
-          "text": "The whole world stops and stares for a while"
-        },
-        {
-          "startMs": 148690,
-          "endMs": 151820,
-          "text": "'Cause, girl, you're amazing (Amazing)"
-        },
-        {
-          "startMs": 151820,
-          "endMs": 158680,
-          "text": "Just the way you are (Yeah)"
-        },
-        {
-          "startMs": 158680,
-          "endMs": 161250,
-          "text": "Uh, yeah, the definition of real is"
-        },
-        {
-          "startMs": 161250,
-          "endMs": 163420,
-          "text": "If you don't feel it, then you don't feel it"
-        },
-        {
-          "startMs": 163420,
-          "endMs": 165610,
-          "text": "Don't conceal it, don't be fake"
-        },
-        {
-          "startMs": 165610,
-          "endMs": 167520,
-          "text": "You look great, don't need silicone to build it (Uh)"
-        },
-        {
-          "startMs": 167520,
-          "endMs": 170090,
-          "text": "Or Botox to kill it (Yeah), you just killin' off spirit (Uh)"
-        },
-        {
-          "startMs": 170090,
-          "endMs": 172370,
-          "text": "And you the one that you gotta live with (Uh, yeah)"
-        },
-        {
-          "startMs": 172370,
-          "endMs": 174150,
-          "text": "So don't get caught up in appearances"
-        },
-        {
-          "startMs": 174150,
-          "endMs": 179140,
-          "text": "See the inner beauty when you look off in the mirrors"
-        },
-        {
-          "startMs": 179140,
-          "endMs": 180110,
-          "text": "The way you are"
-        },
-        {
-          "startMs": 180110,
-          "endMs": 184050,
-          "text": "The way you are"
-        },
-        {
-          "startMs": 184050,
-          "endMs": 187100,
-          "text": "Girl, you're amazing (Amazing)"
-        },
-        {
-          "startMs": 187100,
-          "endMs": 192380,
-          "text": "Just the way you are"
-        },
-        {
-          "startMs": 192380,
-          "endMs": 197060,
-          "text": "When I see your face"
-        },
-        {
-          "startMs": 197060,
-          "endMs": 201680,
-          "text": "There's not a thing that I would change"
-        },
-        {
-          "startMs": 201680,
-          "endMs": 204740,
-          "text": "'Cause you're amazing (Amazing)"
-        },
-        {
-          "startMs": 204740,
-          "endMs": 210280,
-          "text": "Just the way you are"
-        },
-        {
-          "startMs": 210280,
-          "endMs": 214620,
-          "text": "And when you smile"
-        },
-        {
-          "startMs": 214620,
-          "endMs": 219050,
-          "text": "The whole world stops and stares for a while"
-        },
-        {
-          "startMs": 219050,
-          "endMs": 222460,
-          "text": "'Cause, girl, you're amazing (Amazing)"
-        },
-        {
-          "startMs": 222460,
-          "endMs": 238010,
-          "text": "Just the way you are (Yeah)"
+          "startMs": 153890,
+          "endMs": 157090,
+          "text": "I'll love you for a thousand more"
         }
       ]
     },
@@ -2631,8 +2441,8 @@
       "title": "blue",
       "artist": "yung kai",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 15990,
-      "renderDurationInFrames": 4476,
+      "renderTrimStartMs": 16120,
+      "renderDurationInFrames": 4492,
       "durationInFrames": 6430,
       "fps": 30,
       "background": {
@@ -2642,124 +2452,134 @@
       "poetryFrame": {
         "nickname": "@xcai43323",
         "topLabel": "@xcai43323 · AUDIO DIARY",
-        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
-        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
-        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+        "leftVertical": "YOUR MORNING EYES ARE LIKE WATCHING DISTANT STARS.",
+        "rightVertical": "A SIMPLE TOUCH SPEAKS VOLUMES WITHOUT A SINGLE WORD.",
+        "bottomLine": "UNDER MOONLIGHT SKIES, WE BELONG TOGETHER."
       },
       "lyrics": [
         {
-          "startMs": 18990,
-          "endMs": 24810,
+          "startMs": 0,
+          "endMs": 4200,
+          "text": "♪"
+        },
+        {
+          "startMs": 19120,
+          "endMs": 24960,
           "text": "Your morning eyes, I could stare like watching stars"
         },
         {
-          "startMs": 25990,
-          "endMs": 32170,
+          "startMs": 26430,
+          "endMs": 32189,
           "text": "I could walk you by, and I'll tell without a thought"
         },
         {
-          "startMs": 32170,
-          "endMs": 39450,
+          "startMs": 32340,
+          "endMs": 39541,
           "text": "You'd be mine, would you mind if I took your hand tonight?"
         },
         {
-          "startMs": 39970,
-          "endMs": 44670,
+          "startMs": 40040,
+          "endMs": 45260,
           "text": "Know you're all that I want this life"
         },
         {
-          "startMs": 45970,
-          "endMs": 50580,
+          "startMs": 48210,
+          "endMs": 50290,
           "text": "I'll imagine we fell in love"
         },
         {
-          "startMs": 51060,
-          "endMs": 54220,
+          "startMs": 50660,
+          "endMs": 53560,
           "text": "I'll nap under moonlight skies with you"
         },
         {
-          "startMs": 54220,
-          "endMs": 58040,
+          "startMs": 54780,
+          "endMs": 58000,
           "text": "I think I'll picture us, you with the waves"
         },
         {
-          "startMs": 58140,
-          "endMs": 61860,
+          "startMs": 58260,
+          "endMs": 61770,
           "text": "The ocean's colours on your face"
         },
         {
-          "startMs": 61860,
-          "endMs": 65720,
+          "startMs": 62190,
+          "endMs": 65670,
           "text": "I'll leave my heart with your air"
         },
         {
-          "startMs": 65720,
-          "endMs": 69200,
+          "startMs": 66470,
+          "endMs": 69250,
           "text": "So, let me fly with you"
         },
         {
-          "startMs": 69200,
-          "endMs": 74580,
+          "startMs": 69750,
+          "endMs": 75070,
           "text": "Will you be forever with me?"
         },
         {
-          "startMs": 108440,
-          "endMs": 113680,
+          "startMs": 76220,
+          "endMs": 80420,
+          "text": "♪"
+        },
+        {
+          "startMs": 107080,
+          "endMs": 112100,
           "text": "My love will always stay by you"
         },
         {
-          "startMs": 113680,
-          "endMs": 118340,
+          "startMs": 112840,
+          "endMs": 117040,
           "text": "I'll keep it safe, so don't you worry a thing"
         },
         {
-          "startMs": 118340,
-          "endMs": 120840,
+          "startMs": 118120,
+          "endMs": 120620,
           "text": "I'll tell you I love you more"
         },
         {
-          "startMs": 120840,
+          "startMs": 121720,
           "endMs": 128060,
           "text": "It's stuck with you forever, so promise you won't let it go"
         },
         {
-          "startMs": 128060,
-          "endMs": 133900,
+          "startMs": 128580,
+          "endMs": 134520,
           "text": "I'll trust the universe will always bring me to you"
         },
         {
-          "startMs": 133900,
-          "endMs": 139240,
+          "startMs": 136870,
+          "endMs": 139250,
           "text": "I'll imagine we fell in love"
         },
         {
-          "startMs": 139240,
-          "endMs": 142840,
+          "startMs": 139540,
+          "endMs": 142380,
           "text": "I'll nap under moonlight skies with you"
         },
         {
-          "startMs": 142840,
-          "endMs": 146740,
+          "startMs": 143360,
+          "endMs": 146800,
           "text": "I think I'll picture us, you with the waves"
         },
         {
-          "startMs": 146740,
-          "endMs": 150520,
+          "startMs": 146850,
+          "endMs": 150400,
           "text": "The ocean's colours on your face"
         },
         {
-          "startMs": 150520,
-          "endMs": 154300,
+          "startMs": 150640,
+          "endMs": 154480,
           "text": "I'll leave my heart with your air"
         },
         {
-          "startMs": 154650,
+          "startMs": 154910,
           "endMs": 157700,
           "text": "So, let me fly with you"
         },
         {
-          "startMs": 157700,
-          "endMs": 163200,
+          "startMs": 158360,
+          "endMs": 163864,
           "text": "Will you be forever with me?"
         }
       ]
@@ -7364,6 +7184,364 @@
       ]
     },
     {
+      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 6622,
+      "durationInFrames": 6622,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "NEVER LET THE WORLD PAINT YOU INTO A SHAPE THAT DOESN'T FIT.",
+        "rightVertical": "EMBRACE THE COLORS THEY CANNOT TRULY UNDERSTAND OR CONTAIN.",
+        "bottomLine": "YOU ARE GOOD AT WHAT THEY CANNOT SEE."
+      },
+      "lyrics": [
+        {
+          "startMs": 580,
+          "endMs": 2700,
+          "text": "First rule, never let 'em change you"
+        },
+        {
+          "startMs": 2700,
+          "endMs": 5650,
+          "text": "Rule two, do you to the fullest (To the fullest)"
+        },
+        {
+          "startMs": 5650,
+          "endMs": 7150,
+          "text": "And never be ashamed to"
+        },
+        {
+          "startMs": 7150,
+          "endMs": 9350,
+          "text": "You just good at what they can't do"
+        },
+        {
+          "startMs": 9350,
+          "endMs": 11550,
+          "text": "And they hate that, they wanna paint you"
+        },
+        {
+          "startMs": 11550,
+          "endMs": 13380,
+          "text": "In they color, put you in another"
+        },
+        {
+          "startMs": 13380,
+          "endMs": 15520,
+          "text": "But what they don't accept (Uh) and what they don't see (Yeah)"
+        },
+        {
+          "startMs": 15520,
+          "endMs": 17620,
+          "text": "The best thing is what you already be"
+        },
+        {
+          "startMs": 17620,
+          "endMs": 19830,
+          "text": "Oh, her eyes, her eyes"
+        },
+        {
+          "startMs": 19830,
+          "endMs": 22580,
+          "text": "Make the stars look like they're not shinin'"
+        },
+        {
+          "startMs": 22580,
+          "endMs": 24130,
+          "text": "Her hair, her hair"
+        },
+        {
+          "startMs": 24130,
+          "endMs": 27200,
+          "text": "Falls perfectly without her tryin'"
+        },
+        {
+          "startMs": 27200,
+          "endMs": 29620,
+          "text": "She's so beautiful"
+        },
+        {
+          "startMs": 29620,
+          "endMs": 34630,
+          "text": "And I tell her every day"
+        },
+        {
+          "startMs": 34630,
+          "endMs": 37480,
+          "text": "Yeah, I know, I know"
+        },
+        {
+          "startMs": 37480,
+          "endMs": 40070,
+          "text": "When I compliment her, she won't believe me"
+        },
+        {
+          "startMs": 40070,
+          "endMs": 41750,
+          "text": "And it's so, it's so"
+        },
+        {
+          "startMs": 41750,
+          "endMs": 44790,
+          "text": "Sad to think that she don't see what I see"
+        },
+        {
+          "startMs": 44790,
+          "endMs": 51430,
+          "text": "But every time she asks me, \"Do I look okay?\" I say"
+        },
+        {
+          "startMs": 51430,
+          "endMs": 56070,
+          "text": "When I see your face"
+        },
+        {
+          "startMs": 56070,
+          "endMs": 60760,
+          "text": "There's not a thing that I would change"
+        },
+        {
+          "startMs": 60760,
+          "endMs": 63850,
+          "text": "'Cause you're amazing (Amazing)"
+        },
+        {
+          "startMs": 63850,
+          "endMs": 69340,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 69340,
+          "endMs": 73750,
+          "text": "And when you smile"
+        },
+        {
+          "startMs": 73750,
+          "endMs": 78140,
+          "text": "The whole world stops and stares for a while"
+        },
+        {
+          "startMs": 78140,
+          "endMs": 81400,
+          "text": "'Cause, girl, you're amazing (Amazing)"
+        },
+        {
+          "startMs": 81400,
+          "endMs": 88560,
+          "text": "Just the way you are (Yeah)"
+        },
+        {
+          "startMs": 88560,
+          "endMs": 90370,
+          "text": "Her lips, her lips"
+        },
+        {
+          "startMs": 90370,
+          "endMs": 93010,
+          "text": "I could kiss them all day if she'd let me"
+        },
+        {
+          "startMs": 93010,
+          "endMs": 94780,
+          "text": "Her laugh, her laugh"
+        },
+        {
+          "startMs": 94780,
+          "endMs": 97650,
+          "text": "She hates, but I think it's so sexy"
+        },
+        {
+          "startMs": 97650,
+          "endMs": 100110,
+          "text": "She's so beautiful"
+        },
+        {
+          "startMs": 100110,
+          "endMs": 105230,
+          "text": "And I tell her every day"
+        },
+        {
+          "startMs": 105230,
+          "endMs": 107410,
+          "text": "Oh, you know, you know, you know"
+        },
+        {
+          "startMs": 107410,
+          "endMs": 110170,
+          "text": "I'd never ask you to change"
+        },
+        {
+          "startMs": 110170,
+          "endMs": 112390,
+          "text": "If perfect's what you're searching for"
+        },
+        {
+          "startMs": 112390,
+          "endMs": 114590,
+          "text": "Then just stay the same"
+        },
+        {
+          "startMs": 114590,
+          "endMs": 118490,
+          "text": "So don't even bother askin' if you look okay"
+        },
+        {
+          "startMs": 118490,
+          "endMs": 121920,
+          "text": "You know I'll say"
+        },
+        {
+          "startMs": 121920,
+          "endMs": 126530,
+          "text": "When I see your face"
+        },
+        {
+          "startMs": 126530,
+          "endMs": 131180,
+          "text": "There's not a thing that I would change"
+        },
+        {
+          "startMs": 131180,
+          "endMs": 134350,
+          "text": "'Cause you're amazing (Amazing)"
+        },
+        {
+          "startMs": 134350,
+          "endMs": 139740,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 139740,
+          "endMs": 144110,
+          "text": "And when you smile"
+        },
+        {
+          "startMs": 144110,
+          "endMs": 148690,
+          "text": "The whole world stops and stares for a while"
+        },
+        {
+          "startMs": 148690,
+          "endMs": 151820,
+          "text": "'Cause, girl, you're amazing (Amazing)"
+        },
+        {
+          "startMs": 151820,
+          "endMs": 158680,
+          "text": "Just the way you are (Yeah)"
+        },
+        {
+          "startMs": 158680,
+          "endMs": 161250,
+          "text": "Uh, yeah, the definition of real is"
+        },
+        {
+          "startMs": 161250,
+          "endMs": 163420,
+          "text": "If you don't feel it, then you don't feel it"
+        },
+        {
+          "startMs": 163420,
+          "endMs": 165610,
+          "text": "Don't conceal it, don't be fake"
+        },
+        {
+          "startMs": 165610,
+          "endMs": 167520,
+          "text": "You look great, don't need silicone to build it (Uh)"
+        },
+        {
+          "startMs": 167520,
+          "endMs": 170090,
+          "text": "Or Botox to kill it (Yeah), you just killin' off spirit (Uh)"
+        },
+        {
+          "startMs": 170090,
+          "endMs": 172370,
+          "text": "And you the one that you gotta live with (Uh, yeah)"
+        },
+        {
+          "startMs": 172370,
+          "endMs": 174150,
+          "text": "So don't get caught up in appearances"
+        },
+        {
+          "startMs": 174150,
+          "endMs": 179140,
+          "text": "See the inner beauty when you look off in the mirrors"
+        },
+        {
+          "startMs": 179140,
+          "endMs": 180110,
+          "text": "The way you are"
+        },
+        {
+          "startMs": 180110,
+          "endMs": 184050,
+          "text": "The way you are"
+        },
+        {
+          "startMs": 184050,
+          "endMs": 187100,
+          "text": "Girl, you're amazing (Amazing)"
+        },
+        {
+          "startMs": 187100,
+          "endMs": 192380,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 192380,
+          "endMs": 197060,
+          "text": "When I see your face"
+        },
+        {
+          "startMs": 197060,
+          "endMs": 201680,
+          "text": "There's not a thing that I would change"
+        },
+        {
+          "startMs": 201680,
+          "endMs": 204740,
+          "text": "'Cause you're amazing (Amazing)"
+        },
+        {
+          "startMs": 204740,
+          "endMs": 210280,
+          "text": "Just the way you are"
+        },
+        {
+          "startMs": 210280,
+          "endMs": 214620,
+          "text": "And when you smile"
+        },
+        {
+          "startMs": 214620,
+          "endMs": 219050,
+          "text": "The whole world stops and stares for a while"
+        },
+        {
+          "startMs": 219050,
+          "endMs": 222460,
+          "text": "'Cause, girl, you're amazing (Amazing)"
+        },
+        {
+          "startMs": 222460,
+          "endMs": 238010,
+          "text": "Just the way you are (Yeah)"
+        }
+      ]
+    },
+    {
       "id": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
       "title": "We Don't Talk Anymore (feat. Selena Gomez)",
       "artist": "Charlie Puth",
@@ -10205,13 +10383,2142 @@
           "text": "Oh, oh (like a crime) (do it if we tried)"
         }
       ]
+    },
+    {
+      "id": "Go Away (Official Music Video) - weezer - pnTIsubYbCU",
+      "title": "Weezer - Go Away (Official Music Video)",
+      "artist": "weezer",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 14360,
+      "renderDurationInFrames": 5081,
+      "durationInFrames": 5792,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CHILL OF YOUR HANDS IS A SILENT PROMISE OF LOSS.",
+        "rightVertical": "WE STAND AT THE EDGE WHERE GOODBYES ARE FOREVER ETCHED IN STONE.",
+        "bottomLine": "JUST LET ME BE ALONE WITH THESE SHADOWS."
+      },
+      "lyrics": [
+        {
+          "startMs": 17360,
+          "endMs": 19280,
+          "text": "Cold-hearted girl"
+        },
+        {
+          "startMs": 19940,
+          "endMs": 23140,
+          "text": "Don't hurt me like this anymore"
+        },
+        {
+          "startMs": 24310,
+          "endMs": 27820,
+          "text": "I'm waiting right outside your door"
+        },
+        {
+          "startMs": 28530,
+          "endMs": 31530,
+          "text": "Sayin', \"Baby, can we talk?\""
+        },
+        {
+          "startMs": 34260,
+          "endMs": 36020,
+          "text": "Stupid boy"
+        },
+        {
+          "startMs": 36950,
+          "endMs": 40580,
+          "text": "You keep on begging but I won't let you in"
+        },
+        {
+          "startMs": 41150,
+          "endMs": 44760,
+          "text": "You keep on crying but you know what you did"
+        },
+        {
+          "startMs": 45400,
+          "endMs": 48640,
+          "text": "I'll never let you back in"
+        },
+        {
+          "startMs": 48960,
+          "endMs": 50500,
+          "text": "And you say"
+        },
+        {
+          "startMs": 51000,
+          "endMs": 53340,
+          "text": "Go away, go away"
+        },
+        {
+          "startMs": 54290,
+          "endMs": 58440,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 58560,
+          "endMs": 62060,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 62780,
+          "endMs": 65000,
+          "text": "Don't come back here anymore"
+        },
+        {
+          "startMs": 67170,
+          "endMs": 68720,
+          "text": "Go away"
+        },
+        {
+          "startMs": 68720,
+          "endMs": 71140,
+          "text": "I was wrong"
+        },
+        {
+          "startMs": 71220,
+          "endMs": 75390,
+          "text": "I hurt your feelings when I did what I did"
+        },
+        {
+          "startMs": 75470,
+          "endMs": 79960,
+          "text": "I learnt my lesson, I'll stop acting like a kid"
+        },
+        {
+          "startMs": 79960,
+          "endMs": 84160,
+          "text": "Can you give me one more chance?"
+        },
+        {
+          "startMs": 85640,
+          "endMs": 88260,
+          "text": "And so I ask"
+        },
+        {
+          "startMs": 88260,
+          "endMs": 92460,
+          "text": "What did she have that I don't have"
+        },
+        {
+          "startMs": 92610,
+          "endMs": 96810,
+          "text": "You said you'd stay but then you went away"
+        },
+        {
+          "startMs": 96960,
+          "endMs": 101160,
+          "text": "That's why I'm telling you to go away"
+        },
+        {
+          "startMs": 101680,
+          "endMs": 102560,
+          "text": "And you say"
+        },
+        {
+          "startMs": 102560,
+          "endMs": 105750,
+          "text": "Go away, go away"
+        },
+        {
+          "startMs": 105750,
+          "endMs": 109950,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 110030,
+          "endMs": 114230,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 114240,
+          "endMs": 118440,
+          "text": "Don't come back here anymore"
+        },
+        {
+          "startMs": 118500,
+          "endMs": 120700,
+          "text": "Go away"
+        },
+        {
+          "startMs": 120780,
+          "endMs": 127780,
+          "text": "But my life is incomplete without you, whoa-oh"
+        },
+        {
+          "startMs": 129240,
+          "endMs": 136240,
+          "text": "And you miss the little things that I do"
+        },
+        {
+          "startMs": 137490,
+          "endMs": 141630,
+          "text": "You do"
+        },
+        {
+          "startMs": 141630,
+          "endMs": 145830,
+          "text": "Won't you take me back?"
+        },
+        {
+          "startMs": 150180,
+          "endMs": 153720,
+          "text": "That was your last chance"
+        },
+        {
+          "startMs": 158210,
+          "endMs": 161460,
+          "text": "Go away, go away"
+        },
+        {
+          "startMs": 161460,
+          "endMs": 165750,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 165750,
+          "endMs": 169960,
+          "text": "Go away, go away, go away"
+        },
+        {
+          "startMs": 169960,
+          "endMs": 174320,
+          "text": "Don't come back here anymore"
+        },
+        {
+          "startMs": 174320,
+          "endMs": 178550,
+          "text": "Go away"
+        },
+        {
+          "startMs": 178550,
+          "endMs": 181750,
+          "text": "Go away and don't come back"
+        }
+      ]
+    },
+    {
+      "id": "One Thing - One Direction - Y1xs_xPb46M",
+      "title": "One Direction - One Thing",
+      "artist": "One Direction",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 1330,
+      "renderDurationInFrames": 5708,
+      "durationInFrames": 5930,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THIS SUDDEN GRAVITY PULLED ME IN UNEXPECTEDLY.",
+        "rightVertical": "YOU ARE THE STORM I CANNOT RESIST OR CONTROL.",
+        "bottomLine": "A FAINT ECHO OF YOUR NAME"
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 3600,
+          "text": "♪"
+        },
+        {
+          "startMs": 4330,
+          "endMs": 7090,
+          "text": "I've tried playing it cool"
+        },
+        {
+          "startMs": 8280,
+          "endMs": 11080,
+          "text": "But when I'm looking at you"
+        },
+        {
+          "startMs": 11990,
+          "endMs": 14440,
+          "text": "I can't ever be brave"
+        },
+        {
+          "startMs": 15380,
+          "endMs": 18680,
+          "text": "'Cause you make my heart race"
+        },
+        {
+          "startMs": 19480,
+          "endMs": 22560,
+          "text": "Shot me out of the sky"
+        },
+        {
+          "startMs": 23360,
+          "endMs": 26240,
+          "text": "You're my kryptonite"
+        },
+        {
+          "startMs": 26980,
+          "endMs": 29640,
+          "text": "You keep making me weak"
+        },
+        {
+          "startMs": 30490,
+          "endMs": 33480,
+          "text": "Yeah, frozen and can't breathe"
+        },
+        {
+          "startMs": 34370,
+          "endMs": 36140,
+          "text": "Something's gotta give now"
+        },
+        {
+          "startMs": 37800,
+          "endMs": 40380,
+          "text": "'Cause I'm dying just to make you see"
+        },
+        {
+          "startMs": 41540,
+          "endMs": 44640,
+          "text": "That I need you here with me now"
+        },
+        {
+          "startMs": 45540,
+          "endMs": 48640,
+          "text": "'Cause you've got that one thing"
+        },
+        {
+          "startMs": 49200,
+          "endMs": 53330,
+          "text": "So get out, get out, get out of my head"
+        },
+        {
+          "startMs": 53330,
+          "endMs": 57410,
+          "text": "And fall into my arms instead"
+        },
+        {
+          "startMs": 57410,
+          "endMs": 60890,
+          "text": "I don't, I don't, don't know what it is"
+        },
+        {
+          "startMs": 60890,
+          "endMs": 64560,
+          "text": "But I need that one thing"
+        },
+        {
+          "startMs": 64560,
+          "endMs": 68760,
+          "text": "And you've got that one thing"
+        },
+        {
+          "startMs": 72420,
+          "endMs": 76090,
+          "text": "Now I'm climbing the walls"
+        },
+        {
+          "startMs": 76090,
+          "endMs": 79900,
+          "text": "But you don't notice at all"
+        },
+        {
+          "startMs": 79900,
+          "endMs": 83789,
+          "text": "That I'm going out of my mind"
+        },
+        {
+          "startMs": 83789,
+          "endMs": 87310,
+          "text": "All day and all night"
+        },
+        {
+          "startMs": 87310,
+          "endMs": 90650,
+          "text": "Something's gotta give now"
+        },
+        {
+          "startMs": 90650,
+          "endMs": 94509,
+          "text": "'Cause I'm dying just to know your name"
+        },
+        {
+          "startMs": 94509,
+          "endMs": 98430,
+          "text": "And I need you here with me now"
+        },
+        {
+          "startMs": 98430,
+          "endMs": 101760,
+          "text": "'Cause you've got that one thing"
+        },
+        {
+          "startMs": 102320,
+          "endMs": 106250,
+          "text": "So get out, get out, get out of my head"
+        },
+        {
+          "startMs": 106250,
+          "endMs": 109690,
+          "text": "And fall into my arms instead"
+        },
+        {
+          "startMs": 110250,
+          "endMs": 113890,
+          "text": "I don't, I don't, don't know what it is"
+        },
+        {
+          "startMs": 113890,
+          "endMs": 116760,
+          "text": "But I need that one thing"
+        },
+        {
+          "startMs": 117320,
+          "endMs": 120850,
+          "text": "(So) get out, get out, get out of my mind"
+        },
+        {
+          "startMs": 121410,
+          "endMs": 124730,
+          "text": "And come on, come into my life"
+        },
+        {
+          "startMs": 125290,
+          "endMs": 128880,
+          "text": "I don't, I don't, don't know what it is"
+        },
+        {
+          "startMs": 128880,
+          "endMs": 132550,
+          "text": "But I need that one thing"
+        },
+        {
+          "startMs": 132550,
+          "endMs": 136550,
+          "text": "And you've got that one thing"
+        },
+        {
+          "startMs": 136550,
+          "endMs": 140340,
+          "text": "You've got that one thing"
+        },
+        {
+          "startMs": 148020,
+          "endMs": 151700,
+          "text": "Get out, get out, get out of my head"
+        },
+        {
+          "startMs": 151810,
+          "endMs": 155070,
+          "text": "And fall into my arms instead"
+        },
+        {
+          "startMs": 155490,
+          "endMs": 159700,
+          "text": "So get out, get out, get out of my head"
+        },
+        {
+          "startMs": 159700,
+          "endMs": 163730,
+          "text": "And fall into my arms instead"
+        },
+        {
+          "startMs": 163730,
+          "endMs": 167200,
+          "text": "I don't, I don't, don't know what it is"
+        },
+        {
+          "startMs": 167200,
+          "endMs": 170819,
+          "text": "But I need that one thing"
+        },
+        {
+          "startMs": 170819,
+          "endMs": 174930,
+          "text": "(So) get out, get out, get out of my mind (out of my mind)"
+        },
+        {
+          "startMs": 174930,
+          "endMs": 178800,
+          "text": "And come on, come into my life"
+        },
+        {
+          "startMs": 178800,
+          "endMs": 182360,
+          "text": "I don't, I don't, don't know what it is"
+        },
+        {
+          "startMs": 182360,
+          "endMs": 183700,
+          "text": "But I need that one thing"
+        },
+        {
+          "startMs": 185620,
+          "endMs": 189600,
+          "text": "And you've got that one thing"
+        }
+      ]
+    },
+    {
+      "id": "To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY",
+      "title": "To All the Boys I’ve Loved Before",
+      "artist": "JAX",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 5544,
+      "durationInFrames": 5665,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
+        "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
+        "bottomLine": "LET THE NIGHT HUM SOFTLY"
+      },
+      "lyrics": [
+        {
+          "startMs": 100,
+          "endMs": 2920,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 4320,
+          "endMs": 6560,
+          "text": "For teaching me I needed more"
+        },
+        {
+          "startMs": 8250,
+          "endMs": 11210,
+          "text": "I'm kinda glad they broke my heart 'cause"
+        },
+        {
+          "startMs": 11710,
+          "endMs": 14460,
+          "text": "Now it's yours"
+        },
+        {
+          "startMs": 14460,
+          "endMs": 16280,
+          "text": "I loved two guys from Connecticut"
+        },
+        {
+          "startMs": 16280,
+          "endMs": 18320,
+          "text": "With two closets full of skeletons"
+        },
+        {
+          "startMs": 18320,
+          "endMs": 22270,
+          "text": "And I couldn't be a therapist for them"
+        },
+        {
+          "startMs": 22270,
+          "endMs": 24140,
+          "text": "And I loved a kid from Hollywood"
+        },
+        {
+          "startMs": 24140,
+          "endMs": 26170,
+          "text": "But he cheated on me 'cause he could"
+        },
+        {
+          "startMs": 26170,
+          "endMs": 30050,
+          "text": "And I went full Carrie Underwood on him"
+        },
+        {
+          "startMs": 30050,
+          "endMs": 34250,
+          "text": "Ooh, I love the shit they put me through"
+        },
+        {
+          "startMs": 36430,
+          "endMs": 40210,
+          "text": "Because it led me to you"
+        },
+        {
+          "startMs": 40210,
+          "endMs": 44410,
+          "text": "I kissed a lot of frogs to get to the prince"
+        },
+        {
+          "startMs": 44480,
+          "endMs": 48680,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 48760,
+          "endMs": 52900,
+          "text": "For teaching me I needed more"
+        },
+        {
+          "startMs": 52900,
+          "endMs": 56160,
+          "text": "I'm kinda glad they broke my heart 'cause"
+        },
+        {
+          "startMs": 56160,
+          "endMs": 59890,
+          "text": "Now it's yours (now it's yours)"
+        },
+        {
+          "startMs": 59890,
+          "endMs": 64000,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 64000,
+          "endMs": 67950,
+          "text": "For all the fucking drama I endured"
+        },
+        {
+          "startMs": 67950,
+          "endMs": 71000,
+          "text": "But now I don't cry anymore"
+        },
+        {
+          "startMs": 71000,
+          "endMs": 76270,
+          "text": "'Cause you're nothing like the boys I loved before (haha)"
+        },
+        {
+          "startMs": 76270,
+          "endMs": 78370,
+          "text": "I loved someone from New Jersey"
+        },
+        {
+          "startMs": 78370,
+          "endMs": 80350,
+          "text": "But he really, really hurt me"
+        },
+        {
+          "startMs": 80350,
+          "endMs": 84120,
+          "text": "'Cause it weirdly made him happy to see me sad"
+        },
+        {
+          "startMs": 84120,
+          "endMs": 85920,
+          "text": "But you're from Arizona"
+        },
+        {
+          "startMs": 85920,
+          "endMs": 87820,
+          "text": "Oh my God, I love Sedona"
+        },
+        {
+          "startMs": 87820,
+          "endMs": 91840,
+          "text": "Man, you even make corona not so bad"
+        },
+        {
+          "startMs": 91840,
+          "endMs": 98160,
+          "text": "Ooh, I love the shit they put me through"
+        },
+        {
+          "startMs": 98160,
+          "endMs": 102009,
+          "text": "Because it led me to you"
+        },
+        {
+          "startMs": 102009,
+          "endMs": 106450,
+          "text": "I kissed a lot of frogs to get to the prince"
+        },
+        {
+          "startMs": 106450,
+          "endMs": 110789,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 110789,
+          "endMs": 114479,
+          "text": "For teaching me I needed more"
+        },
+        {
+          "startMs": 114479,
+          "endMs": 118270,
+          "text": "I'm kinda glad they broke my heart 'cause"
+        },
+        {
+          "startMs": 118270,
+          "endMs": 122010,
+          "text": "Now it's yours (now it's yours)"
+        },
+        {
+          "startMs": 122010,
+          "endMs": 125730,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 125730,
+          "endMs": 129949,
+          "text": "For all the fucking drama I endured"
+        },
+        {
+          "startMs": 129949,
+          "endMs": 133070,
+          "text": "But now I don't cry anymore"
+        },
+        {
+          "startMs": 133070,
+          "endMs": 137320,
+          "text": "'Cause you're nothing like the boys I loved before"
+        },
+        {
+          "startMs": 137320,
+          "endMs": 141790,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 141790,
+          "endMs": 145579,
+          "text": "For teaching me I needed more"
+        },
+        {
+          "startMs": 145579,
+          "endMs": 149100,
+          "text": "I lost a battle, not the war 'cause"
+        },
+        {
+          "startMs": 149100,
+          "endMs": 152000,
+          "text": "Now I'm yours"
+        },
+        {
+          "startMs": 152000,
+          "endMs": 152960,
+          "text": "Hey, hey"
+        },
+        {
+          "startMs": 152960,
+          "endMs": 156910,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 156910,
+          "endMs": 161170,
+          "text": "For teaching me I needed more"
+        },
+        {
+          "startMs": 161170,
+          "endMs": 164440,
+          "text": "I'm kinda glad they broke my heart 'cause"
+        },
+        {
+          "startMs": 164440,
+          "endMs": 168380,
+          "text": "Now it's yours (now it's yours)"
+        },
+        {
+          "startMs": 168380,
+          "endMs": 172300,
+          "text": "Shoutout to all the boys I loved before"
+        },
+        {
+          "startMs": 172300,
+          "endMs": 176460,
+          "text": "For all the fucking drama I endured"
+        },
+        {
+          "startMs": 176460,
+          "endMs": 179610,
+          "text": "But now I don't cry anymore"
+        },
+        {
+          "startMs": 179610,
+          "endMs": 182810,
+          "text": "'Cause you're nothing like the boys I loved before (haha)"
+        }
+      ]
+    },
+    {
+      "id": "Billie Jean - Michael Jackson - 7CTJcHjkq0E",
+      "title": "Billie Jean",
+      "artist": "Michael Jackson",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 26370,
+      "renderDurationInFrames": 7939,
+      "durationInFrames": 8820,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "A BEAUTY QUEEN FROM A MOVIE SCENE, SHE COMMANDED ALL ATTENTION.",
+        "rightVertical": "EVERY HEAD TURNED WITH EYES DREAMING OF BEING THE ONE.",
+        "bottomLine": "WHO WILL DANCE ON THE FLOOR IN THE ROUND?"
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 4200,
+          "text": "♪"
+        },
+        {
+          "startMs": 29370,
+          "endMs": 33030,
+          "text": "She was more like a beauty queen from a movie scene"
+        },
+        {
+          "startMs": 33350,
+          "endMs": 37530,
+          "text": "I said, \"Don't mind but what do you mean I am the one"
+        },
+        {
+          "startMs": 38700,
+          "endMs": 42620,
+          "text": "Who will dance on the floor in the round?\""
+        },
+        {
+          "startMs": 43530,
+          "endMs": 49840,
+          "text": "She said, \"I am the one who will dance on the floor in the round\""
+        },
+        {
+          "startMs": 49840,
+          "endMs": 53840,
+          "text": "♪"
+        },
+        {
+          "startMs": 53840,
+          "endMs": 57560,
+          "text": "She told me her name was Billie Jean, as she caused a scene"
+        },
+        {
+          "startMs": 57960,
+          "endMs": 62160,
+          "text": "Then every head turned with eyes that dreamed of being the one"
+        },
+        {
+          "startMs": 63390,
+          "endMs": 66570,
+          "text": "Who will dance on the floor in the round"
+        },
+        {
+          "startMs": 69990,
+          "endMs": 73700,
+          "text": "People always told me, \"Be careful of what you do"
+        },
+        {
+          "startMs": 73700,
+          "endMs": 77900,
+          "text": "And don't go around breaking young girls' hearts\""
+        },
+        {
+          "startMs": 78090,
+          "endMs": 82060,
+          "text": "And mother always told me, \"Be careful of who you love"
+        },
+        {
+          "startMs": 82060,
+          "endMs": 86260,
+          "text": "And be careful of what you do 'cause the lie becomes the truth\""
+        },
+        {
+          "startMs": 87039,
+          "endMs": 90690,
+          "text": "Billie Jean is not my lover"
+        },
+        {
+          "startMs": 90690,
+          "endMs": 94890,
+          "text": "She's just a girl who claims that I am the one (oh, baby)"
+        },
+        {
+          "startMs": 95990,
+          "endMs": 100190,
+          "text": "But the kid is not my son (whoo)"
+        },
+        {
+          "startMs": 101030,
+          "endMs": 104160,
+          "text": "She says I am the one (oh, baby)"
+        },
+        {
+          "startMs": 104200,
+          "endMs": 111200,
+          "text": "But the kid is not my son (hee-hee-hee, oh no, hee-hee-hee, whoo)"
+        },
+        {
+          "startMs": 111259,
+          "endMs": 115450,
+          "text": "For 40 days and 40 nights, law was on her side"
+        },
+        {
+          "startMs": 115490,
+          "endMs": 120870,
+          "text": "But who can stand when she's in demand, her schemes and plans"
+        },
+        {
+          "startMs": 120870,
+          "endMs": 125070,
+          "text": "'Cause we danced on the floor in the round"
+        },
+        {
+          "startMs": 125690,
+          "endMs": 132690,
+          "text": "So take my strong advice, just remember to always think twice"
+        },
+        {
+          "startMs": 132840,
+          "endMs": 135770,
+          "text": "Do think twice (do think twice), ooh"
+        },
+        {
+          "startMs": 135810,
+          "endMs": 139880,
+          "text": "She told my baby, we'd danced 'til three, then she looked at me"
+        },
+        {
+          "startMs": 139920,
+          "endMs": 145350,
+          "text": "Then showed a photo of a baby cryin', his eyes were like mine (oh, no)"
+        },
+        {
+          "startMs": 145390,
+          "endMs": 152070,
+          "text": "'Cause we danced on the floor in the round, baby (ooh, hee-hee-hee)"
+        },
+        {
+          "startMs": 152110,
+          "endMs": 155680,
+          "text": "People always told me, \"Be careful of what you do"
+        },
+        {
+          "startMs": 155720,
+          "endMs": 159960,
+          "text": "And don't go around breaking young girls' hearts\" (hee-hee)"
+        },
+        {
+          "startMs": 160000,
+          "endMs": 163990,
+          "text": "She came and stood right by me, then the smell of sweet perfume"
+        },
+        {
+          "startMs": 164030,
+          "endMs": 168850,
+          "text": "This happened much too soon, she called me to her room, hey"
+        },
+        {
+          "startMs": 168850,
+          "endMs": 172760,
+          "text": "Billie Jean is not my lover (whoo)"
+        },
+        {
+          "startMs": 172800,
+          "endMs": 177880,
+          "text": "She's just a girl who claims that I am the one"
+        },
+        {
+          "startMs": 177920,
+          "endMs": 184920,
+          "text": "But the kid is not my son (no-no-no, no-no, no-no-no, whoo)"
+        },
+        {
+          "startMs": 185320,
+          "endMs": 189210,
+          "text": "Billie Jean is not my lover, uh"
+        },
+        {
+          "startMs": 189250,
+          "endMs": 194320,
+          "text": "She's just a girl who claims that I am the one (oh, baby)"
+        },
+        {
+          "startMs": 194320,
+          "endMs": 198520,
+          "text": "But the kid is not my son (no, no)"
+        },
+        {
+          "startMs": 199260,
+          "endMs": 202360,
+          "text": "She says I am the one (oh, baby)"
+        },
+        {
+          "startMs": 202400,
+          "endMs": 209400,
+          "text": "But the kid is not my son (no, hee-hee-hee)"
+        },
+        {
+          "startMs": 210990,
+          "endMs": 213760,
+          "text": "Hee, whoo"
+        },
+        {
+          "startMs": 213760,
+          "endMs": 217960,
+          "text": "♪"
+        },
+        {
+          "startMs": 224050,
+          "endMs": 227039,
+          "text": "She says I am the one"
+        },
+        {
+          "startMs": 227079,
+          "endMs": 234079,
+          "text": "But the kid is not my son (no, no, no, whoo, oh)"
+        },
+        {
+          "startMs": 234390,
+          "endMs": 238210,
+          "text": "Billie Jean is not my lover, uh"
+        },
+        {
+          "startMs": 238250,
+          "endMs": 243500,
+          "text": "She's just a girl who claims that I am the one (don't do this, baby)"
+        },
+        {
+          "startMs": 243540,
+          "endMs": 248400,
+          "text": "But the kid is not my son, no-no-no-no (no-no-no, ah)"
+        },
+        {
+          "startMs": 248440,
+          "endMs": 251600,
+          "text": "She says I am the one (no)"
+        },
+        {
+          "startMs": 251640,
+          "endMs": 256600,
+          "text": "But the kid is not my son (no-no-no-no, whoo)"
+        },
+        {
+          "startMs": 256640,
+          "endMs": 260640,
+          "text": "She says I am the one (whoo, you know what you did)"
+        },
+        {
+          "startMs": 260680,
+          "endMs": 264710,
+          "text": "She says he is my son (breakin' my heart, babe)"
+        },
+        {
+          "startMs": 264750,
+          "endMs": 266970,
+          "text": "She says I am the one"
+        },
+        {
+          "startMs": 267010,
+          "endMs": 271040,
+          "text": "Billie Jean is not my lover, uh"
+        },
+        {
+          "startMs": 271080,
+          "endMs": 274980,
+          "text": "Billie Jean is not my lover, uh"
+        },
+        {
+          "startMs": 275020,
+          "endMs": 279280,
+          "text": "Billie Jean is not my lover, uh (she is just a girl)"
+        },
+        {
+          "startMs": 279320,
+          "endMs": 283300,
+          "text": "Billie Jean is not my lover, uh (don't call me, Billie Jean, whoo)"
+        },
+        {
+          "startMs": 283340,
+          "endMs": 287520,
+          "text": "Billie Jean is not my lover, uh (she's not what she seems)"
+        },
+        {
+          "startMs": 287560,
+          "endMs": 289016,
+          "text": "Billie Jean is not (hee, oh)"
+        }
+      ]
+    },
+    {
+      "id": "Who Says - Selena Gomez - m4p0WNN9p-Y",
+      "title": "Who Says",
+      "artist": "Selena Gomez",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 300,
+      "renderDurationInFrames": 4755,
+      "durationInFrames": 5868,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "WE ARE THE ARCHITECTS OF OUR OWN DESTINY, NEVER FORGOTTING WHO WE TRULY ARE.",
+        "rightVertical": "THE ECHOES OF DOUBT FADE BEFORE THE RADIANCE OF UNAPOLOGETIC SELF-BELIEF.",
+        "bottomLine": "FIND YOUR STRENGTH IN THE SILENCE AND THE LIGHT."
+      },
+      "lyrics": [
+        {
+          "startMs": 3300,
+          "endMs": 5780,
+          "text": "I wouldn't wanna be anybody else, hey"
+        },
+        {
+          "startMs": 10040,
+          "endMs": 11760,
+          "text": "You made me insecure"
+        },
+        {
+          "startMs": 12320,
+          "endMs": 14580,
+          "text": "Told me I wasn't good enough"
+        },
+        {
+          "startMs": 14770,
+          "endMs": 16460,
+          "text": "But who are you to judge?"
+        },
+        {
+          "startMs": 17210,
+          "endMs": 19380,
+          "text": "When you're a diamond in the rough"
+        },
+        {
+          "startMs": 19540,
+          "endMs": 21500,
+          "text": "I'm sure you got some things"
+        },
+        {
+          "startMs": 21820,
+          "endMs": 24040,
+          "text": "You'd like to change about yourself"
+        },
+        {
+          "startMs": 24330,
+          "endMs": 25920,
+          "text": "But when it comes to me"
+        },
+        {
+          "startMs": 26610,
+          "endMs": 29370,
+          "text": "I wouldn't want to be anybody else"
+        },
+        {
+          "startMs": 29370,
+          "endMs": 31430,
+          "text": "I'm no beauty queen"
+        },
+        {
+          "startMs": 31430,
+          "endMs": 33830,
+          "text": "I'm just beautiful me"
+        },
+        {
+          "startMs": 33830,
+          "endMs": 35990,
+          "text": "You've got every right"
+        },
+        {
+          "startMs": 35990,
+          "endMs": 37590,
+          "text": "To a beautiful life"
+        },
+        {
+          "startMs": 37590,
+          "endMs": 38490,
+          "text": "Come on"
+        },
+        {
+          "startMs": 38490,
+          "endMs": 41530,
+          "text": "Who says, who says you're not perfect?"
+        },
+        {
+          "startMs": 41530,
+          "endMs": 44150,
+          "text": "Who says you're not worth it?"
+        },
+        {
+          "startMs": 44150,
+          "endMs": 46630,
+          "text": "Who says you're the only one that's hurting?"
+        },
+        {
+          "startMs": 46630,
+          "endMs": 48770,
+          "text": "Trust me, that's the price of beauty"
+        },
+        {
+          "startMs": 48770,
+          "endMs": 50910,
+          "text": "Who says you're not pretty?"
+        },
+        {
+          "startMs": 50910,
+          "endMs": 52650,
+          "text": "Who says you're not beautiful?"
+        },
+        {
+          "startMs": 52650,
+          "endMs": 53810,
+          "text": "Who says?"
+        },
+        {
+          "startMs": 53810,
+          "endMs": 55610,
+          "text": "It's such a funny thing"
+        },
+        {
+          "startMs": 55610,
+          "endMs": 57570,
+          "text": "How nothing's funny when it's you"
+        },
+        {
+          "startMs": 57570,
+          "endMs": 59930,
+          "text": "You tell 'em what you mean"
+        },
+        {
+          "startMs": 59930,
+          "endMs": 62330,
+          "text": "But they keep whiting out the truth"
+        },
+        {
+          "startMs": 62330,
+          "endMs": 64170,
+          "text": "It's like a work of art"
+        },
+        {
+          "startMs": 64170,
+          "endMs": 66670,
+          "text": "That never gets to see the light"
+        },
+        {
+          "startMs": 66670,
+          "endMs": 68830,
+          "text": "Keep you beneath the stars"
+        },
+        {
+          "startMs": 68830,
+          "endMs": 71230,
+          "text": "Won't let you touch the sky"
+        },
+        {
+          "startMs": 71890,
+          "endMs": 74450,
+          "text": "I'm no beauty queen"
+        },
+        {
+          "startMs": 74450,
+          "endMs": 76890,
+          "text": "I'm just beautiful me"
+        },
+        {
+          "startMs": 76890,
+          "endMs": 79310,
+          "text": "You've got every right"
+        },
+        {
+          "startMs": 79310,
+          "endMs": 80910,
+          "text": "To a beautiful life"
+        },
+        {
+          "startMs": 81410,
+          "endMs": 82270,
+          "text": "Come on"
+        },
+        {
+          "startMs": 83730,
+          "endMs": 86770,
+          "text": "Who says, who says you're not perfect?"
+        },
+        {
+          "startMs": 86770,
+          "endMs": 89030,
+          "text": "Who says you're not worth it?"
+        },
+        {
+          "startMs": 89030,
+          "endMs": 92270,
+          "text": "Who says you're the only one that's hurting?"
+        },
+        {
+          "startMs": 92270,
+          "endMs": 94770,
+          "text": "Trust me, that's the price of beauty"
+        },
+        {
+          "startMs": 94770,
+          "endMs": 97090,
+          "text": "Who says you're not pretty?"
+        },
+        {
+          "startMs": 97090,
+          "endMs": 98850,
+          "text": "Who says you're not beautiful?"
+        },
+        {
+          "startMs": 98850,
+          "endMs": 99730,
+          "text": "Who says?"
+        },
+        {
+          "startMs": 99730,
+          "endMs": 102690,
+          "text": "Who says you're not star potential?"
+        },
+        {
+          "startMs": 102690,
+          "endMs": 105070,
+          "text": "Who says you're not presidential?"
+        },
+        {
+          "startMs": 105070,
+          "endMs": 106610,
+          "text": "Who says you can't be in movies?"
+        },
+        {
+          "startMs": 106610,
+          "endMs": 108710,
+          "text": "Listen to me, listen to me"
+        },
+        {
+          "startMs": 108710,
+          "endMs": 111050,
+          "text": "Who says you don't pass the test?"
+        },
+        {
+          "startMs": 111050,
+          "endMs": 113150,
+          "text": "Who says you can't be the best?"
+        },
+        {
+          "startMs": 113150,
+          "endMs": 114810,
+          "text": "Who said, who said?"
+        },
+        {
+          "startMs": 114810,
+          "endMs": 117768,
+          "text": "Won't you tell me who said that?"
+        },
+        {
+          "startMs": 117768,
+          "endMs": 119568,
+          "text": "Yeah, who said?"
+        },
+        {
+          "startMs": 119568,
+          "endMs": 123178,
+          "text": "Who says, who says you're not perfect?"
+        },
+        {
+          "startMs": 123178,
+          "endMs": 125638,
+          "text": "Who says you're not worth it? (Yeah)"
+        },
+        {
+          "startMs": 125638,
+          "endMs": 129068,
+          "text": "Who says you're the only one that's hurtin' (Yeah, yeah)"
+        },
+        {
+          "startMs": 129068,
+          "endMs": 132648,
+          "text": "Trust me, that's the price of beauty (Oh, hey, yeah)"
+        },
+        {
+          "startMs": 132648,
+          "endMs": 135038,
+          "text": "Who says you're not pretty? (Beauty)"
+        },
+        {
+          "startMs": 135038,
+          "endMs": 137758,
+          "text": "Who says you're not beautiful? (Who said? I'm just beautiful me)"
+        },
+        {
+          "startMs": 137758,
+          "endMs": 139718,
+          "text": "Who says?"
+        },
+        {
+          "startMs": 139718,
+          "endMs": 142018,
+          "text": "Who says you're not perfect?"
+        },
+        {
+          "startMs": 142018,
+          "endMs": 144328,
+          "text": "Who says you're not worth it?"
+        },
+        {
+          "startMs": 144328,
+          "endMs": 148138,
+          "text": "Who says you're the only one that's hurting?"
+        },
+        {
+          "startMs": 148138,
+          "endMs": 151648,
+          "text": "Trust me, that's the price of beauty"
+        },
+        {
+          "startMs": 151648,
+          "endMs": 154208,
+          "text": "Who says you're not pretty? (Who says you're not beautiful?)"
+        },
+        {
+          "startMs": 154208,
+          "endMs": 155228,
+          "text": "Who says you're not beautiful?"
+        },
+        {
+          "startMs": 155228,
+          "endMs": 156808,
+          "text": "Who says?"
+        }
+      ]
+    },
+    {
+      "id": "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+      "title": "Sad Girl Summer",
+      "artist": "Maisie Peters",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 8620,
+      "renderDurationInFrames": 4359,
+      "durationInFrames": 4944,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE ECHO OF UNTOLD PROMISES SHAPED THE SUMMER SKY.",
+        "rightVertical": "A GHOST OF GOLDEN DAYS DANCES AMIDST EMPTY ROOMS.",
+        "bottomLine": "SWEET MEMORIES ARE JUST HAUNTING LIGHT."
+      },
+      "lyrics": [
+        {
+          "startMs": 11620,
+          "endMs": 13020,
+          "text": "One of us was married"
+        },
+        {
+          "startMs": 13880,
+          "endMs": 17090,
+          "text": "To an ex-marine, with a blonde down the block, he"
+        },
+        {
+          "startMs": 17150,
+          "endMs": 18910,
+          "text": "Said commitment's scary"
+        },
+        {
+          "startMs": 19420,
+          "endMs": 23210,
+          "text": "Then he left her alone with a house and a dog, so"
+        },
+        {
+          "startMs": 23210,
+          "endMs": 24550,
+          "text": "So she ran to daddy"
+        },
+        {
+          "startMs": 25220,
+          "endMs": 30060,
+          "text": "And he said: That man's a loser, call your friends up"
+        },
+        {
+          "startMs": 30190,
+          "endMs": 34380,
+          "text": "And we pulled a chair up (oh-oh, oh-oh)"
+        },
+        {
+          "startMs": 34380,
+          "endMs": 36650,
+          "text": "Pass your phone to the right (to the right)"
+        },
+        {
+          "startMs": 36650,
+          "endMs": 39140,
+          "text": "Text an ex-love goodbye"
+        },
+        {
+          "startMs": 39140,
+          "endMs": 42410,
+          "text": "It's another sad girl summer"
+        },
+        {
+          "startMs": 42410,
+          "endMs": 44650,
+          "text": "Flowers on the side of the road"
+        },
+        {
+          "startMs": 44650,
+          "endMs": 47900,
+          "text": "Travellin' beside each other"
+        },
+        {
+          "startMs": 47900,
+          "endMs": 50080,
+          "text": "No one has to dance on their own"
+        },
+        {
+          "startMs": 50080,
+          "endMs": 51060,
+          "text": "Oh, oh, so"
+        },
+        {
+          "startMs": 51060,
+          "endMs": 52580,
+          "text": "Take my hand and"
+        },
+        {
+          "startMs": 52580,
+          "endMs": 53940,
+          "text": "Lose his number"
+        },
+        {
+          "startMs": 53940,
+          "endMs": 58140,
+          "text": "You don't have to have another sad girl summer"
+        },
+        {
+          "startMs": 59380,
+          "endMs": 62420,
+          "text": "Raise your glass, let it go"
+        },
+        {
+          "startMs": 62420,
+          "endMs": 64849,
+          "text": "One of us is messy"
+        },
+        {
+          "startMs": 64849,
+          "endMs": 68060,
+          "text": "She got dumped by he-who-won't-be-mentioned"
+        },
+        {
+          "startMs": 68060,
+          "endMs": 70210,
+          "text": "She's vodka-coke unsteady"
+        },
+        {
+          "startMs": 70210,
+          "endMs": 73750,
+          "text": "So we're secretly staging an intervention"
+        },
+        {
+          "startMs": 73750,
+          "endMs": 76150,
+          "text": "Change your shoes, get ready"
+        },
+        {
+          "startMs": 76150,
+          "endMs": 80630,
+          "text": "That boy is such a loser, put your hair up"
+        },
+        {
+          "startMs": 80630,
+          "endMs": 85080,
+          "text": "And she pulls a chair up (oh-oh, oh-oh)"
+        },
+        {
+          "startMs": 85080,
+          "endMs": 87640,
+          "text": "Pass your phone to the right (to the right)"
+        },
+        {
+          "startMs": 87640,
+          "endMs": 90090,
+          "text": "Text an ex-love goodbye"
+        },
+        {
+          "startMs": 90090,
+          "endMs": 93320,
+          "text": "It's another sad girl summer"
+        },
+        {
+          "startMs": 93320,
+          "endMs": 95440,
+          "text": "Flowers on the side of the road"
+        },
+        {
+          "startMs": 95440,
+          "endMs": 98979,
+          "text": "Travellin' beside each other"
+        },
+        {
+          "startMs": 98979,
+          "endMs": 100850,
+          "text": "No one has to dance on their own"
+        },
+        {
+          "startMs": 100850,
+          "endMs": 102229,
+          "text": "Oh, oh, so"
+        },
+        {
+          "startMs": 102229,
+          "endMs": 103430,
+          "text": "Take my hand and"
+        },
+        {
+          "startMs": 103430,
+          "endMs": 105080,
+          "text": "Lose his number"
+        },
+        {
+          "startMs": 105080,
+          "endMs": 110350,
+          "text": "You don't have to have another sad girl summer"
+        },
+        {
+          "startMs": 110350,
+          "endMs": 113250,
+          "text": "Raise your glass, let it go"
+        },
+        {
+          "startMs": 113250,
+          "endMs": 114610,
+          "text": "Find your lip gloss"
+        },
+        {
+          "startMs": 115370,
+          "endMs": 116470,
+          "text": "Blow a kiss"
+        },
+        {
+          "startMs": 116470,
+          "endMs": 119790,
+          "text": "Forget the boy ever existed"
+        },
+        {
+          "startMs": 119790,
+          "endMs": 121170,
+          "text": "Find your lip gloss"
+        },
+        {
+          "startMs": 121170,
+          "endMs": 122120,
+          "text": "Blow a kiss"
+        },
+        {
+          "startMs": 122120,
+          "endMs": 125370,
+          "text": "Forget the boy ever existed"
+        },
+        {
+          "startMs": 125370,
+          "endMs": 127880,
+          "text": "Pass your phone to the right (to the right)"
+        },
+        {
+          "startMs": 127880,
+          "endMs": 129980,
+          "text": "Text an ex-love goodbye"
+        },
+        {
+          "startMs": 129980,
+          "endMs": 133730,
+          "text": "It's another sad girl summer"
+        },
+        {
+          "startMs": 133730,
+          "endMs": 135900,
+          "text": "Flowers on the side of the road (on the side, on the side of the road)"
+        },
+        {
+          "startMs": 135900,
+          "endMs": 137800,
+          "text": "Travellin' beside each other"
+        },
+        {
+          "startMs": 137800,
+          "endMs": 139650,
+          "text": "No one has to dance on their own"
+        },
+        {
+          "startMs": 139650,
+          "endMs": 140900,
+          "text": "Oh, oh, so"
+        },
+        {
+          "startMs": 140900,
+          "endMs": 142580,
+          "text": "Take my hand and (take my hand)"
+        },
+        {
+          "startMs": 142580,
+          "endMs": 143890,
+          "text": "Lose his number (lose his number)"
+        },
+        {
+          "startMs": 144380,
+          "endMs": 148720,
+          "text": "You don't have to have another sad girl summer (oh, oh, oh)"
+        },
+        {
+          "startMs": 148720,
+          "endMs": 151920,
+          "text": "Raise your glass, let it go (let it go)"
+        }
+      ]
+    },
+    {
+      "id": "Dracula - Tame Impala - cuMuMnCRfqk",
+      "title": "Dracula",
+      "artist": "Tame Impala",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 5549,
+      "durationInFrames": 6159,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE SHADOWS KEEP ME LIKE A STAR IN THE BLUE LIGHT.",
+        "rightVertical": "A BIZARRE FEELING WHEN THE MORNING TURNS TO DUSK.",
+        "bottomLine": "THE NIGHT IS ALMOST OVER, BUT YOU ARE STILL GONE."
+      },
+      "lyrics": [
+        {
+          "startMs": 0,
+          "endMs": 1550,
+          "text": "(Check it out now)"
+        },
+        {
+          "startMs": 4070,
+          "endMs": 8270,
+          "text": "♪"
+        },
+        {
+          "startMs": 8270,
+          "endMs": 11370,
+          "text": "The morning light is turning blue, the feeling is bizarre (bizarre)"
+        },
+        {
+          "startMs": 11370,
+          "endMs": 15320,
+          "text": "The night is almost over, I still don't know where you are"
+        },
+        {
+          "startMs": 29010,
+          "endMs": 33210,
+          "text": "The shadows, yeah, they keep me pretty like a movie star"
+        },
+        {
+          "startMs": 33270,
+          "endMs": 37470,
+          "text": "Daylight makes me feel like Dracula (Dracula)"
+        },
+        {
+          "startMs": 37470,
+          "endMs": 41670,
+          "text": "In the end, I hope it's you and me"
+        },
+        {
+          "startMs": 41690,
+          "endMs": 45220,
+          "text": "In the darkness, I would never leave you (ah)"
+        },
+        {
+          "startMs": 46340,
+          "endMs": 50360,
+          "text": "Won't ever see me in the light of day"
+        },
+        {
+          "startMs": 50570,
+          "endMs": 54660,
+          "text": "It's far too late, the time has come"
+        },
+        {
+          "startMs": 54660,
+          "endMs": 58920,
+          "text": "I'm on the verge of caving in, I run back to the dark"
+        },
+        {
+          "startMs": 58920,
+          "endMs": 63110,
+          "text": "Now I'm Mr. Charisma, fucking Pablo Escobar (Escobar)"
+        },
+        {
+          "startMs": 63110,
+          "endMs": 67410,
+          "text": "My friends are saying, \"Shut up, Kevin, just get in the car\" (Kevin)"
+        },
+        {
+          "startMs": 67410,
+          "endMs": 72190,
+          "text": "I just wanna be right where you are (oh, my love)"
+        },
+        {
+          "startMs": 72190,
+          "endMs": 76300,
+          "text": "In the end, I hope it's you and me"
+        },
+        {
+          "startMs": 76300,
+          "endMs": 79860,
+          "text": "In the darkness, I would never leave (I won't leave her)"
+        },
+        {
+          "startMs": 79860,
+          "endMs": 83300,
+          "text": "We both saw this moment coming from afar"
+        },
+        {
+          "startMs": 83850,
+          "endMs": 86740,
+          "text": "Now here we are"
+        },
+        {
+          "startMs": 87410,
+          "endMs": 94290,
+          "text": "Run from the sunlight, Dracula (hey)"
+        },
+        {
+          "startMs": 94290,
+          "endMs": 98490,
+          "text": "Run from the sunlight, Dracula (Dracu-Dracula)"
+        },
+        {
+          "startMs": 98490,
+          "endMs": 102380,
+          "text": "Run from the sunlight, Dracula (run from the sun)"
+        },
+        {
+          "startMs": 102380,
+          "endMs": 106580,
+          "text": "Isn't the view spectacular? (sunlight, Dracula)"
+        },
+        {
+          "startMs": 106580,
+          "endMs": 110780,
+          "text": "Oh, oh (check it out now)"
+        },
+        {
+          "startMs": 110780,
+          "endMs": 114980,
+          "text": "But please, do you think about what it might mean?"
+        },
+        {
+          "startMs": 114980,
+          "endMs": 119180,
+          "text": "'Cause I dream about you in my sleep"
+        },
+        {
+          "startMs": 119180,
+          "endMs": 123380,
+          "text": "Would you ever love someone like me? Like me? (Oh)"
+        },
+        {
+          "startMs": 123380,
+          "endMs": 127580,
+          "text": "In the end, I hope it's you and me (oh)"
+        },
+        {
+          "startMs": 127580,
+          "endMs": 130830,
+          "text": "In the darkness, I would never leave (I won't leave her)"
+        },
+        {
+          "startMs": 130830,
+          "endMs": 134750,
+          "text": "We both saw this moment comin' from afar"
+        },
+        {
+          "startMs": 134930,
+          "endMs": 137100,
+          "text": "Now here we are"
+        },
+        {
+          "startMs": 139380,
+          "endMs": 143580,
+          "text": "So run from the sunlight, Dracula (hey)"
+        },
+        {
+          "startMs": 146390,
+          "endMs": 150590,
+          "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 150860,
+          "endMs": 155010,
+          "text": "Run from the sunlight, Dracula (oh)"
+        },
+        {
+          "startMs": 155010,
+          "endMs": 159210,
+          "text": "Isn't the view spectacular? (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 159210,
+          "endMs": 163060,
+          "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 163060,
+          "endMs": 167230,
+          "text": "Run from the sunlight, Dracula (run from the sunlight)"
+        },
+        {
+          "startMs": 167230,
+          "endMs": 171430,
+          "text": "Isn't the view spectacular? (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 171430,
+          "endMs": 175610,
+          "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 175610,
+          "endMs": 179790,
+          "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+        },
+        {
+          "startMs": 179790,
+          "endMs": 182990,
+          "text": "Isn't the view spectacular?"
+        }
+      ]
+    },
+    {
+      "id": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+      "title": "Harry Styles - As It Was (Official Video)",
+      "artist": "Harry Styles",
+      "lyricOffsetMs": 0,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4696,
+      "durationInFrames": 4968,
+      "fps": 30,
+      "background": {
+        "kind": "image",
+        "color": "#101828"
+      },
+      "poetryFrame": {
+        "nickname": "@xcai43323",
+        "topLabel": "@xcai43323 · AUDIO DIARY",
+        "leftVertical": "THE MOMENT HANGS BETWEEN US, A FAINT AND SWEET MEMORY.",
+        "rightVertical": "WE ARE JUST GHOSTS IN THE ECHOES OF WHAT USED TO BE.",
+        "bottomLine": "JUST LIKE IT WAS BEFORE"
+      },
+      "lyrics": [
+        {
+          "startMs": 150,
+          "endMs": 3940,
+          "text": "(Come on, Harry, we wanna say goodnight to you)"
+        },
+        {
+          "startMs": 3940,
+          "endMs": 8140,
+          "text": "♪"
+        },
+        {
+          "startMs": 14260,
+          "endMs": 16320,
+          "text": "Holdin' me back"
+        },
+        {
+          "startMs": 16320,
+          "endMs": 18970,
+          "text": "Gravity's holdin' me back"
+        },
+        {
+          "startMs": 18970,
+          "endMs": 21840,
+          "text": "I want you to hold out the palm of your hand"
+        },
+        {
+          "startMs": 21840,
+          "endMs": 25210,
+          "text": "Why don't we leave it at that?"
+        },
+        {
+          "startMs": 25210,
+          "endMs": 27180,
+          "text": "Nothin' to say"
+        },
+        {
+          "startMs": 27180,
+          "endMs": 30000,
+          "text": "When everything gets in the way"
+        },
+        {
+          "startMs": 30000,
+          "endMs": 32950,
+          "text": "Seems you cannot be replaced"
+        },
+        {
+          "startMs": 32950,
+          "endMs": 37150,
+          "text": "And I'm the one who will stay, oh-oh-oh"
+        },
+        {
+          "startMs": 37750,
+          "endMs": 41950,
+          "text": "In this world, it's just us"
+        },
+        {
+          "startMs": 44150,
+          "endMs": 48350,
+          "text": "You know it's not the same as it was"
+        },
+        {
+          "startMs": 48810,
+          "endMs": 53010,
+          "text": "In this world, it's just us"
+        },
+        {
+          "startMs": 55240,
+          "endMs": 59440,
+          "text": "You know it's not the same as it was"
+        },
+        {
+          "startMs": 60300,
+          "endMs": 64500,
+          "text": "As it was, as it was"
+        },
+        {
+          "startMs": 66280,
+          "endMs": 69460,
+          "text": "You know it's not the same"
+        },
+        {
+          "startMs": 69460,
+          "endMs": 71480,
+          "text": "Answer the phone"
+        },
+        {
+          "startMs": 71480,
+          "endMs": 74160,
+          "text": "\"Harry, you're no good alone"
+        },
+        {
+          "startMs": 74160,
+          "endMs": 77000,
+          "text": "Why are you sittin' at home on the floor?"
+        },
+        {
+          "startMs": 77000,
+          "endMs": 80370,
+          "text": "What kind of pills are you on?\""
+        },
+        {
+          "startMs": 80370,
+          "endMs": 82330,
+          "text": "Ringin' the bell"
+        },
+        {
+          "startMs": 82330,
+          "endMs": 85230,
+          "text": "And nobody's comin' to help"
+        },
+        {
+          "startMs": 85230,
+          "endMs": 87850,
+          "text": "Your daddy lives by himself"
+        },
+        {
+          "startMs": 87850,
+          "endMs": 92870,
+          "text": "He just wants to know that you're well, oh-oh-oh"
+        },
+        {
+          "startMs": 92870,
+          "endMs": 97070,
+          "text": "In this world, it's just us"
+        },
+        {
+          "startMs": 99370,
+          "endMs": 103910,
+          "text": "You know it's not the same as it was"
+        },
+        {
+          "startMs": 103910,
+          "endMs": 108110,
+          "text": "In this world, it's just us"
+        },
+        {
+          "startMs": 110420,
+          "endMs": 115410,
+          "text": "You know it's not the same as it was"
+        },
+        {
+          "startMs": 115410,
+          "endMs": 119610,
+          "text": "As it was, as it was"
+        },
+        {
+          "startMs": 121500,
+          "endMs": 124530,
+          "text": "You know it's not the same"
+        },
+        {
+          "startMs": 124530,
+          "endMs": 127360,
+          "text": "Go home, get ahead, light-speed internet"
+        },
+        {
+          "startMs": 127360,
+          "endMs": 130060,
+          "text": "I don't wanna talk about the way that it was"
+        },
+        {
+          "startMs": 130060,
+          "endMs": 132940,
+          "text": "Leave America, two kids follow her"
+        },
+        {
+          "startMs": 132940,
+          "endMs": 138000,
+          "text": "I don't wanna talk about who's doin' it first"
+        },
+        {
+          "startMs": 138000,
+          "endMs": 138960,
+          "text": "(Hey)"
+        },
+        {
+          "startMs": 138960,
+          "endMs": 143010,
+          "text": "♪"
+        },
+        {
+          "startMs": 143010,
+          "endMs": 146260,
+          "text": "As it was"
+        },
+        {
+          "startMs": 146260,
+          "endMs": 151360,
+          "text": "You know it's not the same as it was"
+        },
+        {
+          "startMs": 151360,
+          "endMs": 154560,
+          "text": "As it was, as it was"
+        }
+      ]
     }
   ],
   "queue": [
     {
-      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
-      "title": "Just the Way You Are",
-      "artist": "Bruno Mars",
+      "id": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+      "title": "Christina Perri - A Thousand Years [Official Music Video]",
+      "artist": "Christina Perri",
       "accent": "rgba(163, 206, 255, 0.7)"
     },
     {
@@ -10353,6 +12660,12 @@
       "accent": "rgba(163, 206, 255, 0.7)"
     },
     {
+      "id": "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
       "id": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
       "title": "We Don't Talk Anymore (feat. Selena Gomez)",
       "artist": "Charlie Puth",
@@ -10417,6 +12730,54 @@
       "title": "Clairo - Sofia",
       "artist": "Claire Cottrill",
       "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Go Away (Official Music Video) - weezer - pnTIsubYbCU",
+      "title": "Weezer - Go Away (Official Music Video)",
+      "artist": "weezer",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "One Thing - One Direction - Y1xs_xPb46M",
+      "title": "One Direction - One Thing",
+      "artist": "One Direction",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY",
+      "title": "To All the Boys I’ve Loved Before",
+      "artist": "JAX",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Billie Jean - Michael Jackson - 7CTJcHjkq0E",
+      "title": "Billie Jean",
+      "artist": "Michael Jackson",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Who Says - Selena Gomez - m4p0WNN9p-Y",
+      "title": "Who Says",
+      "artist": "Selena Gomez",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+      "title": "Sad Girl Summer",
+      "artist": "Maisie Peters",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "Dracula - Tame Impala - cuMuMnCRfqk",
+      "title": "Dracula",
+      "artist": "Tame Impala",
+      "accent": "rgba(163, 206, 255, 0.7)"
+    },
+    {
+      "id": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+      "title": "Harry Styles - As It Was (Official Video)",
+      "artist": "Harry Styles",
+      "accent": "rgba(163, 206, 255, 0.7)"
     }
   ],
   "playlists": [
@@ -10429,17 +12790,31 @@
     {
       "id": "new-downloads",
       "name": "New Downloads",
-      "count": 0,
+      "count": 9,
       "accent": "rgba(255,255,255,0.58)",
-      "trackIds": []
+      "trackIds": [
+        "Go Away (Official Music Video) - weezer - pnTIsubYbCU",
+        "One Thing - One Direction - Y1xs_xPb46M",
+        "To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY",
+        "Billie Jean - Michael Jackson - 7CTJcHjkq0E",
+        "Who Says - Selena Gomez - m4p0WNN9p-Y",
+        "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+        "Dracula - Tame Impala - cuMuMnCRfqk",
+        "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+        "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00"
+      ]
     },
     {
       "id": "lyrics-review",
       "name": "Lyrics Review",
-      "count": 1,
+      "count": 5,
       "accent": "rgba(255,255,255,0.58)",
       "trackIds": [
-        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo"
+        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+        "One Thing - One Direction - Y1xs_xPb46M",
+        "Billie Jean - Michael Jackson - 7CTJcHjkq0E",
+        "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+        "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00"
       ]
     },
     {

@@ -1,0 +1,261 @@
+{
+  "title": "One Direction - One Thing",
+  "artist": "One Direction",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/One Thing - One Direction - Y1xs_xPb46M/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 1330,
+  "renderDurationInFrames": 5708,
+  "durationInFrames": 5930,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/One Thing - One Direction - Y1xs_xPb46M/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THIS SUDDEN GRAVITY PULLED ME IN UNEXPECTEDLY.",
+    "rightVertical": "YOU ARE THE STORM I CANNOT RESIST OR CONTROL.",
+    "bottomLine": "A FAINT ECHO OF YOUR NAME"
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 3600,
+      "text": "♪"
+    },
+    {
+      "startMs": 4330,
+      "endMs": 7090,
+      "text": "I've tried playing it cool"
+    },
+    {
+      "startMs": 8280,
+      "endMs": 11080,
+      "text": "But when I'm looking at you"
+    },
+    {
+      "startMs": 11990,
+      "endMs": 14440,
+      "text": "I can't ever be brave"
+    },
+    {
+      "startMs": 15380,
+      "endMs": 18680,
+      "text": "'Cause you make my heart race"
+    },
+    {
+      "startMs": 19480,
+      "endMs": 22560,
+      "text": "Shot me out of the sky"
+    },
+    {
+      "startMs": 23360,
+      "endMs": 26240,
+      "text": "You're my kryptonite"
+    },
+    {
+      "startMs": 26980,
+      "endMs": 29640,
+      "text": "You keep making me weak"
+    },
+    {
+      "startMs": 30490,
+      "endMs": 33480,
+      "text": "Yeah, frozen and can't breathe"
+    },
+    {
+      "startMs": 34370,
+      "endMs": 36140,
+      "text": "Something's gotta give now"
+    },
+    {
+      "startMs": 37800,
+      "endMs": 40380,
+      "text": "'Cause I'm dying just to make you see"
+    },
+    {
+      "startMs": 41540,
+      "endMs": 44640,
+      "text": "That I need you here with me now"
+    },
+    {
+      "startMs": 45540,
+      "endMs": 48640,
+      "text": "'Cause you've got that one thing"
+    },
+    {
+      "startMs": 49200,
+      "endMs": 53330,
+      "text": "So get out, get out, get out of my head"
+    },
+    {
+      "startMs": 53330,
+      "endMs": 57410,
+      "text": "And fall into my arms instead"
+    },
+    {
+      "startMs": 57410,
+      "endMs": 60890,
+      "text": "I don't, I don't, don't know what it is"
+    },
+    {
+      "startMs": 60890,
+      "endMs": 64560,
+      "text": "But I need that one thing"
+    },
+    {
+      "startMs": 64560,
+      "endMs": 68760,
+      "text": "And you've got that one thing"
+    },
+    {
+      "startMs": 72420,
+      "endMs": 76090,
+      "text": "Now I'm climbing the walls"
+    },
+    {
+      "startMs": 76090,
+      "endMs": 79900,
+      "text": "But you don't notice at all"
+    },
+    {
+      "startMs": 79900,
+      "endMs": 83789,
+      "text": "That I'm going out of my mind"
+    },
+    {
+      "startMs": 83789,
+      "endMs": 87310,
+      "text": "All day and all night"
+    },
+    {
+      "startMs": 87310,
+      "endMs": 90650,
+      "text": "Something's gotta give now"
+    },
+    {
+      "startMs": 90650,
+      "endMs": 94509,
+      "text": "'Cause I'm dying just to know your name"
+    },
+    {
+      "startMs": 94509,
+      "endMs": 98430,
+      "text": "And I need you here with me now"
+    },
+    {
+      "startMs": 98430,
+      "endMs": 101760,
+      "text": "'Cause you've got that one thing"
+    },
+    {
+      "startMs": 102320,
+      "endMs": 106250,
+      "text": "So get out, get out, get out of my head"
+    },
+    {
+      "startMs": 106250,
+      "endMs": 109690,
+      "text": "And fall into my arms instead"
+    },
+    {
+      "startMs": 110250,
+      "endMs": 113890,
+      "text": "I don't, I don't, don't know what it is"
+    },
+    {
+      "startMs": 113890,
+      "endMs": 116760,
+      "text": "But I need that one thing"
+    },
+    {
+      "startMs": 117320,
+      "endMs": 120850,
+      "text": "(So) get out, get out, get out of my mind"
+    },
+    {
+      "startMs": 121410,
+      "endMs": 124730,
+      "text": "And come on, come into my life"
+    },
+    {
+      "startMs": 125290,
+      "endMs": 128880,
+      "text": "I don't, I don't, don't know what it is"
+    },
+    {
+      "startMs": 128880,
+      "endMs": 132550,
+      "text": "But I need that one thing"
+    },
+    {
+      "startMs": 132550,
+      "endMs": 136550,
+      "text": "And you've got that one thing"
+    },
+    {
+      "startMs": 136550,
+      "endMs": 140340,
+      "text": "You've got that one thing"
+    },
+    {
+      "startMs": 148020,
+      "endMs": 151700,
+      "text": "Get out, get out, get out of my head"
+    },
+    {
+      "startMs": 151810,
+      "endMs": 155070,
+      "text": "And fall into my arms instead"
+    },
+    {
+      "startMs": 155490,
+      "endMs": 159700,
+      "text": "So get out, get out, get out of my head"
+    },
+    {
+      "startMs": 159700,
+      "endMs": 163730,
+      "text": "And fall into my arms instead"
+    },
+    {
+      "startMs": 163730,
+      "endMs": 167200,
+      "text": "I don't, I don't, don't know what it is"
+    },
+    {
+      "startMs": 167200,
+      "endMs": 170819,
+      "text": "But I need that one thing"
+    },
+    {
+      "startMs": 170819,
+      "endMs": 174930,
+      "text": "(So) get out, get out, get out of my mind (out of my mind)"
+    },
+    {
+      "startMs": 174930,
+      "endMs": 178800,
+      "text": "And come on, come into my life"
+    },
+    {
+      "startMs": 178800,
+      "endMs": 182360,
+      "text": "I don't, I don't, don't know what it is"
+    },
+    {
+      "startMs": 182360,
+      "endMs": 183700,
+      "text": "But I need that one thing"
+    },
+    {
+      "startMs": 185620,
+      "endMs": 189600,
+      "text": "And you've got that one thing"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/One Thing - One Direction - Y1xs_xPb46M",
+  "outputMp4Name": "One Thing - One Direction.mp4"
+}

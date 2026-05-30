@@ -102,10 +102,12 @@ const getLyricsReview = (entry) => {
 const normalizeTrackIds = (trackIds) =>
   Array.from(new Set(Array.isArray(trackIds) ? trackIds.filter((trackId) => typeof trackId === "string" && trackId) : []));
 
-const ensurePlaylist = (playlists, playlistId, playlistName, trackIdsToAdd = []) => {
+const ensurePlaylist = (playlists, playlistId, playlistName, trackIdsToAdd = [], options = {}) => {
   const playlistIndex = playlists.findIndex((playlist) => playlist?.id === playlistId);
   const existingTrackIds = playlistIndex >= 0 ? playlists[playlistIndex]?.trackIds : [];
-  const nextTrackIds = Array.from(new Set([...normalizeTrackIds(existingTrackIds), ...trackIdsToAdd]));
+  const nextTrackIds = options.replace
+    ? normalizeTrackIds(trackIdsToAdd)
+    : Array.from(new Set([...normalizeTrackIds(existingTrackIds), ...trackIdsToAdd]));
 
   if (playlistIndex >= 0) {
     return playlists.map((playlist, index) =>
@@ -134,6 +136,7 @@ try {
     const pipelineResult = JSON.parse(fs.readFileSync(playlistPipelineResultPath, "utf-8"));
     const downloaded = Array.isArray(pipelineResult.results)
       ? pipelineResult.results
+      .filter((entry) => entry?.ok && entry?.audio?.status === "downloaded")
       .map((entry) => {
         const lyricsReview = getLyricsReview(entry);
         return {
@@ -176,8 +179,8 @@ try {
     const customPlaylists = Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [];
     const newSongDirs = downloaded.map((entry) => entry.song_dir).filter(Boolean);
     const lyricsReviewSongDirs = lyricsReviewItems.map((entry) => entry.song_dir).filter(Boolean);
-    let updatedPlaylists = ensurePlaylist(customPlaylists, NEW_DOWNLOADS_PLAYLIST_ID, NEW_DOWNLOADS_PLAYLIST_NAME, newSongDirs);
-    updatedPlaylists = ensurePlaylist(updatedPlaylists, LYRICS_REVIEW_PLAYLIST_ID, LYRICS_REVIEW_PLAYLIST_NAME, lyricsReviewSongDirs);
+    let updatedPlaylists = ensurePlaylist(customPlaylists, NEW_DOWNLOADS_PLAYLIST_ID, NEW_DOWNLOADS_PLAYLIST_NAME, newSongDirs, {replace: true});
+    updatedPlaylists = ensurePlaylist(updatedPlaylists, LYRICS_REVIEW_PLAYLIST_ID, LYRICS_REVIEW_PLAYLIST_NAME, lyricsReviewSongDirs, {replace: true});
     updatedPlaylists = ensurePlaylist(updatedPlaylists, ALIGNMENT_ERROR_PLAYLIST_ID, ALIGNMENT_ERROR_PLAYLIST_NAME, []);
 
     fs.writeFileSync(

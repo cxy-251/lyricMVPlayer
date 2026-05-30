@@ -50,7 +50,7 @@ def get_default_audio_download_config(project_root: str) -> AudioDownloadConfig:
         songs_output_dir=root / "artifacts" / "songs",
         download_archive_path=root / "artifacts" / "common" / "yt-dlp-archive.txt",
         cookies_file_path=root / "artifacts" / "common" / "youtube-cookies.txt",
-        cookies_from_browsers=("brave", "chromium", "chrome", "safari"),
+        cookies_from_browsers=("safari", "brave", "chromium", "chrome"),
         remote_components=("ejs:github",),
     )
 
@@ -136,23 +136,49 @@ def _should_retry_with_cookies(message: str) -> bool:
 
 
 def _export_browser_cookies(binary: str, browser_name: str, cookies_file_path: Path) -> None:
-    try:
-        _run_yt_dlp(
-            binary,
-            _with_remote_components([
-                "--cookies-from-browser",
-                browser_name,
-                "--cookies",
-                str(cookies_file_path),
-                "--skip-download",
-                "--simulate",
-                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            ], ("ejs:github",)),
-        )
-    except Exception as error:
-        if cookies_file_path.exists() and cookies_file_path.stat().st_size > 0:
-            return
-        raise error
+    _run_yt_dlp(
+        binary,
+        _with_remote_components([
+            "--cookies-from-browser",
+            browser_name,
+            "--cookies",
+            str(cookies_file_path),
+            "--skip-download",
+            "--simulate",
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        ], ("ejs:github",)),
+    )
+
+
+def refresh_youtube_cookies_file(config: AudioDownloadConfig) -> tuple[Path | None, str | None, str | None]:
+    binary_path = shutil.which(config.yt_dlp_binary)
+    if not binary_path:
+        return None, f"yt-dlp binary not found: {config.yt_dlp_binary}", None
+
+    _ensure_dirs(config)
+    temp_cookies_path = config.cookies_file_path.with_name(f"{config.cookies_file_path.name}.tmp")
+    failures: list[str] = []
+
+    for browser_name in config.cookies_from_browsers:
+        try:
+            if temp_cookies_path.exists():
+                temp_cookies_path.unlink()
+
+            # Export to a temporary file first, then replace the project cookie file
+            # only after yt-dlp has proved the cookies work against YouTube.
+            _export_browser_cookies(binary_path, browser_name, temp_cookies_path)
+            if not temp_cookies_path.exists() or temp_cookies_path.stat().st_size == 0:
+                raise RuntimeError("yt-dlp did not write a cookies file.")
+
+            temp_cookies_path.replace(config.cookies_file_path)
+            return config.cookies_file_path, None, browser_name
+        except Exception as error:
+            failures.append(f"[cookies-from-browser {browser_name}]\n{error}")
+
+    if temp_cookies_path.exists():
+        temp_cookies_path.unlink()
+
+    return None, "\n\n".join(failures) if failures else "No cookies could be exported.", None
 
 
 def ensure_youtube_cookies(config: AudioDownloadConfig) -> tuple[Path | None, str | None]:
@@ -272,16 +298,16 @@ def download_audio(record, config: AudioDownloadConfig) -> tuple[DownloadedAudio
             )
 
     if has_downloaded_audio(record, config.download_archive_path):
-        metadata_path = record_downloaded_audio(config, metadata)
         song_dir = build_song_directory(config, metadata)
-        audio_candidates = sorted(song_dir.glob("*.mp3"))
+        metadata_path = song_dir / "source.json"
+        audio_candidates = sorted(song_dir.glob("*.mp3")) if song_dir.exists() else []
         audio_path = str(audio_candidates[0]) if audio_candidates else None
         return (
             DownloadedAudioRecord(
                 source_identity_key=source_identity_key,
                 status="skipped",
                 audio_path=audio_path,
-                metadata_path=str(metadata_path),
+                metadata_path=str(metadata_path) if metadata_path.exists() else None,
                 metadata=metadata,
             ),
             None,

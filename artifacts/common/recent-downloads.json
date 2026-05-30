@@ -1,73 +1,64 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
-  "generated_at": "2026-05-21T10:10:11.222Z",
-  "count": 11,
+  "generated_at": "2026-05-28T14:18:16.844Z",
+  "count": 4,
+  "lyrics_review_count": 2,
   "items": [
     {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
-      "ok": true
+      "video_id": "EKDEIlVUPjI",
+      "source_url": "https://www.youtube.com/watch?v=EKDEIlVUPjI",
+      "song_dir": "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+      "ok": true,
+      "lyrics_review": null
     },
     {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4",
-      "ok": true
+      "video_id": "cuMuMnCRfqk",
+      "source_url": "https://www.youtube.com/watch?v=cuMuMnCRfqk",
+      "song_dir": "Dracula - Tame Impala - cuMuMnCRfqk",
+      "ok": true,
+      "lyrics_review": null
     },
     {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "2002 [Official Video] - Anne-Marie - Il-an3K9pjg",
-      "ok": true
+      "video_id": "H5v3kku4y6Q",
+      "source_url": "https://www.youtube.com/watch?v=H5v3kku4y6Q",
+      "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+      "ok": true,
+      "lyrics_review": {
+        "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "H5v3kku4y6Q",
+        "lyric_video_id": "nujn6wbr-e8",
+        "detail": "ytmusic search -> nujn6wbr-e8"
+      }
     },
     {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Mad at Disney - salem ilese - 4cLaxFWT9iI",
-      "ok": true
+      "video_id": "rtOvBOTyX00",
+      "source_url": "https://www.youtube.com/watch?v=rtOvBOTyX00",
+      "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+      "ok": true,
+      "lyrics_review": {
+        "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "rtOvBOTyX00",
+        "lyric_video_id": "wgzrOlRAPxA",
+        "detail": "ytmusic search -> wgzrOlRAPxA"
+      }
+    }
+  ],
+  "lyrics_review_items": [
+    {
+      "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "H5v3kku4y6Q",
+      "lyric_video_id": "nujn6wbr-e8",
+      "detail": "ytmusic search -> nujn6wbr-e8"
     },
     {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Backyard Boy - Claire Rosinkranz - 72L5HWbutzI",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Cheap Thrills - Sia - K_idN3P5_yk",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "girls like me don't cry - thủy - T4gmE2nHA_M",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Hotel - Claire Rosinkranz - R5dAVAkwpUU",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Too Sweet (Official Video) - Hozier - NTpbbQUBbuo",
-      "ok": true
-    },
-    {
-      "video_id": null,
-      "source_url": null,
-      "song_dir": "Clairo - Sofia - Claire Cottrill - L9l8zCOwEII",
-      "ok": true
+      "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "rtOvBOTyX00",
+      "lyric_video_id": "wgzrOlRAPxA",
+      "detail": "ytmusic search -> wgzrOlRAPxA"
     }
   ]
 }

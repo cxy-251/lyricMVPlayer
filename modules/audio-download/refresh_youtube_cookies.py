@@ -4,15 +4,31 @@ import json
 import sys
 from pathlib import Path
 
-from audio_download import ensure_youtube_cookies, get_default_audio_download_config
+from audio_download import get_default_audio_download_config, refresh_youtube_cookies_file
+
+
+def _build_hint(error: str | None) -> str | None:
+    if not error:
+        return None
+
+    lowered = error.lower()
+    if "operation not permitted" in lowered and "cookies.binarycookies" in lowered:
+        return (
+            "macOS blocked access to Safari cookies. Grant Full Disk Access to the terminal app "
+            "running this command, then restart that terminal and run npm run refresh:cookies again."
+        )
+
+    return None
 
 
 def refresh_youtube_cookies(project_root: str) -> dict:
     config = get_default_audio_download_config(project_root)
-    cookies_path, error = ensure_youtube_cookies(config)
+    cookies_path, error, browser = refresh_youtube_cookies_file(config)
     return {
         "ok": cookies_path is not None,
         "cookies_path": str(cookies_path) if cookies_path else str(config.cookies_file_path),
+        "browser": browser,
+        "hint": _build_hint(error),
         "error": error,
     }
 

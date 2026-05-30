@@ -176,6 +176,14 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [initialLibrary, props.playlists]);
 
   const initialStoredState = useMemo<StoredLibraryState>(() => {
+    if (!isInteractiveAudio) {
+      return {
+        likedTrackIds: [],
+        customPlaylists: initialCustomPlaylists,
+        selectedPlaylistId: "all",
+      };
+    }
+
     if (typeof window !== "undefined") {
       try {
         const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -223,11 +231,11 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       customPlaylists: initialCustomPlaylists,
       selectedPlaylistId: "new-downloads",
     };
-  }, [initialCustomPlaylists, initialLibrary]);
+  }, [initialCustomPlaylists, initialLibrary, isInteractiveAudio]);
 
   const [currentTrackIndex, setCurrentTrackIndex] = useState(initialTrackIndex);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(
-    initialStoredState.selectedPlaylistId ?? "new-downloads"
+    isInteractiveAudio ? initialStoredState.selectedPlaylistId ?? "new-downloads" : "all"
   );
   const [likedTrackIds, setLikedTrackIds] = useState<string[]>(initialStoredState.likedTrackIds);
   const [customPlaylists, setCustomPlaylists] = useState<
@@ -309,6 +317,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [currentSong.id, customPlaylists, likedTrackIds]);
 
   useEffect(() => {
+    if (!isInteractiveAudio) {
+      return;
+    }
+
     let cancelled = false;
 
     const hydrateLibraryState = async () => {
@@ -360,10 +372,10 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     return () => {
       cancelled = true;
     };
-  }, [initialCustomPlaylists, initialLibrary]);
+  }, [initialCustomPlaylists, initialLibrary, isInteractiveAudio]);
 
   useEffect(() => {
-    if (!libraryStateReady || typeof window === "undefined") {
+    if (!isInteractiveAudio || !libraryStateReady || typeof window === "undefined") {
       return;
     }
 
@@ -404,7 +416,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
       },
       body: JSON.stringify(syncPayload),
     }).catch(() => undefined);
-  }, [customPlaylists, initialLibrary, libraryStateReady, likedTrackIds, selectedPlaylistId]);
+  }, [customPlaylists, initialLibrary, isInteractiveAudio, libraryStateReady, likedTrackIds, selectedPlaylistId]);
 
   const performSeek = (targetMs: number) => {
     const nextMs = clamp(targetMs, 0, durationMs);
@@ -635,6 +647,9 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   }, [initialTrackIndex]);
 
   useEffect(() => {
+    if (!isInteractiveAudio) {
+      return;
+    }
     if (filteredQueue.length === 0) {
       return;
     }
@@ -646,7 +661,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
         performSeek(0);
       }
     }
-  }, [currentSong.id, filteredQueue, library]);
+  }, [currentSong.id, filteredQueue, isInteractiveAudio, library]);
 
   useEffect(() => {
     if (!isInteractiveAudio) {

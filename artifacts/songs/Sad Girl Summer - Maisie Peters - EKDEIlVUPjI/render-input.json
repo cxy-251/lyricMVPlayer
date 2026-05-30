@@ -1,0 +1,291 @@
+{
+  "title": "Sad Girl Summer",
+  "artist": "Maisie Peters",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 8620,
+  "renderDurationInFrames": 4359,
+  "durationInFrames": 4944,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE ECHO OF UNTOLD PROMISES SHAPED THE SUMMER SKY.",
+    "rightVertical": "A GHOST OF GOLDEN DAYS DANCES AMIDST EMPTY ROOMS.",
+    "bottomLine": "SWEET MEMORIES ARE JUST HAUNTING LIGHT."
+  },
+  "lyrics": [
+    {
+      "startMs": 11620,
+      "endMs": 13020,
+      "text": "One of us was married"
+    },
+    {
+      "startMs": 13880,
+      "endMs": 17090,
+      "text": "To an ex-marine, with a blonde down the block, he"
+    },
+    {
+      "startMs": 17150,
+      "endMs": 18910,
+      "text": "Said commitment's scary"
+    },
+    {
+      "startMs": 19420,
+      "endMs": 23210,
+      "text": "Then he left her alone with a house and a dog, so"
+    },
+    {
+      "startMs": 23210,
+      "endMs": 24550,
+      "text": "So she ran to daddy"
+    },
+    {
+      "startMs": 25220,
+      "endMs": 30060,
+      "text": "And he said: That man's a loser, call your friends up"
+    },
+    {
+      "startMs": 30190,
+      "endMs": 34380,
+      "text": "And we pulled a chair up (oh-oh, oh-oh)"
+    },
+    {
+      "startMs": 34380,
+      "endMs": 36650,
+      "text": "Pass your phone to the right (to the right)"
+    },
+    {
+      "startMs": 36650,
+      "endMs": 39140,
+      "text": "Text an ex-love goodbye"
+    },
+    {
+      "startMs": 39140,
+      "endMs": 42410,
+      "text": "It's another sad girl summer"
+    },
+    {
+      "startMs": 42410,
+      "endMs": 44650,
+      "text": "Flowers on the side of the road"
+    },
+    {
+      "startMs": 44650,
+      "endMs": 47900,
+      "text": "Travellin' beside each other"
+    },
+    {
+      "startMs": 47900,
+      "endMs": 50080,
+      "text": "No one has to dance on their own"
+    },
+    {
+      "startMs": 50080,
+      "endMs": 51060,
+      "text": "Oh, oh, so"
+    },
+    {
+      "startMs": 51060,
+      "endMs": 52580,
+      "text": "Take my hand and"
+    },
+    {
+      "startMs": 52580,
+      "endMs": 53940,
+      "text": "Lose his number"
+    },
+    {
+      "startMs": 53940,
+      "endMs": 58140,
+      "text": "You don't have to have another sad girl summer"
+    },
+    {
+      "startMs": 59380,
+      "endMs": 62420,
+      "text": "Raise your glass, let it go"
+    },
+    {
+      "startMs": 62420,
+      "endMs": 64849,
+      "text": "One of us is messy"
+    },
+    {
+      "startMs": 64849,
+      "endMs": 68060,
+      "text": "She got dumped by he-who-won't-be-mentioned"
+    },
+    {
+      "startMs": 68060,
+      "endMs": 70210,
+      "text": "She's vodka-coke unsteady"
+    },
+    {
+      "startMs": 70210,
+      "endMs": 73750,
+      "text": "So we're secretly staging an intervention"
+    },
+    {
+      "startMs": 73750,
+      "endMs": 76150,
+      "text": "Change your shoes, get ready"
+    },
+    {
+      "startMs": 76150,
+      "endMs": 80630,
+      "text": "That boy is such a loser, put your hair up"
+    },
+    {
+      "startMs": 80630,
+      "endMs": 85080,
+      "text": "And she pulls a chair up (oh-oh, oh-oh)"
+    },
+    {
+      "startMs": 85080,
+      "endMs": 87640,
+      "text": "Pass your phone to the right (to the right)"
+    },
+    {
+      "startMs": 87640,
+      "endMs": 90090,
+      "text": "Text an ex-love goodbye"
+    },
+    {
+      "startMs": 90090,
+      "endMs": 93320,
+      "text": "It's another sad girl summer"
+    },
+    {
+      "startMs": 93320,
+      "endMs": 95440,
+      "text": "Flowers on the side of the road"
+    },
+    {
+      "startMs": 95440,
+      "endMs": 98979,
+      "text": "Travellin' beside each other"
+    },
+    {
+      "startMs": 98979,
+      "endMs": 100850,
+      "text": "No one has to dance on their own"
+    },
+    {
+      "startMs": 100850,
+      "endMs": 102229,
+      "text": "Oh, oh, so"
+    },
+    {
+      "startMs": 102229,
+      "endMs": 103430,
+      "text": "Take my hand and"
+    },
+    {
+      "startMs": 103430,
+      "endMs": 105080,
+      "text": "Lose his number"
+    },
+    {
+      "startMs": 105080,
+      "endMs": 110350,
+      "text": "You don't have to have another sad girl summer"
+    },
+    {
+      "startMs": 110350,
+      "endMs": 113250,
+      "text": "Raise your glass, let it go"
+    },
+    {
+      "startMs": 113250,
+      "endMs": 114610,
+      "text": "Find your lip gloss"
+    },
+    {
+      "startMs": 115370,
+      "endMs": 116470,
+      "text": "Blow a kiss"
+    },
+    {
+      "startMs": 116470,
+      "endMs": 119790,
+      "text": "Forget the boy ever existed"
+    },
+    {
+      "startMs": 119790,
+      "endMs": 121170,
+      "text": "Find your lip gloss"
+    },
+    {
+      "startMs": 121170,
+      "endMs": 122120,
+      "text": "Blow a kiss"
+    },
+    {
+      "startMs": 122120,
+      "endMs": 125370,
+      "text": "Forget the boy ever existed"
+    },
+    {
+      "startMs": 125370,
+      "endMs": 127880,
+      "text": "Pass your phone to the right (to the right)"
+    },
+    {
+      "startMs": 127880,
+      "endMs": 129980,
+      "text": "Text an ex-love goodbye"
+    },
+    {
+      "startMs": 129980,
+      "endMs": 133730,
+      "text": "It's another sad girl summer"
+    },
+    {
+      "startMs": 133730,
+      "endMs": 135900,
+      "text": "Flowers on the side of the road (on the side, on the side of the road)"
+    },
+    {
+      "startMs": 135900,
+      "endMs": 137800,
+      "text": "Travellin' beside each other"
+    },
+    {
+      "startMs": 137800,
+      "endMs": 139650,
+      "text": "No one has to dance on their own"
+    },
+    {
+      "startMs": 139650,
+      "endMs": 140900,
+      "text": "Oh, oh, so"
+    },
+    {
+      "startMs": 140900,
+      "endMs": 142580,
+      "text": "Take my hand and (take my hand)"
+    },
+    {
+      "startMs": 142580,
+      "endMs": 143890,
+      "text": "Lose his number (lose his number)"
+    },
+    {
+      "startMs": 144380,
+      "endMs": 148720,
+      "text": "You don't have to have another sad girl summer (oh, oh, oh)"
+    },
+    {
+      "startMs": 148720,
+      "endMs": 151920,
+      "text": "Raise your glass, let it go (let it go)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+  "outputMp4Name": "Sad Girl Summer - Maisie Peters.mp4"
+}

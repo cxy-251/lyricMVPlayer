@@ -1,8 +1,8 @@
 import type {AudioFeatureTrack} from "../../modules/render-core/src";
 
-import audioSrc0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio.mp3";
-import rawAudioFeatures0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio-features.json";
-import backgroundSrc0 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/background.png";
+import audioSrc0 from "../../artifacts/songs/A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00/audio.mp3";
+import rawAudioFeatures0 from "../../artifacts/songs/A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00/audio-features.json";
+import backgroundSrc0 from "../../artifacts/songs/A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00/background.png";
 import audioSrc1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/audio.mp3";
 import rawAudioFeatures1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/audio-features.json";
 import backgroundSrc1 from "../../artifacts/songs/Never Gonna Give You Up (Official Video) (4K Remaster) - Rick Astley - dQw4w9WgXcQ/background.png";
@@ -72,42 +72,69 @@ import backgroundSrc22 from "../../artifacts/songs/My Humps - Black Eyed Peas - 
 import audioSrc23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/audio.mp3";
 import rawAudioFeatures23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/audio-features.json";
 import backgroundSrc23 from "../../artifacts/songs/Party In The U.S.A. - Miley Cyrus - R1kOdTm9FBk/background.png";
-import audioSrc24 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/audio.mp3";
-import rawAudioFeatures24 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/audio-features.json";
-import backgroundSrc24 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/background.png";
-import audioSrc25 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/audio.mp3";
-import rawAudioFeatures25 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/audio-features.json";
-import backgroundSrc25 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/background.png";
-import audioSrc26 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/audio.mp3";
-import rawAudioFeatures26 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/audio-features.json";
-import backgroundSrc26 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/background.png";
-import audioSrc27 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/audio.mp3";
-import rawAudioFeatures27 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/audio-features.json";
-import backgroundSrc27 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/background.png";
-import audioSrc28 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/audio.mp3";
-import rawAudioFeatures28 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/audio-features.json";
-import backgroundSrc28 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/background.png";
-import audioSrc29 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/audio.mp3";
-import rawAudioFeatures29 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/audio-features.json";
-import backgroundSrc29 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/background.png";
-import audioSrc30 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/audio.mp3";
-import rawAudioFeatures30 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/audio-features.json";
-import backgroundSrc30 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/background.png";
-import audioSrc31 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/audio.mp3";
-import rawAudioFeatures31 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/audio-features.json";
-import backgroundSrc31 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/background.png";
-import audioSrc32 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/audio.mp3";
-import rawAudioFeatures32 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/audio-features.json";
-import backgroundSrc32 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/background.png";
-import audioSrc33 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/audio.mp3";
-import rawAudioFeatures33 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/audio-features.json";
-import backgroundSrc33 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/background.png";
-import audioSrc34 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/audio.mp3";
-import rawAudioFeatures34 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/audio-features.json";
-import backgroundSrc34 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/background.png";
+import audioSrc24 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio.mp3";
+import rawAudioFeatures24 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/audio-features.json";
+import backgroundSrc24 from "../../artifacts/songs/Just the Way You Are - Bruno Mars - GnUW4AF1LZo/background.png";
+import audioSrc25 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/audio.mp3";
+import rawAudioFeatures25 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/audio-features.json";
+import backgroundSrc25 from "../../artifacts/songs/We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg/background.png";
+import audioSrc26 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/audio.mp3";
+import rawAudioFeatures26 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/audio-features.json";
+import backgroundSrc26 from "../../artifacts/songs/Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4/background.png";
+import audioSrc27 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/audio.mp3";
+import rawAudioFeatures27 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/audio-features.json";
+import backgroundSrc27 from "../../artifacts/songs/2002 [Official Video] - Anne-Marie - Il-an3K9pjg/background.png";
+import audioSrc28 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/audio.mp3";
+import rawAudioFeatures28 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/audio-features.json";
+import backgroundSrc28 from "../../artifacts/songs/Mad at Disney - salem ilese - 4cLaxFWT9iI/background.png";
+import audioSrc29 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/audio.mp3";
+import rawAudioFeatures29 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/audio-features.json";
+import backgroundSrc29 from "../../artifacts/songs/Backyard Boy - Claire Rosinkranz - 72L5HWbutzI/background.png";
+import audioSrc30 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/audio.mp3";
+import rawAudioFeatures30 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/audio-features.json";
+import backgroundSrc30 from "../../artifacts/songs/Cheap Thrills - Sia - K_idN3P5_yk/background.png";
+import audioSrc31 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/audio.mp3";
+import rawAudioFeatures31 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/audio-features.json";
+import backgroundSrc31 from "../../artifacts/songs/girls like me don't cry - thủy - T4gmE2nHA_M/background.png";
+import audioSrc32 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/audio.mp3";
+import rawAudioFeatures32 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/audio-features.json";
+import backgroundSrc32 from "../../artifacts/songs/Hotel - Claire Rosinkranz - R5dAVAkwpUU/background.png";
+import audioSrc33 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/audio.mp3";
+import rawAudioFeatures33 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/audio-features.json";
+import backgroundSrc33 from "../../artifacts/songs/Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI/background.png";
+import audioSrc34 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/audio.mp3";
+import rawAudioFeatures34 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/audio-features.json";
+import backgroundSrc34 from "../../artifacts/songs/Too Sweet (Official Video) - Hozier - NTpbbQUBbuo/background.png";
+import audioSrc35 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/audio.mp3";
+import rawAudioFeatures35 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/audio-features.json";
+import backgroundSrc35 from "../../artifacts/songs/Clairo - Sofia - Claire Cottrill - L9l8zCOwEII/background.png";
+import audioSrc36 from "../../artifacts/songs/Go Away (Official Music Video) - weezer - pnTIsubYbCU/audio.mp3";
+import rawAudioFeatures36 from "../../artifacts/songs/Go Away (Official Music Video) - weezer - pnTIsubYbCU/audio-features.json";
+import backgroundSrc36 from "../../artifacts/songs/Go Away (Official Music Video) - weezer - pnTIsubYbCU/background.png";
+import audioSrc37 from "../../artifacts/songs/One Thing - One Direction - Y1xs_xPb46M/audio.mp3";
+import rawAudioFeatures37 from "../../artifacts/songs/One Thing - One Direction - Y1xs_xPb46M/audio-features.json";
+import backgroundSrc37 from "../../artifacts/songs/One Thing - One Direction - Y1xs_xPb46M/background.png";
+import audioSrc38 from "../../artifacts/songs/To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY/audio.mp3";
+import rawAudioFeatures38 from "../../artifacts/songs/To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY/audio-features.json";
+import backgroundSrc38 from "../../artifacts/songs/To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY/background.png";
+import audioSrc39 from "../../artifacts/songs/Billie Jean - Michael Jackson - 7CTJcHjkq0E/audio.mp3";
+import rawAudioFeatures39 from "../../artifacts/songs/Billie Jean - Michael Jackson - 7CTJcHjkq0E/audio-features.json";
+import backgroundSrc39 from "../../artifacts/songs/Billie Jean - Michael Jackson - 7CTJcHjkq0E/background.png";
+import audioSrc40 from "../../artifacts/songs/Who Says - Selena Gomez - m4p0WNN9p-Y/audio.mp3";
+import rawAudioFeatures40 from "../../artifacts/songs/Who Says - Selena Gomez - m4p0WNN9p-Y/audio-features.json";
+import backgroundSrc40 from "../../artifacts/songs/Who Says - Selena Gomez - m4p0WNN9p-Y/background.png";
+import audioSrc41 from "../../artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI/audio.mp3";
+import rawAudioFeatures41 from "../../artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI/audio-features.json";
+import backgroundSrc41 from "../../artifacts/songs/Sad Girl Summer - Maisie Peters - EKDEIlVUPjI/background.png";
+import audioSrc42 from "../../artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk/audio.mp3";
+import rawAudioFeatures42 from "../../artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk/audio-features.json";
+import backgroundSrc42 from "../../artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk/background.png";
+import audioSrc43 from "../../artifacts/songs/As It Was (Official Video) - Harry Styles - H5v3kku4y6Q/audio.mp3";
+import rawAudioFeatures43 from "../../artifacts/songs/As It Was (Official Video) - Harry Styles - H5v3kku4y6Q/audio-features.json";
+import backgroundSrc43 from "../../artifacts/songs/As It Was (Official Video) - Harry Styles - H5v3kku4y6Q/background.png";
 
 export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures: AudioFeatureTrack; backgroundSrc?: string}> = {
-  "Just the Way You Are - Bruno Mars - GnUW4AF1LZo": {
+  "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00": {
     audioSrc: audioSrc0,
     audioFeatures: rawAudioFeatures0 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc0,
@@ -227,59 +254,104 @@ export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures: A
     audioFeatures: rawAudioFeatures23 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc23,
   },
-  "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg": {
+  "Just the Way You Are - Bruno Mars - GnUW4AF1LZo": {
     audioSrc: audioSrc24,
     audioFeatures: rawAudioFeatures24 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc24,
   },
-  "Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4": {
+  "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg": {
     audioSrc: audioSrc25,
     audioFeatures: rawAudioFeatures25 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc25,
   },
-  "2002 [Official Video] - Anne-Marie - Il-an3K9pjg": {
+  "Ho Hey (Official Video) - The Lumineers - zvCBSSwgtg4": {
     audioSrc: audioSrc26,
     audioFeatures: rawAudioFeatures26 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc26,
   },
-  "Mad at Disney - salem ilese - 4cLaxFWT9iI": {
+  "2002 [Official Video] - Anne-Marie - Il-an3K9pjg": {
     audioSrc: audioSrc27,
     audioFeatures: rawAudioFeatures27 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc27,
   },
-  "Backyard Boy - Claire Rosinkranz - 72L5HWbutzI": {
+  "Mad at Disney - salem ilese - 4cLaxFWT9iI": {
     audioSrc: audioSrc28,
     audioFeatures: rawAudioFeatures28 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc28,
   },
-  "Cheap Thrills - Sia - K_idN3P5_yk": {
+  "Backyard Boy - Claire Rosinkranz - 72L5HWbutzI": {
     audioSrc: audioSrc29,
     audioFeatures: rawAudioFeatures29 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc29,
   },
-  "girls like me don't cry - thủy - T4gmE2nHA_M": {
+  "Cheap Thrills - Sia - K_idN3P5_yk": {
     audioSrc: audioSrc30,
     audioFeatures: rawAudioFeatures30 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc30,
   },
-  "Hotel - Claire Rosinkranz - R5dAVAkwpUU": {
+  "girls like me don't cry - thủy - T4gmE2nHA_M": {
     audioSrc: audioSrc31,
     audioFeatures: rawAudioFeatures31 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc31,
   },
-  "Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI": {
+  "Hotel - Claire Rosinkranz - R5dAVAkwpUU": {
     audioSrc: audioSrc32,
     audioFeatures: rawAudioFeatures32 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc32,
   },
-  "Too Sweet (Official Video) - Hozier - NTpbbQUBbuo": {
+  "Are You Bored Yet- (feat. Clairo) - Wallows - nt4_p9Pz0RI": {
     audioSrc: audioSrc33,
     audioFeatures: rawAudioFeatures33 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc33,
   },
-  "Clairo - Sofia - Claire Cottrill - L9l8zCOwEII": {
+  "Too Sweet (Official Video) - Hozier - NTpbbQUBbuo": {
     audioSrc: audioSrc34,
     audioFeatures: rawAudioFeatures34 as AudioFeatureTrack,
     backgroundSrc: backgroundSrc34,
+  },
+  "Clairo - Sofia - Claire Cottrill - L9l8zCOwEII": {
+    audioSrc: audioSrc35,
+    audioFeatures: rawAudioFeatures35 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc35,
+  },
+  "Go Away (Official Music Video) - weezer - pnTIsubYbCU": {
+    audioSrc: audioSrc36,
+    audioFeatures: rawAudioFeatures36 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc36,
+  },
+  "One Thing - One Direction - Y1xs_xPb46M": {
+    audioSrc: audioSrc37,
+    audioFeatures: rawAudioFeatures37 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc37,
+  },
+  "To All the Boys I’ve Loved Before - JAX - Sdf0UxuN7uY": {
+    audioSrc: audioSrc38,
+    audioFeatures: rawAudioFeatures38 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc38,
+  },
+  "Billie Jean - Michael Jackson - 7CTJcHjkq0E": {
+    audioSrc: audioSrc39,
+    audioFeatures: rawAudioFeatures39 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc39,
+  },
+  "Who Says - Selena Gomez - m4p0WNN9p-Y": {
+    audioSrc: audioSrc40,
+    audioFeatures: rawAudioFeatures40 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc40,
+  },
+  "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI": {
+    audioSrc: audioSrc41,
+    audioFeatures: rawAudioFeatures41 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc41,
+  },
+  "Dracula - Tame Impala - cuMuMnCRfqk": {
+    audioSrc: audioSrc42,
+    audioFeatures: rawAudioFeatures42 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc42,
+  },
+  "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q": {
+    audioSrc: audioSrc43,
+    audioFeatures: rawAudioFeatures43 as AudioFeatureTrack,
+    backgroundSrc: backgroundSrc43,
   }
 };

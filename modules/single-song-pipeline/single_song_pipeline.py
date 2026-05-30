@@ -65,10 +65,10 @@ def _timed_lyrics_document_to_lrc_text(document) -> str:
     return "\n".join(rows)
 
 
-def save_pipeline_result(result: dict, project_root: str) -> str:
+def save_pipeline_result(result: dict, project_root: str, write_to_song_dir: bool = True) -> str:
     root = Path(project_root)
     song_dir = result.get("song_dir")
-    if song_dir:
+    if write_to_song_dir and song_dir:
         output_dir = Path(song_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / "pipeline.json"
@@ -118,14 +118,30 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
         result["result_path"] = save_pipeline_result(result, project_root)
         return result
 
+    song_base_name = audio_download.build_song_base_name(audio_record.metadata)
+    song_dir = audio_download.build_song_directory(audio_config, audio_record.metadata)
+    if audio_record.status == "skipped":
+        result = {
+            "ok": True,
+            "stage": "skipped-existing",
+            "song_base_name": song_base_name,
+            "song_dir": str(song_dir),
+            "source": {
+                "source_identity_key": source_ingestion.get_source_identity(record),
+                "record": _serialize(record),
+            },
+            "audio": _serialize(audio_record),
+            "skipped_existing": True,
+        }
+        result["result_path"] = save_pipeline_result(result, project_root, write_to_song_dir=False)
+        return result
+
     lyric_input = lyrics.TimedLyricResolutionInput(
         watch_url=record.watch_url,
         title=audio_record.metadata.title,
         artist=audio_record.metadata.channel or audio_record.metadata.uploader,
         duration_seconds=audio_record.metadata.duration,
     )
-    song_base_name = audio_download.build_song_base_name(audio_record.metadata)
-    song_dir = audio_download.build_song_directory(audio_config, audio_record.metadata)
     song_dir.mkdir(parents=True, exist_ok=True)
     timed_lyrics_path = song_dir / "lyrics.json"
     lyric_document, lyric_error = lyrics.resolve_timed_lyrics(lyric_input)

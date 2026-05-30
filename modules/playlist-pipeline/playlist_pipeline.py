@@ -89,8 +89,9 @@ def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_b
     for entry in playlist_entries:
         pipeline_result = single_song_pipeline.run_single_song_pipeline(entry["watch_url"], project_root)
         song_dir = pipeline_result.get("song_dir")
+        audio_status = pipeline_result.get("audio", {}).get("status")
 
-        if pipeline_result.get("ok") and song_dir:
+        if pipeline_result.get("ok") and song_dir and audio_status == "downloaded":
             audio_features_path = audio_features.extract_audio_features_for_song(song_dir, frame_rate=60)
             source_record = pipeline_result.get("audio", {}).get("metadata", {})
             render_queue.upsert_render_queue_row(

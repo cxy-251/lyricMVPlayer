@@ -1,0 +1,226 @@
+{
+  "title": "Dracula",
+  "artist": "Tame Impala",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5549,
+  "durationInFrames": 6159,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE SHADOWS KEEP ME LIKE A STAR IN THE BLUE LIGHT.",
+    "rightVertical": "A BIZARRE FEELING WHEN THE MORNING TURNS TO DUSK.",
+    "bottomLine": "THE NIGHT IS ALMOST OVER, BUT YOU ARE STILL GONE."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 1550,
+      "text": "(Check it out now)"
+    },
+    {
+      "startMs": 4070,
+      "endMs": 8270,
+      "text": "♪"
+    },
+    {
+      "startMs": 8270,
+      "endMs": 11370,
+      "text": "The morning light is turning blue, the feeling is bizarre (bizarre)"
+    },
+    {
+      "startMs": 11370,
+      "endMs": 15320,
+      "text": "The night is almost over, I still don't know where you are"
+    },
+    {
+      "startMs": 29010,
+      "endMs": 33210,
+      "text": "The shadows, yeah, they keep me pretty like a movie star"
+    },
+    {
+      "startMs": 33270,
+      "endMs": 37470,
+      "text": "Daylight makes me feel like Dracula (Dracula)"
+    },
+    {
+      "startMs": 37470,
+      "endMs": 41670,
+      "text": "In the end, I hope it's you and me"
+    },
+    {
+      "startMs": 41690,
+      "endMs": 45220,
+      "text": "In the darkness, I would never leave you (ah)"
+    },
+    {
+      "startMs": 46340,
+      "endMs": 50360,
+      "text": "Won't ever see me in the light of day"
+    },
+    {
+      "startMs": 50570,
+      "endMs": 54660,
+      "text": "It's far too late, the time has come"
+    },
+    {
+      "startMs": 54660,
+      "endMs": 58920,
+      "text": "I'm on the verge of caving in, I run back to the dark"
+    },
+    {
+      "startMs": 58920,
+      "endMs": 63110,
+      "text": "Now I'm Mr. Charisma, fucking Pablo Escobar (Escobar)"
+    },
+    {
+      "startMs": 63110,
+      "endMs": 67410,
+      "text": "My friends are saying, \"Shut up, Kevin, just get in the car\" (Kevin)"
+    },
+    {
+      "startMs": 67410,
+      "endMs": 72190,
+      "text": "I just wanna be right where you are (oh, my love)"
+    },
+    {
+      "startMs": 72190,
+      "endMs": 76300,
+      "text": "In the end, I hope it's you and me"
+    },
+    {
+      "startMs": 76300,
+      "endMs": 79860,
+      "text": "In the darkness, I would never leave (I won't leave her)"
+    },
+    {
+      "startMs": 79860,
+      "endMs": 83300,
+      "text": "We both saw this moment coming from afar"
+    },
+    {
+      "startMs": 83850,
+      "endMs": 86740,
+      "text": "Now here we are"
+    },
+    {
+      "startMs": 87410,
+      "endMs": 94290,
+      "text": "Run from the sunlight, Dracula (hey)"
+    },
+    {
+      "startMs": 94290,
+      "endMs": 98490,
+      "text": "Run from the sunlight, Dracula (Dracu-Dracula)"
+    },
+    {
+      "startMs": 98490,
+      "endMs": 102380,
+      "text": "Run from the sunlight, Dracula (run from the sun)"
+    },
+    {
+      "startMs": 102380,
+      "endMs": 106580,
+      "text": "Isn't the view spectacular? (sunlight, Dracula)"
+    },
+    {
+      "startMs": 106580,
+      "endMs": 110780,
+      "text": "Oh, oh (check it out now)"
+    },
+    {
+      "startMs": 110780,
+      "endMs": 114980,
+      "text": "But please, do you think about what it might mean?"
+    },
+    {
+      "startMs": 114980,
+      "endMs": 119180,
+      "text": "'Cause I dream about you in my sleep"
+    },
+    {
+      "startMs": 119180,
+      "endMs": 123380,
+      "text": "Would you ever love someone like me? Like me? (Oh)"
+    },
+    {
+      "startMs": 123380,
+      "endMs": 127580,
+      "text": "In the end, I hope it's you and me (oh)"
+    },
+    {
+      "startMs": 127580,
+      "endMs": 130830,
+      "text": "In the darkness, I would never leave (I won't leave her)"
+    },
+    {
+      "startMs": 130830,
+      "endMs": 134750,
+      "text": "We both saw this moment comin' from afar"
+    },
+    {
+      "startMs": 134930,
+      "endMs": 137100,
+      "text": "Now here we are"
+    },
+    {
+      "startMs": 139380,
+      "endMs": 143580,
+      "text": "So run from the sunlight, Dracula (hey)"
+    },
+    {
+      "startMs": 146390,
+      "endMs": 150590,
+      "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 150860,
+      "endMs": 155010,
+      "text": "Run from the sunlight, Dracula (oh)"
+    },
+    {
+      "startMs": 155010,
+      "endMs": 159210,
+      "text": "Isn't the view spectacular? (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 159210,
+      "endMs": 163060,
+      "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 163060,
+      "endMs": 167230,
+      "text": "Run from the sunlight, Dracula (run from the sunlight)"
+    },
+    {
+      "startMs": 167230,
+      "endMs": 171430,
+      "text": "Isn't the view spectacular? (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 171430,
+      "endMs": 175610,
+      "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 175610,
+      "endMs": 179790,
+      "text": "Run from the sunlight, Dracula (run from the sunlight, Dracula)"
+    },
+    {
+      "startMs": 179790,
+      "endMs": 182990,
+      "text": "Isn't the view spectacular?"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Dracula - Tame Impala - cuMuMnCRfqk",
+  "outputMp4Name": "Dracula - Tame Impala.mp4"
+}
