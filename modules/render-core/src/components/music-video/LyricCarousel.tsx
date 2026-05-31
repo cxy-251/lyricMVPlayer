@@ -67,6 +67,14 @@ export const LyricCarousel: React.FC<LyricCarouselProps> = ({
   onSeek
 }) => {
   const frame = useCurrentFrame();
+  if (lyrics.length === 0) {
+    return (
+      <div className="absolute left-[120px] top-[1110px] z-40 flex h-[250px] w-[840px] items-center justify-center text-center text-[44px] font-bold leading-[1.1] text-white/64 [text-shadow:0_8px_28px_rgba(0,0,0,0.62)]">
+        Lyrics unavailable
+      </div>
+    );
+  }
+
   const activeIndex = findActiveIndex(lyrics, currentTimeMs);
   const rawCurrentLine = lyrics[activeIndex] ?? lyrics[0];
   const currentLine = isDecorativeLyric(rawCurrentLine.text)

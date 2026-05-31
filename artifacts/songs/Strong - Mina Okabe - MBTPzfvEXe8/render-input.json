@@ -1,0 +1,326 @@
+{
+  "title": "Strong",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Strong - Mina Okabe - MBTPzfvEXe8/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 2020,
+  "renderDurationInFrames": 5332,
+  "durationInFrames": 5392,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Strong - Mina Okabe - MBTPzfvEXe8/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF MEMORIES AND THE ECHOES OF A FAREWELL.",
+    "rightVertical": "A QUIET CONFESSION WHISPERED INTO THE STARRY NIGHT SKY.",
+    "bottomLine": "TIME IS JUST AN ILLUSION WE CHASE."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 5020,
+      "text": "♪"
+    },
+    {
+      "startMs": 5020,
+      "endMs": 7380,
+      "text": "By this time I'd cut 'em loose"
+    },
+    {
+      "startMs": 7380,
+      "endMs": 9780,
+      "text": "Been a couple months why aren't I sick of you"
+    },
+    {
+      "startMs": 9780,
+      "endMs": 14840,
+      "text": "Hours feel like days when I'm not with you (not with you)"
+    },
+    {
+      "startMs": 14840,
+      "endMs": 17560,
+      "text": "Heard your name a couple times"
+    },
+    {
+      "startMs": 17560,
+      "endMs": 20150,
+      "text": "Didn't think I'd want you but I changed my mind"
+    },
+    {
+      "startMs": 20150,
+      "endMs": 25540,
+      "text": "When I met you I saw someone different (different)"
+    },
+    {
+      "startMs": 25540,
+      "endMs": 27900,
+      "text": "This feeling is unusual"
+    },
+    {
+      "startMs": 27900,
+      "endMs": 30660,
+      "text": "I'm losing my control"
+    },
+    {
+      "startMs": 30660,
+      "endMs": 32510,
+      "text": "I'm hoping that it's mutual"
+    },
+    {
+      "startMs": 32510,
+      "endMs": 36270,
+      "text": "So why don't you let me know"
+    },
+    {
+      "startMs": 36270,
+      "endMs": 38730,
+      "text": "Tell me when I'll see you again"
+    },
+    {
+      "startMs": 38730,
+      "endMs": 41280,
+      "text": "It hurts to wait too long"
+    },
+    {
+      "startMs": 41280,
+      "endMs": 43110,
+      "text": "Usually I'd try to pretend"
+    },
+    {
+      "startMs": 43110,
+      "endMs": 46340,
+      "text": "But I'm just not that strong"
+    },
+    {
+      "startMs": 46340,
+      "endMs": 48820,
+      "text": "Tell me you don't want this to end"
+    },
+    {
+      "startMs": 48820,
+      "endMs": 51510,
+      "text": "'Cause how could this go wrong"
+    },
+    {
+      "startMs": 51510,
+      "endMs": 53360,
+      "text": "I'll admit to everything"
+    },
+    {
+      "startMs": 53360,
+      "endMs": 63560,
+      "text": "'Cause I'm just not that strong"
+    },
+    {
+      "startMs": 63560,
+      "endMs": 65650,
+      "text": "I'm just not that strong"
+    },
+    {
+      "startMs": 65650,
+      "endMs": 67910,
+      "text": "Wanna give you all my time"
+    },
+    {
+      "startMs": 67910,
+      "endMs": 70480,
+      "text": "Usually I'm busy but for you I'm fine"
+    },
+    {
+      "startMs": 70480,
+      "endMs": 76020,
+      "text": "I'm not proud of changing plans to see you (just to see you)"
+    },
+    {
+      "startMs": 76020,
+      "endMs": 78400,
+      "text": "This feeling is unusual"
+    },
+    {
+      "startMs": 78400,
+      "endMs": 81030,
+      "text": "I'm losing my control"
+    },
+    {
+      "startMs": 81030,
+      "endMs": 83220,
+      "text": "I'm hoping that it's mutual"
+    },
+    {
+      "startMs": 83220,
+      "endMs": 86970,
+      "text": "So why don't you let me know"
+    },
+    {
+      "startMs": 86970,
+      "endMs": 89390,
+      "text": "Tell me when I'll see you again"
+    },
+    {
+      "startMs": 89390,
+      "endMs": 91800,
+      "text": "It hurts to wait too long"
+    },
+    {
+      "startMs": 91800,
+      "endMs": 93610,
+      "text": "Usually I'd try to pretend"
+    },
+    {
+      "startMs": 93610,
+      "endMs": 96920,
+      "text": "But I'm just not that strong"
+    },
+    {
+      "startMs": 96920,
+      "endMs": 99420,
+      "text": "Tell me you don't want this to end"
+    },
+    {
+      "startMs": 99420,
+      "endMs": 101900,
+      "text": "'Cause how could this go wrong"
+    },
+    {
+      "startMs": 101900,
+      "endMs": 103790,
+      "text": "I'll admit to everything"
+    },
+    {
+      "startMs": 103790,
+      "endMs": 114460,
+      "text": "'Cause I'm just not that strong (I'm not that, I'm not that strong)"
+    },
+    {
+      "startMs": 114460,
+      "endMs": 116260,
+      "text": "Not that strong"
+    },
+    {
+      "startMs": 116260,
+      "endMs": 117340,
+      "text": "Show me"
+    },
+    {
+      "startMs": 117340,
+      "endMs": 118510,
+      "text": "That you"
+    },
+    {
+      "startMs": 118510,
+      "endMs": 119870,
+      "text": "Need me"
+    },
+    {
+      "startMs": 119870,
+      "endMs": 121010,
+      "text": "Just like I need you"
+    },
+    {
+      "startMs": 121010,
+      "endMs": 122220,
+      "text": "Tell me"
+    },
+    {
+      "startMs": 122220,
+      "endMs": 123540,
+      "text": "That you"
+    },
+    {
+      "startMs": 123540,
+      "endMs": 124840,
+      "text": "Want me"
+    },
+    {
+      "startMs": 124840,
+      "endMs": 126110,
+      "text": "Just like I want you"
+    },
+    {
+      "startMs": 126110,
+      "endMs": 128150,
+      "text": "Don't hesitate"
+    },
+    {
+      "startMs": 128150,
+      "endMs": 131180,
+      "text": "Show me before it's too late"
+    },
+    {
+      "startMs": 131180,
+      "endMs": 132440,
+      "text": "Show me"
+    },
+    {
+      "startMs": 132440,
+      "endMs": 133660,
+      "text": "That You"
+    },
+    {
+      "startMs": 133660,
+      "endMs": 135050,
+      "text": "Need me"
+    },
+    {
+      "startMs": 135050,
+      "endMs": 137590,
+      "text": "Like I need you"
+    },
+    {
+      "startMs": 137590,
+      "endMs": 139820,
+      "text": "Tell me when I'll see you again"
+    },
+    {
+      "startMs": 139820,
+      "endMs": 142460,
+      "text": "It hurts to wait too long"
+    },
+    {
+      "startMs": 142460,
+      "endMs": 144270,
+      "text": "Usually I'd try to pretend"
+    },
+    {
+      "startMs": 144270,
+      "endMs": 147550,
+      "text": "But I'm just not that strong"
+    },
+    {
+      "startMs": 147550,
+      "endMs": 149960,
+      "text": "Tell me you don't want this to end"
+    },
+    {
+      "startMs": 149960,
+      "endMs": 152500,
+      "text": "'Cause how could this go wrong"
+    },
+    {
+      "startMs": 152500,
+      "endMs": 154180,
+      "text": "I'll admit to everything"
+    },
+    {
+      "startMs": 154180,
+      "endMs": 158430,
+      "text": "'Cause I'm just not that strong"
+    },
+    {
+      "startMs": 158430,
+      "endMs": 165100,
+      "text": "(I'm not that, I'm not that strong)"
+    },
+    {
+      "startMs": 165100,
+      "endMs": 179000,
+      "text": "I'm not that strong"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Strong - Mina Okabe - MBTPzfvEXe8",
+  "outputMp4Name": "Strong - Mina Okabe.mp4"
+}

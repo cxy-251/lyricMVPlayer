@@ -1,0 +1,181 @@
+{
+  "title": "easy to love",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/easy to love - Sarah Kang Music - RvL2FHWsOLM/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 5430,
+  "renderDurationInFrames": 4235,
+  "durationInFrames": 5263,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/easy to love - Sarah Kang Music - RvL2FHWsOLM/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE MOMENT MY EYES MET YOURS, THE WORLD SHIFTED INTO A GOLDEN HUE.",
+    "rightVertical": "YOU ARE THE DREAM I NEVER KNEW HOW TO IMAGINE, COMPLETELY AND TRUE.",
+    "bottomLine": "IT'S MORE THAN JUST WORDS, IT'S FOREVER."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 8430,
+      "text": "♪"
+    },
+    {
+      "startMs": 8430,
+      "endMs": 12480,
+      "text": "The moment I laid my eyes on you"
+    },
+    {
+      "startMs": 12480,
+      "endMs": 16730,
+      "text": "I knew you were my dream come true"
+    },
+    {
+      "startMs": 16730,
+      "endMs": 20500,
+      "text": "I don't care if it sounds cliche"
+    },
+    {
+      "startMs": 20500,
+      "endMs": 24820,
+      "text": "I'll say it again day after day"
+    },
+    {
+      "startMs": 24820,
+      "endMs": 28930,
+      "text": "Still I'll find other ways to show"
+    },
+    {
+      "startMs": 28930,
+      "endMs": 32980,
+      "text": "It's not enough just to say it's so"
+    },
+    {
+      "startMs": 32980,
+      "endMs": 35870,
+      "text": "Look into your eyes"
+    },
+    {
+      "startMs": 35870,
+      "endMs": 40150,
+      "text": "Squeeze your hand one, two, three times"
+    },
+    {
+      "startMs": 40150,
+      "endMs": 44190,
+      "text": "You're so easy to love"
+    },
+    {
+      "startMs": 44190,
+      "endMs": 48230,
+      "text": "Like the blue sky above"
+    },
+    {
+      "startMs": 48230,
+      "endMs": 52370,
+      "text": "You're so hard to forget"
+    },
+    {
+      "startMs": 52370,
+      "endMs": 56460,
+      "text": "You're the best I've ever met"
+    },
+    {
+      "startMs": 56460,
+      "endMs": 60150,
+      "text": "And I'm never gonna try"
+    },
+    {
+      "startMs": 60150,
+      "endMs": 62730,
+      "text": "To get you off my mind"
+    },
+    {
+      "startMs": 62730,
+      "endMs": 64250,
+      "text": "Why would I?"
+    },
+    {
+      "startMs": 64250,
+      "endMs": 90040,
+      "text": "When you're so easy to love"
+    },
+    {
+      "startMs": 90040,
+      "endMs": 93800,
+      "text": "You're the sun after the rain"
+    },
+    {
+      "startMs": 93800,
+      "endMs": 97960,
+      "text": "The antidote to my heartache"
+    },
+    {
+      "startMs": 97960,
+      "endMs": 102170,
+      "text": "You could never do no wrong"
+    },
+    {
+      "startMs": 102170,
+      "endMs": 106210,
+      "text": "You are the best part of every song"
+    },
+    {
+      "startMs": 106210,
+      "endMs": 109080,
+      "text": "Look into your eyes"
+    },
+    {
+      "startMs": 109080,
+      "endMs": 113350,
+      "text": "Squeeze your hand one, two, three times"
+    },
+    {
+      "startMs": 113350,
+      "endMs": 117410,
+      "text": "You're so easy to love"
+    },
+    {
+      "startMs": 117410,
+      "endMs": 121530,
+      "text": "Like the blue sky above"
+    },
+    {
+      "startMs": 121530,
+      "endMs": 125510,
+      "text": "You're so hard to forget"
+    },
+    {
+      "startMs": 125510,
+      "endMs": 129670,
+      "text": "You're the best I've ever met"
+    },
+    {
+      "startMs": 129670,
+      "endMs": 133500,
+      "text": "And I'm never gonna try"
+    },
+    {
+      "startMs": 133500,
+      "endMs": 136090,
+      "text": "To get you off my mind"
+    },
+    {
+      "startMs": 136090,
+      "endMs": 137590,
+      "text": "Why would I?"
+    },
+    {
+      "startMs": 137590,
+      "endMs": 144620,
+      "text": "When you're so easy to love"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/easy to love - Sarah Kang Music - RvL2FHWsOLM",
+  "outputMp4Name": "easy to love - Sarah Kang Music.mp4"
+}

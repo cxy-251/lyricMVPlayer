@@ -1,0 +1,151 @@
+{
+  "title": "Summer Is for Falling in Love",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Summer Is for Falling in Love - Sarah Kang Music - zXbqad3UPCk/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 9980,
+  "renderDurationInFrames": 5050,
+  "durationInFrames": 5593,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Summer Is for Falling in Love - Sarah Kang Music - zXbqad3UPCk/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "A CANVAS OF BLUE WHERE OUR JOURNEY BEGINS TO UNFOLD",
+    "rightVertical": "WE COULD DRIVE ALONG AN OCEAN REFLECTING THE SUN'S GOLD LIGHT",
+    "bottomLine": "LET US DREAM IN THE OPEN AIR"
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 12980,
+      "endMs": 18480,
+      "text": "We could drive along an ocean reflecting the sun"
+    },
+    {
+      "startMs": 19010,
+      "endMs": 25250,
+      "text": "Or make a bed of green atop a wide open scene"
+    },
+    {
+      "startMs": 25660,
+      "endMs": 27880,
+      "text": "Under a canvas of blue"
+    },
+    {
+      "startMs": 28250,
+      "endMs": 31440,
+      "text": "I would draw ever nearer to you"
+    },
+    {
+      "startMs": 32170,
+      "endMs": 34240,
+      "text": "To feel the dew on your skin"
+    },
+    {
+      "startMs": 34630,
+      "endMs": 37600,
+      "text": "That is how it would begin"
+    },
+    {
+      "startMs": 38250,
+      "endMs": 44810,
+      "text": "For summer is for falling in love"
+    },
+    {
+      "startMs": 45090,
+      "endMs": 49290,
+      "text": "♪"
+    },
+    {
+      "startMs": 56230,
+      "endMs": 61350,
+      "text": "We could stay out late until the sun sets past eight"
+    },
+    {
+      "startMs": 62120,
+      "endMs": 68750,
+      "text": "And the cotton candy haze mirrors the warmth of your gaze"
+    },
+    {
+      "startMs": 69039,
+      "endMs": 74660,
+      "text": "Raise your glass to mine and as we drink, we would lock eyes"
+    },
+    {
+      "startMs": 75310,
+      "endMs": 80960,
+      "text": "So we could disregard the thought of ever having to part"
+    },
+    {
+      "startMs": 81300,
+      "endMs": 87500,
+      "text": "For summer is for falling in love"
+    },
+    {
+      "startMs": 88700,
+      "endMs": 92900,
+      "text": "♪"
+    },
+    {
+      "startMs": 137410,
+      "endMs": 139780,
+      "text": "This lightness of being"
+    },
+    {
+      "startMs": 140320,
+      "endMs": 143160,
+      "text": "We both know to be fleeting"
+    },
+    {
+      "startMs": 143829,
+      "endMs": 146160,
+      "text": "Like the last breath of a sunset"
+    },
+    {
+      "startMs": 146790,
+      "endMs": 149520,
+      "text": "Right before the day is dead"
+    },
+    {
+      "startMs": 150579,
+      "endMs": 152640,
+      "text": "But maybe the heat of today"
+    },
+    {
+      "startMs": 153070,
+      "endMs": 156310,
+      "text": "Could keep even winter away"
+    },
+    {
+      "startMs": 157050,
+      "endMs": 159220,
+      "text": "So I'll remember your laugh"
+    },
+    {
+      "startMs": 159220,
+      "endMs": 162560,
+      "text": "'Cause nothing ever changes the fact"
+    },
+    {
+      "startMs": 163030,
+      "endMs": 167950,
+      "text": "That summer is for falling in love"
+    },
+    {
+      "startMs": 169940,
+      "endMs": 176340,
+      "text": "Summer is for falling in love"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Summer Is for Falling in Love - Sarah Kang Music - zXbqad3UPCk",
+  "outputMp4Name": "Summer Is for Falling in Love - Sarah Kang Music.mp4"
+}

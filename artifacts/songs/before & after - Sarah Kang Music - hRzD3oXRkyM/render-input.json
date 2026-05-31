@@ -1,0 +1,246 @@
+{
+  "title": "before & after",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/before & after - Sarah Kang Music - hRzD3oXRkyM/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 4223,
+  "durationInFrames": 4783,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/before & after - Sarah Kang Music - hRzD3oXRkyM/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE ONCE DREAMED OF A DIFFERENT SEASON, BEYOND THE GOLDEN HUSH.",
+    "rightVertical": "THE MEMORY IS FRAGILE GLASS, SHATTERING WITH THE PASSAGE OF TIME.",
+    "bottomLine": "A WHISPER IN THE ECHOES OF WHAT WAS"
+  },
+  "lyrics": [
+    {
+      "startMs": 140,
+      "endMs": 1680,
+      "text": "When I was younger"
+    },
+    {
+      "startMs": 1890,
+      "endMs": 4070,
+      "text": "I used to wonder"
+    },
+    {
+      "startMs": 4070,
+      "endMs": 6030,
+      "text": "What it would feel like to"
+    },
+    {
+      "startMs": 7180,
+      "endMs": 8980,
+      "text": "Hold a tiny you"
+    },
+    {
+      "startMs": 9210,
+      "endMs": 11470,
+      "text": "With your button nose"
+    },
+    {
+      "startMs": 11760,
+      "endMs": 13420,
+      "text": "Nobody knows"
+    },
+    {
+      "startMs": 13650,
+      "endMs": 15890,
+      "text": "To prepare you for"
+    },
+    {
+      "startMs": 17260,
+      "endMs": 18800,
+      "text": "How you'd make me discover"
+    },
+    {
+      "startMs": 19420,
+      "endMs": 21340,
+      "text": "A world in color"
+    },
+    {
+      "startMs": 21550,
+      "endMs": 24300,
+      "text": "When all I used to know"
+    },
+    {
+      "startMs": 24430,
+      "endMs": 26520,
+      "text": "Was a monochrome"
+    },
+    {
+      "startMs": 26920,
+      "endMs": 28680,
+      "text": "Of sepia tones"
+    },
+    {
+      "startMs": 28840,
+      "endMs": 31040,
+      "text": "Can't believe how I've"
+    },
+    {
+      "startMs": 31300,
+      "endMs": 33600,
+      "text": "Gone all this time"
+    },
+    {
+      "startMs": 35900,
+      "endMs": 39060,
+      "text": "If I could divide my life in two"
+    },
+    {
+      "startMs": 40010,
+      "endMs": 44020,
+      "text": "It would be before and after you"
+    },
+    {
+      "startMs": 44620,
+      "endMs": 48380,
+      "text": "I thought I knew what happiness was"
+    },
+    {
+      "startMs": 49030,
+      "endMs": 52880,
+      "text": "But that was before I knew you, love"
+    },
+    {
+      "startMs": 53490,
+      "endMs": 57280,
+      "text": "I thought all the future held was fear"
+    },
+    {
+      "startMs": 57980,
+      "endMs": 61440,
+      "text": "But not after I've held you, dear"
+    },
+    {
+      "startMs": 62170,
+      "endMs": 64360,
+      "text": "My life is divided"
+    },
+    {
+      "startMs": 65150,
+      "endMs": 69050,
+      "text": "Before and after you"
+    },
+    {
+      "startMs": 72300,
+      "endMs": 74690,
+      "text": "One day I will grow old"
+    },
+    {
+      "startMs": 74940,
+      "endMs": 76610,
+      "text": "I'll wish I know"
+    },
+    {
+      "startMs": 76840,
+      "endMs": 78770,
+      "text": "How to travel back"
+    },
+    {
+      "startMs": 79060,
+      "endMs": 81110,
+      "text": "To this very day"
+    },
+    {
+      "startMs": 81590,
+      "endMs": 82930,
+      "text": "A Saturday"
+    },
+    {
+      "startMs": 83480,
+      "endMs": 85510,
+      "text": "Blueberry pancakes"
+    },
+    {
+      "startMs": 85800,
+      "endMs": 88260,
+      "text": "No other place"
+    },
+    {
+      "startMs": 89789,
+      "endMs": 92210,
+      "text": "One day you will grow old"
+    },
+    {
+      "startMs": 92210,
+      "endMs": 94170,
+      "text": "Old enough to know"
+    },
+    {
+      "startMs": 94640,
+      "endMs": 96350,
+      "text": "And you'll leave home"
+    },
+    {
+      "startMs": 96690,
+      "endMs": 98490,
+      "text": "But I really hope"
+    },
+    {
+      "startMs": 99090,
+      "endMs": 100690,
+      "text": "You will come back"
+    },
+    {
+      "startMs": 100830,
+      "endMs": 102890,
+      "text": "On a summer day"
+    },
+    {
+      "startMs": 103200,
+      "endMs": 105110,
+      "text": "When you want to stay"
+    },
+    {
+      "startMs": 105860,
+      "endMs": 109110,
+      "text": "If I could divide my life in two"
+    },
+    {
+      "startMs": 109990,
+      "endMs": 113850,
+      "text": "It would be before and after you"
+    },
+    {
+      "startMs": 114570,
+      "endMs": 118370,
+      "text": "I thought I knew what happiness was"
+    },
+    {
+      "startMs": 118890,
+      "endMs": 122750,
+      "text": "But that was before I knew you, love"
+    },
+    {
+      "startMs": 123240,
+      "endMs": 127150,
+      "text": "I thought all the future held was fear"
+    },
+    {
+      "startMs": 127700,
+      "endMs": 131350,
+      "text": "But not after I've held you, dear"
+    },
+    {
+      "startMs": 131910,
+      "endMs": 134230,
+      "text": "My life is divided"
+    },
+    {
+      "startMs": 135090,
+      "endMs": 138790,
+      "text": "Before and after you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/before & after - Sarah Kang Music - hRzD3oXRkyM",
+  "outputMp4Name": "before & after - Sarah Kang Music.mp4"
+}

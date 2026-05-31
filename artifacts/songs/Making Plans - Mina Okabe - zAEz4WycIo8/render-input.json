@@ -1,0 +1,171 @@
+{
+  "title": "Making Plans",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Making Plans - Mina Okabe - zAEz4WycIo8/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5883,
+  "durationInFrames": 5969,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Making Plans - Mina Okabe - zAEz4WycIo8/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE GRAVITATIONAL PULL OF UNSPOKEN DESIRE IS A SILENT THING.",
+    "rightVertical": "WE ARE CAPTURED IN THE ECHOES OF WHAT COULD HAVE BEEN FOREVER.",
+    "bottomLine": "JUST LETTING IT ALL UNRAVEL SLOWLY."
+  },
+  "lyrics": [
+    {
+      "startMs": 40,
+      "endMs": 2310,
+      "text": "One, two, three"
+    },
+    {
+      "startMs": 2310,
+      "endMs": 9160,
+      "text": "Why do I want you so badly, knowing you don't want me, now"
+    },
+    {
+      "startMs": 9160,
+      "endMs": 15410,
+      "text": "Maybe, I don't have to blame myself, again"
+    },
+    {
+      "startMs": 15410,
+      "endMs": 24680,
+      "text": "Were so drawn to you, and boy, I liked how I would feel when you paid attention to me"
+    },
+    {
+      "startMs": 24680,
+      "endMs": 28170,
+      "text": "But I know, yeah, I know"
+    },
+    {
+      "startMs": 28170,
+      "endMs": 33490,
+      "text": "But it went on, a little too long, I let it get worse"
+    },
+    {
+      "startMs": 33490,
+      "endMs": 41050,
+      "text": "Then it had to stop, because I guess, I, I know I shouldn't look back"
+    },
+    {
+      "startMs": 41050,
+      "endMs": 47280,
+      "text": "I couldn't sleep when you were next to me, knowing you might leave"
+    },
+    {
+      "startMs": 47280,
+      "endMs": 53530,
+      "text": "Always thinking you were good for me, but now, I know"
+    },
+    {
+      "startMs": 53530,
+      "endMs": 62260,
+      "text": "All the days I spend thinking I never wanna leave, you were making plans"
+    },
+    {
+      "startMs": 62260,
+      "endMs": 70470,
+      "text": "But they would all, always be without me"
+    },
+    {
+      "startMs": 70470,
+      "endMs": 76420,
+      "text": "Know you're seeing other people, Copenhagen is small"
+    },
+    {
+      "startMs": 76420,
+      "endMs": 84850,
+      "text": "Hear about it all unwillingly, but it helps make me move on"
+    },
+    {
+      "startMs": 84850,
+      "endMs": 87560,
+      "text": "I see a difference out of you, now"
+    },
+    {
+      "startMs": 87560,
+      "endMs": 95330,
+      "text": "Was using the wrong words to describe you, I didn't know you at all (ooh)"
+    },
+    {
+      "startMs": 95330,
+      "endMs": 101690,
+      "text": "I couldn't sleep when you were next to me, knowing you might leave"
+    },
+    {
+      "startMs": 101690,
+      "endMs": 108150,
+      "text": "Always thinking you were good for me, but now, I know (now, I know)"
+    },
+    {
+      "startMs": 108150,
+      "endMs": 116500,
+      "text": "All the days I spend thinking I never wanna leave, you were making plans"
+    },
+    {
+      "startMs": 116500,
+      "endMs": 133730,
+      "text": "But they would all, always be without me, (hmmm)"
+    },
+    {
+      "startMs": 133730,
+      "endMs": 139840,
+      "text": "No, you're just not worth it, not in the slightest bit"
+    },
+    {
+      "startMs": 139840,
+      "endMs": 143290,
+      "text": "Was it all in my head?"
+    },
+    {
+      "startMs": 143290,
+      "endMs": 152160,
+      "text": "Really thought you would admit to feeling something close to what I was going through"
+    },
+    {
+      "startMs": 152160,
+      "endMs": 155530,
+      "text": "Now, it feels like I meant nothing"
+    },
+    {
+      "startMs": 155530,
+      "endMs": 158830,
+      "text": "Now, it feels like I meant nothing"
+    },
+    {
+      "startMs": 158830,
+      "endMs": 165090,
+      "text": "Now, it feels like I meant nothing to you"
+    },
+    {
+      "startMs": 165090,
+      "endMs": 172060,
+      "text": "I couldn't sleep when you were next to me, knowing you might leave"
+    },
+    {
+      "startMs": 172060,
+      "endMs": 178360,
+      "text": "Always thinking you were good for me, but now, I know"
+    },
+    {
+      "startMs": 178360,
+      "endMs": 186980,
+      "text": "All the days I spend thinking I never wanna leave, you were making plans (ooh, ooh)"
+    },
+    {
+      "startMs": 186980,
+      "endMs": 194120,
+      "text": "But they were all always be without me (ooh)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Making Plans - Mina Okabe - zAEz4WycIo8",
+  "outputMp4Name": "Making Plans - Mina Okabe.mp4"
+}

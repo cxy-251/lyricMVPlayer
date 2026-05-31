@@ -1,64 +1,106 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
-  "generated_at": "2026-05-28T14:18:16.844Z",
-  "count": 4,
-  "lyrics_review_count": 2,
+  "generated_at": "2026-05-31T07:45:11.690Z",
+  "count": 6,
+  "lyrics_review_count": 6,
   "items": [
     {
-      "video_id": "EKDEIlVUPjI",
-      "source_url": "https://www.youtube.com/watch?v=EKDEIlVUPjI",
-      "song_dir": "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "cuMuMnCRfqk",
-      "source_url": "https://www.youtube.com/watch?v=cuMuMnCRfqk",
-      "song_dir": "Dracula - Tame Impala - cuMuMnCRfqk",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "H5v3kku4y6Q",
-      "source_url": "https://www.youtube.com/watch?v=H5v3kku4y6Q",
-      "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
-      "ok": true,
+      "video_id": "8LovM2oVqPM",
+      "source_url": "https://www.youtube.com/watch?v=8LovM2oVqPM",
+      "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
+      "ok": false,
       "lyrics_review": {
-        "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "H5v3kku4y6Q",
-        "lyric_video_id": "nujn6wbr-e8",
-        "detail": "ytmusic search -> nujn6wbr-e8"
+        "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "rtOvBOTyX00",
-      "source_url": "https://www.youtube.com/watch?v=rtOvBOTyX00",
-      "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
-      "ok": true,
+      "video_id": "Sa_uktkOmMk",
+      "source_url": "https://www.youtube.com/watch?v=Sa_uktkOmMk",
+      "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
+      "ok": false,
       "lyrics_review": {
-        "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "rtOvBOTyX00",
-        "lyric_video_id": "wgzrOlRAPxA",
-        "detail": "ytmusic search -> wgzrOlRAPxA"
+        "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "waeNhS9yAdk",
+      "source_url": "https://www.youtube.com/watch?v=waeNhS9yAdk",
+      "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "CR5Mowi1rL8",
+      "source_url": "https://www.youtube.com/watch?v=CR5Mowi1rL8",
+      "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "mjk_8HeYack",
+      "source_url": "https://www.youtube.com/watch?v=mjk_8HeYack",
+      "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "ke_3MpO1m_o",
+      "source_url": "https://www.youtube.com/watch?v=ke_3MpO1m_o",
+      "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
       }
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "As It Was (Official Video) - Harry Styles - H5v3kku4y6Q",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "H5v3kku4y6Q",
-      "lyric_video_id": "nujn6wbr-e8",
-      "detail": "ytmusic search -> nujn6wbr-e8"
+      "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
     },
     {
-      "song_dir": "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "rtOvBOTyX00",
-      "lyric_video_id": "wgzrOlRAPxA",
-      "detail": "ytmusic search -> wgzrOlRAPxA"
+      "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
     }
   ]
 }

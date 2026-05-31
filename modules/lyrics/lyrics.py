@@ -337,6 +337,11 @@ def _try_youtube_music(input_data: TimedLyricResolutionInput) -> TimedLyricDocum
     except Exception:
         return None
 
+    try:
+        ytm = YTMusic()
+    except Exception:
+        return None
+
     def _lyrics_doc_from_video_id(video_id: str, detail_label: str) -> TimedLyricDocument | None:
         try:
             watch_data = ytm.get_watch_playlist(videoId=video_id)
@@ -385,7 +390,6 @@ def _try_youtube_music(input_data: TimedLyricResolutionInput) -> TimedLyricDocum
     query = f"{input_data.title or normalized_title} {input_data.artist}"
 
     try:
-        ytm = YTMusic()
         search_results = ytm.search(query, filter="songs", limit=5)
     except Exception:
         return None

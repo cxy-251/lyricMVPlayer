@@ -1,0 +1,221 @@
+{
+  "title": "i miss the old me",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/i miss the old me - Sarah Kang Music - 0JY4Dz2LpEA/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 6560,
+  "renderDurationInFrames": 5834,
+  "durationInFrames": 6315,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/i miss the old me - Sarah Kang Music - 0JY4Dz2LpEA/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "A WHISPER OF WHAT I ONCE WAS, LOST IN THE SHADOWS OF TIME.",
+    "rightVertical": "THE ECHOES OF A LIGHT THAT DAZZLED BEFORE THE WEIGHT OF ADULTHOOD.",
+    "bottomLine": "I YEARN FOR THE SOFTNESS OF YESTERDAY'S SELF."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 9560,
+      "text": "♪"
+    },
+    {
+      "startMs": 9560,
+      "endMs": 13390,
+      "text": "There's still a small part of me"
+    },
+    {
+      "startMs": 13680,
+      "endMs": 17340,
+      "text": "That's buried underneath"
+    },
+    {
+      "startMs": 18580,
+      "endMs": 23370,
+      "text": "The growing bags under my eyes"
+    },
+    {
+      "startMs": 24280,
+      "endMs": 28090,
+      "text": "And the light of the early sunrise"
+    },
+    {
+      "startMs": 29450,
+      "endMs": 32740,
+      "text": "I think about it often"
+    },
+    {
+      "startMs": 33680,
+      "endMs": 37470,
+      "text": "The last bit of my softness"
+    },
+    {
+      "startMs": 38340,
+      "endMs": 43160,
+      "text": "That hides beneath the hard surface"
+    },
+    {
+      "startMs": 44280,
+      "endMs": 48010,
+      "text": "I haven't yet fully lost it"
+    },
+    {
+      "startMs": 48600,
+      "endMs": 51660,
+      "text": "When I look in the mirror"
+    },
+    {
+      "startMs": 52190,
+      "endMs": 56130,
+      "text": "I can barely see her"
+    },
+    {
+      "startMs": 58580,
+      "endMs": 62680,
+      "text": "I don't regret all the choices I've made"
+    },
+    {
+      "startMs": 62970,
+      "endMs": 67290,
+      "text": "And if I did, what's the use anyway"
+    },
+    {
+      "startMs": 67660,
+      "endMs": 71810,
+      "text": "I try not to dwell on what used to be"
+    },
+    {
+      "startMs": 72070,
+      "endMs": 76430,
+      "text": "But sometimes, I miss the old me"
+    },
+    {
+      "startMs": 77250,
+      "endMs": 81280,
+      "text": "Nobody knows what the future may bring"
+    },
+    {
+      "startMs": 81610,
+      "endMs": 86040,
+      "text": "So I'll hold onto sentimental things"
+    },
+    {
+      "startMs": 86300,
+      "endMs": 90580,
+      "text": "They say that the best is still yet to be"
+    },
+    {
+      "startMs": 90790,
+      "endMs": 98060,
+      "text": "But sometimes, I just miss the old me"
+    },
+    {
+      "startMs": 98060,
+      "endMs": 105330,
+      "text": "♪"
+    },
+    {
+      "startMs": 105330,
+      "endMs": 109470,
+      "text": "I try to live in the moment"
+    },
+    {
+      "startMs": 109780,
+      "endMs": 113770,
+      "text": "But there's some reassurance"
+    },
+    {
+      "startMs": 114380,
+      "endMs": 119190,
+      "text": "Of looking behind your shoulder"
+    },
+    {
+      "startMs": 120370,
+      "endMs": 124290,
+      "text": "The more and more you get older"
+    },
+    {
+      "startMs": 125230,
+      "endMs": 128830,
+      "text": "Maybe one day I'll be wiser"
+    },
+    {
+      "startMs": 129500,
+      "endMs": 133720,
+      "text": "Let go of what's familiar"
+    },
+    {
+      "startMs": 134330,
+      "endMs": 138980,
+      "text": "I'll think about it from time to time"
+    },
+    {
+      "startMs": 140050,
+      "endMs": 143990,
+      "text": "Of how I lived a full life"
+    },
+    {
+      "startMs": 144550,
+      "endMs": 147910,
+      "text": "When I look in the mirror"
+    },
+    {
+      "startMs": 148120,
+      "endMs": 153210,
+      "text": "I'm beginning to see her"
+    },
+    {
+      "startMs": 154500,
+      "endMs": 158660,
+      "text": "I don't regret all the choices I've made"
+    },
+    {
+      "startMs": 158910,
+      "endMs": 163310,
+      "text": "And if I did, what's the use anyway"
+    },
+    {
+      "startMs": 163560,
+      "endMs": 167700,
+      "text": "I try not to dwell on what used to be"
+    },
+    {
+      "startMs": 167880,
+      "endMs": 172610,
+      "text": "But sometimes, I miss the old me"
+    },
+    {
+      "startMs": 173150,
+      "endMs": 177200,
+      "text": "Nobody knows what the future may bring"
+    },
+    {
+      "startMs": 177490,
+      "endMs": 181940,
+      "text": "So I'll hold onto sentimental things"
+    },
+    {
+      "startMs": 182200,
+      "endMs": 186300,
+      "text": "They say the best is still yet to be"
+    },
+    {
+      "startMs": 186460,
+      "endMs": 190990,
+      "text": "But sometimes, I miss the old me"
+    },
+    {
+      "startMs": 191250,
+      "endMs": 199030,
+      "text": "Sometimes, I just miss the old me"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/i miss the old me - Sarah Kang Music - 0JY4Dz2LpEA",
+  "outputMp4Name": "i miss the old me - Sarah Kang Music.mp4"
+}

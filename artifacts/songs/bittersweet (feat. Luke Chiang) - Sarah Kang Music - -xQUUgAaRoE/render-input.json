@@ -1,0 +1,196 @@
+{
+  "title": "bittersweet (feat. Luke Chiang)",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/bittersweet (feat. Luke Chiang) - Sarah Kang Music - -xQUUgAaRoE/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 15400,
+  "renderDurationInFrames": 4520,
+  "durationInFrames": 5019,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/bittersweet (feat. Luke Chiang) - Sarah Kang Music - -xQUUgAaRoE/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "A SWEET MELODY OF MEMORIES WE CANNOT FORGET.",
+    "rightVertical": "THE GENTLE WEIGHT OF GOODBYES IS A BITTER KIND OF MAGIC.",
+    "bottomLine": "RUNNING OUT OF TIME TO HOLD YOU CLOSE."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 18400,
+      "text": "♪"
+    },
+    {
+      "startMs": 18400,
+      "endMs": 21680,
+      "text": "Your smile makes me wanna cry"
+    },
+    {
+      "startMs": 22760,
+      "endMs": 24970,
+      "text": "Feels like we're running out of time"
+    },
+    {
+      "startMs": 26940,
+      "endMs": 30060,
+      "text": "The more and more of you that I like"
+    },
+    {
+      "startMs": 30900,
+      "endMs": 33650,
+      "text": "Makes it harder to say goodbye"
+    },
+    {
+      "startMs": 34850,
+      "endMs": 39370,
+      "text": "You're like the perfect cup of coffee"
+    },
+    {
+      "startMs": 39600,
+      "endMs": 44040,
+      "text": "Or a symphony finale"
+    },
+    {
+      "startMs": 44260,
+      "endMs": 48430,
+      "text": "Just like moving to a new city"
+    },
+    {
+      "startMs": 48680,
+      "endMs": 52770,
+      "text": "Or the ending of a movie"
+    },
+    {
+      "startMs": 53760,
+      "endMs": 57250,
+      "text": "Loving you is bittersweet"
+    },
+    {
+      "startMs": 58300,
+      "endMs": 61520,
+      "text": "Even when you're next to me"
+    },
+    {
+      "startMs": 62710,
+      "endMs": 65390,
+      "text": "Loving you makes me weak"
+    },
+    {
+      "startMs": 65600,
+      "endMs": 68850,
+      "text": "But stay with me"
+    },
+    {
+      "startMs": 71610,
+      "endMs": 75550,
+      "text": "I'd better lock up my heart"
+    },
+    {
+      "startMs": 76060,
+      "endMs": 80230,
+      "text": "There's not an ending if it never starts"
+    },
+    {
+      "startMs": 80380,
+      "endMs": 84320,
+      "text": "But I'm thinking that you might be worth it"
+    },
+    {
+      "startMs": 84800,
+      "endMs": 88130,
+      "text": "If you're mine maybe I'll risk the hurting"
+    },
+    {
+      "startMs": 88380,
+      "endMs": 92790,
+      "text": "You're like the perfect cup of coffee"
+    },
+    {
+      "startMs": 93080,
+      "endMs": 97240,
+      "text": "Or a symphony finale"
+    },
+    {
+      "startMs": 97500,
+      "endMs": 101830,
+      "text": "Just like moving to a new city"
+    },
+    {
+      "startMs": 102040,
+      "endMs": 106450,
+      "text": "Or the ending of a movie"
+    },
+    {
+      "startMs": 107180,
+      "endMs": 110970,
+      "text": "Loving you is bittersweet"
+    },
+    {
+      "startMs": 111610,
+      "endMs": 114640,
+      "text": "Even when you're next to me"
+    },
+    {
+      "startMs": 116080,
+      "endMs": 118810,
+      "text": "Loving you makes me weak"
+    },
+    {
+      "startMs": 119030,
+      "endMs": 122250,
+      "text": "But stay with me"
+    },
+    {
+      "startMs": 124840,
+      "endMs": 127680,
+      "text": "Loving you is bittersweet"
+    },
+    {
+      "startMs": 129360,
+      "endMs": 132270,
+      "text": "Even when you're next to me"
+    },
+    {
+      "startMs": 133850,
+      "endMs": 136460,
+      "text": "Loving you makes me weak"
+    },
+    {
+      "startMs": 136720,
+      "endMs": 140030,
+      "text": "But stay with me"
+    },
+    {
+      "startMs": 141720,
+      "endMs": 146180,
+      "text": "You're like the perfect cup of coffee"
+    },
+    {
+      "startMs": 146410,
+      "endMs": 150560,
+      "text": "Or a symphony finale"
+    },
+    {
+      "startMs": 150800,
+      "endMs": 154940,
+      "text": "Just like moving to a new city"
+    },
+    {
+      "startMs": 155260,
+      "endMs": 159500,
+      "text": "Or the ending of a movie"
+    },
+    {
+      "startMs": 160420,
+      "endMs": 164080,
+      "text": "Loving you is bittersweet"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/bittersweet (feat. Luke Chiang) - Sarah Kang Music - -xQUUgAaRoE",
+  "outputMp4Name": "bittersweet (feat. Luke Chiang) - Sarah Kang Music.mp4"
+}

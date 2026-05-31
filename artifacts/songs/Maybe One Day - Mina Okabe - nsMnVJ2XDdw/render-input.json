@@ -1,0 +1,276 @@
+{
+  "title": "Maybe One Day",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Maybe One Day - Mina Okabe - nsMnVJ2XDdw/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 3890,
+  "renderDurationInFrames": 5888,
+  "durationInFrames": 6418,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Maybe One Day - Mina Okabe - nsMnVJ2XDdw/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE SILENCE CARRIES WHISPERS OF WHAT COULD HAVE BEEN.",
+    "rightVertical": "WE ARE ONLY ECHOES OF A PROMISE NEVER KEPT.",
+    "bottomLine": "A DISTANT LIGHT IN THE SHADOWS."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 6890,
+      "text": "♪"
+    },
+    {
+      "startMs": 6890,
+      "endMs": 9670,
+      "text": "Just listen when I say"
+    },
+    {
+      "startMs": 9670,
+      "endMs": 13090,
+      "text": "Don't take this the wrong way"
+    },
+    {
+      "startMs": 13090,
+      "endMs": 16640,
+      "text": "This was such a mistake"
+    },
+    {
+      "startMs": 16640,
+      "endMs": 22200,
+      "text": "We're not good together, together"
+    },
+    {
+      "startMs": 22200,
+      "endMs": 26410,
+      "text": "You were honest from the start"
+    },
+    {
+      "startMs": 26410,
+      "endMs": 29990,
+      "text": "I tried to change my heart"
+    },
+    {
+      "startMs": 29990,
+      "endMs": 36320,
+      "text": "I know it took forever to get here"
+    },
+    {
+      "startMs": 36320,
+      "endMs": 39730,
+      "text": "Hate to be the one to say this has to stop"
+    },
+    {
+      "startMs": 39730,
+      "endMs": 42810,
+      "text": "It's a rare occasion, but it's all my fault"
+    },
+    {
+      "startMs": 42810,
+      "endMs": 46630,
+      "text": "I could lie and tell you that the timing's off"
+    },
+    {
+      "startMs": 46630,
+      "endMs": 48850,
+      "text": "But that's not all"
+    },
+    {
+      "startMs": 48850,
+      "endMs": 56200,
+      "text": "Maybe one day, I would've fallen for you"
+    },
+    {
+      "startMs": 56200,
+      "endMs": 57920,
+      "text": "But now I'm facing the truth"
+    },
+    {
+      "startMs": 57920,
+      "endMs": 60820,
+      "text": "And I just need some distance"
+    },
+    {
+      "startMs": 60820,
+      "endMs": 66760,
+      "text": "'Cause I can't look at your face"
+    },
+    {
+      "startMs": 66760,
+      "endMs": 70420,
+      "text": "I get annoyed when you call"
+    },
+    {
+      "startMs": 70420,
+      "endMs": 72270,
+      "text": "Don't wanna hear it at all"
+    },
+    {
+      "startMs": 72270,
+      "endMs": 75000,
+      "text": "When you say that you miss me"
+    },
+    {
+      "startMs": 75000,
+      "endMs": 81590,
+      "text": "'Cause I don't, I don't"
+    },
+    {
+      "startMs": 81590,
+      "endMs": 85650,
+      "text": "I hope you know I tried avoiding this"
+    },
+    {
+      "startMs": 85650,
+      "endMs": 89180,
+      "text": "But my signs were always missed"
+    },
+    {
+      "startMs": 89180,
+      "endMs": 96790,
+      "text": "Now I can't help but feel frustrated, frustrated"
+    },
+    {
+      "startMs": 96790,
+      "endMs": 100150,
+      "text": "Hate to be the one to say this has to stop"
+    },
+    {
+      "startMs": 100150,
+      "endMs": 103350,
+      "text": "It's a rare occasion, but it's all my fault"
+    },
+    {
+      "startMs": 103350,
+      "endMs": 107050,
+      "text": "I could lie and tell you that the timing's off"
+    },
+    {
+      "startMs": 107050,
+      "endMs": 109340,
+      "text": "But that's not all"
+    },
+    {
+      "startMs": 109340,
+      "endMs": 116540,
+      "text": "Maybe one day, I would've fallen for you"
+    },
+    {
+      "startMs": 116540,
+      "endMs": 118390,
+      "text": "But now I'm facing the truth"
+    },
+    {
+      "startMs": 118390,
+      "endMs": 121340,
+      "text": "And I just need some distance"
+    },
+    {
+      "startMs": 121340,
+      "endMs": 127310,
+      "text": "'Cause I can't look at your face"
+    },
+    {
+      "startMs": 127310,
+      "endMs": 130880,
+      "text": "I get annoyed when you call"
+    },
+    {
+      "startMs": 130880,
+      "endMs": 132630,
+      "text": "Don't wanna hear it at all"
+    },
+    {
+      "startMs": 132630,
+      "endMs": 135520,
+      "text": "When you say that you miss me"
+    },
+    {
+      "startMs": 135520,
+      "endMs": 140650,
+      "text": "'Cause I don't, I don't"
+    },
+    {
+      "startMs": 140650,
+      "endMs": 143970,
+      "text": "Don't have anything good left to say"
+    },
+    {
+      "startMs": 143970,
+      "endMs": 147680,
+      "text": "Over-attachment, it pushed me away"
+    },
+    {
+      "startMs": 147680,
+      "endMs": 149490,
+      "text": "I don't care if it's fair"
+    },
+    {
+      "startMs": 149490,
+      "endMs": 154880,
+      "text": "Know you tried your best to make me a priority"
+    },
+    {
+      "startMs": 154880,
+      "endMs": 158330,
+      "text": "I would hate to be treated this way"
+    },
+    {
+      "startMs": 158330,
+      "endMs": 161830,
+      "text": "And I'm sorry for all the delay"
+    },
+    {
+      "startMs": 161830,
+      "endMs": 165990,
+      "text": "Now I'm done thinking all of this through"
+    },
+    {
+      "startMs": 165990,
+      "endMs": 173480,
+      "text": "But maybe one day, I would've fallen for you"
+    },
+    {
+      "startMs": 173480,
+      "endMs": 175200,
+      "text": "But now I'm facing the truth"
+    },
+    {
+      "startMs": 175200,
+      "endMs": 177900,
+      "text": "And I just need some distance"
+    },
+    {
+      "startMs": 177900,
+      "endMs": 184160,
+      "text": "'Cause I can't look at your face"
+    },
+    {
+      "startMs": 184160,
+      "endMs": 187730,
+      "text": "I get annoyed when you call"
+    },
+    {
+      "startMs": 187730,
+      "endMs": 189470,
+      "text": "Don't wanna hear it at all"
+    },
+    {
+      "startMs": 189470,
+      "endMs": 192320,
+      "text": "When you say that you miss me"
+    },
+    {
+      "startMs": 192320,
+      "endMs": 198160,
+      "text": "'Cause I don't, I don't"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Maybe One Day - Mina Okabe - nsMnVJ2XDdw",
+  "outputMp4Name": "Maybe One Day - Mina Okabe.mp4"
+}

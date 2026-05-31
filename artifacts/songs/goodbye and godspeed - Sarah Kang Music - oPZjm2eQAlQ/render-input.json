@@ -1,0 +1,186 @@
+{
+  "title": "goodbye and godspeed",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/goodbye and godspeed - Sarah Kang Music - oPZjm2eQAlQ/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 20340,
+  "renderDurationInFrames": 6389,
+  "durationInFrames": 7249,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/goodbye and godspeed - Sarah Kang Music - oPZjm2eQAlQ/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WHY DOES THE SUN RISE TO SET AGAIN, A CYCLE OF BEAUTY AND PAIN?",
+    "rightVertical": "WHY DO MEMORIES UNFOLD LIKE AUTUMN LEAVES, DRIFTING AWAY WITH TIME'S HAND?",
+    "bottomLine": "THE WEIGHT OF ALL GOODBYES"
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 23340,
+      "text": "♪"
+    },
+    {
+      "startMs": 23340,
+      "endMs": 27880,
+      "text": "Why does the sun rise to set again?"
+    },
+    {
+      "startMs": 27880,
+      "endMs": 33220,
+      "text": "Why do leaves grow and fall by autumn's end?"
+    },
+    {
+      "startMs": 33220,
+      "endMs": 40750,
+      "text": "Why do friends grow apart with no one to blame?"
+    },
+    {
+      "startMs": 40750,
+      "endMs": 45560,
+      "text": "Why is it hard to change?"
+    },
+    {
+      "startMs": 45560,
+      "endMs": 50710,
+      "text": "Why do flowers bloom only to die someday?"
+    },
+    {
+      "startMs": 50710,
+      "endMs": 56950,
+      "text": "Why does snow become rain in May?"
+    },
+    {
+      "startMs": 56950,
+      "endMs": 63350,
+      "text": "Why did I choose to run away?"
+    },
+    {
+      "startMs": 63350,
+      "endMs": 68730,
+      "text": "You told me I should stay"
+    },
+    {
+      "startMs": 68730,
+      "endMs": 74080,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 74080,
+      "endMs": 79040,
+      "text": "Who knows if I'll see you again"
+    },
+    {
+      "startMs": 79040,
+      "endMs": 86190,
+      "text": "But for now, I know that this is the end"
+    },
+    {
+      "startMs": 86190,
+      "endMs": 91520,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 91520,
+      "endMs": 96640,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 96640,
+      "endMs": 102080,
+      "text": "Why do roads cross only to part again?"
+    },
+    {
+      "startMs": 102080,
+      "endMs": 108150,
+      "text": "Why do we leave so many things unsaid?"
+    },
+    {
+      "startMs": 108150,
+      "endMs": 114530,
+      "text": "Why do we have to say farewell?"
+    },
+    {
+      "startMs": 114530,
+      "endMs": 119930,
+      "text": "I guess only time will tell"
+    },
+    {
+      "startMs": 119930,
+      "endMs": 125380,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 125380,
+      "endMs": 130450,
+      "text": "Who knows if I'll see you again"
+    },
+    {
+      "startMs": 130450,
+      "endMs": 137550,
+      "text": "But for now, I know that this is the end"
+    },
+    {
+      "startMs": 137550,
+      "endMs": 142880,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 142880,
+      "endMs": 148350,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 148350,
+      "endMs": 179620,
+      "text": "♪"
+    },
+    {
+      "startMs": 179620,
+      "endMs": 186210,
+      "text": "Sometimes when I'm looking up at the moon"
+    },
+    {
+      "startMs": 186210,
+      "endMs": 192010,
+      "text": "I'll wonder if you see it, too"
+    },
+    {
+      "startMs": 192010,
+      "endMs": 200640,
+      "text": "If you don't forget me, I won't forget you"
+    },
+    {
+      "startMs": 200640,
+      "endMs": 206260,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 206260,
+      "endMs": 211220,
+      "text": "I hope that I'll see you again"
+    },
+    {
+      "startMs": 211220,
+      "endMs": 218320,
+      "text": "But for now, I know that this is the end"
+    },
+    {
+      "startMs": 218320,
+      "endMs": 225830,
+      "text": "Goodbye and godspeed, my friend"
+    },
+    {
+      "startMs": 225830,
+      "endMs": 231320,
+      "text": "Goodbye and godspeed, my friend"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/goodbye and godspeed - Sarah Kang Music - oPZjm2eQAlQ",
+  "outputMp4Name": "goodbye and godspeed - Sarah Kang Music.mp4"
+}

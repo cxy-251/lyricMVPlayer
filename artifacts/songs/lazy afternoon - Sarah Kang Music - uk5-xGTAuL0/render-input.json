@@ -1,0 +1,196 @@
+{
+  "title": "lazy afternoon",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/lazy afternoon - Sarah Kang Music - uk5-xGTAuL0/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 7650,
+  "renderDurationInFrames": 4881,
+  "durationInFrames": 5253,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/lazy afternoon - Sarah Kang Music - uk5-xGTAuL0/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CALL OF DISTANT HORIZONS ALWAYS WHISPERS A SWEET, FAINT SONG.",
+    "rightVertical": "A THOUSAND VIBRATIONS CAN LEAD THE HEART TO WHERE IT BELONGS.",
+    "bottomLine": "STILLNESS IS THE MOST BEAUTIFUL VIEW."
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 10650,
+      "text": "♪"
+    },
+    {
+      "startMs": 10650,
+      "endMs": 16150,
+      "text": "I could travel to Paris and see the city lights"
+    },
+    {
+      "startMs": 16150,
+      "endMs": 21650,
+      "text": "Ride a boat in Venice, what a beautiful sight"
+    },
+    {
+      "startMs": 21650,
+      "endMs": 27250,
+      "text": "I could journey afar to an ocean so blue"
+    },
+    {
+      "startMs": 27250,
+      "endMs": 32580,
+      "text": "But nothing is as beautiful as you"
+    },
+    {
+      "startMs": 32580,
+      "endMs": 38320,
+      "text": "I could climb up a hill and watch the sunrise"
+    },
+    {
+      "startMs": 38320,
+      "endMs": 43620,
+      "text": "Wander until the stars fill up the skies"
+    },
+    {
+      "startMs": 43620,
+      "endMs": 49130,
+      "text": "But none of that matters if you aren't there, too"
+    },
+    {
+      "startMs": 49130,
+      "endMs": 54780,
+      "text": "I wanna be next to you"
+    },
+    {
+      "startMs": 54780,
+      "endMs": 60130,
+      "text": "If you would like to spend some time"
+    },
+    {
+      "startMs": 60130,
+      "endMs": 65400,
+      "text": "I'd like to spend it with you"
+    },
+    {
+      "startMs": 65400,
+      "endMs": 68420,
+      "text": "A glass of red wine"
+    },
+    {
+      "startMs": 68420,
+      "endMs": 70730,
+      "text": "Just you and I"
+    },
+    {
+      "startMs": 70730,
+      "endMs": 76490,
+      "text": "On a lazy afternoon"
+    },
+    {
+      "startMs": 76490,
+      "endMs": 81670,
+      "text": "They say that someday the romance will fade"
+    },
+    {
+      "startMs": 81670,
+      "endMs": 87350,
+      "text": "And tomorrow will be just another day"
+    },
+    {
+      "startMs": 87350,
+      "endMs": 92590,
+      "text": "But even if we don't do anything at all"
+    },
+    {
+      "startMs": 92590,
+      "endMs": 98330,
+      "text": "I wanna be where you are"
+    },
+    {
+      "startMs": 98330,
+      "endMs": 103870,
+      "text": "If you would like to spend some time"
+    },
+    {
+      "startMs": 103870,
+      "endMs": 109060,
+      "text": "I'd like to spend it with you"
+    },
+    {
+      "startMs": 109060,
+      "endMs": 111950,
+      "text": "A glass of red wine"
+    },
+    {
+      "startMs": 111950,
+      "endMs": 114430,
+      "text": "Just you and I"
+    },
+    {
+      "startMs": 114430,
+      "endMs": 123050,
+      "text": "On a lazy afternoon (mm, mm)"
+    },
+    {
+      "startMs": 123050,
+      "endMs": 125740,
+      "text": "(Mm, mm)"
+    },
+    {
+      "startMs": 125740,
+      "endMs": 128410,
+      "text": "(Mm, mm)"
+    },
+    {
+      "startMs": 128410,
+      "endMs": 131060,
+      "text": "(Mm, mm)"
+    },
+    {
+      "startMs": 131060,
+      "endMs": 133870,
+      "text": "(Mm, mm)"
+    },
+    {
+      "startMs": 133870,
+      "endMs": 139310,
+      "text": "(Mm, mm, mm)"
+    },
+    {
+      "startMs": 139310,
+      "endMs": 144680,
+      "text": "If you would like to spend some time"
+    },
+    {
+      "startMs": 144680,
+      "endMs": 150050,
+      "text": "I'd like to spend it with you"
+    },
+    {
+      "startMs": 150050,
+      "endMs": 152910,
+      "text": "A glass of red wine"
+    },
+    {
+      "startMs": 152910,
+      "endMs": 155330,
+      "text": "Just you and I"
+    },
+    {
+      "startMs": 155330,
+      "endMs": 160710,
+      "text": "On a lazy afternoon"
+    },
+    {
+      "startMs": 160710,
+      "endMs": 168370,
+      "text": "On a lazy afternoon"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/lazy afternoon - Sarah Kang Music - uk5-xGTAuL0",
+  "outputMp4Name": "lazy afternoon - Sarah Kang Music.mp4"
+}

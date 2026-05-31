@@ -1,6 +1,6 @@
 {
   "nickname": "CleanKsen",
-  "selectedPlaylistId": "alignment-error",
+  "selectedPlaylistId": "all",
   "likedTrackIds": [],
   "customPlaylists": [
     {
@@ -16,16 +16,7 @@
     {
       "id": "alignment-error",
       "name": "Alignment Error",
-      "trackIds": [
-        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
-        "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
-        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
-        "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
-        "One Thing - One Direction - Y1xs_xPb46M",
-        "Who Says - Selena Gomez - m4p0WNN9p-Y",
-        "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
-        "Dracula - Tame Impala - cuMuMnCRfqk"
-      ]
+      "trackIds": []
     }
   ]
 }

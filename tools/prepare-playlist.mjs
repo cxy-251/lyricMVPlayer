@@ -136,7 +136,7 @@ try {
     const pipelineResult = JSON.parse(fs.readFileSync(playlistPipelineResultPath, "utf-8"));
     const downloaded = Array.isArray(pipelineResult.results)
       ? pipelineResult.results
-      .filter((entry) => entry?.ok && entry?.audio?.status === "downloaded")
+      .filter((entry) => entry?.audio?.status === "downloaded")
       .map((entry) => {
         const lyricsReview = getLyricsReview(entry);
         return {
@@ -177,10 +177,16 @@ try {
           customPlaylists: [],
         };
     const customPlaylists = Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [];
-    const newSongDirs = downloaded.map((entry) => entry.song_dir).filter(Boolean);
     const lyricsReviewSongDirs = lyricsReviewItems.map((entry) => entry.song_dir).filter(Boolean);
-    let updatedPlaylists = ensurePlaylist(customPlaylists, NEW_DOWNLOADS_PLAYLIST_ID, NEW_DOWNLOADS_PLAYLIST_NAME, newSongDirs, {replace: true});
-    updatedPlaylists = ensurePlaylist(updatedPlaylists, LYRICS_REVIEW_PLAYLIST_ID, LYRICS_REVIEW_PLAYLIST_NAME, lyricsReviewSongDirs, {replace: true});
+    const lyricsReviewSongDirSet = new Set(lyricsReviewSongDirs);
+    const newSongDirs = downloaded
+      .map((entry) => entry.song_dir)
+      .filter((songDir) => songDir && !lyricsReviewSongDirSet.has(songDir));
+    let updatedPlaylists = customPlaylists;
+    if (downloaded.length > 0) {
+      updatedPlaylists = ensurePlaylist(updatedPlaylists, NEW_DOWNLOADS_PLAYLIST_ID, NEW_DOWNLOADS_PLAYLIST_NAME, newSongDirs, {replace: true});
+      updatedPlaylists = ensurePlaylist(updatedPlaylists, LYRICS_REVIEW_PLAYLIST_ID, LYRICS_REVIEW_PLAYLIST_NAME, lyricsReviewSongDirs, {replace: true});
+    }
     updatedPlaylists = ensurePlaylist(updatedPlaylists, ALIGNMENT_ERROR_PLAYLIST_ID, ALIGNMENT_ERROR_PLAYLIST_NAME, []);
 
     fs.writeFileSync(

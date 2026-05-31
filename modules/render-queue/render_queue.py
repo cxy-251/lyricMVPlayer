@@ -10,6 +10,14 @@ from pathlib import Path
 CSV_HEADERS = ["video_status", "render_batch", "background_ready", "song_dir", "source_url"]
 ALLOWED_STATUSES = {"pending", "rendered", "published"}
 TRUE_VALUES = {"true", "1", "yes", "y"}
+RENDER_BATCH_CODES = {
+    "0": "ready",
+    "1": "manual-lyrics-alignment-error",
+    "2": "timed-lyrics-missing",
+    "3": "lyrics-source-mismatch",
+    "22": "published",
+}
+MANUAL_RENDER_BATCH_CODES = {"1", "22"}
 LEGACY_STATUS_MAP = {
     "未渲染": "pending",
     "已渲染": "rendered",
@@ -101,9 +109,19 @@ def _normalize_row(raw_row: dict[str, str], project_root: str) -> dict[str, str]
 def _save_rows(csv_path: Path, rows: list[dict[str, str]]) -> None:
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CSV_HEADERS)
+        writer = csv.DictWriter(handle, fieldnames=CSV_HEADERS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _should_update_render_batch(existing_batch: str, incoming_batch: str) -> bool:
+    if incoming_batch == "":
+        return False
+    if existing_batch in MANUAL_RENDER_BATCH_CODES:
+        return False
+    if incoming_batch == "0" and existing_batch not in {"", "0"}:
+        return False
+    return True
 
 
 def _load_rows(csv_path: Path, project_root: str) -> list[dict[str, str]]:
@@ -145,7 +163,7 @@ def upsert_render_queue_row(project_root: str, row: RenderQueueRow) -> Path:
     for existing in rows:
         if existing["song_dir"] == row.song_dir:
             existing["source_url"] = serialized["source_url"]
-            if row.render_batch != "":
+            if _should_update_render_batch(existing.get("render_batch", ""), serialized["render_batch"]):
                 existing["render_batch"] = serialized["render_batch"]
             if existing["video_status"] not in ALLOWED_STATUSES:
                 existing["video_status"] = serialized["video_status"]
@@ -161,7 +179,26 @@ def upsert_render_queue_row(project_root: str, row: RenderQueueRow) -> Path:
 def list_background_pending_rows(project_root: str) -> list[dict[str, str]]:
     csv_path = ensure_render_queue_csv(project_root)
     rows = _load_rows(csv_path, project_root)
-    return [row for row in rows if row.get("background_ready") == "false"]
+    return [
+        row
+        for row in rows
+        if row.get("background_ready") == "false"
+        and row.get("render_batch", "") == "0"
+    ]
+
+
+def get_queue_row(project_root: str, song_dir_name: str) -> dict[str, str] | None:
+    csv_path = ensure_render_queue_csv(project_root)
+    rows = _load_rows(csv_path, project_root)
+    for row in rows:
+        if row.get("song_dir") == song_dir_name:
+            return row
+    return None
+
+
+def is_background_generation_allowed(project_root: str, song_dir_name: str) -> bool:
+    row = get_queue_row(project_root, song_dir_name)
+    return row is not None and row.get("render_batch", "") == "0"
 
 
 def list_runnable_rows(project_root: str, batch_value: str = "0") -> list[dict[str, str]]:
@@ -207,6 +244,7 @@ def _main(argv: list[str]) -> int:
     if len(argv) < 3:
         raise SystemExit(
             "Usage:\n"
+            "  render_queue.py list-render-batch-codes <project_root>\n"
             "  render_queue.py list-background-pending <project_root>\n"
             "  render_queue.py list-runnable <project_root> [batch]\n"
             "  render_queue.py mark <project_root> <song_dir_name> <status>\n"
@@ -215,6 +253,10 @@ def _main(argv: list[str]) -> int:
 
     command = argv[1]
     project_root = argv[2]
+
+    if command == "list-render-batch-codes":
+        print(json.dumps(RENDER_BATCH_CODES, ensure_ascii=False, indent=2))
+        return 0
 
     if command == "list-background-pending":
         print(json.dumps(list_background_pending_rows(project_root), ensure_ascii=False, indent=2))

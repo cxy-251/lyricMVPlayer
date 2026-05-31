@@ -1,0 +1,216 @@
+{
+  "title": "Always Hurts",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Always Hurts - Mina Okabe - lH1xJUDMm2Q/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5781,
+  "durationInFrames": 5926,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Always Hurts - Mina Okabe - lH1xJUDMm2Q/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE ECHOES OF WHAT WAS LEFT UNSAID STILL HAUNT THE SILENCE.",
+    "rightVertical": "A DISTANT GHOST WHISPERS SECRETS YOU CANNOT AFFORD TO HEAR.",
+    "bottomLine": "WHISPERING THROUGH THE SHARDS OF MEMORY."
+  },
+  "lyrics": [
+    {
+      "startMs": 680,
+      "endMs": 4880,
+      "text": "Constant, thinking about it"
+    },
+    {
+      "startMs": 5860,
+      "endMs": 9480,
+      "text": "Knowing little but wanting more"
+    },
+    {
+      "startMs": 9480,
+      "endMs": 12550,
+      "text": "Don't know what I do this for"
+    },
+    {
+      "startMs": 12550,
+      "endMs": 16750,
+      "text": "From a distance"
+    },
+    {
+      "startMs": 18290,
+      "endMs": 22490,
+      "text": "It sinks in, the reality of it all"
+    },
+    {
+      "startMs": 25130,
+      "endMs": 29330,
+      "text": "Making it up, now I'm falling"
+    },
+    {
+      "startMs": 31150,
+      "endMs": 35350,
+      "text": "Into a thought that I made with your facade"
+    },
+    {
+      "startMs": 36660,
+      "endMs": 39910,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 39910,
+      "endMs": 42280,
+      "text": "All my thoughts are just pretend"
+    },
+    {
+      "startMs": 42960,
+      "endMs": 47260,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 47260,
+      "endMs": 49540,
+      "text": "Maybe I should make this end"
+    },
+    {
+      "startMs": 49540,
+      "endMs": 52540,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 54890,
+      "endMs": 58830,
+      "text": "I think it again, think it again"
+    },
+    {
+      "startMs": 60550,
+      "endMs": 62610,
+      "text": "This all happens too much"
+    },
+    {
+      "startMs": 66100,
+      "endMs": 69320,
+      "text": "After one night, I build it up"
+    },
+    {
+      "startMs": 69320,
+      "endMs": 72640,
+      "text": "From nothing to something"
+    },
+    {
+      "startMs": 72640,
+      "endMs": 76840,
+      "text": "You just keep on talking"
+    },
+    {
+      "startMs": 78190,
+      "endMs": 82390,
+      "text": "But you leave out the parts I know you try to hide"
+    },
+    {
+      "startMs": 85160,
+      "endMs": 88970,
+      "text": "Making it up, now I'm falling"
+    },
+    {
+      "startMs": 91230,
+      "endMs": 95270,
+      "text": "Into a thought that I made with your facade"
+    },
+    {
+      "startMs": 96640,
+      "endMs": 99880,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 99880,
+      "endMs": 102650,
+      "text": "All my thoughts are just pretend"
+    },
+    {
+      "startMs": 102650,
+      "endMs": 105560,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 105560,
+      "endMs": 108670,
+      "text": "Maybe I should make this end"
+    },
+    {
+      "startMs": 108670,
+      "endMs": 112870,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 114620,
+      "endMs": 118820,
+      "text": "I think it again, think it again"
+    },
+    {
+      "startMs": 143910,
+      "endMs": 146810,
+      "text": "Keep on hoping that you try"
+    },
+    {
+      "startMs": 146810,
+      "endMs": 149850,
+      "text": "To open up and help decide"
+    },
+    {
+      "startMs": 149850,
+      "endMs": 155370,
+      "text": "If I should keep holding on to you"
+    },
+    {
+      "startMs": 156070,
+      "endMs": 160930,
+      "text": "Don't know who you really are"
+    },
+    {
+      "startMs": 160930,
+      "endMs": 164810,
+      "text": "Because I see just what I want"
+    },
+    {
+      "startMs": 164810,
+      "endMs": 169590,
+      "text": "Knowing you could cause it all to stay"
+    },
+    {
+      "startMs": 169590,
+      "endMs": 172470,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 172470,
+      "endMs": 175330,
+      "text": "All my thoughts are just pretend"
+    },
+    {
+      "startMs": 175330,
+      "endMs": 178489,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 178489,
+      "endMs": 181290,
+      "text": "Maybe I should make this end"
+    },
+    {
+      "startMs": 181290,
+      "endMs": 187500,
+      "text": "I think it again, I think it again"
+    },
+    {
+      "startMs": 187500,
+      "endMs": 190700,
+      "text": "I think it again, think it again"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Always Hurts - Mina Okabe - lH1xJUDMm2Q",
+  "outputMp4Name": "Always Hurts - Mina Okabe.mp4"
+}

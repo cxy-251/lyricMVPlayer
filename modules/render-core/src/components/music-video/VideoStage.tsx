@@ -50,7 +50,7 @@ const formatDisplayTitle = (title: string, artist: string): string => {
 };
 
 const findActiveLine = (lyrics: LyricVideoCompositionProps["lyrics"], currentMs: number) => {
-  return lyrics.find((line) => currentMs >= line.startMs && currentMs < line.endMs) ?? lyrics[0];
+  return lyrics.find((line) => currentMs >= line.startMs && currentMs < line.endMs) ?? lyrics[0] ?? null;
 };
 
 const sampleAudioFeature = (
@@ -280,9 +280,11 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
   const fallbackDurationMs = Math.max((currentSong.durationInFrames / currentSong.fps) * 1000, lyricsEndMs);
   const durationMs = Math.max(loadedAudioDurationMs || 0, fallbackDurationMs);
   const activeLine = findActiveLine(currentSong.lyrics, effectiveLyricTimeMs);
-  const activeSpan = Math.max(1, activeLine.endMs - activeLine.startMs);
-  const lineProgress = clamp((effectiveLyricTimeMs - activeLine.startMs) / activeSpan, 0, 1);
-  const fallbackEnergy = 0.26 + Math.sin(lineProgress * Math.PI) * 0.74;
+  const activeSpan = activeLine ? Math.max(1, activeLine.endMs - activeLine.startMs) : 1;
+  const lineProgress = activeLine ? clamp((effectiveLyricTimeMs - activeLine.startMs) / activeSpan, 0, 1) : 0;
+  const fallbackEnergy = activeLine
+    ? 0.26 + Math.sin(lineProgress * Math.PI) * 0.74
+    : 0.2 + (Math.sin(currentTimeMs * 0.0016) * 0.5 + 0.5) * 0.08;
   const sampledFeature = sampleAudioFeature(currentSong.audioFeatures, currentTimeMs);
   const reactiveBass = sampledFeature?.bass ?? fallbackEnergy * 0.82;
   const reactiveMid = sampledFeature?.mid ?? fallbackEnergy * 0.72;
@@ -520,7 +522,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     }
 
     const tailMs = durationMs - lyricsEndMs;
-    if (repeatMode === "one" && tailMs > 2200 && currentTimeMs >= lyricsEndMs + 240) {
+    if (repeatMode === "one" && lyricsEndMs > 0 && tailMs > 2200 && currentTimeMs >= lyricsEndMs + 240) {
       triggerCrossfadeRestart();
     } else if (repeatMode === "one" && currentTimeMs >= durationMs - 760) {
       triggerCrossfadeRestart();

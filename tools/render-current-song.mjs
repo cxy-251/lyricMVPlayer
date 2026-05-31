@@ -24,11 +24,26 @@ if (!fs.existsSync(songDir)) {
 const songsOutDir = path.join(projectRoot, "artifacts", "songsout");
 const finalOutputPath = path.join(songsOutDir, `${songDirName}.mp4`);
 const remotionBin = path.join(projectRoot, "node_modules", ".bin", "remotion");
+const selectSongScriptPath = path.join(projectRoot, "tools", "select-song-for-preview.mjs");
+const renderConcurrency = process.env.REMOTION_CONCURRENCY ?? "3";
 fs.mkdirSync(songsOutDir, {recursive: true});
+
+const selectResult = spawnSync(
+  "node",
+  [selectSongScriptPath, "--render-only", songDirName],
+  {
+    cwd: projectRoot,
+    stdio: "inherit",
+  }
+);
+
+if (selectResult.status !== 0) {
+  process.exit(selectResult.status ?? 1);
+}
 
 const renderResult = spawnSync(
   remotionBin,
-  ["render", "src/remotion/RenderRoot.tsx", "MusicVideo", finalOutputPath],
+  ["render", "src/remotion/RenderRoot.tsx", "MusicVideo", finalOutputPath, `--concurrency=${renderConcurrency}`],
   {
     cwd: projectRoot,
     stdio: "inherit",

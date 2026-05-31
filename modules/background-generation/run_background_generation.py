@@ -54,6 +54,15 @@ def _needs_background(song_dir: Path) -> bool:
     return True
 
 
+def _background_blocked_result(song_dir: Path) -> dict:
+    return {
+        "ok": False,
+        "song_dir": str(song_dir),
+        "error": "background-generation-skipped-by-render-batch",
+        "message": "Only production-queue rows with render_batch=0 can generate backgrounds.",
+    }
+
+
 def _main(argv: list[str]) -> int:
     if len(argv) < 3:
         raise SystemExit(
@@ -70,13 +79,23 @@ def _main(argv: list[str]) -> int:
     render_queue = _load_render_queue_module(project_root)
 
     if command == "current":
-        result = bg.generate_background_for_song(str(_resolve_current_song_dir(project_root)), str(project_root))
+        song_dir = _resolve_current_song_dir(project_root)
+        if not render_queue.is_background_generation_allowed(str(project_root), song_dir.name):
+            result = _background_blocked_result(song_dir)
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return 1
+        result = bg.generate_background_for_song(str(song_dir), str(project_root))
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0 if result.get("ok") else 1
 
     if command == "missing":
         results = []
-        for song_dir in _list_song_dirs(project_root):
+        pending_rows = render_queue.list_background_pending_rows(str(project_root))
+        for row in pending_rows:
+            song_dir_name = row.get("song_dir", "").strip()
+            if not song_dir_name:
+                continue
+            song_dir = project_root / "artifacts" / "songs" / song_dir_name
             if not _needs_background(song_dir):
                 continue
             results.append(bg.generate_background_for_song(str(song_dir), str(project_root)))
@@ -134,6 +153,10 @@ def _main(argv: list[str]) -> int:
         if len(argv) < 4:
             raise SystemExit("Usage: run_background_generation.py song <project_root> <song_dir_name>")
         song_dir = project_root / "artifacts" / "songs" / argv[3]
+        if not render_queue.is_background_generation_allowed(str(project_root), song_dir.name):
+            result = _background_blocked_result(song_dir)
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return 1
         result = bg.generate_background_for_song(str(song_dir), str(project_root))
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0 if result.get("ok") else 1

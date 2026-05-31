@@ -10,10 +10,12 @@ const previewManifestPath = path.join(projectRoot, "src", "remotion", "preview-l
 const previewAssetMapPath = path.join(projectRoot, "src", "remotion", "preview-asset-map.ts");
 const previewPropsPath = path.join(projectRoot, "src", "remotion", "preview-composition-props.ts");
 
-const requested = process.argv.slice(2).join(" ").trim();
+const args = process.argv.slice(2);
+const renderOnly = args.includes("--render-only");
+const requested = args.filter((arg) => arg !== "--render-only").join(" ").trim();
 
 if (!requested) {
-  throw new Error('Usage: node tools/select-song-for-preview.mjs "<song-folder-name>"');
+  throw new Error('Usage: node tools/select-song-for-preview.mjs [--render-only] "<song-folder-name>"');
 }
 
 const absoluteCandidate = path.isAbsolute(requested) ? requested : path.join(songsRoot, requested);
@@ -78,7 +80,10 @@ const libraryState = fs.existsSync(libraryStatePath)
   : null;
 
 const uniqueSongDirNames = Array.from(
-  new Set([selectedSongDirName, ...queueRows.map((row) => row.song_dir).filter(Boolean)])
+  new Set([
+    selectedSongDirName,
+    ...(renderOnly ? [] : queueRows.map((row) => row.song_dir).filter(Boolean)),
+  ])
 ).filter((songDirName) => {
   const songDirPath = path.join(songsRoot, songDirName);
   return fs.existsSync(songDirPath) && fs.statSync(songDirPath).isDirectory();
@@ -101,11 +106,11 @@ const buildSongEntry = (songDirName, index) => {
   const songDirPath = path.join(songsRoot, songDirName);
   const renderInputPath = path.join(songDirPath, "render-input.json");
   const audioFeaturesPath = path.join(songDirPath, "audio-features.json");
+  const sourcePath = path.join(songDirPath, "source.json");
   const audioPath = path.join(songDirPath, "audio.mp3");
+  const includeAudioFeatures = renderOnly || songDirName === selectedSongDirName;
+  const includeLyrics = renderOnly || songDirName === selectedSongDirName;
 
-  if (!fs.existsSync(renderInputPath)) {
-    throw new Error(`Missing render-input.json in ${songDirPath}`);
-  }
   if (!fs.existsSync(audioFeaturesPath)) {
     throw new Error(`Missing audio-features.json in ${songDirPath}`);
   }
@@ -113,7 +118,14 @@ const buildSongEntry = (songDirName, index) => {
     throw new Error(`Missing audio.mp3 in ${songDirPath}`);
   }
 
-  const renderInput = JSON.parse(fs.readFileSync(renderInputPath, "utf-8"));
+  const audioFeatures = JSON.parse(fs.readFileSync(audioFeaturesPath, "utf-8"));
+  const source = fs.existsSync(sourcePath) ? JSON.parse(fs.readFileSync(sourcePath, "utf-8")) : {};
+  const renderInput = fs.existsSync(renderInputPath)
+    ? JSON.parse(fs.readFileSync(renderInputPath, "utf-8"))
+    : null;
+  const fps = renderInput?.fps ?? audioFeatures.frameRate ?? 60;
+  const durationMs = audioFeatures.durationMs ?? (Number(source.duration) || 0) * 1000;
+  const durationInFrames = renderInput?.durationInFrames ?? Math.max(1, Math.ceil((durationMs / 1000) * fps));
   const backgroundFileName = supportedBackgrounds.find((candidate) =>
     fs.existsSync(path.join(songDirPath, candidate))
   );
@@ -124,28 +136,30 @@ const buildSongEntry = (songDirName, index) => {
     id: songDirName,
     index,
     audioImport: `import audioSrc${index} from "${songImportBase}/audio.mp3";`,
-    audioFeaturesImport: `import rawAudioFeatures${index} from "${songImportBase}/audio-features.json";`,
+    audioFeaturesImport: includeAudioFeatures
+      ? `import rawAudioFeatures${index} from "${songImportBase}/audio-features.json";`
+      : "",
     backgroundImport: backgroundFileName
       ? `import backgroundSrc${index} from "${songImportBase}/${backgroundFileName}";`
       : "",
     audioVar: `audioSrc${index}`,
-    audioFeaturesVar: `rawAudioFeatures${index}`,
+    audioFeaturesVar: includeAudioFeatures ? `rawAudioFeatures${index}` : null,
     backgroundVar: backgroundFileName ? `backgroundSrc${index}` : null,
     song: {
       id: songDirName,
-      title: renderInput.title,
-      artist: renderInput.artist,
-      lyricOffsetMs: renderInput.lyricOffsetMs ?? 0,
-      renderTrimStartMs: renderInput.renderTrimStartMs ?? 0,
-      renderDurationInFrames: renderInput.renderDurationInFrames ?? renderInput.durationInFrames,
-      durationInFrames: renderInput.durationInFrames,
-      fps: renderInput.fps,
+      title: renderInput?.title ?? source.title ?? songDirName,
+      artist: renderInput?.artist ?? source.channel ?? source.uploader ?? "Unknown Artist",
+      lyricOffsetMs: renderInput?.lyricOffsetMs ?? 0,
+      renderTrimStartMs: renderInput?.renderTrimStartMs ?? 0,
+      renderDurationInFrames: renderInput?.renderDurationInFrames ?? durationInFrames,
+      durationInFrames,
+      fps,
       background: {
-        kind: backgroundFileName ? "image" : renderInput.background?.kind ?? "color",
-        color: renderInput.background?.color ?? "#101828"
+        kind: backgroundFileName ? "image" : renderInput?.background?.kind ?? "color",
+        color: renderInput?.background?.color ?? "#101828"
       },
-      poetryFrame: normalizePoetryFrame(renderInput.poetryFrame),
-      lyrics: renderInput.lyrics
+      poetryFrame: normalizePoetryFrame(renderInput?.poetryFrame),
+      lyrics: includeLyrics && Array.isArray(renderInput?.lyrics) ? renderInput.lyrics : []
     }
   };
 };
@@ -159,30 +173,32 @@ const queue = songEntries.map((entry) => ({
   accent: "rgba(163, 206, 255, 0.7)"
 }));
 
-const playlists = [
-  {
-    id: "liked",
-    name: "Liked Songs",
-    count: Array.isArray(libraryState?.likedTrackIds) ? libraryState.likedTrackIds.length : 0,
-    accent: "rgba(255, 196, 170, 0.78)"
-  },
-  ...((Array.isArray(libraryState?.customPlaylists) ? libraryState.customPlaylists : []).map((playlist) => {
-    const trackIds =
-      playlist.trackIds === "__ALL__"
-        ? queue.map((track) => track.id)
-        : Array.isArray(playlist.trackIds)
-          ? playlist.trackIds
-          : [];
+const playlists = renderOnly
+  ? []
+  : [
+      {
+        id: "liked",
+        name: "Liked Songs",
+        count: Array.isArray(libraryState?.likedTrackIds) ? libraryState.likedTrackIds.length : 0,
+        accent: "rgba(255, 196, 170, 0.78)"
+      },
+      ...((Array.isArray(libraryState?.customPlaylists) ? libraryState.customPlaylists : []).map((playlist) => {
+        const trackIds =
+          playlist.trackIds === "__ALL__"
+            ? queue.map((track) => track.id)
+            : Array.isArray(playlist.trackIds)
+              ? playlist.trackIds
+              : [];
 
-    return {
-      id: playlist.id,
-      name: playlist.name,
-      count: trackIds.length,
-      accent: "rgba(255,255,255,0.58)",
-      trackIds
-    };
-  }))
-];
+        return {
+          id: playlist.id,
+          name: playlist.name,
+          count: trackIds.length,
+          accent: "rgba(255,255,255,0.58)",
+          trackIds
+        };
+      }))
+    ];
 
 const manifestPayload = {
   selectedSongDirName,
@@ -197,11 +213,16 @@ const assetImports = songEntries.flatMap((entry) =>
 
 const assetMapEntries = songEntries
   .map((entry) => {
-    const backgroundLine = entry.backgroundVar ? `backgroundSrc: ${entry.backgroundVar},` : "";
+    const fields = [`audioSrc: ${entry.audioVar}`];
+    if (entry.audioFeaturesVar) {
+      fields.push(`audioFeatures: ${entry.audioFeaturesVar} as AudioFeatureTrack`);
+    }
+    if (entry.backgroundVar) {
+      fields.push(`backgroundSrc: ${entry.backgroundVar}`);
+    }
+
     return `  ${JSON.stringify(entry.id)}: {
-    audioSrc: ${entry.audioVar},
-    audioFeatures: ${entry.audioFeaturesVar} as AudioFeatureTrack,
-    ${backgroundLine}
+${fields.map((field) => `    ${field}`).join(",\n")}
   }`;
   })
   .join(",\n");
@@ -210,7 +231,7 @@ const assetMapSource = `import type {AudioFeatureTrack} from "../../modules/rend
 
 ${assetImports.join("\n")}
 
-export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures: AudioFeatureTrack; backgroundSrc?: string}> = {
+export const previewAssetMap: Record<string, {audioSrc: string; audioFeatures?: AudioFeatureTrack; backgroundSrc?: string}> = {
 ${assetMapEntries}
 };
 `;
