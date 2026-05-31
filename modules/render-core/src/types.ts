@@ -42,6 +42,8 @@ export type SongLibraryItem = {
   accent?: string;
 };
 
+export type SongLibraryItemLoader = (songId: string) => Promise<SongLibraryItem | null>;
+
 export type PlaylistSummary = {
   id: string;
   name: string;
@@ -82,6 +84,7 @@ export type LyricVideoCompositionProps = {
   audioFeatures?: AudioFeatureTrack;
   queue?: QueueTrack[];
   library?: SongLibraryItem[];
+  loadLibraryItem?: SongLibraryItemLoader;
   initialTrackId?: string;
   playlists?: PlaylistSummary[];
 };

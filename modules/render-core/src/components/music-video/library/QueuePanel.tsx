@@ -1,8 +1,8 @@
 import React from "react";
 import {ListMusic, X} from "lucide-react";
 
-import type {QueueTrack} from "../../types";
-import {cn} from "../../lib/cn";
+import type {QueueTrack} from "../../../types";
+import {cn} from "../../../lib/cn";
 
 type QueuePanelProps = {
   open: boolean;

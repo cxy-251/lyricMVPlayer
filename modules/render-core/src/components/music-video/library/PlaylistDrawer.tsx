@@ -1,8 +1,8 @@
 import React from "react";
 import {X} from "lucide-react";
 
-import type {PlaylistSummary} from "../../types";
-import {cn} from "../../lib/cn";
+import type {PlaylistSummary} from "../../../types";
+import {cn} from "../../../lib/cn";
 
 type PlaylistDrawerProps = {
   open: boolean;

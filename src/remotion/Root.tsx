@@ -2,7 +2,7 @@ import React from "react";
 import {Composition, registerRoot} from "remotion";
 import "../styles/tailwind.css";
 
-import {MusicVideoComposition} from "../../modules/render-core/src";
+import {PreviewMusicVideoComposition} from "./PreviewMusicVideoComposition";
 import {previewCompositionProps} from "./preview-composition-props";
 
 export const RemotionRoot: React.FC = () => {
@@ -10,7 +10,7 @@ export const RemotionRoot: React.FC = () => {
     <>
       <Composition
         id="MusicVideo"
-        component={MusicVideoComposition}
+        component={PreviewMusicVideoComposition}
         width={1080}
         height={1920}
         fps={previewCompositionProps.fps}

@@ -9,7 +9,7 @@ import {
   SkipBack,
   SkipForward
 } from "lucide-react";
-import {cn} from "../../lib/cn";
+import {cn} from "../../../lib/cn";
 
 type RepeatMode = "none" | "one" | "list";
 

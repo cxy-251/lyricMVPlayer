@@ -7,6 +7,7 @@ export type {
   PlaylistSummary,
   QueueTrack,
   SongLibraryItem,
+  SongLibraryItemLoader,
   TimedLyricLine
 } from "./types";
 export {sampleCompositionProps} from "./sample-data";

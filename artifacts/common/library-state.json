@@ -11,12 +11,31 @@
     {
       "id": "lyrics-review",
       "name": "Lyrics Review",
-      "trackIds": []
+      "trackIds": [
+        "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
+        "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
+        "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
+        "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
+        "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
+        "Forever - Mina Okabe - ke_3MpO1m_o"
+      ]
     },
     {
       "id": "alignment-error",
       "name": "Alignment Error",
-      "trackIds": []
+      "trackIds": [
+        "Run Wild (向风而野) - 是晚星呀 - Topic - bHPwcS2IquY",
+        "We Don't Talk Anymore (feat. Selena Gomez) - Charlie Puth - yN6JgL0IUJg",
+        "Just the Way You Are - Bruno Mars - GnUW4AF1LZo",
+        "A Thousand Years [Official Music Video] - Christina Perri - rtOvBOTyX00",
+        "One Thing - One Direction - Y1xs_xPb46M",
+        "Who Says - Selena Gomez - m4p0WNN9p-Y",
+        "Sad Girl Summer - Maisie Peters - EKDEIlVUPjI",
+        "Dracula - Tame Impala - cuMuMnCRfqk",
+        "Stranger - Mina Okabe - LjJIrgB9WJk",
+        "A Little Bit More - Mina Okabe - P4mV6ncdB1Q",
+        "Always Hurts - Mina Okabe - lH1xJUDMm2Q"
+      ]
     }
   ]
 }

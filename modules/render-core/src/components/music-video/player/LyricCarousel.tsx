@@ -1,8 +1,15 @@
 import React from "react";
 import {spring, useCurrentFrame} from "remotion";
 
-import type {TimedLyricLine} from "../../types";
-import {cn} from "../../lib/cn";
+import type {TimedLyricLine} from "../../../types";
+import {
+  findActiveLyricIndex,
+  findNextMeaningfulLine,
+  findPreviousMeaningfulLine,
+  getCurrentLyricFontSize,
+  isDecorativeLyric,
+} from "../../../domain/lyrics";
+import {cn} from "../../../lib/cn";
 
 type LyricCarouselProps = {
   lyrics: TimedLyricLine[];
@@ -10,54 +17,6 @@ type LyricCarouselProps = {
   currentTimeMs: number;
   onSeek?: (targetMs: number) => void;
   interactiveHint?: boolean;
-};
-
-const isDecorativeLyric = (text: string): boolean => /^[♪\s]+$/.test(text);
-
-const findActiveIndex = (lyrics: TimedLyricLine[], currentMs: number): number => {
-  const activeIndex = lyrics.findIndex((line) => currentMs >= line.startMs && currentMs < line.endMs);
-  if (activeIndex >= 0) {
-    return activeIndex;
-  }
-
-  const firstFuture = lyrics.findIndex((line) => currentMs < line.startMs);
-  return firstFuture > 0 ? firstFuture - 1 : 0;
-};
-
-const findPreviousMeaningfulLine = (lyrics: TimedLyricLine[], startIndex: number): TimedLyricLine | null => {
-  for (let index = startIndex; index >= 0; index -= 1) {
-    if (!isDecorativeLyric(lyrics[index].text)) {
-      return lyrics[index];
-    }
-  }
-
-  return null;
-};
-
-const findNextMeaningfulLine = (lyrics: TimedLyricLine[], startIndex: number): TimedLyricLine | null => {
-  for (let index = startIndex; index < lyrics.length; index += 1) {
-    if (!isDecorativeLyric(lyrics[index].text)) {
-      return lyrics[index];
-    }
-  }
-
-  return null;
-};
-
-const getCurrentFontSize = (text: string): number => {
-  if (text.length <= 24) {
-    return 82;
-  }
-
-  if (text.length <= 42) {
-    return 74;
-  }
-
-  if (text.length <= 58) {
-    return 68;
-  }
-
-  return 62;
 };
 
 export const LyricCarousel: React.FC<LyricCarouselProps> = ({
@@ -75,7 +34,7 @@ export const LyricCarousel: React.FC<LyricCarouselProps> = ({
     );
   }
 
-  const activeIndex = findActiveIndex(lyrics, currentTimeMs);
+  const activeIndex = findActiveLyricIndex(lyrics, currentTimeMs);
   const rawCurrentLine = lyrics[activeIndex] ?? lyrics[0];
   const currentLine = isDecorativeLyric(rawCurrentLine.text)
     ? findNextMeaningfulLine(lyrics, activeIndex + 1) ?? rawCurrentLine
@@ -91,7 +50,7 @@ export const LyricCarousel: React.FC<LyricCarouselProps> = ({
       stiffness: 120
     }
   });
-  const currentFontSize = getCurrentFontSize(currentLine.text);
+  const currentFontSize = getCurrentLyricFontSize(currentLine.text);
 
   return (
     <>
