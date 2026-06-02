@@ -1,0 +1,6 @@
+{
+  "name": "@paper-to-video/editor-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module"
+}

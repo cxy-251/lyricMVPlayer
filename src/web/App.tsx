@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
 import {Player} from "@remotion/player";
 
-import {MusicVideoComposition} from "../../modules/render-core/src";
+import {MusicVideoComposition} from "../../modules/render-core/src/compositions/MusicVideoComposition";
 import type {
   AudioFeatureTrack,
   BackgroundAsset,
@@ -13,12 +13,31 @@ import type {
   TimedLyricLine,
 } from "../../modules/render-core/src";
 
+const EffectLabPage = lazy(() =>
+  import("../../modules/render-core/src/visual-effects/lab/EffectLabPage").then((module) => ({
+    default: module.EffectLabPage,
+  })),
+);
+
+const PaperStudioPage = lazy(() =>
+  import("./PaperStudioPage").then((module) => ({
+    default: module.PaperStudioPage,
+  })),
+);
+
+const StudioHomePage = lazy(() =>
+  import("./StudioHomePage").then((module) => ({
+    default: module.StudioHomePage,
+  })),
+);
+
 type ManifestSong = {
   id: string;
   title: string;
   artist: string;
   renderInputUrl: string;
   audioFeaturesUrl: string;
+  assetStatus?: QueueTrack["assetStatus"];
 };
 
 type WebManifest = {
@@ -70,7 +89,13 @@ const buildQueue = (library: SongLibraryItem[]): QueueTrack[] =>
     title: song.title,
     artist: song.artist,
     accent: "rgba(163, 206, 255, 0.7)",
+    assetStatus: song.assetStatus,
   }));
+
+const normalizeManifestTrackIds = (trackIds: unknown): string[] =>
+  Array.isArray(trackIds)
+    ? Array.from(new Set(trackIds.filter((trackId): trackId is string => typeof trackId === "string")))
+    : [];
 
 const buildPlaylists = (
   library: SongLibraryItem[],
@@ -84,7 +109,7 @@ const buildPlaylists = (
         playlist.trackIds === ALL_TRACKS_SENTINEL
           ? libraryIds
           : Array.isArray(playlist.trackIds)
-            ? playlist.trackIds.filter((trackId) => libraryIds.includes(trackId))
+            ? normalizeManifestTrackIds(playlist.trackIds)
             : [];
 
       return {
@@ -123,6 +148,22 @@ export const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [splashText, setSplashText] = useState<string>("LET THE WAVEFORM BREATHE BELOW THE SONG");
   const [showSplash, setShowSplash] = useState(true);
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+  const isStudioRoute = pathname === "/studio";
+  const isLegacyPaperEffectRoute = pathname.startsWith("/paper/effects/");
+  const isEffectLabRoute =
+    pathname === "/effects" ||
+    pathname.startsWith("/effects/") ||
+    pathname === "/studio/effects" ||
+    pathname.startsWith("/studio/effects/") ||
+    isLegacyPaperEffectRoute;
+  const isPaperStudioRoute =
+    pathname === "/studio/papers" ||
+    pathname.startsWith("/studio/papers/") ||
+    (pathname === "/paper" || pathname.startsWith("/paper/")) && !isLegacyPaperEffectRoute ||
+    pathname.startsWith("/templates/") ||
+    pathname.startsWith("/previews/");
+  const isNonLyricsRoute = isStudioRoute || isEffectLabRoute || isPaperStudioRoute;
 
   const preloadImage = async (src: string | undefined): Promise<void> => {
     if (!src) {
@@ -139,6 +180,10 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isNonLyricsRoute) {
+      return undefined;
+    }
+
     let cancelled = false;
     const renderInputCache = new Map<string, Promise<RenderInputPayload>>();
     const audioFeaturesCache = new Map<string, Promise<AudioFeatureTrack>>();
@@ -163,7 +208,8 @@ export const App: React.FC = () => {
         nickname,
         topLabel: `${nickname.toUpperCase()} · AUDIO DIARY`,
       },
-        lyrics: [{startMs: 0, endMs: 1000, text: "Loading..."}],
+      lyrics: [{startMs: 0, endMs: 1000, text: "Loading..."}],
+      assetStatus: song.assetStatus,
     });
 
     const fetchJson = async <T,>(url: string): Promise<T> => {
@@ -230,6 +276,7 @@ export const App: React.FC = () => {
           poetryFrame: normalizePoetryFrame(renderInput.poetryFrame, nickname),
           lyrics: renderInput.lyrics as TimedLyricLine[],
           audioFeatures,
+          assetStatus: song.assetStatus,
         } satisfies SongLibraryItem;
       })();
 
@@ -355,7 +402,7 @@ export const App: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isNonLyricsRoute]);
 
   const body = useMemo(() => {
     if (error) {
@@ -386,9 +433,36 @@ export const App: React.FC = () => {
     );
   }, [error, props]);
 
+  if (isStudioRoute) {
+    return (
+      <Suspense fallback={<div className="web-route-status">Loading studio...</div>}>
+        <StudioHomePage />
+      </Suspense>
+    );
+  }
+
+  if (isEffectLabRoute) {
+    return (
+      <Suspense fallback={<div className="web-route-status">Loading effect lab...</div>}>
+        <EffectLabPage />
+      </Suspense>
+    );
+  }
+
+  if (isPaperStudioRoute) {
+    return (
+      <Suspense fallback={<div className="web-route-status">Loading paper player...</div>}>
+        <PaperStudioPage />
+      </Suspense>
+    );
+  }
+
   return (
     <div className="web-shell">
       <div className="web-stage-frame">
+        <a className="web-studio-link" href="/studio" title="Studio" aria-label="Open studio">
+          <span>Lab</span>
+        </a>
         {body}
         <div className={`web-splash ${showSplash ? "is-visible" : "is-hidden"}`}>
           <div className="web-splash__inner">

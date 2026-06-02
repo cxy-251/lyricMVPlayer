@@ -5,6 +5,7 @@ const projectRoot = process.cwd();
 const artifactsRoot = path.join(projectRoot, "artifacts");
 const songsRoot = path.join(artifactsRoot, "songs");
 const commonRoot = path.join(artifactsRoot, "common");
+const paperOutputRoot = path.join(artifactsRoot, "paper-video", "output");
 const publicRoot = path.join(projectRoot, "public-web");
 const currentSongConfigPath = path.join(projectRoot, "src", "remotion", "current-song.json");
 const libraryStatePath = path.join(commonRoot, "library-state.json");
@@ -64,7 +65,142 @@ const parseCsv = (csvText) => {
   });
 };
 
+const collectFiles = (rootDir, fileName) => {
+  if (!fs.existsSync(rootDir)) {
+    return [];
+  }
+
+  const found = [];
+  const walk = (dirPath) => {
+    for (const entry of fs.readdirSync(dirPath, {withFileTypes: true})) {
+      const entryPath = path.join(dirPath, entry.name);
+      if (entry.isDirectory()) {
+        walk(entryPath);
+      } else if (entry.isFile() && entry.name === fileName) {
+        found.push(entryPath);
+      }
+    }
+  };
+  walk(rootDir);
+  return found;
+};
+
+const buildPaperLibrary = () => {
+  const runsRoot = path.join(paperOutputRoot, "runs");
+  const manifests = collectFiles(runsRoot, "render-manifest.json");
+  const latestByProject = new Map();
+
+  for (const manifestPath of manifests) {
+    try {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+      if (!manifest.paper?.title || !Array.isArray(manifest.scenes)) {
+        continue;
+      }
+
+      const relativeParts = path.relative(runsRoot, manifestPath).split(path.sep);
+      const projectId = manifest.projectId || relativeParts[0];
+      const runId = relativeParts[1] || "default";
+      const item = {
+        id: `${projectId}__${runId}`.replace(/[^a-zA-Z0-9_.-]+/g, "-"),
+        projectId,
+        runId,
+        label: manifest.paper.paperId || projectId,
+        title: manifest.paper.title,
+        source: path.relative(projectRoot, manifestPath),
+        renderManifestPath: manifestPath,
+        sceneCount: manifest.scenes.length,
+        durationSeconds: Math.round((manifest.totalFrames / manifest.fps) * 10) / 10,
+        themeId: manifest.theme?.id ?? "",
+      };
+      const previous = latestByProject.get(projectId);
+      if (!previous || String(runId).localeCompare(String(previous.runId)) > 0) {
+        latestByProject.set(projectId, item);
+      }
+    } catch {
+      // Ignore stale or malformed paper artifacts.
+    }
+  }
+
+  return Array.from(latestByProject.values()).sort((a, b) => {
+    const left = `${a.runId}-${a.projectId}`;
+    const right = `${b.runId}-${b.projectId}`;
+    return right.localeCompare(left);
+  });
+};
+
 const supportedBackgrounds = ["background.png", "background.jpg", "background.jpeg", "background.webp"];
+
+const parseSongDirName = (songDirName) => {
+  const parts = songDirName.split(" - ");
+  if (parts.length >= 3) {
+    return {
+      title: parts.slice(0, -2).join(" - "),
+      artist: parts[parts.length - 2],
+    };
+  }
+
+  return {
+    title: songDirName,
+    artist: "Unknown Artist",
+  };
+};
+
+const readJsonIfExists = (filePath) => {
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  } catch {
+    return null;
+  }
+};
+
+const createFallbackRenderInput = ({
+  audioFeatures,
+  backgroundFileName,
+  songDirName,
+  source,
+}) => {
+  const parsed = parseSongDirName(songDirName);
+  const title = typeof source?.title === "string" && source.title.trim() ? source.title : parsed.title;
+  const artist =
+    typeof source?.channel === "string" && source.channel.trim()
+      ? source.channel
+      : typeof source?.uploader === "string" && source.uploader.trim()
+        ? source.uploader
+        : parsed.artist;
+  const durationMs =
+    typeof audioFeatures?.durationMs === "number"
+      ? audioFeatures.durationMs
+      : typeof source?.duration === "number"
+        ? source.duration * 1000
+        : 1000;
+  const fps = 30;
+  const durationInFrames = Math.max(1, Math.ceil((durationMs / 1000) * fps));
+
+  return {
+    title,
+    artist,
+    lyricOffsetMs: 0,
+    renderTrimStartMs: 0,
+    renderDurationInFrames: durationInFrames,
+    durationInFrames,
+    fps,
+    background: backgroundFileName
+      ? {kind: "image", color: null}
+      : {kind: "color", color: "#101828"},
+    poetryFrame: {
+      nickname: libraryState.nickname ?? "CleanKsen",
+      topLabel: `${(libraryState.nickname ?? "CleanKsen").toUpperCase()} · AUDIO DIARY`,
+      leftVertical: "",
+      rightVertical: "",
+      bottomLine: "LYRICS NEED REVIEW",
+    },
+    lyrics: [],
+  };
+};
 
 const currentSongConfig = fs.existsSync(currentSongConfigPath)
   ? JSON.parse(fs.readFileSync(currentSongConfigPath, "utf-8"))
@@ -109,11 +245,12 @@ for (const songDirName of songDirNames) {
   const renderInputPath = path.join(songDirPath, "render-input.json");
   const audioFeaturesPath = path.join(songDirPath, "audio-features.json");
   const audioPath = path.join(songDirPath, "audio.mp3");
+  const sourcePath = path.join(songDirPath, "source.json");
 
   if (!fs.existsSync(songDirPath) || !fs.statSync(songDirPath).isDirectory()) {
     continue;
   }
-  if (!fs.existsSync(renderInputPath) || !fs.existsSync(audioFeaturesPath) || !fs.existsSync(audioPath)) {
+  if (!fs.existsSync(audioFeaturesPath) || !fs.existsSync(audioPath)) {
     continue;
   }
 
@@ -128,7 +265,13 @@ for (const songDirName of songDirNames) {
     fs.copyFileSync(path.join(songDirPath, backgroundFileName), path.join(publicSongDir, backgroundFileName));
   }
 
-  const renderInput = JSON.parse(fs.readFileSync(renderInputPath, "utf-8"));
+  const source = readJsonIfExists(sourcePath);
+  const audioFeatures = readJsonIfExists(audioFeaturesPath);
+  const hasRenderInput = fs.existsSync(renderInputPath);
+  const renderInput = hasRenderInput
+    ? JSON.parse(fs.readFileSync(renderInputPath, "utf-8"))
+    : createFallbackRenderInput({audioFeatures, backgroundFileName, songDirName, source});
+  const hasLyrics = Array.isArray(renderInput.lyrics) && renderInput.lyrics.length > 0;
   const rewrittenRenderInput = {
     ...renderInput,
     audioSrc: `/songs/${encodeURIComponent(songDirName)}/audio.mp3`,
@@ -151,6 +294,13 @@ for (const songDirName of songDirNames) {
     artist: renderInput.artist,
     renderInputUrl: `/songs/${encodeURIComponent(songDirName)}/render-input.json`,
     audioFeaturesUrl: `/songs/${encodeURIComponent(songDirName)}/audio-features.json`,
+    assetStatus: {
+      audio: true,
+      audioFeatures: true,
+      background: Boolean(backgroundFileName),
+      lyrics: hasLyrics,
+      renderInput: hasRenderInput,
+    },
   });
 }
 
@@ -164,3 +314,4 @@ const manifest = {
 };
 
 fs.writeFileSync(path.join(publicRoot, "library-manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+fs.writeFileSync(path.join(publicRoot, "paper-library.json"), JSON.stringify({papers: buildPaperLibrary()}, null, 2) + "\n");

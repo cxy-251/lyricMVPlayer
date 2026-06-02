@@ -13,7 +13,11 @@
       "@modules/*": [
         "./modules/*/src",
         "./modules/*/src/index.ts"
-      ]
+      ],
+      "@paper-to-video/atomic-ui": ["./modules/paper-video/packages/atomic-ui/src/index.tsx"],
+      "@paper-to-video/content-pipeline": ["./modules/paper-video/packages/content-pipeline/src/index.ts"],
+      "@paper-to-video/shared-types": ["./modules/paper-video/packages/shared-types/src/index.ts"],
+      "@paper-to-video/timeline-engine": ["./modules/paper-video/packages/timeline-engine/src/index.tsx"]
     }
   },
   "include": [

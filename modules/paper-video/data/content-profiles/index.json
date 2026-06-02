@@ -1,0 +1,14 @@
+{
+  "profiles": [
+    {
+      "id": "demo-layout-priors",
+      "label": "Layout priors demo",
+      "path": "data/content-profiles/demo-layout-priors.json"
+    },
+    {
+      "id": "agentic-world-modeling",
+      "label": "Agentic world modeling digest",
+      "path": "data/content-profiles/agentic-world-modeling.json"
+    }
+  ]
+}

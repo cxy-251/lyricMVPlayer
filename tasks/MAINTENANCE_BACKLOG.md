@@ -1,6 +1,6 @@
 # Maintenance Backlog
 
-Updated: 2026-05-21
+Updated: 2026-06-02
 
 ## Open
 
@@ -38,6 +38,12 @@ Updated: 2026-05-21
   - Progress update: the website now shows a splash overlay that uses the first song's dynamic `poetryFrame.bottomLine` and only fades out after the first background image is actually loaded, which hides the heaviest initial media delay.
   - Next step: if the library keeps growing, move from serial background caching toward true on-demand fetch for selected songs and nearby neighbors only.
 
+- Unified local development entry
+  - Status: `fixed in code, pending local restart`
+  - Problem: `npm run dev` still opened the old Remotion Studio route while the current app now uses one Vite studio for Lyrics, Effects, and Paper pages.
+  - Fix: `npm run dev` now refreshes `public-web/`, starts the library-state sync API, and opens the unified Vite app on `http://127.0.0.1:3212`.
+  - Note: Remotion remains the render backend for MP4 export, but its old Studio entry is no longer the default development UI.
+
 ## Resolved Recently
 
 - Library-state default playlists
@@ -55,6 +61,7 @@ Updated: 2026-05-21
 
 - Web build pipeline
   - Added a Vite-based web player build with:
+    - `npm run dev`
     - `npm run dev:web`
     - `npm run build:web`
   - Cloudflare Pages can now use `npm run build:web` with `dist/` as the output directory.

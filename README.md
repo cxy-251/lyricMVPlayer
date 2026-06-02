@@ -4,9 +4,9 @@
 
 ## Current state
 
-- The project currently starts from a detailed requirements document.
-- Business code has not been implemented yet.
-- The immediate goal is to define a practical MVP before building the pipeline.
+- The project now has one unified Vite development entry for the Lyrics, Effects, and Paper studio pages.
+- Remotion remains the rendering backend for MP4 export, but it is no longer the default local preview UI.
+- Song, paper, and generated visual assets are kept under `artifacts/` and exposed to the web UI through generated static manifests.
 
 ## What this project is
 
@@ -44,16 +44,27 @@ Common commands for the frontend preview and render layer:
   Install project dependencies.
 
 - `npm run dev`
-  Start Remotion Studio locally.
-  Default preview URL:
-  `http://localhost:3100/MusicVideo`
+  Start the unified local studio. This command:
+  - refreshes static web assets under `public-web/`
+  - starts the library-state sync API on `http://127.0.0.1:3210`
+  - starts the Vite web app on `http://127.0.0.1:3212`
+
+  Main local routes:
+  - `http://127.0.0.1:3212/`
+  - `http://127.0.0.1:3212/LyricsMusic`
+  - `http://127.0.0.1:3212/studio`
+  - `http://127.0.0.1:3212/studio/effects`
+  - `http://127.0.0.1:3212/studio/papers`
+
+  The old Remotion Studio URL such as `http://localhost:3000/MusicVideo` is not the current development entry anymore.
 
 - `npm run dev:web`
-  Start the Vite web-player app locally.
+  Start only the Vite web app locally, without the library-state sync API.
   Default preview URL:
-  `http://127.0.0.1:4173`
+  `http://127.0.0.1:3212`
   This command first prepares deployable static song assets under:
   `public-web/`
+  Prefer `npm run dev` for normal local work so playlist and review-state changes can be written back to `artifacts/common/library-state.json`.
 
 - `npm run build:web`
   Build the deployable static web player into:
@@ -66,8 +77,8 @@ Common commands for the frontend preview and render layer:
   - Build output directory: `dist`
 
 - `npm run use:song -- "<song-folder-name>"`
-  Switch the active preview/render song package.
-  This updates the Remotion preview entry to read from the selected song directory under:
+  Switch the active direct-render song package.
+  This updates the Remotion render entry to read from the selected song directory under:
   `artifacts/songs/`
 
 - `artifacts/common/library-state.json`

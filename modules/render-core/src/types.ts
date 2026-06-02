@@ -23,6 +23,14 @@ export type QueueTrack = {
   title: string;
   artist: string;
   accent?: string;
+  available?: boolean;
+  assetStatus?: {
+    audio: boolean;
+    audioFeatures: boolean;
+    background: boolean;
+    lyrics: boolean;
+    renderInput: boolean;
+  };
 };
 
 export type SongLibraryItem = {
@@ -40,6 +48,7 @@ export type SongLibraryItem = {
   lyrics: TimedLyricLine[];
   audioFeatures?: AudioFeatureTrack;
   accent?: string;
+  assetStatus?: QueueTrack["assetStatus"];
 };
 
 export type SongLibraryItemLoader = (songId: string) => Promise<SongLibraryItem | null>;

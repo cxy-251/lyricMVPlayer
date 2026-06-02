@@ -30,6 +30,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
     currentSong,
     currentTrack,
     filteredQueue,
+    displayQueue,
     isCurrentLiked,
     library,
     playlists,
@@ -200,7 +201,7 @@ export const VideoStage: React.FC<LyricVideoCompositionProps> = (props) => {
 
       <QueuePanel
         open={queueOpen}
-        queue={filteredQueue}
+        queue={displayQueue}
         currentTrackId={currentTrack.id}
         onClose={() => setQueueOpen(false)}
         onSelectTrack={(trackId) => {

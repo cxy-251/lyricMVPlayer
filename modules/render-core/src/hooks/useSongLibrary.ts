@@ -6,6 +6,7 @@ import {
   STORAGE_KEY,
   buildCustomPlaylists,
   createInitialCustomPlaylists,
+  normalizeTrackIds,
   type StoredLibraryState,
 } from "../domain/playlists";
 import {createSingleSongLibraryItem, DEFAULT_NICKNAME} from "../domain/songs";
@@ -19,6 +20,26 @@ import type {
 type UseSongLibraryOptions = {
   props: LyricVideoCompositionProps;
   isInteractiveAudio: boolean;
+};
+
+const createUnavailableQueueTrack = (trackId: string): QueueTrack => {
+  const parts = trackId.split(" - ");
+  const title = parts.length >= 3 ? parts.slice(0, -2).join(" - ") : trackId;
+  const artist = parts.length >= 3 ? parts[parts.length - 2] : "Missing render assets";
+  return {
+    id: trackId,
+    title,
+    artist,
+    available: false,
+    accent: "rgba(255, 180, 140, 0.68)",
+    assetStatus: {
+      audio: false,
+      audioFeatures: false,
+      background: false,
+      lyrics: false,
+      renderInput: false,
+    },
+  };
 };
 
 export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOptions) => {
@@ -75,6 +96,8 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
         if (raw) {
           const parsed = JSON.parse(raw) as Partial<StoredLibraryState>;
           const playlistSeedMap = new Map(initialCustomPlaylists.map((playlist) => [playlist.id, playlist]));
+          const initialLibraryIds = initialLibrary.map((item) => item.id);
+          const initialLibraryIdSet = new Set(initialLibraryIds);
           const storedTrackMap = new Map(
             Array.isArray(parsed.customPlaylists)
               ? parsed.customPlaylists
@@ -89,12 +112,17 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
             likedTrackIds: Array.isArray(parsed.likedTrackIds) ? parsed.likedTrackIds : [],
             customPlaylists: initialCustomPlaylists.map((playlist) => {
               const storedTrackIds = storedTrackMap.get(playlist.id);
+              const seedTrackIds = normalizeTrackIds(playlist.trackIds, initialLibraryIds);
+              const localTrackIds = storedTrackIds
+                ? normalizeTrackIds(storedTrackIds, initialLibraryIds)
+                : [];
+              const protectedSeedTrackIds = seedTrackIds.filter((trackId) => !initialLibraryIdSet.has(trackId));
               return {
                 id: playlist.id,
                 name: playlist.name,
-                trackIds: (storedTrackIds ?? playlist.trackIds).filter((trackId) =>
-                  initialLibrary.some((item) => item.id === trackId)
-                ),
+                trackIds: storedTrackIds
+                  ? Array.from(new Set([...protectedSeedTrackIds, ...localTrackIds]))
+                  : seedTrackIds,
               };
             }),
             selectedPlaylistId:
@@ -137,6 +165,7 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
         title: item.title,
         artist: item.artist,
         accent: item.accent,
+        assetStatus: item.assetStatus,
       })),
     [initialLibrary, props.queue]
   );
@@ -160,6 +189,21 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
       return queue;
     }
     return queue.filter((track) => playlist.trackIds.includes(track.id));
+  }, [customPlaylists, likedTrackIds, queue, selectedPlaylistId]);
+
+  const displayQueue = useMemo(() => {
+    if (!selectedPlaylistId || selectedPlaylistId === "all") {
+      return queue;
+    }
+    if (selectedPlaylistId === "liked") {
+      return queue.filter((track) => likedTrackIds.includes(track.id));
+    }
+    const playlist = customPlaylists.find((item) => item.id === selectedPlaylistId);
+    if (!playlist) {
+      return queue;
+    }
+    const queueById = new Map(queue.map((track) => [track.id, track]));
+    return playlist.trackIds.map((trackId) => queueById.get(trackId) ?? createUnavailableQueueTrack(trackId));
   }, [customPlaylists, likedTrackIds, queue, selectedPlaylistId]);
 
   const playlists: PlaylistSummary[] = useMemo(() => {
@@ -250,7 +294,7 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
 
         setLikedTrackIds(
           Array.isArray(parsed.likedTrackIds)
-            ? Array.from(new Set(parsed.likedTrackIds.filter((trackId) => libraryIds.includes(trackId))))
+            ? normalizeTrackIds(parsed.likedTrackIds, libraryIds)
             : []
         );
         setCustomPlaylists(nextCustomPlaylists);
@@ -346,6 +390,7 @@ export const useSongLibrary = ({props, isInteractiveAudio}: UseSongLibraryOption
     currentTrack,
     currentTrackIndex,
     customPlaylists,
+    displayQueue,
     filteredQueue,
     initialTrackIndex,
     isCurrentLiked,

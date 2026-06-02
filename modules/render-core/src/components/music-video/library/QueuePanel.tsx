@@ -12,6 +12,25 @@ type QueuePanelProps = {
   onSelectTrack: (trackId: string) => void;
 };
 
+const formatAssetStatus = (track: QueueTrack) => {
+  if (track.available === false) {
+    return "missing public assets";
+  }
+
+  const status = track.assetStatus;
+  if (!status) {
+    return track.artist;
+  }
+
+  const parts = [
+    status.audio ? "audio" : "no audio",
+    status.background ? "background" : "no background",
+    status.lyrics ? "lyrics" : "no lyrics",
+  ];
+
+  return `${track.artist} · ${parts.join(" · ")}`;
+};
+
 export const QueuePanel: React.FC<QueuePanelProps> = ({
   open,
   queue,
@@ -43,14 +62,18 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({
           {queue.map((track) => (
             <button
               key={track.id}
+              disabled={track.available === false}
               className={cn(
                 "rounded-[22px] border bg-white/4 px-[20px] py-[18px] text-left transition",
-                track.id === currentTrackId ? "border-blue-300/60 bg-blue-300/10" : "border-white/8"
+                track.id === currentTrackId ? "border-blue-300/60 bg-blue-300/10" : "border-white/8",
+                track.available === false ? "cursor-not-allowed opacity-55" : ""
               )}
               onClick={() => onSelectTrack(track.id)}
             >
               <div className="text-[20px] font-semibold text-white/94">{track.title}</div>
-              <div className="mt-[6px] text-[15px] text-white/58">{track.artist}</div>
+              <div className="mt-[6px] text-[15px] text-white/58">
+                {formatAssetStatus(track)}
+              </div>
             </button>
           ))}
         </div>

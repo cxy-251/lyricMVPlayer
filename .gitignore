@@ -9,10 +9,17 @@ coverage/
 __pycache__/
 *.pyc
 
+# Paper video source is integrated under modules; generated outputs stay isolated.
+modules/paper-video/apps/editor-web/dist/
+modules/paper-video/output/
+modules/paper-video/release/
+modules/paper-video/build/
+
 # Keep artifacts under version control only when they are needed by the web player.
 artifacts/*
 !artifacts/common/
 !artifacts/songs/
+!artifacts/paper-video/
 
 # Common files needed for queue/library playback state.
 artifacts/common/*
@@ -41,3 +48,5 @@ artifacts/songs/*/*
 
 # Render outputs are publish artifacts, not required for the player site bundle.
 artifacts/songsout/
+artifacts/paper-video/*
+!artifacts/paper-video/.gitkeep

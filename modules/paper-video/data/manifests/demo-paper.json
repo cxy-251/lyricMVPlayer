@@ -1,0 +1,145 @@
+{
+  "projectId": "demo-paper-001",
+  "seed": 42,
+  "locale": "zh-CN",
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "data/templates/paper-digest-v1.json"
+  },
+  "contentProfile": {
+    "id": "demo-layout-priors"
+  },
+  "coverProfile": {
+    "id": "portrait-default"
+  },
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "platform": "douyin"
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2501.12345",
+    "title": "Diffusion Models Learn to Understand Layout Priors"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "life-game"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b1ffe9",
+      "secondaryColor": "#fff9ef",
+      "birthColor": "#a5d8ff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.48rem, 5vw + 0.7rem, 5.6rem)",
+      "bodySize": "clamp(1.18rem, 1.95vw + 0.55rem, 2.42rem)",
+      "bulletSize": "clamp(1.1rem, 1.78vw + 0.52rem, 2.12rem)",
+      "subtitleSize": "clamp(1.12rem, 1.52vw + 0.54rem, 1.94rem)"
+    },
+    "textMotions": {
+      "fade-up": {
+        "enterFrames": 12,
+        "maxLiftPx": 14,
+        "minOpacity": 0.28,
+        "bodyDelayFrames": 2,
+        "bulletsStaggerFrames": 3
+      },
+      "slide-up": {
+        "enterFrames": 16,
+        "maxLiftPx": 24,
+        "minOpacity": 0.18,
+        "bodyDelayFrames": 3,
+        "bulletsStaggerFrames": 4
+      },
+      "stagger-rise": {
+        "enterFrames": 18,
+        "maxLiftPx": 18,
+        "minOpacity": 0.2,
+        "bodyDelayFrames": 4,
+        "bulletsStaggerFrames": 5
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "contentRef": "hook",
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "cover-full",
+      "backgroundEffectId": "aurora",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio"
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "contentRef": "problem",
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "cover-focus-tl",
+      "backgroundEffectId": "cellular-launch",
+      "motionPresetId": "slide-up",
+      "durationStrategy": "auto-by-audio"
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "contentRef": "method",
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "cover-focus-tr",
+      "backgroundEffectId": "cellular-life",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio"
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "contentRef": "value",
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "cover-focus-br",
+      "backgroundEffectId": "cellular-life",
+      "motionPresetId": "stagger-rise",
+      "durationStrategy": "auto-by-audio"
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "contentRef": "ending",
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "cover-focus-bl",
+      "backgroundEffectId": "cellular-life",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio"
+    }
+  ]
+}

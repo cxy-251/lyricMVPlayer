@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "description": "Automated lyric video production pipeline using Remotion, TypeScript, and generated visuals.",
+  "workspaces": [
+    "modules/paper-video/apps/*",
+    "modules/paper-video/packages/*"
+  ],
   "scripts": {
     "dev": "node tools/dev-with-sync.mjs",
-    "dev:web": "node tools/build-web-public.mjs && vite",
+    "dev:web": "node tools/build-web-public.mjs && vite --host 127.0.0.1 --port 3212",
     "build:web": "node tools/build-web-public.mjs && vite build",
     "refresh:cookies": "conda run -n kwai python modules/audio-download/refresh_youtube_cookies.py /Users/cxy251/Code/04AIMedia/lyricMVPlayer",
     "prepare:playlist": "node tools/prepare-playlist.mjs",
@@ -13,6 +17,25 @@
     "generate:backgrounds": "node tools/generate-backgrounds.mjs queue",
     "apply:manual-lyrics": "node tools/apply-manual-lyrics.mjs",
     "render:queue": "node tools/render-queued-videos.mjs",
+    "render:paper": "cd modules/paper-video && node --import tsx ../../tools/paper-video/build-video.ts",
+    "paper:typecheck": "tsc --noEmit -p modules/paper-video/apps/editor-web/tsconfig.json && tsc --noEmit -p modules/paper-video/apps/video-renderer/tsconfig.json",
+    "paper:produce": "cd modules/paper-video && node --import tsx ../../tools/paper-video/produce-video.ts",
+    "paper:compose": "cd modules/paper-video && node --import tsx ../../tools/paper-video/compose-manifest.ts",
+    "paper:generate-audio": "cd modules/paper-video && node --import tsx ../../tools/paper-video/generate-audio.ts",
+    "paper:fetch:arxiv-ai": "cd modules/paper-video && node --import tsx ../../tools/paper-video/fetch-arxiv-ai.ts",
+    "paper:update-urls": "cd modules/paper-video && node --import tsx ../../tools/paper-video/update-paper-urls.ts",
+    "paper:build-source-bundle": "cd modules/paper-video && node --import tsx ../../tools/paper-video/build-source-bundle.ts",
+    "analyze:paper-sources": "cd modules/paper-video && node --import tsx ../../tools/paper-video/analyze-paper-sources.ts",
+    "paper:build-video-batch": "cd modules/paper-video && node --import tsx ../../tools/paper-video/build-video-batch.ts",
+    "paper:create-manifest": "cd modules/paper-video && node --import tsx ../../tools/paper-video/create-video-manifest.ts",
+    "paper:extract-pdf-text": "cd modules/paper-video && node --import tsx ../../tools/paper-video/extract-pdf-text.ts",
+    "paper:prepare-cover-image": "cd modules/paper-video && node --import tsx ../../tools/paper-video/prepare-cover-image.ts",
+    "prepare:latest-ai-batch": "cd modules/paper-video && node --import tsx ../../tools/paper-video/prepare-latest-ai-batch.ts",
+    "produce:paper-urls": "cd modules/paper-video && node --import tsx ../../tools/paper-video/produce-paper-urls.ts",
+    "produce:paper-urls:donut": "cd modules/paper-video && node --import tsx ../../tools/paper-video/produce-paper-url-donut-batch.ts",
+    "paper:produce-effect": "cd modules/paper-video && node --import tsx ../../tools/paper-video/produce-effect-video.ts",
+    "paper:import-summary-json": "cd modules/paper-video && node --import tsx ../../tools/paper-video/import-summary-json.ts",
+    "paper:scaffold-manifests": "cd modules/paper-video && node --import tsx ../../tools/paper-video/scaffold-paper-manifests.ts",
     "use:song": "node tools/select-song-for-preview.mjs",
     "render": "node tools/render-current-song.mjs",
     "typecheck": "tsc --noEmit"
@@ -26,13 +49,17 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "remotion": "^4.0.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.461",
+    "@types/node": "^24.9.1",
+    "@types/three": "^0.184.0",
     "@vitejs/plugin-react": "^5.0.4",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.0",
     "vite": "^7.1.7"
   }

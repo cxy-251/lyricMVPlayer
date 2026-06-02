@@ -13,7 +13,7 @@ The project needs a minimal vertical slice before integrating downloading, lyric
 
 - create the render-core public types
 - create the render-core validation entrypoint
-- create the minimal Remotion composition root
+- create the minimal Remotion render root
 - create a sample composition payload for local development
 - document the module boundary and public interface
 
@@ -43,7 +43,7 @@ The project needs a minimal vertical slice before integrating downloading, lyric
 - `render-core` has a documented public interface
 - `render-core` exports reusable types
 - `render-core` exports a validation function for composition props
-- Remotion root registers one working composition shape
+- Remotion render root registers one working composition shape
 - later modules can depend on the render-core contract without importing UI internals
 
 ## Validation steps
@@ -51,7 +51,7 @@ The project needs a minimal vertical slice before integrating downloading, lyric
 - inspect the module task doc and confirm public API is explicit
 - inspect `modules/render-core/src/index.ts` and confirm only public exports are exposed
 - inspect `modules/render-core/src/validate-composition.ts` and confirm prop validation is deterministic
-- inspect `src/remotion/Root.tsx` and confirm one composition is registered
+- inspect `src/remotion/RenderRoot.tsx` and confirm the render composition is registered
 
 ## Notes / Risks
 

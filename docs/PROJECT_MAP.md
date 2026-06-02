@@ -10,6 +10,7 @@ lyricMVPlayer/
 ├─ package.json
 ├─ remotion.config.ts
 ├─ tsconfig.json
+├─ vite.config.ts
 ├─ docs/
 │  ├─ PROJECT_SCOPE.md
 │  ├─ PROJECT_MAP.md
@@ -27,15 +28,20 @@ lyricMVPlayer/
 │  ├─ playlist-pipeline/
 │  ├─ background-generation/
 │  ├─ video-render/
+│  ├─ paper-video/
 │  ├─ history-dedupe/
 │  └─ single-song-pipeline/
 ├─ artifacts/
 │  ├─ common/
+│  ├─ paper-video/
 │  ├─ songsout/
 │  └─ songs/
+├─ public-web/
 ├─ src/
 │  ├─ remotion/
+│  ├─ web/
 │  └─ styles/
+├─ tools/
 └─ tasks/
    └─ TASK_TEMPLATE.md
 ```
@@ -52,10 +58,13 @@ lyricMVPlayer/
   Large source requirements document describing the intended full system.
 
 - `package.json`
-  Initial project manifest for the render-core task.
+  Project manifest and npm command surface. `npm run dev` is the unified local studio entry.
 
 - `remotion.config.ts`
-  Initial Remotion configuration.
+  Remotion configuration for final video rendering.
+
+- `vite.config.ts`
+  Vite configuration for the unified local studio and deployable web app.
 
 - `tsconfig.json`
   TypeScript compiler configuration.
@@ -73,12 +82,15 @@ lyricMVPlayer/
   Tracks project workstreams and feature progress.
 
 - `modules/`
-  Module folders. Pipeline-facing modules should keep their own Python code beside their task files.
+  Module folders. Pipeline-facing modules should keep their own Python code beside their task files. Shared render UI, paper-video tooling, and reusable visual effects also live here.
 
 - `artifacts/common/`
   Shared cross-song state such as downloaded ID archives.
   Shared downloadable model files should also live under `artifacts/common/models/`.
-  The render control CSV also lives here as `render-queue.csv`.
+  The render control CSV also lives here as `production-queue.csv`.
+
+- `artifacts/paper-video/`
+  Paper-video generated outputs and imported run artifacts. These are isolated from song artifacts.
 
 - `artifacts/songs/`
   One folder per song. Audio, lyrics, prompt files, generated images, and per-song temporary render outputs should stay together here.
@@ -87,18 +99,24 @@ lyricMVPlayer/
   Final exported MP4 files using the song folder name as the filename.
 
 - `src/remotion/`
-  Thin top-level Remotion integration entry plus preview binding for the currently selected song package.
+  Thin Remotion render integration entry plus binding for the currently selected song package.
+
+- `src/web/`
+  Unified Vite studio entry. It serves LyricsMusic, the studio index, effect previews, and paper playback pages.
 
 - `src/styles/`
   Thin global reset / Tailwind entry only. Main HUD layout now lives inside render-core components.
+
+- `tools/`
+  Node and TypeScript orchestration scripts for local dev, asset manifest generation, playlist preparation, background generation, paper-video production, and render queue execution.
 
 - `tasks/TASK_TEMPLATE.md`
   Standard format for implementation or diagnosis tasks.
 
 ## Current codebase reality
 
-- A minimal render-core skeleton now exists.
-- The Remotion preview root now binds to one real `render-input.json` from `artifacts/songs/...`.
+- The unified local studio is the default development UI and starts with `npm run dev`.
+- The Remotion render root still binds to one real `render-input.json` from `artifacts/songs/...` for direct MP4 rendering.
 - A first non-mock source-ingestion Python module now exists for single-song YouTube URL normalization.
 - A first audio-download Python module now exists and is designed around `yt-dlp` plus download-archive dedupe.
 - A first lyrics Python module now exists with timed-lyrics fallback structure and two real providers in scope.
@@ -108,13 +126,14 @@ lyricMVPlayer/
 - A first playlist-pipeline module now exists to prepare playlist entries up to song-package readiness without starting MP4 renders.
 - A first background-generation Python module now exists to generate subjectless illustration prompt packages.
 - A first single-song pipeline runner now exists to compose source, audio, and lyrics into one saved result.
+- Paper-video tooling has been folded under `modules/paper-video/`, with generated paper outputs isolated under `artifacts/paper-video/`.
+- WebGL/Three visual effects are exposed through the shared render-core effect registry and the unified `/studio/effects` page.
 - Song artifacts are now grouped by per-song folder using the naming pattern `song title - artist - id`.
 - The currently active preview/render song is tracked in `src/remotion/current-song.json` and can be switched with `npm run use:song -- "<song-folder-name>"`.
 - Shared downloaded-ID state now lives in `artifacts/common/`.
 - The Remotion composition contract still lives under `modules/render-core/src/`.
 - The fixed player HUD now lives under `modules/render-core/src/components/music-video/`.
-- There is no CLI yet.
-- There is no full video pipeline yet, but the first single-song ingestion runner now exists.
+- The Vite web app reads generated manifests from `public-web/` so large song and paper assets are not bundled into the JavaScript entry.
 
 ## Expected future implementation areas
 

@@ -1,0 +1,8 @@
+[project]
+name = "paper-to-video-tts"
+version = "0.1.0"
+description = "Edge TTS service for PaperToVideo"
+requires-python = ">=3.11"
+dependencies = [
+  "edge-tts"
+]

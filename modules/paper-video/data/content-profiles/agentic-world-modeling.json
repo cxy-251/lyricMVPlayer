@@ -1,0 +1,57 @@
+{
+  "id": "agentic-world-modeling",
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2604.22748v1",
+    "title": "Agentic World Modeling: Foundations, Capabilities, Laws, and Beyond",
+    "categories": [
+      "cs.AI"
+    ],
+    "publishedAt": "2026-04-24T17:48:47Z"
+  },
+  "scenes": {
+    "hook": {
+      "narrationText": "这篇论文不是在做单点模型改进，而是在重新整理 AI agent 的 world modeling 全景。",
+      "content": {
+        "title": "Agentic World Modeling",
+        "body": "它试图回答一个更底层的问题：智能体到底该怎样理解和模拟环境。"
+      }
+    },
+    "problem": {
+      "narrationText": "作者想解决的问题是：当智能体开始在真实环境里持续行动时，我们到底该怎样定义和评估 world model。",
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "不是只谈模型能力，而是想统一定义、评估方式和研究边界。"
+      }
+    },
+    "method": {
+      "narrationText": "论文提出了一个 levels x laws 的分析框架，把能力层级和约束类型放到同一张图里，并梳理了整个 agent world model 研究脉络。",
+      "content": {
+        "title": "核心方法",
+        "bullets": [
+          "用 levels x laws 统一框架",
+          "区分 predictor、simulator、evolver",
+          "把 physical、digital、social、scientific 环境放在同一张图里"
+        ]
+      }
+    },
+    "value": {
+      "narrationText": "它的价值不只是综述，而是把 predictor、simulator、evolver 这些能力层级统一到了同一个研究坐标系里。",
+      "content": {
+        "title": "为什么值得看？",
+        "bullets": [
+          "帮助理解 agent world model 的全景图",
+          "把不同研究社区的语言对齐起来",
+          "适合做这个方向的入门总览"
+        ]
+      }
+    },
+    "ending": {
+      "narrationText": "如果你在关注 agent、world model 和长期规划，这篇综述非常适合作为进入这个方向的起点。",
+      "content": {
+        "title": "一句话结论",
+        "body": "世界模型不再只是预测下一步，而是在为可行动的智能体搭建环境理解能力。"
+      }
+    }
+  }
+}

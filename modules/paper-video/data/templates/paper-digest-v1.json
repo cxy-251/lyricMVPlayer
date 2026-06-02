@@ -1,0 +1,27 @@
+{
+  "id": "paper-digest-v1",
+  "version": "1.0.0",
+  "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+  "sceneTemplates": [
+    {
+      "sceneType": "hero",
+      "nodes": [
+        {"id": "hero-avatar", "componentId": "cover-avatar", "zone": "primary"},
+        {"id": "hero-kicker", "componentId": "scene-kicker", "zone": "primary"},
+        {"id": "hero-title", "componentId": "scene-title", "zone": "primary"},
+        {"id": "hero-body", "componentId": "scene-body", "zone": "primary"},
+        {"id": "hero-subtitle", "componentId": "subtitle-panel", "zone": "secondary"}
+      ]
+    },
+    {
+      "sceneType": "default",
+      "nodes": [
+        {"id": "default-kicker", "componentId": "scene-kicker", "zone": "primary"},
+        {"id": "default-title", "componentId": "scene-title", "zone": "primary"},
+        {"id": "default-body", "componentId": "scene-body", "zone": "primary"},
+        {"id": "default-bullets", "componentId": "scene-bullets", "zone": "primary"},
+        {"id": "default-subtitle", "componentId": "subtitle-panel", "zone": "secondary"}
+      ]
+    }
+  ]
+}

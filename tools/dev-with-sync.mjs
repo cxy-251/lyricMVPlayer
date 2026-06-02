@@ -1,17 +1,31 @@
-import {spawn} from "node:child_process";
+import {spawn, spawnSync} from "node:child_process";
 import path from "node:path";
 
 const projectRoot = process.cwd();
 const syncServerPath = path.join(projectRoot, "tools", "library-state-sync-server.mjs");
-const startedAt = Date.now();
-let remotionHandledAsExisting = false;
+const buildPublicPath = path.join(projectRoot, "tools", "build-web-public.mjs");
+const viteCommand = path.join(
+  projectRoot,
+  "node_modules",
+  ".bin",
+  process.platform === "win32" ? "vite.cmd" : "vite",
+);
+
+const buildResult = spawnSync(process.execPath, [buildPublicPath], {
+  cwd: projectRoot,
+  stdio: "inherit",
+});
+
+if (buildResult.status !== 0) {
+  process.exit(buildResult.status ?? 1);
+}
 
 const syncServer = spawn(process.execPath, [syncServerPath], {
   cwd: projectRoot,
   stdio: "inherit",
 });
 
-const remotion = spawn("npx", ["remotion", "studio", "src/remotion/Root.tsx"], {
+const webApp = spawn(viteCommand, ["--host", "127.0.0.1", "--port", "3212"], {
   cwd: projectRoot,
   stdio: "inherit",
   shell: process.platform === "win32",
@@ -21,8 +35,8 @@ const shutdown = (code = 0) => {
   if (!syncServer.killed) {
     syncServer.kill("SIGTERM");
   }
-  if (!remotion.killed) {
-    remotion.kill("SIGTERM");
+  if (!webApp.killed) {
+    webApp.kill("SIGTERM");
   }
   process.exit(code);
 };
@@ -33,20 +47,9 @@ syncServer.on("exit", (code) => {
   }
 });
 
-remotion.on("exit", (code) => {
-  const livedMs = Date.now() - startedAt;
-  if ((code ?? 0) === 0 && livedMs < 10_000) {
-    remotionHandledAsExisting = true;
-    process.stdout.write("[dev-with-sync] Remotion is already running on port 3000; keeping library-state sync server alive.\n");
-    return;
-  }
-
+webApp.on("exit", (code) => {
   shutdown(code ?? 0);
 });
 
 process.on("SIGINT", () => shutdown(0));
 process.on("SIGTERM", () => shutdown(0));
-
-if (remotionHandledAsExisting) {
-  process.stdin.resume();
-}

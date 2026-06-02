@@ -27,9 +27,8 @@ export const normalizeTrackIds = (trackIds: unknown, libraryIds: string[]): stri
     return [];
   }
 
-  const libraryIdSet = new Set(libraryIds);
   return Array.from(
-    new Set(trackIds.filter((trackId): trackId is string => typeof trackId === "string" && libraryIdSet.has(trackId)))
+    new Set(trackIds.filter((trackId): trackId is string => typeof trackId === "string" && trackId.length > 0))
   );
 };
 
@@ -53,10 +52,17 @@ export const buildCustomPlaylists = (
   return mergedIds.map((playlistId) => {
     const base = baseMap.get(playlistId);
     const persisted = persistedList.find((playlist) => playlist.id === playlistId);
+    const baseTrackIds = normalizeTrackIds(base?.trackIds ?? [], libraryIds);
+    const persistedTrackIds =
+      persisted && "trackIds" in persisted ? normalizeTrackIds(persisted.trackIds, libraryIds) : [];
+    const libraryIdSet = new Set(libraryIds);
+    const protectedBaseTrackIds = baseTrackIds.filter((trackId) => !libraryIdSet.has(trackId));
     return {
       id: playlistId,
       name: persisted?.name ?? base?.name ?? playlistId,
-      trackIds: normalizeTrackIds(persisted?.trackIds ?? base?.trackIds ?? [], libraryIds),
+      trackIds: persisted
+        ? Array.from(new Set([...protectedBaseTrackIds, ...persistedTrackIds]))
+        : baseTrackIds,
     };
   });
 };
