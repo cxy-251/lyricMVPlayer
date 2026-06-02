@@ -30,6 +30,7 @@ export type RawRenderInput = {
     leftVertical?: string | null;
     rightVertical?: string | null;
     bottomLine?: string | null;
+    sonnetLines?: string[] | null;
   };
   lyrics?: RawTimedLyricLine[];
 };

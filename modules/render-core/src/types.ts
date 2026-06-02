@@ -16,6 +16,7 @@ export type PoetryFrame = {
   leftVertical: string;
   rightVertical: string;
   bottomLine: string;
+  sonnetLines?: string[];
 };
 
 export type QueueTrack = {

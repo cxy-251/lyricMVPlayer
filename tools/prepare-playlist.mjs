@@ -8,6 +8,7 @@ const defaultRenderBatch = process.argv[3] ?? "0";
 const recentDownloadsPath = path.join(projectRoot, "artifacts", "common", "recent-downloads.json");
 const playlistPipelineResultPath = path.join(projectRoot, "artifacts", "common", "playlist-pipeline.json");
 const libraryStatePath = path.join(projectRoot, "artifacts", "common", "library-state.json");
+const buildWebPublicScriptPath = path.join(projectRoot, "tools", "build-web-public.mjs");
 const NEW_DOWNLOADS_PLAYLIST_ID = "new-downloads";
 const NEW_DOWNLOADS_PLAYLIST_NAME = "New Downloads";
 const LYRICS_REVIEW_PLAYLIST_ID = "lyrics-review";
@@ -220,6 +221,14 @@ if (fs.existsSync(currentSongConfigPath)) {
       process.exit(refreshResult.status ?? 1);
     }
   }
+}
+
+const webRefreshResult = spawnSync("node", [buildWebPublicScriptPath], {
+  cwd: projectRoot,
+  stdio: "inherit",
+});
+if ((webRefreshResult.status ?? 1) !== 0) {
+  process.exit(webRefreshResult.status ?? 1);
 }
 
 process.exit(0);

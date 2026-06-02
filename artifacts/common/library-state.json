@@ -1,12 +1,22 @@
 {
   "nickname": "CleanKsen",
-  "selectedPlaylistId": "lyrics-review",
+  "selectedPlaylistId": "all",
   "likedTrackIds": [],
   "customPlaylists": [
     {
       "id": "new-downloads",
       "name": "New Downloads",
-      "trackIds": []
+      "trackIds": [
+        "Lucky - Jason Mraz - ezVbN7e-L7Y",
+        "I Know a Place - chevy - K6QK_dVk8BY",
+        "let's run away - Sarah Kang Music - rqpra7nXL_g",
+        "Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4",
+        "Every Second - Mina Okabe - cXf3do6ltzU",
+        "lazy afternoon - Sarah Kang Music - RiU3HRYTM7Q",
+        "Valentine - Laufey - Ejvz4EdcXM0",
+        "Nothing - Milena 밀레나 - _LvN1NhCeIU",
+        "comethru - Jeremy Zucker - X1R7SrjI_o8"
+      ]
     },
     {
       "id": "lyrics-review",
@@ -17,7 +27,11 @@
         "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
         "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
         "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
-        "Forever - Mina Okabe - ke_3MpO1m_o"
+        "Forever - Mina Okabe - ke_3MpO1m_o",
+        "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
+        "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+        "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+        "Girls ft. Cardi B- Bebe Rexha & Charli XCX [Official Video] - Rita Ora - ExJmET8boVw"
       ]
     },
     {

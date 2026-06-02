@@ -1,0 +1,212 @@
+{
+  "title": "Valentine",
+  "artist": "Laufey",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Valentine - Laufey - Ejvz4EdcXM0/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 5640,
+  "renderDurationInFrames": 4728,
+  "durationInFrames": 5067,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Valentine - Laufey - Ejvz4EdcXM0/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE HEARTBEAT ACCELERATES BEYOND CONTROL'S GRIP.",
+    "rightVertical": "A QUIET SHOCK WASHES OVER YEARS OF GUARDED SILENCE.",
+    "bottomLine": "THIS UNEXPECTED BLOOM REQUIRES ALL MY FAITH.",
+    "sonnetLines": [
+      "The walls I built were strong and high,",
+      "A fortress against the passing sky.",
+      "I swore my heart was made of stone,",
+      "Content to walk this path alone.",
+      "But sunlight found a hidden seam,",
+      "Waking up a forgotten dream.",
+      "A simple glance, a whispered name,",
+      "Ignites a sudden, gentle flame.",
+      "My careful walls began to bend,",
+      "Where fear and sweet desire blend.",
+      "I didn't know the depth of grace,",
+      "Or how to hold this fragile space.",
+      "Just caught within the golden light,",
+      "And suddenly everything felt right."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 8640,
+      "endMs": 11380,
+      "text": "I've rejected affection"
+    },
+    {
+      "startMs": 12230,
+      "endMs": 14720,
+      "text": "For years and years"
+    },
+    {
+      "startMs": 15260,
+      "endMs": 18120,
+      "text": "Now I have it and damn it"
+    },
+    {
+      "startMs": 18120,
+      "endMs": 20360,
+      "text": "It's kind of weird"
+    },
+    {
+      "startMs": 21080,
+      "endMs": 23400,
+      "text": "He tells me I'm pretty"
+    },
+    {
+      "startMs": 23930,
+      "endMs": 26560,
+      "text": "Don't know how to respond"
+    },
+    {
+      "startMs": 26940,
+      "endMs": 29640,
+      "text": "I tell him that he's pretty too"
+    },
+    {
+      "startMs": 29820,
+      "endMs": 32380,
+      "text": "Can I say that? Don't have a clue"
+    },
+    {
+      "startMs": 32870,
+      "endMs": 35080,
+      "text": "With every passing moment"
+    },
+    {
+      "startMs": 35600,
+      "endMs": 38200,
+      "text": "I surprise myself"
+    },
+    {
+      "startMs": 38650,
+      "endMs": 40100,
+      "text": "I'm scared of flies"
+    },
+    {
+      "startMs": 40160,
+      "endMs": 41460,
+      "text": "I'm scared of guys"
+    },
+    {
+      "startMs": 41710,
+      "endMs": 43890,
+      "text": "Someone please help"
+    },
+    {
+      "startMs": 44450,
+      "endMs": 46760,
+      "text": "'Cause I think I've fallen"
+    },
+    {
+      "startMs": 47380,
+      "endMs": 49880,
+      "text": "In love this time"
+    },
+    {
+      "startMs": 50270,
+      "endMs": 58340,
+      "text": "I blinked and suddenly I had a valentine (be my valentine)"
+    },
+    {
+      "startMs": 58340,
+      "endMs": 62540,
+      "text": "♪"
+    },
+    {
+      "startMs": 80320,
+      "endMs": 84900,
+      "text": "What if he's the last one I kiss?"
+    },
+    {
+      "startMs": 85880,
+      "endMs": 91360,
+      "text": "What if he's the only one I'll ever miss?"
+    },
+    {
+      "startMs": 91900,
+      "endMs": 97290,
+      "text": "Maybe I should run, I'm only twenty-one"
+    },
+    {
+      "startMs": 97290,
+      "endMs": 101990,
+      "text": "I don't even know who I want to become"
+    },
+    {
+      "startMs": 106050,
+      "endMs": 111210,
+      "text": "I've lost all control of my heartbeat now"
+    },
+    {
+      "startMs": 111880,
+      "endMs": 116830,
+      "text": "Got caught in a romance with him somehow"
+    },
+    {
+      "startMs": 117650,
+      "endMs": 123200,
+      "text": "I still feel a shock through every bone"
+    },
+    {
+      "startMs": 123790,
+      "endMs": 126360,
+      "text": "When I hear an, \"I love you\""
+    },
+    {
+      "startMs": 126470,
+      "endMs": 129610,
+      "text": "'Cause now I've got someone to lose"
+    },
+    {
+      "startMs": 130199,
+      "endMs": 134849,
+      "text": "The first one to ever like me back"
+    },
+    {
+      "startMs": 135280,
+      "endMs": 140230,
+      "text": "I'm seconds away from a heart attack"
+    },
+    {
+      "startMs": 141540,
+      "endMs": 147140,
+      "text": "How the hell did I fall in love this time?"
+    },
+    {
+      "startMs": 147290,
+      "endMs": 152440,
+      "text": "And honestly, I can't believe I get to call you mine"
+    },
+    {
+      "startMs": 153060,
+      "endMs": 154640,
+      "text": "I blinked and suddenly"
+    },
+    {
+      "startMs": 155170,
+      "endMs": 157550,
+      "text": "I had a valentine"
+    },
+    {
+      "startMs": 160140,
+      "endMs": 161272,
+      "text": "Valentine"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Valentine - Laufey - Ejvz4EdcXM0",
+  "outputMp4Name": "Valentine - Laufey.mp4"
+}

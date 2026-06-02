@@ -1,0 +1,282 @@
+{
+  "title": "Every Second",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Every Second - Mina Okabe - cXf3do6ltzU/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5377,
+  "durationInFrames": 5462,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Every Second - Mina Okabe - cXf3do6ltzU/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF EVERY PASSING SECOND",
+    "rightVertical": "A MOMENT SUSPENDED IN GOLDEN LIGHT",
+    "bottomLine": "ALWAYS REMEMBER THIS SOFT, FLEETING HUE.",
+    "sonnetLines": [
+      "To hold the hours like fragile glass,",
+      "Before the current pulls them past.",
+      "We build our peace in fading gleam,",
+      "A waking echo of a dream.",
+      "The worry whispers on the breeze,",
+      "Of futures lost among the trees.",
+      "Oh, let the clock hand pause its sweep,",
+      "While silent promises we keep.",
+      "This warmth is precious, thin, and frail,",
+      "Against the coming winter gale.",
+      "We gather moments like fine sand,",
+      "Held gently in an open hand.",
+      "Lest time should steal what we adore,",
+      "And leave us wanting something more."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 220,
+      "endMs": 2220,
+      "text": "Every second, every day"
+    },
+    {
+      "startMs": 3430,
+      "endMs": 7060,
+      "text": "I spend hoping we never change, love when you"
+    },
+    {
+      "startMs": 7380,
+      "endMs": 9480,
+      "text": "Never wait or hesitate"
+    },
+    {
+      "startMs": 10850,
+      "endMs": 14460,
+      "text": "To tell me what is on your mind, really do"
+    },
+    {
+      "startMs": 14740,
+      "endMs": 17960,
+      "text": "Enjoy your company, I think you would agree"
+    },
+    {
+      "startMs": 18400,
+      "endMs": 21620,
+      "text": "Just where you'd rather be is right here with me"
+    },
+    {
+      "startMs": 22090,
+      "endMs": 24710,
+      "text": "Make my day in every way"
+    },
+    {
+      "startMs": 25820,
+      "endMs": 28900,
+      "text": "Know I'll be okay when you are around"
+    },
+    {
+      "startMs": 30080,
+      "endMs": 32940,
+      "text": "I just want to stop"
+    },
+    {
+      "startMs": 33650,
+      "endMs": 36660,
+      "text": "Worrying 'bout what could come"
+    },
+    {
+      "startMs": 36920,
+      "endMs": 40060,
+      "text": "I really like it here in your arms"
+    },
+    {
+      "startMs": 40510,
+      "endMs": 43360,
+      "text": "Thinking this is where I belong"
+    },
+    {
+      "startMs": 44120,
+      "endMs": 47320,
+      "text": "I had no doubt in my mind we would make it far"
+    },
+    {
+      "startMs": 48090,
+      "endMs": 51040,
+      "text": "Now I fear a change, want time to stop"
+    },
+    {
+      "startMs": 51970,
+      "endMs": 54290,
+      "text": "Waiting for an argument"
+    },
+    {
+      "startMs": 55150,
+      "endMs": 58030,
+      "text": "Inevitable, but don't know how bad"
+    },
+    {
+      "startMs": 58840,
+      "endMs": 61760,
+      "text": "The smallest things will get to you"
+    },
+    {
+      "startMs": 62710,
+      "endMs": 65880,
+      "text": "Hoping we won't be a thing of the past"
+    },
+    {
+      "startMs": 66550,
+      "endMs": 69780,
+      "text": "But where we are today is where I want to stay"
+    },
+    {
+      "startMs": 70100,
+      "endMs": 73200,
+      "text": "Leave worries far away when you're here with me"
+    },
+    {
+      "startMs": 73880,
+      "endMs": 76500,
+      "text": "I should just enjoy this time"
+    },
+    {
+      "startMs": 77360,
+      "endMs": 81160,
+      "text": "In case we end up leaving all this behind"
+    },
+    {
+      "startMs": 81780,
+      "endMs": 84840,
+      "text": "I just need to stop"
+    },
+    {
+      "startMs": 85440,
+      "endMs": 87840,
+      "text": "Worrying 'bout what could come"
+    },
+    {
+      "startMs": 88680,
+      "endMs": 91700,
+      "text": "I really like it here in your arms"
+    },
+    {
+      "startMs": 92220,
+      "endMs": 95040,
+      "text": "Thinking this is where I belong"
+    },
+    {
+      "startMs": 95750,
+      "endMs": 99020,
+      "text": "I had no doubt in my mind we would make it far"
+    },
+    {
+      "startMs": 99660,
+      "endMs": 102820,
+      "text": "Now I fear a change, want time to stop"
+    },
+    {
+      "startMs": 103810,
+      "endMs": 106540,
+      "text": "Yeah, I'm always with you"
+    },
+    {
+      "startMs": 107150,
+      "endMs": 110480,
+      "text": "I wanna remember this moment in time"
+    },
+    {
+      "startMs": 111250,
+      "endMs": 114040,
+      "text": "Though I'm always with you"
+    },
+    {
+      "startMs": 114430,
+      "endMs": 117560,
+      "text": "I wanna remember if we leave this behind"
+    },
+    {
+      "startMs": 118180,
+      "endMs": 121280,
+      "text": "I really like it here in your arms"
+    },
+    {
+      "startMs": 121840,
+      "endMs": 124840,
+      "text": "Thinking this is where I belong"
+    },
+    {
+      "startMs": 125390,
+      "endMs": 128560,
+      "text": "I had no doubt in my mind we would make it far"
+    },
+    {
+      "startMs": 129220,
+      "endMs": 132840,
+      "text": "Now I fear a change, want time to stop"
+    },
+    {
+      "startMs": 132940,
+      "endMs": 136060,
+      "text": "I really like it here in your arms"
+    },
+    {
+      "startMs": 136579,
+      "endMs": 139539,
+      "text": "Thinking this is where I belong"
+    },
+    {
+      "startMs": 140150,
+      "endMs": 143400,
+      "text": "I had no doubt in my mind we would make it far"
+    },
+    {
+      "startMs": 144030,
+      "endMs": 147650,
+      "text": "Now I fear a change, want time to stop"
+    },
+    {
+      "startMs": 147650,
+      "endMs": 150730,
+      "text": "Yeah, I'm always with you"
+    },
+    {
+      "startMs": 151480,
+      "endMs": 154580,
+      "text": "I wanna remember this moment in time"
+    },
+    {
+      "startMs": 155550,
+      "endMs": 158520,
+      "text": "Though I'm always with you"
+    },
+    {
+      "startMs": 158750,
+      "endMs": 162090,
+      "text": "I wanna remember if we leave this behind"
+    },
+    {
+      "startMs": 162970,
+      "endMs": 165860,
+      "text": "Yeah, I'm always with you"
+    },
+    {
+      "startMs": 166120,
+      "endMs": 169420,
+      "text": "I wanna remember this moment in time"
+    },
+    {
+      "startMs": 170310,
+      "endMs": 173060,
+      "text": "Though I'm always with you"
+    },
+    {
+      "startMs": 173510,
+      "endMs": 177250,
+      "text": "I wanna remember if we leave this behind"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Every Second - Mina Okabe - cXf3do6ltzU",
+  "outputMp4Name": "Every Second - Mina Okabe.mp4"
+}

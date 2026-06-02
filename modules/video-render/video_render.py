@@ -33,6 +33,7 @@ class RenderPoetryFrame:
     leftVertical: str
     rightVertical: str
     bottomLine: str
+    sonnetLines: list[str]
 
 
 @dataclass(frozen=True)
@@ -294,12 +295,19 @@ def _load_poetry_frame(song_dir: Path) -> RenderPoetryFrame:
     poetry_path = song_dir / "poetry-frame.json"
     if poetry_path.exists():
         poetry_data = _load_json(poetry_path)
+        raw_sonnet_lines = poetry_data.get("sonnet_lines")
+        sonnet_lines = [
+            str(line).strip()
+            for line in raw_sonnet_lines
+            if str(line).strip()
+        ] if isinstance(raw_sonnet_lines, list) else []
         return RenderPoetryFrame(
             nickname=str(poetry_data.get("nickname") or "@xcai43323"),
             topLabel=str(poetry_data.get("top_label") or "@xcai43323 · AUDIO DIARY"),
             leftVertical=str(poetry_data.get("left_vertical") or ""),
             rightVertical=str(poetry_data.get("right_vertical") or ""),
             bottomLine=str(poetry_data.get("bottom_line") or ""),
+            sonnetLines=sonnet_lines,
         )
 
     return RenderPoetryFrame(
@@ -308,6 +316,7 @@ def _load_poetry_frame(song_dir: Path) -> RenderPoetryFrame:
         leftVertical="THE RAIN WRITES SOFTLY ON THE GLASS WHILE THE MUSIC REMEMBERS",
         rightVertical="STREETLIGHTS RETURN AS QUIET STARS BENEATH THE MIDNIGHT SKY",
         bottomLine="LET THE NIGHT HUM SOFTLY",
+        sonnetLines=[],
     )
 
 

@@ -182,22 +182,43 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
                 lyrics_format="lrc",
             )
 
-    background_context = background_generation.BackgroundPromptContext(
-        song_title=audio_record.metadata.title or record.source_identity.video_id,
-        artist=audio_record.metadata.channel or audio_record.metadata.uploader or "unknown-artist",
-        song_base_name=song_base_name,
-        song_dir=str(song_dir),
-        lyric_lines=[
-            line.text if hasattr(line, "text") else str(line.get("text", ""))
-            for line in (lyric_document.lines if hasattr(lyric_document, "lines") else [])
-        ],
-    )
-    background_package = background_generation.build_background_prompt_package(background_context)
-    background_paths = background_generation.save_background_prompt_package(background_package, background_context)
-    poetry_package = background_generation.build_poetry_frame_package(background_context)
-    poetry_paths = background_generation.save_poetry_frame_package(poetry_package, background_context)
-    workflow_package = background_generation.build_comfyui_workflow_package(background_package, background_context)
-    workflow_path = background_generation.save_comfyui_workflow_package(workflow_package, background_context)
+    try:
+        background_generation.require_local_llm_available()
+        visual_plan_paths = background_generation.refresh_song_background_assets(str(song_dir), require_llm=True)
+    except Exception as error:
+        result = {
+            "ok": False,
+            "stage": "background-generation",
+            "song_base_name": song_base_name,
+            "song_dir": str(song_dir),
+            "source": {
+                "source_identity_key": source_ingestion.get_source_identity(record),
+                "record": _serialize(record),
+            },
+            "audio": _serialize(audio_record),
+            "timed_lyrics": {
+                "path": str(timed_lyrics_path),
+                "document": _serialize(lyric_document),
+                "score": lyrics.score_timed_lyrics(lyric_document) if hasattr(lyric_document, "lines") else None,
+                "fallback_used": fallback_result is not None,
+            },
+            "aligned_lyrics": {
+                "path": alignment_result.aligned_lrc_json_path if alignment_result else None,
+                "vocals_path": alignment_result.vocals_path if alignment_result else None,
+                "accompaniment_path": alignment_result.accompaniment_path if alignment_result else None,
+                "error": alignment_error,
+            },
+            "error": {
+                "reason": getattr(error, "reason", "background-generation-failed"),
+                "message": str(error),
+            },
+        }
+        result["result_path"] = save_pipeline_result(result, project_root)
+        return result
+
+    background_package_data = _load_json(Path(visual_plan_paths["background_json_path"]))
+    poetry_package_data = _load_json(Path(visual_plan_paths["poetry_json_path"]))
+    workflow_data = _load_json(Path(visual_plan_paths["workflow_path"]))
     render_job = video_render.build_render_job_input(str(song_dir))
     render_input_path = video_render.save_render_job_input(render_job)
 
@@ -224,24 +245,25 @@ def run_single_song_pipeline(input_url: str, project_root: str) -> dict:
             "error": alignment_error,
         },
         "background_prompt": {
-            "package": _serialize(background_package),
-            "json_path": background_paths["json_path"],
-            "md_path": background_paths["md_path"],
+            "package": background_package_data,
+            "json_path": visual_plan_paths["background_json_path"],
+            "md_path": visual_plan_paths["background_md_path"],
         },
         "poetry_frame": {
-            "package": _serialize(poetry_package),
-            "json_path": poetry_paths["json_path"],
-            "md_path": poetry_paths["md_path"],
+            "package": poetry_package_data,
+            "json_path": visual_plan_paths["poetry_json_path"],
+            "md_path": visual_plan_paths["poetry_md_path"],
         },
         "background_workflow": {
-            "checkpoint_name": workflow_package.checkpoint_name,
-            "width": workflow_package.width,
-            "height": workflow_package.height,
-            "steps": workflow_package.steps,
-            "cfg": workflow_package.cfg,
-            "sampler_name": workflow_package.sampler_name,
-            "scheduler": workflow_package.scheduler,
-            "workflow_path": workflow_path,
+            "checkpoint_name": workflow_data.get("4", {}).get("inputs", {}).get("ckpt_name"),
+            "seed": workflow_data.get("3", {}).get("inputs", {}).get("seed"),
+            "width": workflow_data.get("5", {}).get("inputs", {}).get("width"),
+            "height": workflow_data.get("5", {}).get("inputs", {}).get("height"),
+            "steps": workflow_data.get("3", {}).get("inputs", {}).get("steps"),
+            "cfg": workflow_data.get("3", {}).get("inputs", {}).get("cfg"),
+            "sampler_name": workflow_data.get("3", {}).get("inputs", {}).get("sampler_name"),
+            "scheduler": workflow_data.get("3", {}).get("inputs", {}).get("scheduler"),
+            "workflow_path": visual_plan_paths["workflow_path"],
         },
         "render_input": {
             "path": render_input_path,

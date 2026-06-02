@@ -1,0 +1,202 @@
+{
+  "title": "about time",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/about time - Sarah Kang Music - LssgRVr8djY/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 9180,
+  "renderDurationInFrames": 5513,
+  "durationInFrames": 5791,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/about time - Sarah Kang Music - LssgRVr8djY/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF YEARS CAN NEVER BE REELLED BACK",
+    "rightVertical": "ONLY THE ECHOES OF SUMMER AND DORM ROOM KISSES REMAIN",
+    "bottomLine": "A PART OF US WILL ALWAYS RESIDE IN YESTERDAY'S LIGHT",
+    "sonnetLines": [
+      "The years drift past like smoke,",
+      "Leaving only golden dust.",
+      "We trace the paths we walked,",
+      "Held by fragile trust.",
+      "A youthful laugh rings clear,",
+      "In rooms long since vacated.",
+      "Sweet moments banish fear,",
+      "By memory translated.",
+      "Time keeps its steady beat,",
+      "An unstoppable flow.",
+      "But love makes time retreat,",
+      "To seeds that softly grow.",
+      "We hold the ghosts of grace,",
+      "In this timeless, quiet space."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 12180,
+      "text": "♪"
+    },
+    {
+      "startMs": 12180,
+      "endMs": 18260,
+      "text": "I think about that summer day when I went on my first date"
+    },
+    {
+      "startMs": 18260,
+      "endMs": 24030,
+      "text": "We danced in an empty parking lot to a song I since forgot"
+    },
+    {
+      "startMs": 24030,
+      "endMs": 30330,
+      "text": "And the first time I held his hand, I thought this boy could be a man"
+    },
+    {
+      "startMs": 30330,
+      "endMs": 35840,
+      "text": "We must've been watching a movie, I think it was Toy Story 3"
+    },
+    {
+      "startMs": 35840,
+      "endMs": 42570,
+      "text": "As long as you remember me and all the ways I used to be"
+    },
+    {
+      "startMs": 42570,
+      "endMs": 47850,
+      "text": "A part of me will always be 18"
+    },
+    {
+      "startMs": 47850,
+      "endMs": 51590,
+      "text": "And time keeps ticking on, it's true"
+    },
+    {
+      "startMs": 51590,
+      "endMs": 54680,
+      "text": "She'll steal away our youth"
+    },
+    {
+      "startMs": 54680,
+      "endMs": 60930,
+      "text": "But that's how I'll remember me and you"
+    },
+    {
+      "startMs": 60930,
+      "endMs": 66150,
+      "text": "That's how I'll remember me and you"
+    },
+    {
+      "startMs": 66150,
+      "endMs": 76060,
+      "text": "♪"
+    },
+    {
+      "startMs": 76060,
+      "endMs": 82000,
+      "text": "I didn't think much of you 'til that autumn afternoon"
+    },
+    {
+      "startMs": 82000,
+      "endMs": 87970,
+      "text": "I never would've guessed it would be you (would be you)"
+    },
+    {
+      "startMs": 87970,
+      "endMs": 94280,
+      "text": "And it was in January when you finally kissed me"
+    },
+    {
+      "startMs": 94280,
+      "endMs": 99510,
+      "text": "In a dorm room on York Street and the rest is history"
+    },
+    {
+      "startMs": 99510,
+      "endMs": 106370,
+      "text": "As long as I remember you and all the things you used to do"
+    },
+    {
+      "startMs": 106370,
+      "endMs": 111600,
+      "text": "A part of you will always be 22"
+    },
+    {
+      "startMs": 111600,
+      "endMs": 115450,
+      "text": "And time keeps ticking on it's true"
+    },
+    {
+      "startMs": 115450,
+      "endMs": 118540,
+      "text": "She'll steal away our youth"
+    },
+    {
+      "startMs": 118540,
+      "endMs": 124650,
+      "text": "But that's how I'll remember me and you when we meet"
+    },
+    {
+      "startMs": 124650,
+      "endMs": 127670,
+      "text": "And that's the thing about time"
+    },
+    {
+      "startMs": 127670,
+      "endMs": 130480,
+      "text": "You cannot press rewind"
+    },
+    {
+      "startMs": 130480,
+      "endMs": 133540,
+      "text": "If remembering's all I can do"
+    },
+    {
+      "startMs": 133540,
+      "endMs": 138130,
+      "text": "That's how I'll hold on to you"
+    },
+    {
+      "startMs": 138130,
+      "endMs": 161880,
+      "text": "♪"
+    },
+    {
+      "startMs": 161880,
+      "endMs": 168670,
+      "text": "As long as you and I remember all the times we shared together"
+    },
+    {
+      "startMs": 168670,
+      "endMs": 174080,
+      "text": "A part of us will never get older"
+    },
+    {
+      "startMs": 174080,
+      "endMs": 177630,
+      "text": "And time keeps ticking on it's true"
+    },
+    {
+      "startMs": 177630,
+      "endMs": 180830,
+      "text": "She'll steal away our youth"
+    },
+    {
+      "startMs": 180830,
+      "endMs": 187180,
+      "text": "But that's how I'll remember me and you when we meet"
+    },
+    {
+      "startMs": 187180,
+      "endMs": 190960,
+      "text": "That's how I'll remember me and you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/about time - Sarah Kang Music - LssgRVr8djY",
+  "outputMp4Name": "about time - Sarah Kang Music.mp4"
+}

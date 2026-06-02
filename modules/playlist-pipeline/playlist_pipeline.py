@@ -138,6 +138,12 @@ def run_playlist_pipeline(playlist_url: str, project_root: str, default_render_b
         "render_queue_playlist_module",
         modules_root / "render-queue" / "render_queue.py",
     )
+    background_generation = _load_module(
+        "background_generation_playlist_module",
+        modules_root / "background-generation" / "background_generation.py",
+    )
+
+    background_generation.require_local_llm_available()
 
     playlist_entries = _extract_playlist_entries(playlist_url)
     queue_csv_path = render_queue.ensure_render_queue_csv(project_root)
@@ -194,7 +200,17 @@ def _main(argv: list[str]) -> int:
     playlist_url = argv[1]
     project_root = argv[2]
     default_render_batch = argv[3] if len(argv) > 3 else ""
-    result = run_playlist_pipeline(playlist_url, project_root, default_render_batch=default_render_batch)
+    try:
+        result = run_playlist_pipeline(playlist_url, project_root, default_render_batch=default_render_batch)
+    except Exception as error:
+        result = {
+            "ok": False,
+            "stage": "playlist-preflight",
+            "reason": getattr(error, "reason", "playlist-pipeline-failed"),
+            "error": str(error),
+        }
+        print(json.dumps(_serialize(result), ensure_ascii=False, indent=2))
+        return 1
     print(json.dumps(_serialize(result), ensure_ascii=False, indent=2))
     return 0
 

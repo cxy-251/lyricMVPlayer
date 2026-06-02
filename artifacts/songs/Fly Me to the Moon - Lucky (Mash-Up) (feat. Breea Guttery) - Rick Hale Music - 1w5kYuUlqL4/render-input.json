@@ -1,0 +1,227 @@
+{
+  "title": "Fly Me to the Moon / Lucky (Mash-Up) (feat. Breea Guttery)",
+  "artist": "Rick Hale Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5533,
+  "durationInFrames": 5832,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "ACROSS THE DEEP BLUE OCEAN, WE FIND OUR GUIDING LIGHT. A COSMIC JOURNEY HOME.",
+    "rightVertical": "LET US DANCE AMONG STARS UNTIL DAWN BREAKS. FOREVERMORE, IN THIS GOLDEN EMBRACE.",
+    "bottomLine": "WE ARE LUCKY TO HAVE FOUND OUR WAY BACK HERE.",
+    "sonnetLines": [
+      "To worlds beyond the blue expanse,",
+      "We drift upon a starry tide.",
+      "Where distant planets softly dance,",
+      "And loyal hearts forever ride.",
+      "A whispered promise on the breeze,",
+      "Of stars that guide us through the night.",
+      "Beyond the reach of earthly ease,",
+      "We find our everlasting light.",
+      "The deepest love, a steady hum,",
+      "More constant than the moon's slow gleam.",
+      "From cosmic wonder till kingdom come,",
+      "It is this gentle, waking dream.",
+      "A haven built on shared delight,",
+      "Our truest stars burn ever bright."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 1060,
+      "endMs": 3390,
+      "text": "Fly me to the moon"
+    },
+    {
+      "startMs": 3590,
+      "endMs": 7550,
+      "text": "And let me dance among the stars"
+    },
+    {
+      "startMs": 8280,
+      "endMs": 11270,
+      "text": "Let me know what spring is like"
+    },
+    {
+      "startMs": 11400,
+      "endMs": 14600,
+      "text": "On Jupiter and Mars"
+    },
+    {
+      "startMs": 15790,
+      "endMs": 21430,
+      "text": "In other words, hold my hand"
+    },
+    {
+      "startMs": 23260,
+      "endMs": 28760,
+      "text": "In other words, baby, kiss me"
+    },
+    {
+      "startMs": 30440,
+      "endMs": 33300,
+      "text": "Fill my heart with songs"
+    },
+    {
+      "startMs": 33300,
+      "endMs": 37500,
+      "text": "And let me sing forevermore"
+    },
+    {
+      "startMs": 38000,
+      "endMs": 40930,
+      "text": "You are all I long for"
+    },
+    {
+      "startMs": 40930,
+      "endMs": 45100,
+      "text": "All I worship and adore"
+    },
+    {
+      "startMs": 45100,
+      "endMs": 49300,
+      "text": "In other words, please be true"
+    },
+    {
+      "startMs": 52960,
+      "endMs": 56390,
+      "text": "In other words, I love you"
+    },
+    {
+      "startMs": 56390,
+      "endMs": 59770,
+      "text": "Do you hear me, I'm talking to you"
+    },
+    {
+      "startMs": 59770,
+      "endMs": 63970,
+      "text": "Across the water, across the deep blue ocean"
+    },
+    {
+      "startMs": 65489,
+      "endMs": 67440,
+      "text": "Under the open sky"
+    },
+    {
+      "startMs": 67440,
+      "endMs": 70270,
+      "text": "Oh my, baby I'm trying"
+    },
+    {
+      "startMs": 71100,
+      "endMs": 74180,
+      "text": "Boy, I hear you in my dreams"
+    },
+    {
+      "startMs": 75010,
+      "endMs": 77660,
+      "text": "I feel your whisper across the sea"
+    },
+    {
+      "startMs": 78490,
+      "endMs": 81180,
+      "text": "I keep you with me in my heart"
+    },
+    {
+      "startMs": 82010,
+      "endMs": 86690,
+      "text": "You make it easier when life gets hard"
+    },
+    {
+      "startMs": 87520,
+      "endMs": 90270,
+      "text": "Lucky I'm in love with my best friend"
+    },
+    {
+      "startMs": 91100,
+      "endMs": 94000,
+      "text": "Lucky to have been where we have been"
+    },
+    {
+      "startMs": 94830,
+      "endMs": 101420,
+      "text": "Lucky to be coming home again"
+    },
+    {
+      "startMs": 102250,
+      "endMs": 105170,
+      "text": "Lucky we're in love in every way"
+    },
+    {
+      "startMs": 106000,
+      "endMs": 108790,
+      "text": "Lucky to have stayed where we have stayed"
+    },
+    {
+      "startMs": 109620,
+      "endMs": 116190,
+      "text": "Lucky to be coming home someday"
+    },
+    {
+      "startMs": 116190,
+      "endMs": 120390,
+      "text": "♪"
+    },
+    {
+      "startMs": 143320,
+      "endMs": 146120,
+      "text": "Lucky I'm in love with my best friend"
+    },
+    {
+      "startMs": 146950,
+      "endMs": 149890,
+      "text": "Lucky to have been where we have been"
+    },
+    {
+      "startMs": 150720,
+      "endMs": 156130,
+      "text": "Lucky to be coming home again"
+    },
+    {
+      "startMs": 156960,
+      "endMs": 158870,
+      "text": "Fill my heart with songs (lucky we're in love in every way)"
+    },
+    {
+      "startMs": 159700,
+      "endMs": 163760,
+      "text": "And let me sing forevermore (lucky to have stayed where we have stayed)"
+    },
+    {
+      "startMs": 164590,
+      "endMs": 167950,
+      "text": "Tell me I'm the lucky one (lucky to be coming home someday)"
+    },
+    {
+      "startMs": 167950,
+      "endMs": 171880,
+      "text": "You worship and adore"
+    },
+    {
+      "startMs": 171880,
+      "endMs": 174780,
+      "text": "In other words"
+    },
+    {
+      "startMs": 174780,
+      "endMs": 179240,
+      "text": "Oh, in other words"
+    },
+    {
+      "startMs": 179240,
+      "endMs": 182440,
+      "text": "In other words, I love you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4",
+  "outputMp4Name": "Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music.mp4"
+}

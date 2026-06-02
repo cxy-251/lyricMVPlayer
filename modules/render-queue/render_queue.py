@@ -184,6 +184,19 @@ def list_background_pending_rows(project_root: str) -> list[dict[str, str]]:
         for row in rows
         if row.get("background_ready") == "false"
         and row.get("render_batch", "") == "0"
+        and row.get("video_status") not in {"rendered", "published"}
+    ]
+
+
+def list_render_batch_zero_unfinished_rows(project_root: str) -> list[dict[str, str]]:
+    csv_path = ensure_render_queue_csv(project_root)
+    rows = _load_rows(csv_path, project_root)
+    return [
+        row
+        for row in rows
+        if row.get("song_dir", "").strip()
+        and row.get("render_batch", "") == "0"
+        and row.get("video_status") not in {"rendered", "published"}
     ]
 
 
@@ -198,7 +211,11 @@ def get_queue_row(project_root: str, song_dir_name: str) -> dict[str, str] | Non
 
 def is_background_generation_allowed(project_root: str, song_dir_name: str) -> bool:
     row = get_queue_row(project_root, song_dir_name)
-    return row is not None and row.get("render_batch", "") == "0"
+    return (
+        row is not None
+        and row.get("render_batch", "") == "0"
+        and row.get("video_status") not in {"rendered", "published"}
+    )
 
 
 def list_runnable_rows(project_root: str, batch_value: str = "0") -> list[dict[str, str]]:
@@ -246,6 +263,7 @@ def _main(argv: list[str]) -> int:
             "Usage:\n"
             "  render_queue.py list-render-batch-codes <project_root>\n"
             "  render_queue.py list-background-pending <project_root>\n"
+            "  render_queue.py list-render-batch-0-unfinished <project_root>\n"
             "  render_queue.py list-runnable <project_root> [batch]\n"
             "  render_queue.py mark <project_root> <song_dir_name> <status>\n"
             "  render_queue.py mark-background <project_root> <song_dir_name> <true|false>\n"
@@ -260,6 +278,10 @@ def _main(argv: list[str]) -> int:
 
     if command == "list-background-pending":
         print(json.dumps(list_background_pending_rows(project_root), ensure_ascii=False, indent=2))
+        return 0
+
+    if command == "list-render-batch-0-unfinished":
+        print(json.dumps(list_render_batch_zero_unfinished_rows(project_root), ensure_ascii=False, indent=2))
         return 0
 
     if command == "list-runnable":

@@ -128,7 +128,24 @@ const buildPaperLibrary = () => {
   });
 };
 
-const supportedBackgrounds = ["background.png", "background.jpg", "background.jpeg", "background.webp"];
+const backgroundAssetPattern = /^background(?:[-_].*)?\.(png|jpg|jpeg|webp)$/i;
+
+const findBackgroundFileName = (songDirPath) => {
+  const candidates = fs
+    .readdirSync(songDirPath, {withFileTypes: true})
+    .filter((entry) => entry.isFile() && backgroundAssetPattern.test(entry.name))
+    .map((entry) => entry.name);
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return candidates.sort((left, right) => {
+    const leftStats = fs.statSync(path.join(songDirPath, left));
+    const rightStats = fs.statSync(path.join(songDirPath, right));
+    return rightStats.mtimeMs - leftStats.mtimeMs;
+  })[0];
+};
 
 const parseSongDirName = (songDirName) => {
   const parts = songDirName.split(" - ");
@@ -197,6 +214,7 @@ const createFallbackRenderInput = ({
       leftVertical: "",
       rightVertical: "",
       bottomLine: "LYRICS NEED REVIEW",
+      sonnetLines: [],
     },
     lyrics: [],
   };
@@ -254,7 +272,7 @@ for (const songDirName of songDirNames) {
     continue;
   }
 
-  const backgroundFileName = supportedBackgrounds.find((candidate) => fs.existsSync(path.join(songDirPath, candidate)));
+  const backgroundFileName = findBackgroundFileName(songDirPath);
   const publicSongDir = path.join(publicRoot, "songs", songDirName);
   ensureDir(publicSongDir);
 

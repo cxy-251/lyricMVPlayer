@@ -1,8 +1,8 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
-  "generated_at": "2026-05-31T07:45:11.690Z",
-  "count": 6,
-  "lyrics_review_count": 6,
+  "generated_at": "2026-06-02T01:56:16.490Z",
+  "count": 18,
+  "lyrics_review_count": 9,
   "items": [
     {
       "video_id": "8LovM2oVqPM",
@@ -69,6 +69,104 @@
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
+    },
+    {
+      "video_id": "qW9Z5BghHus",
+      "source_url": "https://www.youtube.com/watch?v=qW9Z5BghHus",
+      "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "vWQ7E0wZ5BU",
+      "source_url": "https://www.youtube.com/watch?v=vWQ7E0wZ5BU",
+      "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+      "ok": true,
+      "lyrics_review": {
+        "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "vWQ7E0wZ5BU",
+        "lyric_video_id": "zXbqad3UPCk",
+        "detail": "ytmusic search -> zXbqad3UPCk"
+      }
+    },
+    {
+      "video_id": "ezVbN7e-L7Y",
+      "source_url": "https://www.youtube.com/watch?v=ezVbN7e-L7Y",
+      "song_dir": "Lucky - Jason Mraz - ezVbN7e-L7Y",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "K6QK_dVk8BY",
+      "source_url": "https://www.youtube.com/watch?v=K6QK_dVk8BY",
+      "song_dir": "I Know a Place - chevy - K6QK_dVk8BY",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "rqpra7nXL_g",
+      "source_url": "https://www.youtube.com/watch?v=rqpra7nXL_g",
+      "song_dir": "let's run away - Sarah Kang Music - rqpra7nXL_g",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "1w5kYuUlqL4",
+      "source_url": "https://www.youtube.com/watch?v=1w5kYuUlqL4",
+      "song_dir": "Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "cXf3do6ltzU",
+      "source_url": "https://www.youtube.com/watch?v=cXf3do6ltzU",
+      "song_dir": "Every Second - Mina Okabe - cXf3do6ltzU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "RiU3HRYTM7Q",
+      "source_url": "https://www.youtube.com/watch?v=RiU3HRYTM7Q",
+      "song_dir": "lazy afternoon - Sarah Kang Music - RiU3HRYTM7Q",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "0bkXQYUTmgs",
+      "source_url": "https://www.youtube.com/watch?v=0bkXQYUTmgs",
+      "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "Ejvz4EdcXM0",
+      "source_url": "https://www.youtube.com/watch?v=Ejvz4EdcXM0",
+      "song_dir": "Valentine - Laufey - Ejvz4EdcXM0",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "_LvN1NhCeIU",
+      "source_url": "https://www.youtube.com/watch?v=_LvN1NhCeIU",
+      "song_dir": "Nothing - Milena 밀레나 - _LvN1NhCeIU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "X1R7SrjI_o8",
+      "source_url": "https://www.youtube.com/watch?v=X1R7SrjI_o8",
+      "song_dir": "comethru - Jeremy Zucker - X1R7SrjI_o8",
+      "ok": true,
+      "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
@@ -99,6 +197,23 @@
     },
     {
       "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "vWQ7E0wZ5BU",
+      "lyric_video_id": "zXbqad3UPCk",
+      "detail": "ytmusic search -> zXbqad3UPCk"
+    },
+    {
+      "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     }

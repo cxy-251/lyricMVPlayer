@@ -1,0 +1,167 @@
+{
+  "title": "Nothing",
+  "artist": "Milena 밀레나 ",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Nothing - Milena 밀레나 - _LvN1NhCeIU/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 4921,
+  "durationInFrames": 5250,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Nothing - Milena 밀레나 - _LvN1NhCeIU/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE QUIET JOY OF HOURS UNSPENT\nWHERE TIME SLIPS AWAY AND THE WORLD STOPS TURNING",
+    "rightVertical": "FINDING PERFECTION IN THE SIMPLEST GLOW\nA SANCTUARY BEYOND ALL DRAMA OR LIGHT SHOWS",
+    "bottomLine": "THIS QUIET PEACE IS MORE THAN ENOUGH.",
+    "sonnetLines": [
+      "The day's loud edges gently fade,",
+      "Into the comfort of a shared embrace.",
+      "No grand adventure is ever made,",
+      "To match this quiet, settled grace.",
+      "A simple breath beside another's side,",
+      "The gentle rhythm of familiar sound.",
+      "Where deeper truths forever reside,",
+      "On common, safe and steady ground.",
+      "Let the outside world drift out of sight,",
+      "We need no stars or ocean breeze,",
+      "Just this soft amber glow of lamplight,",
+      "And quiet moments bringing ease.",
+      "This simple presence is all we require,",
+      "Our perfect shelter in time's slow fire."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 610,
+      "endMs": 5140,
+      "text": "Track suits and red wine, movies for two"
+    },
+    {
+      "startMs": 5970,
+      "endMs": 11310,
+      "text": "We'll take off our phones and we'll turn off our shoes"
+    },
+    {
+      "startMs": 11420,
+      "endMs": 16340,
+      "text": "We'll play Nintendo though I always lose"
+    },
+    {
+      "startMs": 16520,
+      "endMs": 22080,
+      "text": "'Cause you watch the TV while I'm watching you"
+    },
+    {
+      "startMs": 22540,
+      "endMs": 27580,
+      "text": "There's not many people I'd honestly say"
+    },
+    {
+      "startMs": 27580,
+      "endMs": 31440,
+      "text": "I don't mind losing to"
+    },
+    {
+      "startMs": 33470,
+      "endMs": 40570,
+      "text": "But there's nothing like doing nothing with you"
+    },
+    {
+      "startMs": 44990,
+      "endMs": 48970,
+      "text": "Dumb conversation, we lose track of time"
+    },
+    {
+      "startMs": 50280,
+      "endMs": 54960,
+      "text": "Have I told you lately I'm grateful you're mine?"
+    },
+    {
+      "startMs": 56220,
+      "endMs": 60820,
+      "text": "We'll watch The Notebook for the seventeenth time"
+    },
+    {
+      "startMs": 61720,
+      "endMs": 66330,
+      "text": "I'll say \"It's stupid,\" then you'll catch me crying"
+    },
+    {
+      "startMs": 66330,
+      "endMs": 72810,
+      "text": "We're not making out on a boat in the rain"
+    },
+    {
+      "startMs": 72810,
+      "endMs": 77950,
+      "text": "Or in a house I painted blue"
+    },
+    {
+      "startMs": 77950,
+      "endMs": 84310,
+      "text": "But there's nothing like doing nothing with you"
+    },
+    {
+      "startMs": 88500,
+      "endMs": 92880,
+      "text": "So shut all the windows, lock all the doors"
+    },
+    {
+      "startMs": 94360,
+      "endMs": 99440,
+      "text": "We're not looking for no one, don't need nothing more"
+    },
+    {
+      "startMs": 100930,
+      "endMs": 104310,
+      "text": "You'll bite my lip and I'll want you more"
+    },
+    {
+      "startMs": 105860,
+      "endMs": 110460,
+      "text": "Until we end up in a heap on the floor"
+    },
+    {
+      "startMs": 116300,
+      "endMs": 120500,
+      "text": "♪"
+    },
+    {
+      "startMs": 121820,
+      "endMs": 127100,
+      "text": "You could be dancing on tabletops, wearing high heels"
+    },
+    {
+      "startMs": 127250,
+      "endMs": 132650,
+      "text": "Drinking until the world spins like a wheel"
+    },
+    {
+      "startMs": 133350,
+      "endMs": 138250,
+      "text": "But tonight, your apartment has so much appeal"
+    },
+    {
+      "startMs": 138380,
+      "endMs": 141820,
+      "text": "Who needs stars? We've got a roof"
+    },
+    {
+      "startMs": 144270,
+      "endMs": 151150,
+      "text": "But there's nothing like doing nothing with you"
+    },
+    {
+      "startMs": 155660,
+      "endMs": 162060,
+      "text": "No, there's nothing like doing nothing with you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Nothing - Milena 밀레나 - _LvN1NhCeIU",
+  "outputMp4Name": "Nothing - Milena 밀레나.mp4"
+}

@@ -69,6 +69,7 @@ type RenderInputPayload = {
     leftVertical?: string | null;
     rightVertical?: string | null;
     bottomLine?: string | null;
+    sonnetLines?: string[] | null;
   };
   lyrics: TimedLyricLine[];
 };
@@ -81,6 +82,7 @@ const DEFAULT_POETRY_FRAME: PoetryFrame = {
   leftVertical: "",
   rightVertical: "",
   bottomLine: "",
+  sonnetLines: [],
 };
 
 const buildQueue = (library: SongLibraryItem[]): QueueTrack[] =>
@@ -134,6 +136,7 @@ const normalizePoetryFrame = (
         leftVertical: poetryFrame.leftVertical ?? "",
         rightVertical: poetryFrame.rightVertical ?? "",
         bottomLine: poetryFrame.bottomLine ?? "",
+        sonnetLines: Array.isArray(poetryFrame.sonnetLines) ? poetryFrame.sonnetLines : [],
       }
     : {
         nickname,
@@ -141,6 +144,7 @@ const normalizePoetryFrame = (
         leftVertical: "",
         rightVertical: "",
         bottomLine: "",
+        sonnetLines: [],
       };
 
 export const App: React.FC = () => {

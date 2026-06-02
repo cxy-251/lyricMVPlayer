@@ -1,0 +1,187 @@
+{
+  "title": "I Know a Place",
+  "artist": "chevy",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Know a Place - chevy - K6QK_dVk8BY/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 10550,
+  "renderDurationInFrames": 3600,
+  "durationInFrames": 3870,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Know a Place - chevy - K6QK_dVk8BY/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE CHASE THE ECHOES OF WHAT COULD NEVER LAST",
+    "rightVertical": "A PLACE ONLY FOUND WITHIN THE QUIET HEART'S DREAMING MIND",
+    "bottomLine": "THE MEMORY IS MORE REAL THAN THE TOUCH",
+    "sonnetLines": [
+      "Where the tide whispers secrets untold,",
+      "And the light breaks through the soft haze,",
+      "A promise of warmth, brave and bold,",
+      "Beyond the reach of passing days.",
+      "We build our haven on fragile air,",
+      "With laughter that echoes so bright,",
+      "A secret we know only to share,",
+      "Hidden from the harsh morning light.",
+      "The perfect moment, a painted scene,",
+      "Exists just behind closed eyes' veil,",
+      "A beautiful, temporary dream,",
+      "A whisper that will never fail.",
+      "Though time claims us and shadows creep near,",
+      "We hold this imagined truth so dear."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 13550,
+      "endMs": 14590,
+      "text": "I know a place"
+    },
+    {
+      "startMs": 14870,
+      "endMs": 16230,
+      "text": "That's sound and safe"
+    },
+    {
+      "startMs": 16530,
+      "endMs": 18170,
+      "text": "For us now"
+    },
+    {
+      "startMs": 19820,
+      "endMs": 21290,
+      "text": "No need to hide"
+    },
+    {
+      "startMs": 21480,
+      "endMs": 23070,
+      "text": "Or say goodbyes"
+    },
+    {
+      "startMs": 23120,
+      "endMs": 24640,
+      "text": "Leave them out"
+    },
+    {
+      "startMs": 25650,
+      "endMs": 27310,
+      "text": "We'll run away"
+    },
+    {
+      "startMs": 28940,
+      "endMs": 29980,
+      "text": "It'll be okay"
+    },
+    {
+      "startMs": 36140,
+      "endMs": 40340,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 40480,
+      "endMs": 44680,
+      "text": "♪"
+    },
+    {
+      "startMs": 46310,
+      "endMs": 48170,
+      "text": "We can chase waterfalls and"
+    },
+    {
+      "startMs": 48380,
+      "endMs": 51180,
+      "text": "Talk 'til all my hair dries"
+    },
+    {
+      "startMs": 52950,
+      "endMs": 54380,
+      "text": "Just lie on the sand"
+    },
+    {
+      "startMs": 54610,
+      "endMs": 56080,
+      "text": "Each hand in hand"
+    },
+    {
+      "startMs": 56240,
+      "endMs": 57500,
+      "text": "In paradise"
+    },
+    {
+      "startMs": 58510,
+      "endMs": 60770,
+      "text": "'Cause we don't got long"
+    },
+    {
+      "startMs": 61840,
+      "endMs": 64400,
+      "text": "'Til we say so long"
+    },
+    {
+      "startMs": 69270,
+      "endMs": 73310,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 73310,
+      "endMs": 77510,
+      "text": "♪"
+    },
+    {
+      "startMs": 79400,
+      "endMs": 85450,
+      "text": "We can live in this lovely dream"
+    },
+    {
+      "startMs": 86090,
+      "endMs": 93039,
+      "text": "It'll be my reality"
+    },
+    {
+      "startMs": 93039,
+      "endMs": 97239,
+      "text": "♪"
+    },
+    {
+      "startMs": 99110,
+      "endMs": 105860,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 106500,
+      "endMs": 107460,
+      "text": "I know a place"
+    },
+    {
+      "startMs": 108100,
+      "endMs": 109390,
+      "text": "That has no trace"
+    },
+    {
+      "startMs": 110030,
+      "endMs": 114230,
+      "text": "Of us now"
+    },
+    {
+      "startMs": 114870,
+      "endMs": 117250,
+      "text": "It's just a thought"
+    },
+    {
+      "startMs": 117890,
+      "endMs": 121090,
+      "text": "So don't tell me it's wrong"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/I Know a Place - chevy - K6QK_dVk8BY",
+  "outputMp4Name": "I Know a Place - chevy.mp4"
+}

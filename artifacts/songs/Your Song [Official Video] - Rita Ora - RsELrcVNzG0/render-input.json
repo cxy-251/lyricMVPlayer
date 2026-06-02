@@ -1,0 +1,297 @@
+{
+  "title": "Rita Ora - Your Song [Official Video]",
+  "artist": "Rita Ora",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Your Song [Official Video] - Rita Ora - RsELrcVNzG0/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 9290,
+  "renderDurationInFrames": 5248,
+  "durationInFrames": 5767,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Your Song [Official Video] - Rita Ora - RsELrcVNzG0/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE WERE WAY UP TONIGHT, BREATHING IN THE SMOKE AND THE MUSIC",
+    "rightVertical": "THIS FEELING IS MORE THAN JUST A SONG; IT'S MY NEW REALITY",
+    "bottomLine": "YOUR VOICE CARRIES ME THROUGH ALL THE DARKNESS.",
+    "sonnetLines": [
+      "The fear that woke me fades to dust,",
+      "A whisper caught in smoke and gold.",
+      "I shed the habit of distrust,",
+      "A story waiting to unfold.",
+      "No longer will the sad notes sting,",
+      "Only rhythm, only sweet refrain.",
+      "The reckless joy the moments bring,",
+      "Washing out the doubt and pain.",
+      "We dance upon a fragile height,",
+      "Where amber spills on indigo blue.",
+      "Lost in this incandescent light,",
+      "My heart finds its forever true.",
+      "This melody is where I belong,",
+      "A perfect, endless, rising song."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 12290,
+      "endMs": 15270,
+      "text": "I woke up with a fear this morning"
+    },
+    {
+      "startMs": 15270,
+      "endMs": 19470,
+      "text": "But I can taste you on the tip of my tongue"
+    },
+    {
+      "startMs": 20390,
+      "endMs": 23440,
+      "text": "Alarm without no warning"
+    },
+    {
+      "startMs": 23440,
+      "endMs": 27640,
+      "text": "You're by my side and we've got smoke in our lungs"
+    },
+    {
+      "startMs": 28100,
+      "endMs": 32300,
+      "text": "Last night we were way up, kissing in the back of the cab"
+    },
+    {
+      "startMs": 32710,
+      "endMs": 36910,
+      "text": "And then you say love, baby, let's go back to my flat"
+    },
+    {
+      "startMs": 37000,
+      "endMs": 40810,
+      "text": "And when we wake up, never had a feeling like that"
+    },
+    {
+      "startMs": 40810,
+      "endMs": 44820,
+      "text": "I got a reason so man, put that record on again"
+    },
+    {
+      "startMs": 44820,
+      "endMs": 47700,
+      "text": "I don't want to hear sad songs anymore"
+    },
+    {
+      "startMs": 47700,
+      "endMs": 49930,
+      "text": "I only want to hear love songs"
+    },
+    {
+      "startMs": 49930,
+      "endMs": 52950,
+      "text": "I found my heart up in this place tonight"
+    },
+    {
+      "startMs": 52950,
+      "endMs": 55900,
+      "text": "Don't want to sing mad songs anymore"
+    },
+    {
+      "startMs": 55900,
+      "endMs": 58120,
+      "text": "Only want to sing your song"
+    },
+    {
+      "startMs": 58120,
+      "endMs": 61020,
+      "text": "'Cause your song's got me feeling like I'm"
+    },
+    {
+      "startMs": 61020,
+      "endMs": 65150,
+      "text": "I'm in love, I'm in love, I'm in love"
+    },
+    {
+      "startMs": 65150,
+      "endMs": 69320,
+      "text": "Yeah, you know your song's got me feeling like that"
+    },
+    {
+      "startMs": 69320,
+      "endMs": 71560,
+      "text": "No fear, but I think I'm falling"
+    },
+    {
+      "startMs": 71560,
+      "endMs": 72410,
+      "text": "I'm not proud"
+    },
+    {
+      "startMs": 72410,
+      "endMs": 77190,
+      "text": "But I'm usually the type of girl that would hit and run"
+    },
+    {
+      "startMs": 77190,
+      "endMs": 80060,
+      "text": "No risk, so I think I'm all in"
+    },
+    {
+      "startMs": 80060,
+      "endMs": 85280,
+      "text": "When I kiss your lips, through my heartbeat thump"
+    },
+    {
+      "startMs": 85280,
+      "endMs": 89590,
+      "text": "And now we're way up, dancing on the roof of the house"
+    },
+    {
+      "startMs": 89590,
+      "endMs": 93650,
+      "text": "And then we make love, right there on your best friend's couch"
+    },
+    {
+      "startMs": 93650,
+      "endMs": 97740,
+      "text": "And then you say, love, this is what is all about"
+    },
+    {
+      "startMs": 97740,
+      "endMs": 101740,
+      "text": "So keep on kissing my mouth and put that record on again"
+    },
+    {
+      "startMs": 101740,
+      "endMs": 104740,
+      "text": "I don't want to hear sad songs anymore"
+    },
+    {
+      "startMs": 104740,
+      "endMs": 106840,
+      "text": "I only want to hear love songs"
+    },
+    {
+      "startMs": 106840,
+      "endMs": 109979,
+      "text": "I found my heart up in this place tonight"
+    },
+    {
+      "startMs": 109979,
+      "endMs": 112840,
+      "text": "Don't want to sing mad songs anymore"
+    },
+    {
+      "startMs": 112840,
+      "endMs": 115009,
+      "text": "Only want to sing your song"
+    },
+    {
+      "startMs": 115009,
+      "endMs": 118070,
+      "text": "'Cause your song's got me feeling like I'm"
+    },
+    {
+      "startMs": 118070,
+      "endMs": 121920,
+      "text": "I'm in love, I'm in love, I'm in love"
+    },
+    {
+      "startMs": 121920,
+      "endMs": 126220,
+      "text": "I'm in love, I'm in love, I'm in love"
+    },
+    {
+      "startMs": 126220,
+      "endMs": 130039,
+      "text": "I'm in love, I'm in love, I'm in love"
+    },
+    {
+      "startMs": 130039,
+      "endMs": 134360,
+      "text": "Yeah, you know your song's got me feeling like I'm"
+    },
+    {
+      "startMs": 134360,
+      "endMs": 137270,
+      "text": "I don't want to hear sad songs anymore"
+    },
+    {
+      "startMs": 137270,
+      "endMs": 139490,
+      "text": "I only want to hear love songs"
+    },
+    {
+      "startMs": 139490,
+      "endMs": 142579,
+      "text": "I found my heart up in this place tonight"
+    },
+    {
+      "startMs": 142579,
+      "endMs": 145420,
+      "text": "I don't want to sing mad songs anymore"
+    },
+    {
+      "startMs": 145420,
+      "endMs": 147630,
+      "text": "I only want to sing your song"
+    },
+    {
+      "startMs": 147630,
+      "endMs": 150680,
+      "text": "'Cause your song's got me feeling like I'm"
+    },
+    {
+      "startMs": 150680,
+      "endMs": 153579,
+      "text": "I don't want to hear sad songs anymore"
+    },
+    {
+      "startMs": 153579,
+      "endMs": 155700,
+      "text": "I only want to hear love songs"
+    },
+    {
+      "startMs": 155700,
+      "endMs": 158700,
+      "text": "I found my heart up in this place tonight"
+    },
+    {
+      "startMs": 158700,
+      "endMs": 161560,
+      "text": "Don't want to sing mad songs anymore"
+    },
+    {
+      "startMs": 161560,
+      "endMs": 163829,
+      "text": "Only want to sing your song"
+    },
+    {
+      "startMs": 163829,
+      "endMs": 167360,
+      "text": "'Cause your song's got me feeling like I'm (Got me feeling like I'm)"
+    },
+    {
+      "startMs": 167360,
+      "endMs": 170420,
+      "text": "I'm in love, I'm in love, I'm in love (I'm in love)"
+    },
+    {
+      "startMs": 170420,
+      "endMs": 174950,
+      "text": "I'm in love, I'm in love, I'm in love (I'm)"
+    },
+    {
+      "startMs": 174950,
+      "endMs": 179050,
+      "text": "I'm in love, I'm in love, I'm in love (I'm in love)"
+    },
+    {
+      "startMs": 179050,
+      "endMs": 182250,
+      "text": "Yeah, you know your song's got me feeling like that"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Your Song [Official Video] - Rita Ora - RsELrcVNzG0",
+  "outputMp4Name": "Your Song [Official Video] - Rita Ora.mp4"
+}

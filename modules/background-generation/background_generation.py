@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 import time
+import hashlib
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
@@ -29,9 +30,13 @@ class BackgroundPromptPackage:
     scene: str
     style: str
     composition: str
+    lyric_reading: str
+    visual_metaphor: str
     positive_prompt: str
     negative_prompt: str
     workflow_hint: str
+    generation_source: str
+    llm_model: str
 
 
 @dataclass(frozen=True)
@@ -41,12 +46,16 @@ class PoetryFramePackage:
     left_vertical: str
     right_vertical: str
     bottom_line: str
+    sonnet_lines: list[str]
     tone: str
+    generation_source: str
+    llm_model: str
 
 
 @dataclass(frozen=True)
 class ComfyUIWorkflowPackage:
     checkpoint_name: str
+    seed: int
     width: int
     height: int
     steps: int
@@ -89,9 +98,30 @@ NEGATIVE_PROMPT = (
     "photo realism, low detail, blurry, cluttered foreground, busy center, harsh contrast"
 )
 
-LOCAL_LLM_ENDPOINT = "http://127.0.0.1:1234/v1/chat/completions"
+LOCAL_LLM_BASE_URL = "http://127.0.0.1:1234/v1"
+LOCAL_LLM_ENDPOINT = f"{LOCAL_LLM_BASE_URL}/chat/completions"
 LOCAL_LLM_MODEL = "google/gemma-4-e4b"
 COMFYUI_API_URL = "http://127.0.0.1:8000"
+VISUAL_PLAN_KEYS = (
+    "mood",
+    "palette",
+    "scene",
+    "style",
+    "composition",
+    "lyric_reading",
+    "visual_metaphor",
+    "prompt_focus",
+    "left_vertical",
+    "right_vertical",
+    "bottom_line",
+    "tone",
+)
+
+
+class BackgroundGenerationError(RuntimeError):
+    def __init__(self, reason: str, message: str):
+        super().__init__(message)
+        self.reason = reason
 
 
 def _normalize_title(title: str) -> str:
@@ -134,6 +164,69 @@ def _extract_focus_lines(lyric_lines: list[str], limit: int = 4) -> list[str]:
     return cleaned
 
 
+def _format_full_lyrics_for_llm(lyric_lines: list[str]) -> list[dict[str, str | int]]:
+    formatted: list[dict[str, str | int]] = []
+    for index, line in enumerate(lyric_lines, start=1):
+        text = re.sub(r"\s+", " ", line.strip())
+        if not text or text == "♪":
+            continue
+        formatted.append({"line": index, "text": text})
+    return formatted
+
+
+def _curl_json_payload(
+    method: str,
+    url: str,
+    payload: dict | None = None,
+    timeout_seconds: int = 90,
+) -> dict | None:
+    curl_binary = shutil.which("curl")
+    if not curl_binary:
+        return None
+
+    command = [curl_binary, "-s", "-X", method, url]
+    if payload is not None:
+        command.extend(
+            [
+                "-H",
+                "Content-Type: application/json",
+                "-d",
+                json.dumps(payload, ensure_ascii=False),
+            ]
+        )
+
+    try:
+        completed = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+        )
+        if not completed.stdout.strip():
+            return None
+        return json.loads(completed.stdout)
+    except (subprocess.SubprocessError, TimeoutError, json.JSONDecodeError):
+        return None
+
+
+def is_local_llm_available() -> bool:
+    body = _curl_json_payload("GET", f"{LOCAL_LLM_BASE_URL}/models", timeout_seconds=8)
+    return isinstance(body, dict) and isinstance(body.get("data"), list)
+
+
+def require_local_llm_available() -> None:
+    if is_local_llm_available():
+        return
+    raise BackgroundGenerationError(
+        "local-llm-unavailable",
+        (
+            f"Local LLM is unavailable at {LOCAL_LLM_BASE_URL}. "
+            "Open LM Studio/local server before preparing playlists or regenerating visual assets."
+        ),
+    )
+
+
 def _call_local_llm_json(system_prompt: str, user_prompt: str) -> dict | None:
     payload = {
         "model": LOCAL_LLM_MODEL,
@@ -144,26 +237,12 @@ def _call_local_llm_json(system_prompt: str, user_prompt: str) -> dict | None:
         ],
     }
     try:
-        curl_binary = shutil.which("curl")
-        if not curl_binary:
+        body = _curl_json_payload("POST", LOCAL_LLM_ENDPOINT, payload, timeout_seconds=90)
+        if not body:
             return None
-        completed = subprocess.run(
-            [
-                curl_binary,
-                "-s",
-                LOCAL_LLM_ENDPOINT,
-                "-H",
-                "Content-Type: application/json",
-                "-d",
-                json.dumps(payload, ensure_ascii=False),
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=90,
-        )
-        body = json.loads(completed.stdout)
-    except (subprocess.SubprocessError, TimeoutError, json.JSONDecodeError):
+        if body.get("error"):
+            return None
+    except (TimeoutError, json.JSONDecodeError):
         return None
 
     try:
@@ -177,56 +256,94 @@ def _call_local_llm_json(system_prompt: str, user_prompt: str) -> dict | None:
         return None
 
 
-def _generate_local_background_fields(context: BackgroundPromptContext) -> dict | None:
-    focus_lines = _extract_focus_lines(context.lyric_lines, limit=6)
+def _is_complete_visual_plan(payload: dict | None) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    if any(not str(payload.get(key) or "").strip() for key in VISUAL_PLAN_KEYS):
+        return False
+    sonnet_lines = payload.get("sonnet_lines")
+    if not isinstance(sonnet_lines, list):
+        return False
+    return len([line for line in sonnet_lines if str(line).strip()]) == 14
+
+
+def _generate_local_visual_plan_fields(context: BackgroundPromptContext) -> dict | None:
+    full_lyrics = _format_full_lyrics_for_llm(context.lyric_lines)
+    full_lyrics_json = json.dumps(full_lyrics, ensure_ascii=False)
     system_prompt = (
-        "You write high-quality visual prompt plans for subjectless lyric-video backgrounds. "
+        "You are a lyric-video visual director and compact poetry writer. "
+        "Read the full song lyrics in order before deciding anything. "
+        "Infer the emotional arc, recurring images, point of view, and tonal shift across the whole song. "
+        "Create subjectless 9:16 background art direction that is readable behind lyric overlays. "
+        "Also write concise frame text and a 14-line original poem inspired by the whole song. "
+        "Do not quote full lyric lines. Avoid generic night/city filler unless the full song clearly asks for it. "
         "Return strict JSON only."
     )
     user_prompt = (
-        "Given the song title, artist, and lyric excerpts, create a background prompt plan for a 9:16 lyric video. "
-        "The background must be subjectless, illustration-friendly, readable behind lyrics, and emotionally specific. "
-        "Return JSON with keys: mood, palette, scene, style, composition, prompt_focus.\n\n"
+        "Use the full lyrics below as the source of truth. "
+        "Return JSON with keys: mood, palette, scene, style, composition, lyric_reading, visual_metaphor, "
+        "prompt_focus, left_vertical, right_vertical, bottom_line, tone, sonnet_lines.\n"
+        "- lyric_reading: 2-4 sentences explaining the song's full emotional arc.\n"
+        "- visual_metaphor: a concrete subjectless environment that translates that arc into image language.\n"
+        "- prompt_focus: specific image details derived from the full song, not generic filler.\n"
+        "- left_vertical and right_vertical: uppercase poetic frame text, each 10-16 words.\n"
+        "- bottom_line: uppercase ambient line, 6-10 words.\n"
+        "- sonnet_lines: exactly 14 short original lines, inspired by the full song but not quoting it.\n\n"
         f"title: {context.song_title}\n"
         f"artist: {context.artist}\n"
-        f"lyric_excerpts: {focus_lines}\n"
+        f"lyric_line_count: {len(full_lyrics)}\n"
+        f"full_lyrics_json: {full_lyrics_json}\n"
     )
-    return _call_local_llm_json(system_prompt, user_prompt)
+    last_payload: dict | None = None
+    for _attempt in range(3):
+        last_payload = _call_local_llm_json(system_prompt, user_prompt)
+        if _is_complete_visual_plan(last_payload):
+            return last_payload
+    return last_payload if isinstance(last_payload, dict) else None
 
 
-def _generate_local_poetry_fields(context: BackgroundPromptContext) -> dict | None:
-    focus_lines = _extract_focus_lines(context.lyric_lines, limit=6)
-    system_prompt = (
-        "You write short atmospheric framing text for music video overlays. "
-        "Return strict JSON only."
-    )
-    user_prompt = (
-        "Write decorative overlay text for a lyric video frame. "
-        "The text should feel cinematic, restrained, and inspired by the song lyrics. "
-        "Return JSON with keys: left_vertical, right_vertical, bottom_line, tone. "
-        "left_vertical and right_vertical should each be one uppercase poetic sentence around 10 to 16 words. "
-        "bottom_line should be one short uppercase ambient line around 6 to 10 words.\n\n"
-        f"title: {context.song_title}\n"
-        f"artist: {context.artist}\n"
-        f"lyric_excerpts: {focus_lines}\n"
-    )
-    return _call_local_llm_json(system_prompt, user_prompt)
+def _has_any_field(payload: dict | None, keys: tuple[str, ...]) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    return any(str(payload.get(key) or "").strip() for key in keys)
 
 
-def build_background_prompt_package(context: BackgroundPromptContext) -> BackgroundPromptPackage:
+def build_background_prompt_package(
+    context: BackgroundPromptContext,
+    require_llm: bool = True,
+    local_fields: dict | None = None,
+) -> BackgroundPromptPackage:
     normalized_title = _normalize_title_against_artist(context.song_title, context.artist)
     mood = _infer_mood(normalized_title, context.lyric_lines)
     template = POSITIVE_TEMPLATES[mood]
     focus_lines = _extract_focus_lines(context.lyric_lines)
     focus_hint = "; ".join(focus_lines)
 
-    local_fields = _generate_local_background_fields(context) or {}
+    if local_fields is None:
+        local_fields = _generate_local_visual_plan_fields(context)
+    if require_llm and not _has_any_field(
+        local_fields,
+        ("mood", "palette", "scene", "style", "composition", "lyric_reading", "visual_metaphor", "prompt_focus"),
+    ):
+        raise BackgroundGenerationError(
+            "local-llm-background-failed",
+            f"Local LLM did not return a usable background prompt plan for: {context.song_base_name}",
+        )
+    local_fields = local_fields or {}
     mood = str(local_fields.get("mood") or mood)
     palette = str(local_fields.get("palette") or template["palette"])
     scene = str(local_fields.get("scene") or template["scene"])
-    style = template["style"]
+    style = str(local_fields.get("style") or template["style"])
 
-    composition = "vertical 9:16 composition, subjectless illustration, clean center area for lyric overlay, layered depth, calm readable layout, premium wallpaper framing"
+    composition_detail = str(local_fields.get("composition") or "").strip()
+    composition = (
+        "vertical 9:16 composition, subjectless illustration, clean center area for lyric overlay, "
+        "layered depth, calm readable layout, premium wallpaper framing"
+    )
+    if composition_detail:
+        composition = f"{composition}, {composition_detail}"
+    lyric_reading = str(local_fields.get("lyric_reading") or "").strip()
+    visual_metaphor = str(local_fields.get("visual_metaphor") or "").strip()
     prompt_focus = str(local_fields.get("prompt_focus") or focus_hint)
     song_reference = f"{context.artist} - {normalized_title}"
     positive_prompt = (
@@ -234,6 +351,7 @@ def build_background_prompt_package(context: BackgroundPromptContext) -> Backgro
         f"'{song_reference}' by {context.artist}, mood {mood}, {scene}, "
         f"{palette}, {style}, {composition}, no characters, no human figures, "
         f"visually rich but uncluttered, evocative atmosphere, detailed environment storytelling, "
+        f"lyric reading: {lyric_reading}, visual metaphor: {visual_metaphor}, "
         f"focus inspiration: {prompt_focus}"
     )
 
@@ -244,14 +362,43 @@ def build_background_prompt_package(context: BackgroundPromptContext) -> Backgro
         scene=scene,
         style=style,
         composition=composition,
+        lyric_reading=lyric_reading,
+        visual_metaphor=visual_metaphor,
         positive_prompt=positive_prompt,
         negative_prompt=NEGATIVE_PROMPT,
         workflow_hint="comfyui-subjectless-illustration-background",
+        generation_source="local-llm" if _has_any_field(local_fields, ("mood", "palette", "scene", "lyric_reading", "visual_metaphor", "prompt_focus")) else "template-fallback",
+        llm_model=LOCAL_LLM_MODEL if _has_any_field(local_fields, ("mood", "palette", "scene", "lyric_reading", "visual_metaphor", "prompt_focus")) else "",
     )
 
 
-def build_poetry_frame_package(context: BackgroundPromptContext) -> PoetryFramePackage:
-    local_fields = _generate_local_poetry_fields(context) or {}
+def build_poetry_frame_package(
+    context: BackgroundPromptContext,
+    require_llm: bool = True,
+    local_fields: dict | None = None,
+) -> PoetryFramePackage:
+    if local_fields is None:
+        local_fields = _generate_local_visual_plan_fields(context)
+    if require_llm and not _has_any_field(
+        local_fields,
+        ("left_vertical", "right_vertical", "bottom_line", "tone", "sonnet_lines"),
+    ):
+        raise BackgroundGenerationError(
+            "local-llm-poetry-failed",
+            f"Local LLM did not return usable poetry-frame text for: {context.song_base_name}",
+        )
+    local_fields = local_fields or {}
+    raw_sonnet_lines = local_fields.get("sonnet_lines")
+    sonnet_lines = [
+        str(line).strip()
+        for line in raw_sonnet_lines
+        if str(line).strip()
+    ] if isinstance(raw_sonnet_lines, list) else []
+    if require_llm and len(sonnet_lines) != 14:
+        raise BackgroundGenerationError(
+            "local-llm-sonnet-failed",
+            f"Local LLM did not return exactly 14 sonnet lines for: {context.song_base_name}",
+        )
     return PoetryFramePackage(
         nickname="@xcai43323",
         top_label="@xcai43323 · AUDIO DIARY",
@@ -267,7 +414,10 @@ def build_poetry_frame_package(context: BackgroundPromptContext) -> PoetryFrameP
             local_fields.get("bottom_line")
             or "LET THE NIGHT HUM SOFTLY"
         ).upper(),
+        sonnet_lines=sonnet_lines,
         tone=str(local_fields.get("tone") or "cinematic-ambient"),
+        generation_source="local-llm" if _has_any_field(local_fields, ("left_vertical", "right_vertical", "bottom_line", "tone", "sonnet_lines")) else "template-fallback",
+        llm_model=LOCAL_LLM_MODEL if _has_any_field(local_fields, ("left_vertical", "right_vertical", "bottom_line", "tone", "sonnet_lines")) else "",
     )
 
 
@@ -346,6 +496,10 @@ def save_poetry_frame_package(
                 "",
                 package.bottom_line,
                 "",
+                "## Sonnet",
+                "",
+                *package.sonnet_lines,
+                "",
             ]
         ),
         encoding="utf-8",
@@ -356,11 +510,18 @@ def save_poetry_frame_package(
     }
 
 
+def _build_stable_seed(context: BackgroundPromptContext) -> int:
+    seed_source = f"{context.song_base_name}|{context.song_title}|{context.artist}"
+    digest = hashlib.sha256(seed_source.encode("utf-8")).hexdigest()
+    return int(digest[:14], 16)
+
+
 def build_comfyui_workflow_package(
     package: BackgroundPromptPackage,
     context: BackgroundPromptContext,
 ) -> ComfyUIWorkflowPackage:
     checkpoint_name = "RealVisXLV4.0.safetensors"
+    seed = _build_stable_seed(context)
     width = 1080
     height = 1920
     steps = 32
@@ -370,7 +531,7 @@ def build_comfyui_workflow_package(
 
     workflow = {
         "3": {
-            "inputs": {"seed": 724638291847261, "steps": steps, "cfg": cfg, "sampler_name": sampler_name, "scheduler": scheduler, "denoise": 1, "model": ["4", 0], "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0]},
+            "inputs": {"seed": seed, "steps": steps, "cfg": cfg, "sampler_name": sampler_name, "scheduler": scheduler, "denoise": 1, "model": ["4", 0], "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0]},
             "class_type": "KSampler",
         },
         "4": {
@@ -401,6 +562,7 @@ def build_comfyui_workflow_package(
 
     return ComfyUIWorkflowPackage(
         checkpoint_name=checkpoint_name,
+        seed=seed,
         width=width,
         height=height,
         steps=steps,
@@ -431,34 +593,7 @@ def get_default_comfyui_api_url() -> str:
 
 
 def _curl_json(method: str, url: str, payload: dict | None = None) -> dict | None:
-    curl_binary = shutil.which("curl")
-    if not curl_binary:
-        return None
-
-    command = [curl_binary, "-s", "-X", method, url]
-    if payload is not None:
-        command.extend(
-            [
-                "-H",
-                "Content-Type: application/json",
-                "-d",
-                json.dumps(payload, ensure_ascii=False),
-            ]
-        )
-
-    try:
-        completed = subprocess.run(
-            command,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=90,
-        )
-        if not completed.stdout.strip():
-            return None
-        return json.loads(completed.stdout)
-    except (subprocess.SubprocessError, json.JSONDecodeError, TimeoutError):
-        return None
+    return _curl_json_payload(method, url, payload, timeout_seconds=90)
 
 
 def is_comfyui_api_available(api_url: str | None = None) -> bool:
@@ -521,10 +656,13 @@ def build_context_from_song_dir(song_dir: str) -> BackgroundPromptContext:
     )
 
 
-def refresh_song_background_assets(song_dir: str) -> dict[str, str]:
+def refresh_song_background_assets(song_dir: str, require_llm: bool = True) -> dict[str, str]:
+    if require_llm:
+        require_local_llm_available()
     context = build_context_from_song_dir(song_dir)
-    background_package = build_background_prompt_package(context)
-    poetry_package = build_poetry_frame_package(context)
+    local_fields = _generate_local_visual_plan_fields(context)
+    background_package = build_background_prompt_package(context, require_llm=require_llm, local_fields=local_fields)
+    poetry_package = build_poetry_frame_package(context, require_llm=require_llm, local_fields=local_fields)
     workflow_package = build_comfyui_workflow_package(background_package, context)
 
     background_paths = save_background_prompt_package(background_package, context)
@@ -541,50 +679,77 @@ def refresh_song_background_assets(song_dir: str) -> dict[str, str]:
     }
 
 
+def refresh_render_input_for_song(song_dir: str, project_root: str) -> str:
+    video_render_path = Path(project_root) / "modules" / "video-render" / "video_render.py"
+    import importlib.util
+    import sys
+
+    spec = importlib.util.spec_from_file_location("video_render_background_module", video_render_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load module from {video_render_path}")
+    video_render_module = importlib.util.module_from_spec(spec)
+    sys.modules["video_render_background_module"] = video_render_module
+    spec.loader.exec_module(video_render_module)
+    return video_render_module.refresh_render_job_input(song_dir)
+
+
 def generate_background_for_song(
     song_dir: str,
     project_root: str,
     api_url: str | None = None,
     comfy_output_root: str | None = None,
     timeout_seconds: int = 600,
+    reuse_existing_output: bool = False,
+    require_llm: bool = True,
+    refresh_assets: bool = False,
 ) -> dict:
-    root = Path(project_root)
     context = build_context_from_song_dir(song_dir)
-    asset_paths = refresh_song_background_assets(song_dir)
-    workflow = json.loads(Path(asset_paths["workflow_path"]).read_text(encoding="utf-8"))
+    if refresh_assets:
+        try:
+            asset_paths = refresh_song_background_assets(song_dir, require_llm=require_llm)
+            workflow_path = Path(asset_paths["workflow_path"])
+        except BackgroundGenerationError as error:
+            return {
+                "ok": False,
+                "reason": error.reason,
+                "song_dir": context.song_dir,
+                "message": str(error),
+            }
+    else:
+        workflow_path = Path(song_dir) / "background-workflow.json"
+        if not workflow_path.exists():
+            return {
+                "ok": False,
+                "reason": "background-workflow-missing",
+                "song_dir": context.song_dir,
+                "workflow_path": str(workflow_path),
+                "message": "Run npm run regenerate:lyrics-llm-workflow-text before generating background images.",
+            }
+    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
 
-    existing_import = import_latest_comfy_background(
-        context=context,
-        comfy_output_root=comfy_output_root,
-    )
-    if existing_import is not None:
-        video_render_path = root / "modules" / "video-render" / "video_render.py"
-        import importlib.util
-        import sys
-
-        spec = importlib.util.spec_from_file_location("video_render_background_module", video_render_path)
-        if spec is None or spec.loader is None:
-            raise RuntimeError(f"Unable to load module from {video_render_path}")
-        video_render_module = importlib.util.module_from_spec(spec)
-        sys.modules["video_render_background_module"] = video_render_module
-        spec.loader.exec_module(video_render_module)
-        render_input_path = video_render_module.refresh_render_job_input(context.song_dir)
-        return {
-            "ok": True,
-            "song_dir": context.song_dir,
-            "workflow_path": asset_paths["workflow_path"],
-            "prompt_id": None,
-            "background_path": existing_import,
-            "render_input_path": render_input_path,
-            "reused_existing_output": True,
-        }
+    if reuse_existing_output:
+        existing_import = import_latest_comfy_background(
+            context=context,
+            comfy_output_root=comfy_output_root,
+        )
+        if existing_import is not None:
+            render_input_path = refresh_render_input_for_song(context.song_dir, project_root)
+            return {
+                "ok": True,
+                "song_dir": context.song_dir,
+                "workflow_path": str(workflow_path),
+                "prompt_id": None,
+                "background_path": existing_import,
+                "render_input_path": render_input_path,
+                "reused_existing_output": True,
+            }
 
     if not is_comfyui_api_available(api_url):
         return {
             "ok": False,
             "reason": "comfyui-api-unavailable",
             "song_dir": context.song_dir,
-            "workflow_path": asset_paths["workflow_path"],
+            "workflow_path": str(workflow_path),
             "api_url": api_url or get_default_comfyui_api_url(),
         }
 
@@ -594,7 +759,7 @@ def generate_background_for_song(
             "ok": False,
             "reason": "workflow-submit-failed",
             "song_dir": context.song_dir,
-            "workflow_path": asset_paths["workflow_path"],
+            "workflow_path": str(workflow_path),
             "api_url": api_url or get_default_comfyui_api_url(),
         }
 
@@ -623,22 +788,12 @@ def generate_background_for_song(
             timeout_seconds=90,
         )
 
-    video_render_path = root / "modules" / "video-render" / "video_render.py"
-    import importlib.util
-    import sys
-
-    spec = importlib.util.spec_from_file_location("video_render_background_module", video_render_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Unable to load module from {video_render_path}")
-    video_render_module = importlib.util.module_from_spec(spec)
-    sys.modules["video_render_background_module"] = video_render_module
-    spec.loader.exec_module(video_render_module)
-    render_input_path = video_render_module.refresh_render_job_input(context.song_dir)
+    render_input_path = refresh_render_input_for_song(context.song_dir, project_root)
 
     return {
         "ok": imported_background is not None,
         "song_dir": context.song_dir,
-        "workflow_path": asset_paths["workflow_path"],
+        "workflow_path": str(workflow_path),
         "prompt_id": prompt_id,
         "background_path": imported_background,
         "render_input_path": render_input_path,

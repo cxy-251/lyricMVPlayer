@@ -39,6 +39,7 @@ const normalizePoetryFrame = (poetryFrame: RawRenderInput["poetryFrame"]): Poetr
         leftVertical: poetryFrame.leftVertical ?? "",
         rightVertical: poetryFrame.rightVertical ?? "",
         bottomLine: poetryFrame.bottomLine ?? "",
+        sonnetLines: Array.isArray(poetryFrame.sonnetLines) ? poetryFrame.sonnetLines : [],
       }
     : undefined;
 
