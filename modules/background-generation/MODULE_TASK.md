@@ -18,7 +18,7 @@ Maintain two separate visual-production stages for renderable song items: local-
 - generate subjectless illustration prompts, poetry-frame text, fourteen-line poem text, and workflow JSON through the local LLM server
 - pass the cleaned full lyric sequence to the local LLM instead of a representative excerpt
 - save prompt files into the song directory
-- submit existing workflow JSON files to ComfyUI for render-batch-0, queue, or playlist-based image generation
+- submit existing workflow JSON files to ComfyUI for selectable render batches
 - refresh render-input and web-public manifests after visual assets change
 
 ## Non-goals
@@ -46,7 +46,7 @@ Maintain two separate visual-production stages for renderable song items: local-
 
 - one song can produce a reusable background prompt package
 - local LLM unavailability is reported as a hard failure instead of silently using repeated fallback text
-- local LLM lyric-understanding/workflow/text regeneration is limited to `render_batch=0` repair targets unless a more specific single-song path is used
+- local LLM lyric-understanding/workflow/text regeneration defaults to `render_batch=0`, with explicit batch selection for intentional rebuilds such as `render_batch=22`
 - the LLM output includes a full-song reading, a visual metaphor, prompt focus, frame text, and exactly fourteen poem lines
 - prompt output is saved inside the same song folder as audio and lyrics
 - prompt direction avoids human figures and focuses on subjectless illustration backgrounds

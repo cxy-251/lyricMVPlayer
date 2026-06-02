@@ -333,6 +333,10 @@ export const App: React.FC = () => {
             lyrics: initialSong.lyrics,
             audioFeatures: initialSong.audioFeatures,
             library: initialLibrary,
+            loadLibraryItem: async (songId: string) => {
+              const song = manifest.songs.find((item) => item.id === songId);
+              return song ? loadSongData(song, nickname) : null;
+            },
             initialTrackId: initialSong.id,
             queue,
             playlists,
@@ -369,31 +373,6 @@ export const App: React.FC = () => {
             }
           })
         );
-
-        const remainingSongs = manifest.songs.filter(
-          (song) => song.id !== initialSong.id && !prioritySongs.some((prioritySong) => prioritySong.id === song.id)
-        );
-        for (const song of remainingSongs) {
-          if (cancelled) {
-            break;
-          }
-          try {
-            const loadedSong = await loadSongData(song, nickname);
-            if (!cancelled) {
-              setProps((current) => {
-                if (!current?.library) {
-                  return current;
-                }
-                return {
-                  ...current,
-                  library: current.library.map((item) => (item.id === loadedSong.id ? loadedSong : item)),
-                };
-              });
-            }
-          } catch {
-            // keep placeholder song and continue loading the rest
-          }
-        }
       } catch (loadError) {
         if (!cancelled) {
           setError(loadError instanceof Error ? loadError.message : String(loadError));

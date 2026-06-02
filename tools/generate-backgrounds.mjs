@@ -4,8 +4,9 @@ import path from "node:path";
 
 const projectRoot = process.cwd();
 const mode = process.argv[2] ?? "queue";
-const songDirName = process.argv.slice(3).join(" ").trim();
-const playlistId = process.argv[3] ?? "";
+const modeArgs = process.argv.slice(3);
+const songDirName = modeArgs.join(" ").trim();
+const playlistId = modeArgs[0] ?? "";
 
 const scriptPath = path.join(
   projectRoot,
@@ -19,7 +20,7 @@ const args =
     ? ["run", "-n", "kwai", "python", scriptPath, "song", projectRoot, songDirName]
     : mode === "playlist"
       ? ["run", "-n", "kwai", "python", scriptPath, "playlist", projectRoot, playlistId]
-    : ["run", "-n", "kwai", "python", scriptPath, mode, projectRoot];
+    : ["run", "-n", "kwai", "python", scriptPath, mode, projectRoot, ...modeArgs];
 
 if (mode === "song" && !songDirName) {
   throw new Error('Usage: node tools/generate-backgrounds.mjs song "<song-folder-name>"');

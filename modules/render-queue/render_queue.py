@@ -176,27 +176,36 @@ def upsert_render_queue_row(project_root: str, row: RenderQueueRow) -> Path:
     return csv_path
 
 
-def list_background_pending_rows(project_root: str) -> list[dict[str, str]]:
+def list_background_pending_rows(
+    project_root: str,
+    batch_value: str = "0",
+    include_finished: bool = False,
+    include_ready: bool = False,
+) -> list[dict[str, str]]:
     csv_path = ensure_render_queue_csv(project_root)
     rows = _load_rows(csv_path, project_root)
     return [
         row
         for row in rows
-        if row.get("background_ready") == "false"
-        and row.get("render_batch", "") == "0"
-        and row.get("video_status") not in {"rendered", "published"}
+        if (include_ready or row.get("background_ready") == "false")
+        and row.get("render_batch", "") == batch_value
+        and (include_finished or row.get("video_status") not in {"rendered", "published"})
     ]
 
 
-def list_render_batch_zero_unfinished_rows(project_root: str) -> list[dict[str, str]]:
+def list_rows_for_visual_plan_regeneration(
+    project_root: str,
+    batch_value: str = "0",
+    include_finished: bool = False,
+) -> list[dict[str, str]]:
     csv_path = ensure_render_queue_csv(project_root)
     rows = _load_rows(csv_path, project_root)
     return [
         row
         for row in rows
         if row.get("song_dir", "").strip()
-        and row.get("render_batch", "") == "0"
-        and row.get("video_status") not in {"rendered", "published"}
+        and row.get("render_batch", "") == batch_value
+        and (include_finished or row.get("video_status") not in {"rendered", "published"})
     ]
 
 
@@ -209,12 +218,17 @@ def get_queue_row(project_root: str, song_dir_name: str) -> dict[str, str] | Non
     return None
 
 
-def is_background_generation_allowed(project_root: str, song_dir_name: str) -> bool:
+def is_background_generation_allowed(
+    project_root: str,
+    song_dir_name: str,
+    batch_value: str = "0",
+    include_finished: bool = False,
+) -> bool:
     row = get_queue_row(project_root, song_dir_name)
     return (
         row is not None
-        and row.get("render_batch", "") == "0"
-        and row.get("video_status") not in {"rendered", "published"}
+        and row.get("render_batch", "") == batch_value
+        and (include_finished or row.get("video_status") not in {"rendered", "published"})
     )
 
 
@@ -262,8 +276,8 @@ def _main(argv: list[str]) -> int:
         raise SystemExit(
             "Usage:\n"
             "  render_queue.py list-render-batch-codes <project_root>\n"
-            "  render_queue.py list-background-pending <project_root>\n"
-            "  render_queue.py list-render-batch-0-unfinished <project_root>\n"
+            "  render_queue.py list-background-pending <project_root> [batch] [--include-finished] [--include-ready]\n"
+            "  render_queue.py list-visual-plan-targets <project_root> [batch] [--include-finished]\n"
             "  render_queue.py list-runnable <project_root> [batch]\n"
             "  render_queue.py mark <project_root> <song_dir_name> <status>\n"
             "  render_queue.py mark-background <project_root> <song_dir_name> <true|false>\n"
@@ -277,11 +291,37 @@ def _main(argv: list[str]) -> int:
         return 0
 
     if command == "list-background-pending":
-        print(json.dumps(list_background_pending_rows(project_root), ensure_ascii=False, indent=2))
+        batch_value = argv[3] if len(argv) > 3 and not argv[3].startswith("--") else "0"
+        include_finished = "--include-finished" in argv[3:]
+        include_ready = "--include-ready" in argv[3:]
+        print(
+            json.dumps(
+                list_background_pending_rows(
+                    project_root,
+                    batch_value=batch_value,
+                    include_finished=include_finished,
+                    include_ready=include_ready,
+                ),
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0
 
-    if command == "list-render-batch-0-unfinished":
-        print(json.dumps(list_render_batch_zero_unfinished_rows(project_root), ensure_ascii=False, indent=2))
+    if command == "list-visual-plan-targets":
+        batch_value = argv[3] if len(argv) > 3 and not argv[3].startswith("--") else "0"
+        include_finished = "--include-finished" in argv[3:]
+        print(
+            json.dumps(
+                list_rows_for_visual_plan_regeneration(
+                    project_root,
+                    batch_value=batch_value,
+                    include_finished=include_finished,
+                ),
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0
 
     if command == "list-runnable":

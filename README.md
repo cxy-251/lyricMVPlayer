@@ -125,6 +125,9 @@ Common commands for the frontend preview and render layer:
   This command uses the local ComfyUI API on:
   `http://127.0.0.1:8000`
   It does not call the local LLM and does not regenerate prompt text. If a target song already has `background.png`, this command overwrites it after ComfyUI returns a new image.
+  To generate images for another CSV render batch, pass the batch value:
+  `npm run generate:backgrounds -- 22`
+  Explicit non-zero batches include rendered/published rows and existing-ready backgrounds so older published songs can be rebuilt intentionally.
 
 - `npm run regenerate:lyrics-llm-workflow-text`
   Regenerate only the lyric-understanding, workflow, and frame-text files for every `artifacts/common/production-queue.csv` row where `render_batch = 0` and `video_status` is not `rendered` or `published`.
@@ -132,13 +135,9 @@ Common commands for the frontend preview and render layer:
   For each target song it overwrites `background-prompt.json`, `poetry-frame.json`, `background-workflow.json`, refreshes `render-input.json`, and marks `background_ready=false` so `npm run generate:backgrounds` can generate a new image from the new workflow.
   The local LLM receives the cleaned full lyric sequence in order, not a representative excerpt. The LLM must return a full-song reading, visual metaphor, prompt focus, frame text, and exactly 14 original sonnet lines.
   This command requires the local LLM server on `http://127.0.0.1:1234/v1`.
-
-- `npm run regenerate:backgrounds:new-downloads`
-  Generate background images for songs currently in the `New Downloads` playlist from their existing workflows.
-  This does not call the local LLM.
-
-- `npm run regenerate:backgrounds:playlist -- "<playlist-id>"`
-  Same as the previous background-image command, but targets any playlist id from `artifacts/common/library-state.json`.
+  To rebuild workflow/text for another CSV render batch, pass the batch value:
+  `npm run regenerate:lyrics-llm-workflow-text -- 22`
+  Explicit non-zero batches include rendered/published rows and still mark `background_ready=false` for the follow-up image generation command.
 
 - `npm run apply:manual-lyrics -- "<song-folder-name>"`
   If a song folder contains `lyrics.manual.txt`, use that file as the preferred lyric source, realign it against the song audio, overwrite `lyrics.json`, refresh `alignedLRC.json`, regenerate background prompt / poetry / workflow assets, and refresh `render-input.json`.

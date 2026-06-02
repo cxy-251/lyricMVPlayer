@@ -69,12 +69,23 @@ def _load_playlist_song_dirs(project_root: Path, playlist_id: str) -> list[str]:
     return []
 
 
-def _background_blocked_result(song_dir: Path) -> dict:
+def _should_include_finished_for_batch(batch_value: str) -> bool:
+    return batch_value != "0"
+
+
+def _should_include_ready_for_batch(batch_value: str) -> bool:
+    return batch_value != "0"
+
+
+def _background_blocked_result(song_dir: Path, batch_value: str = "0") -> dict:
     return {
         "ok": False,
         "song_dir": str(song_dir),
         "error": "background-generation-skipped-by-render-queue",
-        "message": "Only production-queue rows with render_batch=0 that are not rendered or published can generate backgrounds.",
+        "message": (
+            f"Only production-queue rows with render_batch={batch_value} can generate backgrounds"
+            + ("." if _should_include_finished_for_batch(batch_value) else " when they are not rendered or published.")
+        ),
     }
 
 
@@ -107,9 +118,9 @@ def _main(argv: list[str]) -> int:
         raise SystemExit(
             "Usage:\n"
             "  run_background_generation.py current <project_root>\n"
-            "  run_background_generation.py queue <project_root>\n"
-            "  run_background_generation.py missing <project_root>\n"
-            "  run_background_generation.py lyrics-llm-workflow-text <project_root>\n"
+            "  run_background_generation.py queue <project_root> [batch]\n"
+            "  run_background_generation.py missing <project_root> [batch]\n"
+            "  run_background_generation.py lyrics-llm-workflow-text <project_root> [batch]\n"
             "  run_background_generation.py new-downloads <project_root>\n"
             "  run_background_generation.py playlist <project_root> <playlist_id>\n"
             "  run_background_generation.py song <project_root> <song_dir_name>\n"
@@ -117,6 +128,9 @@ def _main(argv: list[str]) -> int:
 
     command = argv[1]
     project_root = Path(argv[2])
+    selected_batch_value = argv[3] if len(argv) >= 4 and not argv[3].startswith("--") else "0"
+    selected_batch_includes_finished = _should_include_finished_for_batch(selected_batch_value)
+    selected_batch_includes_ready = _should_include_ready_for_batch(selected_batch_value)
     bg = _load_background_generation_module(project_root)
     render_queue = _load_render_queue_module(project_root)
     llm_required_commands = {"lyrics-llm-workflow-text"}
@@ -165,7 +179,12 @@ def _main(argv: list[str]) -> int:
 
     if command == "missing":
         results = []
-        pending_rows = render_queue.list_background_pending_rows(str(project_root))
+        pending_rows = render_queue.list_background_pending_rows(
+            str(project_root),
+            batch_value=selected_batch_value,
+            include_finished=selected_batch_includes_finished,
+            include_ready=selected_batch_includes_ready,
+        )
         for row in pending_rows:
             song_dir_name = row.get("song_dir", "").strip()
             if not song_dir_name:
@@ -174,12 +193,29 @@ def _main(argv: list[str]) -> int:
             if not _needs_background(song_dir):
                 continue
             results.append(bg.generate_background_for_song(str(song_dir), str(project_root)))
-        print(json.dumps({"results": results}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "target": "missing-backgrounds",
+                    "render_batch": selected_batch_value,
+                    "include_finished": selected_batch_includes_finished,
+                    "include_ready": selected_batch_includes_ready,
+                    "results": results,
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0 if all(item.get("ok") for item in results) else 1
 
     if command == "queue":
         results = []
-        pending_rows = render_queue.list_background_pending_rows(str(project_root))
+        pending_rows = render_queue.list_background_pending_rows(
+            str(project_root),
+            batch_value=selected_batch_value,
+            include_finished=selected_batch_includes_finished,
+            include_ready=selected_batch_includes_ready,
+        )
         for row in pending_rows:
             song_dir_name = row.get("song_dir", "").strip()
             if not song_dir_name:
@@ -212,7 +248,19 @@ def _main(argv: list[str]) -> int:
                         "recovered_after_generation": True,
                     }
                 )
-        print(json.dumps({"results": results}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "target": "background-images",
+                    "render_batch": selected_batch_value,
+                    "include_finished": selected_batch_includes_finished,
+                    "include_ready": selected_batch_includes_ready,
+                    "results": results,
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         if all(item.get("ok") for item in results):
             return 0
         unresolved = [
@@ -226,13 +274,29 @@ def _main(argv: list[str]) -> int:
 
     if command == "lyrics-llm-workflow-text":
         results = []
-        target_rows = render_queue.list_render_batch_zero_unfinished_rows(str(project_root))
+        target_rows = render_queue.list_rows_for_visual_plan_regeneration(
+            str(project_root),
+            batch_value=selected_batch_value,
+            include_finished=selected_batch_includes_finished,
+        )
         for row in target_rows:
             song_dir_name = row.get("song_dir", "").strip()
             if not song_dir_name:
                 continue
             results.append(_refresh_visual_plan_for_row(bg, render_queue, project_root, song_dir_name))
-        print(json.dumps({"target": "lyrics-llm-workflow-text", "count": len(target_rows), "results": results}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "target": "lyrics-llm-workflow-text",
+                    "render_batch": selected_batch_value,
+                    "include_finished": selected_batch_includes_finished,
+                    "count": len(target_rows),
+                    "results": results,
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0 if results and all(item.get("ok") for item in results) else 1
 
     if command in {"new-downloads", "playlist"}:
