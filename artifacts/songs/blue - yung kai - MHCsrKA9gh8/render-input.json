@@ -3,8 +3,8 @@
   "artist": "yung kai",
   "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/blue - yung kai - MHCsrKA9gh8/audio.mp3",
   "lyricOffsetMs": 0,
-  "renderTrimStartMs": 15990,
-  "renderDurationInFrames": 4476,
+  "renderTrimStartMs": 16120,
+  "renderDurationInFrames": 4492,
   "durationInFrames": 6430,
   "fps": 30,
   "background": {
@@ -15,124 +15,150 @@
   "poetryFrame": {
     "nickname": "@xcai43323",
     "topLabel": "@xcai43323 · AUDIO DIARY",
-    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
-    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
-    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+    "leftVertical": "YOUR HEART IS A WHISPER IN THE BLUE HOUR LIGHT",
+    "rightVertical": "WE WILL LIVE WITHIN THIS DREAM OF FOREVERMORE",
+    "bottomLine": "A LOVE THAT TRANSCENDS TIME AND TIDES",
+    "sonnetLines": [
+      "The tide pulls out to meet the stars,",
+      "A quiet promise whispered on the breeze.",
+      "We trace the map of where forever are,",
+      "Among the salt and ocean mysteries.",
+      "Your gaze holds all the light I need,",
+      "A steady beacon through the shifting haze.",
+      "A silent, perfect, everlasting creed,",
+      "Beyond the passing of these fleeting days.",
+      "Let memory become our guiding art,",
+      "A tapestry woven from deep midnight blue.",
+      "To hold your soul within my beating heart,",
+      "My endless devotion waits for only you.",
+      "We are bound by waves and lunar sheen,",
+      "The deepest color ever truly seen."
+    ]
   },
   "lyrics": [
     {
-      "startMs": 18990,
-      "endMs": 24810,
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 19120,
+      "endMs": 24960,
       "text": "Your morning eyes, I could stare like watching stars"
     },
     {
-      "startMs": 25990,
-      "endMs": 32170,
+      "startMs": 26430,
+      "endMs": 32189,
       "text": "I could walk you by, and I'll tell without a thought"
     },
     {
-      "startMs": 32170,
-      "endMs": 39450,
+      "startMs": 32340,
+      "endMs": 39541,
       "text": "You'd be mine, would you mind if I took your hand tonight?"
     },
     {
-      "startMs": 39970,
-      "endMs": 44670,
+      "startMs": 40040,
+      "endMs": 45260,
       "text": "Know you're all that I want this life"
     },
     {
-      "startMs": 45970,
-      "endMs": 50580,
+      "startMs": 48210,
+      "endMs": 50290,
       "text": "I'll imagine we fell in love"
     },
     {
-      "startMs": 51060,
-      "endMs": 54220,
+      "startMs": 50660,
+      "endMs": 53560,
       "text": "I'll nap under moonlight skies with you"
     },
     {
-      "startMs": 54220,
-      "endMs": 58040,
+      "startMs": 54780,
+      "endMs": 58000,
       "text": "I think I'll picture us, you with the waves"
     },
     {
-      "startMs": 58140,
-      "endMs": 61860,
+      "startMs": 58260,
+      "endMs": 61770,
       "text": "The ocean's colours on your face"
     },
     {
-      "startMs": 61860,
-      "endMs": 65720,
+      "startMs": 62190,
+      "endMs": 65670,
       "text": "I'll leave my heart with your air"
     },
     {
-      "startMs": 65720,
-      "endMs": 69200,
+      "startMs": 66470,
+      "endMs": 69250,
       "text": "So, let me fly with you"
     },
     {
-      "startMs": 69200,
-      "endMs": 74580,
+      "startMs": 69750,
+      "endMs": 75070,
       "text": "Will you be forever with me?"
     },
     {
-      "startMs": 108440,
-      "endMs": 113680,
+      "startMs": 76220,
+      "endMs": 80420,
+      "text": "♪"
+    },
+    {
+      "startMs": 107080,
+      "endMs": 112100,
       "text": "My love will always stay by you"
     },
     {
-      "startMs": 113680,
-      "endMs": 118340,
+      "startMs": 112840,
+      "endMs": 117040,
       "text": "I'll keep it safe, so don't you worry a thing"
     },
     {
-      "startMs": 118340,
-      "endMs": 120840,
+      "startMs": 118120,
+      "endMs": 120620,
       "text": "I'll tell you I love you more"
     },
     {
-      "startMs": 120840,
+      "startMs": 121720,
       "endMs": 128060,
       "text": "It's stuck with you forever, so promise you won't let it go"
     },
     {
-      "startMs": 128060,
-      "endMs": 133900,
+      "startMs": 128580,
+      "endMs": 134520,
       "text": "I'll trust the universe will always bring me to you"
     },
     {
-      "startMs": 133900,
-      "endMs": 139240,
+      "startMs": 136870,
+      "endMs": 139250,
       "text": "I'll imagine we fell in love"
     },
     {
-      "startMs": 139240,
-      "endMs": 142840,
+      "startMs": 139540,
+      "endMs": 142380,
       "text": "I'll nap under moonlight skies with you"
     },
     {
-      "startMs": 142840,
-      "endMs": 146740,
+      "startMs": 143360,
+      "endMs": 146800,
       "text": "I think I'll picture us, you with the waves"
     },
     {
-      "startMs": 146740,
-      "endMs": 150520,
+      "startMs": 146850,
+      "endMs": 150400,
       "text": "The ocean's colours on your face"
     },
     {
-      "startMs": 150520,
-      "endMs": 154300,
+      "startMs": 150640,
+      "endMs": 154480,
       "text": "I'll leave my heart with your air"
     },
     {
-      "startMs": 154650,
+      "startMs": 154910,
       "endMs": 157700,
       "text": "So, let me fly with you"
     },
     {
-      "startMs": 157700,
-      "endMs": 163200,
+      "startMs": 158360,
+      "endMs": 163864,
       "text": "Will you be forever with me?"
     }
   ],

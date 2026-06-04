@@ -15,9 +15,25 @@
   "poetryFrame": {
     "nickname": "@xcai43323",
     "topLabel": "@xcai43323 · AUDIO DIARY",
-    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
-    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
-    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+    "leftVertical": "WHAT IS THE CALCULATION FOR A LIFE UNLIVED?",
+    "rightVertical": "THE WEIGHT OF EXPECTATION IN AN EMPTY ROOM.",
+    "bottomLine": "LOST BETWEEN YESTERDAY AND TOMORROW'S DEBT",
+    "sonnetLines": [
+      "The year turns swiftly,",
+      "Leaving echoes behind.",
+      "A path unknown now,",
+      "A worried design.",
+      "Where did the laughter go?",
+      "The certainty fled.",
+      "Just numbers and futures,",
+      "Unwritten instead.",
+      "We search for the moment,",
+      "The lesson concealed.",
+      "Of growing too fast, though we feel",
+      "So utterly stalled.",
+      "Tell me the secret key,",
+      "To where I should call."
+    ]
   },
   "lyrics": [
     {

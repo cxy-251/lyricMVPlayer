@@ -15,9 +15,25 @@
   "poetryFrame": {
     "nickname": "@xcai43323",
     "topLabel": "@xcai43323 · AUDIO DIARY",
-    "leftVertical": "THE MOMENT HANGS BETWEEN US, A FAINT AND SWEET MEMORY.",
-    "rightVertical": "WE ARE JUST GHOSTS IN THE ECHOES OF WHAT USED TO BE.",
-    "bottomLine": "JUST LIKE IT WAS BEFORE"
+    "leftVertical": "THE ECHO OF A MOMENT THAT COULD NOT LAST FOREVER",
+    "rightVertical": "WE ARE LEFT WITH THE GHOSTS OF WHAT USED TO BE",
+    "bottomLine": "A QUIET ACKNOWLEDGMENT OF HOW THINGS HAVE CHANGED",
+    "sonnetLines": [
+      "The clock hands spin too fast,",
+      "Leaving echoes in the air.",
+      "A ghost of laughter cast,",
+      "Beyond what we can repair.",
+      "We trace the fading lines,",
+      "On maps we used to know.",
+      "Where time's forgotten signs,",
+      "Whispered secrets soft and low.",
+      "Gravity pulls us apart,",
+      "Into separate, steady streams.",
+      "Just a whisper in the heart,",
+      "Of half-remembered dreams.",
+      "The past is a beautiful ache,",
+      "A promise that cannot break."
+    ]
   },
   "lyrics": [
     {

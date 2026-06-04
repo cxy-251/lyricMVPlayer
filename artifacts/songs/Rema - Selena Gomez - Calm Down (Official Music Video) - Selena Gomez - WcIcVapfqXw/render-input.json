@@ -1,6 +1,6 @@
 {
-  "title": "Calm Down (Official Music Video)",
-  "artist": "Rema - Selena Gomez",
+  "title": "Rema, Selena Gomez - Calm Down (Official Music Video)",
+  "artist": "Selena Gomez",
   "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Rema - Selena Gomez - Calm Down (Official Music Video) - Selena Gomez - WcIcVapfqXw/audio.mp3",
   "lyricOffsetMs": 0,
   "renderTrimStartMs": 5530,
@@ -15,9 +15,25 @@
   "poetryFrame": {
     "nickname": "@xcai43323",
     "topLabel": "@xcai43323 · AUDIO DIARY",
-    "leftVertical": "THE CITY HOLDS ITS BREATH WHILE THE SONG TURNS MEMORY INTO LIGHT",
-    "rightVertical": "EACH CHORUS LEAVES A QUIET TRACE ABOVE THE STREETS OF MIDNIGHT",
-    "bottomLine": "LET THE NIGHT HUM SOFTLY"
+    "leftVertical": "THE RHYTHM OF THE HEART IS A WILD AND UNSTABLE THING",
+    "rightVertical": "A SWEET FANTASY WE CANNOT HELP BUT EMBRACE TONIGHT",
+    "bottomLine": "LET THE MOMENT TAKE US, NO TURNING BACK NOW",
+    "sonnetLines": [
+      "The pulse beats out a secret code,",
+      "A breathless rhythm in the fading light.",
+      "We dance upon the shifting road,",
+      "Lost to the magic of the endless night.",
+      "Your gaze holds me, electric and deep,",
+      "A current pulling where I cannot stray.",
+      "Promises that fragile memories keep,",
+      "Washing away the doubt of yesterday.",
+      "The heat rises like a golden haze,",
+      "Confined moments under velvet skies.",
+      "We wander through these beautiful maze,",
+      "Reflected truth within your knowing eyes.",
+      "Let the control dissolve and drift away,",
+      "Just feel the pull until the break of day."
+    ]
   },
   "lyrics": [
     {
