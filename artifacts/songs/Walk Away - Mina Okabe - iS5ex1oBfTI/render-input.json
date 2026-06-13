@@ -1,0 +1,267 @@
+{
+  "title": "Walk Away",
+  "artist": "Mina Okabe",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Walk Away - Mina Okabe - iS5ex1oBfTI/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 6190,
+  "renderDurationInFrames": 4584,
+  "durationInFrames": 5095,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Walk Away - Mina Okabe - iS5ex1oBfTI/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF WORDS UNWRITTEN IN THE SILENCE BETWEEN US.",
+    "rightVertical": "A CONSTANT QUESTION ECHOING THROUGH THESE EMPTY HALLWAYS. WHERE DO WE GO?",
+    "bottomLine": "WE NEED TRUTH, NOT JUST VAGUE PROMISES.",
+    "sonnetLines": [
+      "The signal fades across the pane,",
+      "A promise whispered in the rain.",
+      "I trace the lines of what we were,",
+      "Caught in a beautiful blur.",
+      "Each glance was a thread I held fast,",
+      "A fragile moment built to not last.",
+      "Why does the pull remain so strong?",
+      "Where did our clearer footing go wrong?",
+      "To walk away feels like a fall,",
+      "Yet staying means losing it all.",
+      "Just tell me where your heart resides,",
+      "Before this confusion presides.",
+      "Let the curtain finally descend,",
+      "And let this weary waiting end."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 9190,
+      "endMs": 11670,
+      "text": "Sent a text last night"
+    },
+    {
+      "startMs": 12290,
+      "endMs": 16210,
+      "text": "But you still haven't replied"
+    },
+    {
+      "startMs": 18360,
+      "endMs": 21400,
+      "text": "Best to forget 'cause you"
+    },
+    {
+      "startMs": 22770,
+      "endMs": 25570,
+      "text": "Don't invest the time"
+    },
+    {
+      "startMs": 27860,
+      "endMs": 30490,
+      "text": "Get out of my mind"
+    },
+    {
+      "startMs": 32110,
+      "endMs": 33430,
+      "text": "Get out"
+    },
+    {
+      "startMs": 33880,
+      "endMs": 37210,
+      "text": "You're messing with my head"
+    },
+    {
+      "startMs": 37210,
+      "endMs": 38990,
+      "text": "'Cause I wait for you"
+    },
+    {
+      "startMs": 38990,
+      "endMs": 43030,
+      "text": "Maybe I've misread all the things you do"
+    },
+    {
+      "startMs": 43030,
+      "endMs": 46470,
+      "text": "Looking for a reason to stay"
+    },
+    {
+      "startMs": 46470,
+      "endMs": 48330,
+      "text": "Why can't I walk away"
+    },
+    {
+      "startMs": 48420,
+      "endMs": 51500,
+      "text": "Walk away, away from you?"
+    },
+    {
+      "startMs": 51640,
+      "endMs": 55500,
+      "text": "Try to decide, could you"
+    },
+    {
+      "startMs": 56290,
+      "endMs": 59730,
+      "text": "Say where this is going? I notice"
+    },
+    {
+      "startMs": 60360,
+      "endMs": 64430,
+      "text": "Every time I make up my mind"
+    },
+    {
+      "startMs": 64860,
+      "endMs": 68670,
+      "text": "You find a way to get back into my life"
+    },
+    {
+      "startMs": 69830,
+      "endMs": 73880,
+      "text": "Get out of my life (get out of my life)"
+    },
+    {
+      "startMs": 73880,
+      "endMs": 75770,
+      "text": "Get out"
+    },
+    {
+      "startMs": 75770,
+      "endMs": 78620,
+      "text": "You're messing with my head"
+    },
+    {
+      "startMs": 78620,
+      "endMs": 80240,
+      "text": "'Cause I wait for you"
+    },
+    {
+      "startMs": 80240,
+      "endMs": 84440,
+      "text": "Maybe I've misread all the things you do"
+    },
+    {
+      "startMs": 84460,
+      "endMs": 88039,
+      "text": "Looking for a reason to stay"
+    },
+    {
+      "startMs": 88039,
+      "endMs": 90060,
+      "text": "Why can't I walk away?"
+    },
+    {
+      "startMs": 90060,
+      "endMs": 92840,
+      "text": "Walk away, away from you?"
+    },
+    {
+      "startMs": 92840,
+      "endMs": 96360,
+      "text": "Ahh, ahh"
+    },
+    {
+      "startMs": 96360,
+      "endMs": 100490,
+      "text": "Ahh (away from you)"
+    },
+    {
+      "startMs": 100490,
+      "endMs": 103850,
+      "text": "Ahh"
+    },
+    {
+      "startMs": 103850,
+      "endMs": 106130,
+      "text": "Why can't I walk away"
+    },
+    {
+      "startMs": 106130,
+      "endMs": 109360,
+      "text": "Walk away, away from you?"
+    },
+    {
+      "startMs": 109360,
+      "endMs": 111040,
+      "text": "It's something I want"
+    },
+    {
+      "startMs": 112200,
+      "endMs": 118000,
+      "text": "But if you don't feel the same way then tell me"
+    },
+    {
+      "startMs": 118000,
+      "endMs": 120610,
+      "text": "'Cause it's nothing I want"
+    },
+    {
+      "startMs": 120610,
+      "endMs": 124810,
+      "text": "If I'm alone in this"
+    },
+    {
+      "startMs": 125200,
+      "endMs": 128139,
+      "text": "You're messing with my head"
+    },
+    {
+      "startMs": 128139,
+      "endMs": 128710,
+      "text": "'Cause I wait for you"
+    },
+    {
+      "startMs": 129870,
+      "endMs": 132840,
+      "text": "Maybe I've misread all the things you do"
+    },
+    {
+      "startMs": 134000,
+      "endMs": 137320,
+      "text": "Looking for a reason to stay"
+    },
+    {
+      "startMs": 137320,
+      "endMs": 139480,
+      "text": "Why can't I walk away?"
+    },
+    {
+      "startMs": 139480,
+      "endMs": 142510,
+      "text": "Walk away, away from you?"
+    },
+    {
+      "startMs": 142510,
+      "endMs": 146570,
+      "text": "Ahh, ahh"
+    },
+    {
+      "startMs": 146570,
+      "endMs": 150700,
+      "text": "Ahh, ah (away from you)"
+    },
+    {
+      "startMs": 150700,
+      "endMs": 153579,
+      "text": "Ahh (ohh, oh)"
+    },
+    {
+      "startMs": 153579,
+      "endMs": 155820,
+      "text": "Why can't I walk away"
+    },
+    {
+      "startMs": 155820,
+      "endMs": 157000,
+      "text": "Walk away, away from you?"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Walk Away - Mina Okabe - iS5ex1oBfTI",
+  "outputMp4Name": "Walk Away - Mina Okabe.mp4"
+}

@@ -1,219 +1,307 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
-  "generated_at": "2026-06-02T01:56:16.490Z",
-  "count": 18,
-  "lyrics_review_count": 9,
+  "generated_at": "2026-06-06T15:16:23.920Z",
+  "count": 28,
+  "lyrics_review_count": 11,
   "items": [
     {
-      "video_id": "8LovM2oVqPM",
-      "source_url": "https://www.youtube.com/watch?v=8LovM2oVqPM",
-      "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
+      "video_id": "XkGIneCJRlc",
+      "source_url": "https://www.youtube.com/watch?v=XkGIneCJRlc",
+      "song_dir": "Telephone - Lady Gaga - XkGIneCJRlc",
+      "ok": true,
+      "lyrics_review": null
     },
     {
-      "video_id": "Sa_uktkOmMk",
-      "source_url": "https://www.youtube.com/watch?v=Sa_uktkOmMk",
-      "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "waeNhS9yAdk",
-      "source_url": "https://www.youtube.com/watch?v=waeNhS9yAdk",
-      "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "CR5Mowi1rL8",
-      "source_url": "https://www.youtube.com/watch?v=CR5Mowi1rL8",
-      "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "mjk_8HeYack",
-      "source_url": "https://www.youtube.com/watch?v=mjk_8HeYack",
-      "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "ke_3MpO1m_o",
-      "source_url": "https://www.youtube.com/watch?v=ke_3MpO1m_o",
-      "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "qW9Z5BghHus",
-      "source_url": "https://www.youtube.com/watch?v=qW9Z5BghHus",
-      "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "vWQ7E0wZ5BU",
-      "source_url": "https://www.youtube.com/watch?v=vWQ7E0wZ5BU",
-      "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+      "video_id": "bFHbrstGqBM",
+      "source_url": "https://www.youtube.com/watch?v=bFHbrstGqBM",
+      "song_dir": "i know a place - chevy - bFHbrstGqBM",
       "ok": true,
       "lyrics_review": {
-        "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+        "song_dir": "i know a place - chevy - bFHbrstGqBM",
         "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "vWQ7E0wZ5BU",
-        "lyric_video_id": "zXbqad3UPCk",
-        "detail": "ytmusic search -> zXbqad3UPCk"
+        "expected_video_id": "bFHbrstGqBM",
+        "lyric_video_id": "K6QK_dVk8BY",
+        "detail": "ytmusic search -> K6QK_dVk8BY"
       }
     },
     {
-      "video_id": "ezVbN7e-L7Y",
-      "source_url": "https://www.youtube.com/watch?v=ezVbN7e-L7Y",
-      "song_dir": "Lucky - Jason Mraz - ezVbN7e-L7Y",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "K6QK_dVk8BY",
-      "source_url": "https://www.youtube.com/watch?v=K6QK_dVk8BY",
-      "song_dir": "I Know a Place - chevy - K6QK_dVk8BY",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "rqpra7nXL_g",
-      "source_url": "https://www.youtube.com/watch?v=rqpra7nXL_g",
-      "song_dir": "let's run away - Sarah Kang Music - rqpra7nXL_g",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "1w5kYuUlqL4",
-      "source_url": "https://www.youtube.com/watch?v=1w5kYuUlqL4",
-      "song_dir": "Fly Me to the Moon - Lucky (Mash-Up) (feat. Breea Guttery) - Rick Hale Music - 1w5kYuUlqL4",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "cXf3do6ltzU",
-      "source_url": "https://www.youtube.com/watch?v=cXf3do6ltzU",
-      "song_dir": "Every Second - Mina Okabe - cXf3do6ltzU",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "RiU3HRYTM7Q",
-      "source_url": "https://www.youtube.com/watch?v=RiU3HRYTM7Q",
-      "song_dir": "lazy afternoon - Sarah Kang Music - RiU3HRYTM7Q",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "0bkXQYUTmgs",
-      "source_url": "https://www.youtube.com/watch?v=0bkXQYUTmgs",
-      "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+      "video_id": "q7JcmvbygpM",
+      "source_url": "https://www.youtube.com/watch?v=q7JcmvbygpM",
+      "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
       "ok": false,
       "lyrics_review": {
-        "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+        "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "Ejvz4EdcXM0",
-      "source_url": "https://www.youtube.com/watch?v=Ejvz4EdcXM0",
-      "song_dir": "Valentine - Laufey - Ejvz4EdcXM0",
+      "video_id": "iS5ex1oBfTI",
+      "source_url": "https://www.youtube.com/watch?v=iS5ex1oBfTI",
+      "song_dir": "Walk Away - Mina Okabe - iS5ex1oBfTI",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "_LvN1NhCeIU",
-      "source_url": "https://www.youtube.com/watch?v=_LvN1NhCeIU",
-      "song_dir": "Nothing - Milena 밀레나 - _LvN1NhCeIU",
+      "video_id": "AQdy73E-l3g",
+      "source_url": "https://www.youtube.com/watch?v=AQdy73E-l3g",
+      "song_dir": "When It Snows - Sarah Kang Music - AQdy73E-l3g",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "X1R7SrjI_o8",
-      "source_url": "https://www.youtube.com/watch?v=X1R7SrjI_o8",
-      "song_dir": "comethru - Jeremy Zucker - X1R7SrjI_o8",
+      "video_id": "o8CybhLH9KI",
+      "source_url": "https://www.youtube.com/watch?v=o8CybhLH9KI",
+      "song_dir": "We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music - o8CybhLH9KI",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "P8kgKKd-dqY",
+      "source_url": "https://www.youtube.com/watch?v=P8kgKKd-dqY",
+      "song_dir": "Sweatshirt (with Gabe Bondoc) - Patrick Hizon - P8kgKKd-dqY",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "SzJXikN_4wA",
+      "source_url": "https://www.youtube.com/watch?v=SzJXikN_4wA",
+      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "CzED0ifV9uM",
+      "source_url": "https://www.youtube.com/watch?v=CzED0ifV9uM",
+      "song_dir": "It’s Okay Today - Jigoooo Radio - CzED0ifV9uM",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "VB-LtTddtBw",
+      "source_url": "https://www.youtube.com/watch?v=VB-LtTddtBw",
+      "song_dir": "Dreamer - Laufey - VB-LtTddtBw",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "y-STe_g795o",
+      "source_url": "https://www.youtube.com/watch?v=y-STe_g795o",
+      "song_dir": "Fall In Love Alone - Stacey Ryan - y-STe_g795o",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "sLSMRPompnk",
+      "source_url": "https://www.youtube.com/watch?v=sLSMRPompnk",
+      "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "h_PDqnuEXfg",
+      "source_url": "https://www.youtube.com/watch?v=h_PDqnuEXfg",
+      "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "2L-2zBOaq_g",
+      "source_url": "https://www.youtube.com/watch?v=2L-2zBOaq_g",
+      "song_dir": "Fool Moon - ARCANA - Topic - 2L-2zBOaq_g",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Ns3MbpQMNBs",
+      "source_url": "https://www.youtube.com/watch?v=Ns3MbpQMNBs",
+      "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "4YYcWdW8vDM",
+      "source_url": "https://www.youtube.com/watch?v=4YYcWdW8vDM",
+      "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "JEXBW0hhk38",
+      "source_url": "https://www.youtube.com/watch?v=JEXBW0hhk38",
+      "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "SncwslSGA1k",
+      "source_url": "https://www.youtube.com/watch?v=SncwslSGA1k",
+      "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "f2PdKjdPMmU",
+      "source_url": "https://www.youtube.com/watch?v=f2PdKjdPMmU",
+      "song_dir": "Silver Lining - Laufey - f2PdKjdPMmU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Y4_l-9Uxvhg",
+      "source_url": "https://www.youtube.com/watch?v=Y4_l-9Uxvhg",
+      "song_dir": "Worth It. - RAYE - Y4_l-9Uxvhg",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "dqsxlYtWM-k",
+      "source_url": "https://www.youtube.com/watch?v=dqsxlYtWM-k",
+      "song_dir": "Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify - dqsxlYtWM-k",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "a0VPrYLHvJA",
+      "source_url": "https://www.youtube.com/watch?v=a0VPrYLHvJA",
+      "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "tDDdmYGgBXA",
+      "source_url": "https://www.youtube.com/watch?v=tDDdmYGgBXA",
+      "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "wI33QEo2SbQ",
+      "source_url": "https://www.youtube.com/watch?v=wI33QEo2SbQ",
+      "song_dir": "Adventure with You (feat. Cy Leo) - Sarah Kang Music - wI33QEo2SbQ",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "SpDVSZIbQms",
+      "source_url": "https://www.youtube.com/watch?v=SpDVSZIbQms",
+      "song_dir": "You- Dear - Eloise - SpDVSZIbQms",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "yjzNbYpPOKE",
+      "source_url": "https://www.youtube.com/watch?v=yjzNbYpPOKE",
+      "song_dir": "Alright - Couch - yjzNbYpPOKE",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "pzYFPxEXSU8",
+      "source_url": "https://www.youtube.com/watch?v=pzYFPxEXSU8",
+      "song_dir": "Time Traveling - Anthony Lazaro - pzYFPxEXSU8",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "b2gTGEeB12w",
+      "source_url": "https://www.youtube.com/watch?v=b2gTGEeB12w",
+      "song_dir": "Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w",
       "ok": true,
       "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "summer after senior year (feat. Michael Carreon) - Sarah Kang Music - 8LovM2oVqPM",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "i have a crush on you (feat. Kazuki Isogai) - Sarah Kang Music - Sa_uktkOmMk",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "loml (feat. HOHYUN) - Sarah Kang Music - waeNhS9yAdk",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Mean Too Much - Mina Okabe - CR5Mowi1rL8",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Dancing Around The Truth - Mina Okabe - mjk_8HeYack",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Forever - Mina Okabe - ke_3MpO1m_o",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "First Time High [Official Audio] - Rita Ora - qW9Z5BghHus",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Sarah Kang - Summer Is for Falling in Love (live acoustic) - Sarah Kang Music - vWQ7E0wZ5BU",
+      "song_dir": "i know a place - chevy - bFHbrstGqBM",
       "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "vWQ7E0wZ5BU",
-      "lyric_video_id": "zXbqad3UPCk",
-      "detail": "ytmusic search -> zXbqad3UPCk"
+      "expected_video_id": "bFHbrstGqBM",
+      "lyric_video_id": "K6QK_dVk8BY",
+      "detail": "ytmusic search -> K6QK_dVk8BY"
     },
     {
-      "song_dir": "Maybe the World is a Beautiful Place (feat. Lee Jin Ah) - Sarah Kang Music - 0bkXQYUTmgs",
+      "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     }

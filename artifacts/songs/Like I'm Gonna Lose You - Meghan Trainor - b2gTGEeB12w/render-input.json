@@ -1,0 +1,272 @@
+{
+  "title": "Like I'm Gonna Lose You",
+  "artist": "Meghan Trainor",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 6330,
+  "durationInFrames": 6751,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE ARE BOUND BY THE BEAUTY OF TEMPORARY LIGHT",
+    "rightVertical": "HOLD THIS MOMENT TIGHTLY; DON'T LET IT SLIP AWAY",
+    "bottomLine": "LOVE LIKE IF FOREVER WAS A LIE",
+    "sonnetLines": [
+      "The silver gleam of passing years,",
+      "A whispered promise on the breeze.",
+      "We build our world through shared tears,",
+      "And find true solace and unease.",
+      "Let time forget its measured pace,",
+      "Before the morning breaks the spell.",
+      "We memorize a perfect face,",
+      "A story that we know so well.",
+      "To drink deep from this fading cup,",
+      "And taste the salt of what remains.",
+      "The fragile moments bubble up,",
+      "Washing away all former pains.",
+      "I'll hold you close when shadows fall,",
+      "Before the curtain starts to call."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 1250,
+      "endMs": 3430,
+      "text": "I found myself dreaming"
+    },
+    {
+      "startMs": 4160,
+      "endMs": 7360,
+      "text": "In silver and gold"
+    },
+    {
+      "startMs": 7470,
+      "endMs": 10160,
+      "text": "Like a scene from a movie"
+    },
+    {
+      "startMs": 10350,
+      "endMs": 14030,
+      "text": "That every broken heart knows"
+    },
+    {
+      "startMs": 14440,
+      "endMs": 16960,
+      "text": "We were walking on moonlight"
+    },
+    {
+      "startMs": 17330,
+      "endMs": 20630,
+      "text": "And you pulled me close"
+    },
+    {
+      "startMs": 20630,
+      "endMs": 22940,
+      "text": "Split second and you disappeared"
+    },
+    {
+      "startMs": 23560,
+      "endMs": 26840,
+      "text": "And then I was all alone"
+    },
+    {
+      "startMs": 27280,
+      "endMs": 28840,
+      "text": "I woke up in tears"
+    },
+    {
+      "startMs": 28840,
+      "endMs": 30620,
+      "text": "With you by my side"
+    },
+    {
+      "startMs": 30620,
+      "endMs": 32119,
+      "text": "A breath of relief"
+    },
+    {
+      "startMs": 32119,
+      "endMs": 33760,
+      "text": "And I realized"
+    },
+    {
+      "startMs": 35130,
+      "endMs": 38090,
+      "text": "No, we're not promised tomorrow"
+    },
+    {
+      "startMs": 39460,
+      "endMs": 45510,
+      "text": "So I'm gonna love you like I'm gonna lose you"
+    },
+    {
+      "startMs": 45860,
+      "endMs": 50240,
+      "text": "I'm gonna hold you like I'm saying goodbye"
+    },
+    {
+      "startMs": 52950,
+      "endMs": 55740,
+      "text": "Wherever we're standing"
+    },
+    {
+      "startMs": 55740,
+      "endMs": 59440,
+      "text": "I won't take you for granted"
+    },
+    {
+      "startMs": 59440,
+      "endMs": 63640,
+      "text": "'Cause we'll never know when, when we'll run out of time"
+    },
+    {
+      "startMs": 66490,
+      "endMs": 70690,
+      "text": "So I'm gonna love you like I'm gonna lose you"
+    },
+    {
+      "startMs": 72700,
+      "endMs": 76900,
+      "text": "I'm gonna love you like I'm gonna lose you"
+    },
+    {
+      "startMs": 80990,
+      "endMs": 84170,
+      "text": "In the blink of an eye"
+    },
+    {
+      "startMs": 84170,
+      "endMs": 87680,
+      "text": "Just a whisper of smoke"
+    },
+    {
+      "startMs": 87680,
+      "endMs": 90780,
+      "text": "You could lose everything"
+    },
+    {
+      "startMs": 90780,
+      "endMs": 94729,
+      "text": "The truth is you never know"
+    },
+    {
+      "startMs": 94729,
+      "endMs": 97670,
+      "text": "So I'll kiss you longer, baby (hey)"
+    },
+    {
+      "startMs": 97670,
+      "endMs": 101110,
+      "text": "Any chance that I get"
+    },
+    {
+      "startMs": 101110,
+      "endMs": 103780,
+      "text": "I'll make the most of the minutes"
+    },
+    {
+      "startMs": 103780,
+      "endMs": 107390,
+      "text": "And love with no regrets"
+    },
+    {
+      "startMs": 107390,
+      "endMs": 110590,
+      "text": "Let's take our time to say what we want (say what we want)"
+    },
+    {
+      "startMs": 110590,
+      "endMs": 115390,
+      "text": "Use what we got before it's all gone (all gone)"
+    },
+    {
+      "startMs": 115390,
+      "endMs": 119590,
+      "text": "'Cause no (no), we're not promised tomorrow"
+    },
+    {
+      "startMs": 120000,
+      "endMs": 125880,
+      "text": "So I'm gonna love you like I'm gonna lose you (lose you)"
+    },
+    {
+      "startMs": 125880,
+      "endMs": 132880,
+      "text": "I'm gonna hold you (hey) like I'm saying goodbye"
+    },
+    {
+      "startMs": 132930,
+      "endMs": 136310,
+      "text": "Wherever we're standing (yeah)"
+    },
+    {
+      "startMs": 136310,
+      "endMs": 139470,
+      "text": "I won't take you for granted"
+    },
+    {
+      "startMs": 139470,
+      "endMs": 146470,
+      "text": "'Cause we'll never know when, when we'll run out of time"
+    },
+    {
+      "startMs": 146540,
+      "endMs": 152370,
+      "text": "So I'm gonna love (I'm gonna love you) you like I'm gonna lose you (like I'm gonna lose you)"
+    },
+    {
+      "startMs": 152370,
+      "endMs": 159370,
+      "text": "I'm gonna love you (love you) like I'm gonna lose you"
+    },
+    {
+      "startMs": 161160,
+      "endMs": 165360,
+      "text": "♪"
+    },
+    {
+      "startMs": 172670,
+      "endMs": 179460,
+      "text": "I'm gonna love you like I'm gonna lose you (oh, like I'm gonna lose you)"
+    },
+    {
+      "startMs": 179460,
+      "endMs": 186460,
+      "text": "I'm gonna hold you like I'm saying goodbye"
+    },
+    {
+      "startMs": 186930,
+      "endMs": 188860,
+      "text": "Wherever we're standing"
+    },
+    {
+      "startMs": 188860,
+      "endMs": 192610,
+      "text": "I won't take you for granted"
+    },
+    {
+      "startMs": 192610,
+      "endMs": 199430,
+      "text": "'Cause we'll never know when, when we'll run out of time"
+    },
+    {
+      "startMs": 199430,
+      "endMs": 205829,
+      "text": "So I'm gonna love (I'm gonna love you) you like I'm gonna lose you (like I'm gonna lose you)"
+    },
+    {
+      "startMs": 205829,
+      "endMs": 209029,
+      "text": "I'm gonna love you (love you) like I'm gonna lose you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w",
+  "outputMp4Name": "Like I'm Gonna Lose You - Meghan Trainor.mp4"
+}

@@ -1,0 +1,252 @@
+{
+  "title": "Time Traveling",
+  "artist": "Anthony Lazaro",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Time Traveling - Anthony Lazaro - pzYFPxEXSU8/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5523,
+  "durationInFrames": 5687,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Time Traveling - Anthony Lazaro - pzYFPxEXSU8/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE SKY REMAINS THE SAME NO MATTER WHERE YOU ARE",
+    "rightVertical": "A CONTINUOUS STREAM OF MEMORIES ACROSS TIME'S EDGE",
+    "bottomLine": "WE BRIDGE THE MILES WITH THOUGHT AND LIGHT",
+    "sonnetLines": [
+      "Across the miles, a whispered breath,",
+      "Where time forgets its steady pace.",
+      "We live within this gentle death,",
+      "Of moments held in sacred space.",
+      "The sun ascends on golden wings,",
+      "To chase the shadows of the night.",
+      "A quiet promise memory brings,",
+      "A guiding glow, a hopeful light.",
+      "Through coffee steam and screen's soft gleam,",
+      "Our hearts connect beyond the sight.",
+      "We ride upon a waking dream,",
+      "Into tomorrow, pure and bright.",
+      "Across the years, our spirits roam,",
+      "Forever finding coming home."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 1100,
+      "endMs": 4340,
+      "text": "Wondering if thousands of miles away"
+    },
+    {
+      "startMs": 5010,
+      "endMs": 6970,
+      "text": "The sky's just as blue"
+    },
+    {
+      "startMs": 7720,
+      "endMs": 10400,
+      "text": "It's as if I'm stuck in yesterday"
+    },
+    {
+      "startMs": 11420,
+      "endMs": 13380,
+      "text": "When I'm thinking of you"
+    },
+    {
+      "startMs": 14200,
+      "endMs": 16580,
+      "text": "'Cause when you have your morning coffee"
+    },
+    {
+      "startMs": 17790,
+      "endMs": 20640,
+      "text": "I'm turning out the lights so I could dream"
+    },
+    {
+      "startMs": 21160,
+      "endMs": 23100,
+      "text": "And when you smile through the screen"
+    },
+    {
+      "startMs": 23360,
+      "endMs": 26020,
+      "text": "I wish you could be with me"
+    },
+    {
+      "startMs": 26540,
+      "endMs": 29100,
+      "text": "So I lay my head to rest"
+    },
+    {
+      "startMs": 29610,
+      "endMs": 32800,
+      "text": "When the sun is rising"
+    },
+    {
+      "startMs": 33480,
+      "endMs": 35700,
+      "text": "I'll start a brand-new day"
+    },
+    {
+      "startMs": 36210,
+      "endMs": 39780,
+      "text": "When the moon is shining"
+    },
+    {
+      "startMs": 40020,
+      "endMs": 42320,
+      "text": "I long to be with you"
+    },
+    {
+      "startMs": 42840,
+      "endMs": 46080,
+      "text": "In all the places you have been"
+    },
+    {
+      "startMs": 46440,
+      "endMs": 50660,
+      "text": "So today I'm time travelling"
+    },
+    {
+      "startMs": 52810,
+      "endMs": 57230,
+      "text": "Oh, today I am a time travelling"
+    },
+    {
+      "startMs": 58840,
+      "endMs": 63040,
+      "text": "♪"
+    },
+    {
+      "startMs": 64250,
+      "endMs": 67611,
+      "text": "And every time that you are closing your eyes"
+    },
+    {
+      "startMs": 68490,
+      "endMs": 70570,
+      "text": "I will be beside you"
+    },
+    {
+      "startMs": 71130,
+      "endMs": 74250,
+      "text": "And my heart will glide across the miles"
+    },
+    {
+      "startMs": 74960,
+      "endMs": 77290,
+      "text": "To flight right to you"
+    },
+    {
+      "startMs": 77550,
+      "endMs": 80190,
+      "text": "'Cause when I dive into the traffic"
+    },
+    {
+      "startMs": 80890,
+      "endMs": 84030,
+      "text": "The echo of your voice is all I hear"
+    },
+    {
+      "startMs": 84220,
+      "endMs": 86470,
+      "text": "I'm never tired of your laughing"
+    },
+    {
+      "startMs": 86760,
+      "endMs": 89370,
+      "text": "So far, but ever so near"
+    },
+    {
+      "startMs": 89770,
+      "endMs": 92690,
+      "text": "So I lay my head to rest"
+    },
+    {
+      "startMs": 92850,
+      "endMs": 96270,
+      "text": "When the sun is rising"
+    },
+    {
+      "startMs": 96860,
+      "endMs": 99370,
+      "text": "I'll start a brand-new day"
+    },
+    {
+      "startMs": 99400,
+      "endMs": 102830,
+      "text": "When the moon is shining"
+    },
+    {
+      "startMs": 103470,
+      "endMs": 105810,
+      "text": "I long to be with you"
+    },
+    {
+      "startMs": 105930,
+      "endMs": 108950,
+      "text": "In all the places you have been"
+    },
+    {
+      "startMs": 109600,
+      "endMs": 113600,
+      "text": "So today I'm time travelling"
+    },
+    {
+      "startMs": 116370,
+      "endMs": 120770,
+      "text": "So today I'm time travelling"
+    },
+    {
+      "startMs": 123150,
+      "endMs": 127350,
+      "text": "♪"
+    },
+    {
+      "startMs": 149660,
+      "endMs": 152140,
+      "text": "So I lay my head to rest"
+    },
+    {
+      "startMs": 152930,
+      "endMs": 156150,
+      "text": "When the sun is rising"
+    },
+    {
+      "startMs": 156500,
+      "endMs": 159030,
+      "text": "I'll start a brand-new day"
+    },
+    {
+      "startMs": 159550,
+      "endMs": 162790,
+      "text": "When the moon is shining"
+    },
+    {
+      "startMs": 163410,
+      "endMs": 165470,
+      "text": "I long to be with you"
+    },
+    {
+      "startMs": 166170,
+      "endMs": 169010,
+      "text": "In all the places you have been"
+    },
+    {
+      "startMs": 169610,
+      "endMs": 173630,
+      "text": "So today I'm time travelling"
+    },
+    {
+      "startMs": 176360,
+      "endMs": 182120,
+      "text": "Oh, today I'm time travelling"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Time Traveling - Anthony Lazaro - pzYFPxEXSU8",
+  "outputMp4Name": "Time Traveling - Anthony Lazaro.mp4"
+}

@@ -1,0 +1,232 @@
+{
+  "title": "Stumblin' in (Acoustic Cover)",
+  "artist": "Audrey Stclair Acoustic Covers on Spotify",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify - dqsxlYtWM-k/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 12420,
+  "renderDurationInFrames": 5351,
+  "durationInFrames": 6229,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify - dqsxlYtWM-k/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE LAY OUR HEARTS OUT ON THE TABLE, A RISKY GAMBLE OF GOLD AND FLAME.",
+    "rightVertical": "YOUR LIGHT CATCHES US WHEN WE ARE MOST VULNERABLE TO BEGIN AGAIN.",
+    "bottomLine": "LOST IN THE FIRELIGHT, STUMBLING BEYOND ALL CONTROL",
+    "sonnetLines": [
+      "The reckless rhythm of the heart,",
+      "A flame that catches in the dark.",
+      "We fall together, blind and free,",
+      "Lost to a shared intensity.",
+      "Old freedoms fade like morning mist,",
+      "By promises our spirits kissed.",
+      "Through shadowed rooms where whispers gleam,",
+      "A waking truth within a dream.",
+      "The fragile light of one embrace,",
+      "Rewrites the map upon this place.",
+      "We stumble onward, breath by slow breath,",
+      "Defying silence, conquering death.",
+      "This burning current cannot cease,",
+      "Finding in you eternal peace."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 15420,
+      "endMs": 19120,
+      "text": "Our love is alive"
+    },
+    {
+      "startMs": 19120,
+      "endMs": 22900,
+      "text": "And so we begin"
+    },
+    {
+      "startMs": 22900,
+      "endMs": 27100,
+      "text": "Foolishly laying our hearts on the table, stumblin' in"
+    },
+    {
+      "startMs": 30290,
+      "endMs": 34260,
+      "text": "Our love is a flame"
+    },
+    {
+      "startMs": 34260,
+      "endMs": 37860,
+      "text": "Burning within"
+    },
+    {
+      "startMs": 37860,
+      "endMs": 42060,
+      "text": "Now and then, firelight will catch us, stumblin' in"
+    },
+    {
+      "startMs": 45140,
+      "endMs": 48810,
+      "text": "Wherever you go"
+    },
+    {
+      "startMs": 48810,
+      "endMs": 52270,
+      "text": "Whatever you do"
+    },
+    {
+      "startMs": 52270,
+      "endMs": 56470,
+      "text": "You know these reckless thoughts of mine are following you"
+    },
+    {
+      "startMs": 59910,
+      "endMs": 63320,
+      "text": "I've fallen for you"
+    },
+    {
+      "startMs": 63320,
+      "endMs": 67040,
+      "text": "Whatever you do"
+    },
+    {
+      "startMs": 67040,
+      "endMs": 71240,
+      "text": "'Cause, baby, you've shown me so many things that I never knew"
+    },
+    {
+      "startMs": 74740,
+      "endMs": 77510,
+      "text": "Whatever it takes"
+    },
+    {
+      "startMs": 77510,
+      "endMs": 81710,
+      "text": "Baby, I'll do it for you"
+    },
+    {
+      "startMs": 82150,
+      "endMs": 85880,
+      "text": "Our love is alive"
+    },
+    {
+      "startMs": 85880,
+      "endMs": 89730,
+      "text": "And so we begin"
+    },
+    {
+      "startMs": 89730,
+      "endMs": 96730,
+      "text": "Foolishly laying our hearts on the table, stumblin' in"
+    },
+    {
+      "startMs": 96960,
+      "endMs": 100850,
+      "text": "Our lovе is a flame"
+    },
+    {
+      "startMs": 100850,
+      "endMs": 104590,
+      "text": "Burning within"
+    },
+    {
+      "startMs": 104590,
+      "endMs": 111590,
+      "text": "Now and then, firelight will catch us, stumblin' in"
+    },
+    {
+      "startMs": 112220,
+      "endMs": 115060,
+      "text": "You wеre so young"
+    },
+    {
+      "startMs": 115060,
+      "endMs": 118970,
+      "text": "Oh, and I was so free"
+    },
+    {
+      "startMs": 118970,
+      "endMs": 125970,
+      "text": "I may have been young, but baby, that's not what I wanted to be"
+    },
+    {
+      "startMs": 126650,
+      "endMs": 129860,
+      "text": "Well, you were the one"
+    },
+    {
+      "startMs": 129860,
+      "endMs": 133600,
+      "text": "Oh, why was it me?"
+    },
+    {
+      "startMs": 133600,
+      "endMs": 140600,
+      "text": "'Cause, baby, you've shown me so many things that I'd never see"
+    },
+    {
+      "startMs": 141370,
+      "endMs": 144030,
+      "text": "Whatever you need"
+    },
+    {
+      "startMs": 144030,
+      "endMs": 148600,
+      "text": "Baby, you got it from me"
+    },
+    {
+      "startMs": 148600,
+      "endMs": 152470,
+      "text": "Our love is alive"
+    },
+    {
+      "startMs": 152470,
+      "endMs": 156150,
+      "text": "And so we begin"
+    },
+    {
+      "startMs": 156150,
+      "endMs": 163150,
+      "text": "Foolishly laying our hearts on the table, stumblin' in"
+    },
+    {
+      "startMs": 163420,
+      "endMs": 167300,
+      "text": "Our love is a flame"
+    },
+    {
+      "startMs": 167300,
+      "endMs": 171050,
+      "text": "Burning within"
+    },
+    {
+      "startMs": 171050,
+      "endMs": 178050,
+      "text": "Now and then, firelight will catch us, stumblin' in"
+    },
+    {
+      "startMs": 178110,
+      "endMs": 181870,
+      "text": "Stumblin' in"
+    },
+    {
+      "startMs": 181870,
+      "endMs": 185610,
+      "text": "Stumblin' in"
+    },
+    {
+      "startMs": 185610,
+      "endMs": 188810,
+      "text": "Foolishly laying our hearts on the table, stumblin' in"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify - dqsxlYtWM-k",
+  "outputMp4Name": "Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify.mp4"
+}

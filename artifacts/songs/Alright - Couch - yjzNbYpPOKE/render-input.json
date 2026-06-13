@@ -1,0 +1,312 @@
+{
+  "title": "Alright",
+  "artist": "Couch",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Alright - Couch - yjzNbYpPOKE/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 7291,
+  "durationInFrames": 7503,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Alright - Couch - yjzNbYpPOKE/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF LOSSES WILL NOT DEFINE WHO YOU ARE",
+    "rightVertical": "REMEMBER THE QUIET STRENGTH BEYOND THE CRITICISM",
+    "bottomLine": "BREATHE DEEP. IT IS ALRIGHT TO BEGIN AGAIN.",
+    "sonnetLines": [
+      "The tide of doubt begins to fade,",
+      "A whispered promise in the light.",
+      "No single failure is displayed,",
+      "To eclipse the coming bright.",
+      "Let the river carry every stain,",
+      "Washing worries from your soul,",
+      "Through gentle rain and passing pain,",
+      "Making fractured spirit whole.",
+      "The dawn arrives without a plea,",
+      "Only quiet, steady grace;",
+      "A simple truth for you to see:",
+      "Worth resides in time and space.",
+      "You are enough beneath the blue,",
+      "And everything will follow through."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 3820,
+      "text": "Don't you know that it's alright"
+    },
+    {
+      "startMs": 8570,
+      "endMs": 10090,
+      "text": "My friend"
+    },
+    {
+      "startMs": 12400,
+      "endMs": 15940,
+      "text": "♪"
+    },
+    {
+      "startMs": 16160,
+      "endMs": 17080,
+      "text": "Runnin' round"
+    },
+    {
+      "startMs": 17370,
+      "endMs": 20220,
+      "text": "You can't find what you're looking for"
+    },
+    {
+      "startMs": 20470,
+      "endMs": 21830,
+      "text": "I'll show you"
+    },
+    {
+      "startMs": 23640,
+      "endMs": 27680,
+      "text": "♪"
+    },
+    {
+      "startMs": 28330,
+      "endMs": 31890,
+      "text": "You called me up when you were crying"
+    },
+    {
+      "startMs": 33900,
+      "endMs": 36340,
+      "text": "Oh, yeah you were crying"
+    },
+    {
+      "startMs": 40730,
+      "endMs": 43990,
+      "text": "You're sick of losing, sick of trying"
+    },
+    {
+      "startMs": 46200,
+      "endMs": 47660,
+      "text": "Oh, so I say"
+    },
+    {
+      "startMs": 52320,
+      "endMs": 56580,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 56930,
+      "endMs": 59050,
+      "text": "Kick yourself down"
+    },
+    {
+      "startMs": 60040,
+      "endMs": 64240,
+      "text": "Kick yourself down, no"
+    },
+    {
+      "startMs": 66250,
+      "endMs": 68710,
+      "text": "Look what you've got"
+    },
+    {
+      "startMs": 68710,
+      "endMs": 71960,
+      "text": "And baby look what you're not"
+    },
+    {
+      "startMs": 71960,
+      "endMs": 76160,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 77780,
+      "endMs": 81980,
+      "text": "Now you know that it's alright"
+    },
+    {
+      "startMs": 82360,
+      "endMs": 86560,
+      "text": "My friend"
+    },
+    {
+      "startMs": 89990,
+      "endMs": 91870,
+      "text": "You tally up your losses"
+    },
+    {
+      "startMs": 91870,
+      "endMs": 96070,
+      "text": "Sit in the critical"
+    },
+    {
+      "startMs": 96550,
+      "endMs": 102280,
+      "text": "That's not all you've got, no"
+    },
+    {
+      "startMs": 102280,
+      "endMs": 107740,
+      "text": "You called me up when you were crying"
+    },
+    {
+      "startMs": 107740,
+      "endMs": 114520,
+      "text": "Oh, yeah you were crying"
+    },
+    {
+      "startMs": 114520,
+      "endMs": 120020,
+      "text": "You're sick of losing, sick of trying"
+    },
+    {
+      "startMs": 120020,
+      "endMs": 124220,
+      "text": "Oh, so I say"
+    },
+    {
+      "startMs": 126180,
+      "endMs": 130380,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 130770,
+      "endMs": 133840,
+      "text": "Kick yourself down"
+    },
+    {
+      "startMs": 133840,
+      "endMs": 138040,
+      "text": "Kick yourself down, no"
+    },
+    {
+      "startMs": 140060,
+      "endMs": 142550,
+      "text": "Look what you've got"
+    },
+    {
+      "startMs": 142550,
+      "endMs": 145840,
+      "text": "And baby look what you're not"
+    },
+    {
+      "startMs": 145840,
+      "endMs": 150040,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 150410,
+      "endMs": 152860,
+      "text": "And I know it's not so easy"
+    },
+    {
+      "startMs": 152860,
+      "endMs": 156610,
+      "text": "When I'm the one who needs to hear"
+    },
+    {
+      "startMs": 156610,
+      "endMs": 162770,
+      "text": "I can't help myself the way that I've helped you"
+    },
+    {
+      "startMs": 162770,
+      "endMs": 165430,
+      "text": "But I'll do my best to listen"
+    },
+    {
+      "startMs": 165430,
+      "endMs": 168880,
+      "text": "To the words that I've been saying"
+    },
+    {
+      "startMs": 168880,
+      "endMs": 174910,
+      "text": "To myself, I will say"
+    },
+    {
+      "startMs": 174910,
+      "endMs": 181540,
+      "text": "I will, I will say yeah"
+    },
+    {
+      "startMs": 181540,
+      "endMs": 185740,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 186120,
+      "endMs": 189210,
+      "text": "Kick yourself down"
+    },
+    {
+      "startMs": 189210,
+      "endMs": 193410,
+      "text": "Kick yourself down, no"
+    },
+    {
+      "startMs": 195360,
+      "endMs": 198060,
+      "text": "Look what you've got"
+    },
+    {
+      "startMs": 198060,
+      "endMs": 201150,
+      "text": "And baby look what you're not"
+    },
+    {
+      "startMs": 201150,
+      "endMs": 203410,
+      "text": "Don't kick yourself"
+    },
+    {
+      "startMs": 203410,
+      "endMs": 207670,
+      "text": "Tell me, tell me don't"
+    },
+    {
+      "startMs": 207670,
+      "endMs": 210720,
+      "text": "Kick yourself down"
+    },
+    {
+      "startMs": 210720,
+      "endMs": 213890,
+      "text": "Kick yourself down"
+    },
+    {
+      "startMs": 213890,
+      "endMs": 218090,
+      "text": "Kick yourself down, no"
+    },
+    {
+      "startMs": 220030,
+      "endMs": 224230,
+      "text": "Look what you've got"
+    },
+    {
+      "startMs": 224420,
+      "endMs": 225770,
+      "text": "And baby look what you're not"
+    },
+    {
+      "startMs": 225770,
+      "endMs": 229970,
+      "text": "Don't kick yourself down"
+    },
+    {
+      "startMs": 232290,
+      "endMs": 235350,
+      "text": "Now you know that it's alright"
+    },
+    {
+      "startMs": 237800,
+      "endMs": 241048,
+      "text": "My friend"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Alright - Couch - yjzNbYpPOKE",
+  "outputMp4Name": "Alright - Couch.mp4"
+}

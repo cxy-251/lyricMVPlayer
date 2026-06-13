@@ -1,0 +1,232 @@
+{
+  "title": "We're All Gonna Die Anyway (feat. Jackson Lundy)",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music - o8CybhLH9KI/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 4500,
+  "renderDurationInFrames": 5481,
+  "durationInFrames": 5691,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music - o8CybhLH9KI/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF DAYS THAT FEEL LIKE BLACK AND WHITE",
+    "rightVertical": "NOTHING IS FINAL BUT THE BREATH WE SHARE TONIGHT",
+    "bottomLine": "ALL THINGS WILL SOFTEN IN THE MIST",
+    "sonnetLines": [
+      "The struggle fades with morning light,",
+      "A whispered secret in the gray,",
+      "We chase the moments of pure might,",
+      "And let the difficult day stray.",
+      "Our fragile spirits start to roam,",
+      "Through fields where shadows softly creep,",
+      "Finding a temporary home,",
+      "Where weary promises can sleep.",
+      "The point dissolves like ocean foam,",
+      "Into the vastness, cool and deep,",
+      "A truth we cannot call our own,",
+      "But silently begin to keep.",
+      "We learn that broken is okay,",
+      "When dawn arrives at close of day."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 7500,
+      "endMs": 10480,
+      "text": "Did you have one of those days"
+    },
+    {
+      "startMs": 10830,
+      "endMs": 13840,
+      "text": "You wish you could just wish away"
+    },
+    {
+      "startMs": 14390,
+      "endMs": 18590,
+      "text": "Oh wouldn't it be nice to disappear"
+    },
+    {
+      "startMs": 21540,
+      "endMs": 24800,
+      "text": "The world feels like it's black and white"
+    },
+    {
+      "startMs": 25240,
+      "endMs": 28280,
+      "text": "And when you smile it's out of spite"
+    },
+    {
+      "startMs": 28930,
+      "endMs": 32460,
+      "text": "Trust me, I've been there before"
+    },
+    {
+      "startMs": 35620,
+      "endMs": 39620,
+      "text": "Sometimes I wonder what's the point"
+    },
+    {
+      "startMs": 39620,
+      "endMs": 41800,
+      "text": "Of trying every day"
+    },
+    {
+      "startMs": 42810,
+      "endMs": 46820,
+      "text": "When we're all gonna die anyway"
+    },
+    {
+      "startMs": 50140,
+      "endMs": 53250,
+      "text": "But maybe everything that's sad"
+    },
+    {
+      "startMs": 53770,
+      "endMs": 55730,
+      "text": "Will come untrue someday"
+    },
+    {
+      "startMs": 57250,
+      "endMs": 62610,
+      "text": "We're all gonna die anyway"
+    },
+    {
+      "startMs": 64760,
+      "endMs": 67820,
+      "text": "Even though we don't have long"
+    },
+    {
+      "startMs": 68110,
+      "endMs": 71260,
+      "text": "This isn't just another song"
+    },
+    {
+      "startMs": 71730,
+      "endMs": 76230,
+      "text": "That tells you to live only for today"
+    },
+    {
+      "startMs": 78880,
+      "endMs": 82120,
+      "text": "I guess all that I wanted to say"
+    },
+    {
+      "startMs": 82590,
+      "endMs": 85410,
+      "text": "Is it's okay to not be okay"
+    },
+    {
+      "startMs": 86039,
+      "endMs": 90790,
+      "text": "And death won't have the final say"
+    },
+    {
+      "startMs": 92910,
+      "endMs": 96270,
+      "text": "Sometimes I wonder what's the point"
+    },
+    {
+      "startMs": 96670,
+      "endMs": 99090,
+      "text": "Of trying every day"
+    },
+    {
+      "startMs": 100100,
+      "endMs": 104150,
+      "text": "When we're all gonna die anyway"
+    },
+    {
+      "startMs": 107450,
+      "endMs": 110560,
+      "text": "But maybe everything that's sad"
+    },
+    {
+      "startMs": 111009,
+      "endMs": 113040,
+      "text": "Will come untrue someday"
+    },
+    {
+      "startMs": 114620,
+      "endMs": 118380,
+      "text": "We're all gonna die anyway"
+    },
+    {
+      "startMs": 121800,
+      "endMs": 124180,
+      "text": "It's morbid of me"
+    },
+    {
+      "startMs": 125480,
+      "endMs": 128539,
+      "text": "To think about dying"
+    },
+    {
+      "startMs": 129080,
+      "endMs": 133540,
+      "text": "But it'll happen to me and you"
+    },
+    {
+      "startMs": 136280,
+      "endMs": 138900,
+      "text": "And maybe the thought"
+    },
+    {
+      "startMs": 139760,
+      "endMs": 142880,
+      "text": "That we will all be gone"
+    },
+    {
+      "startMs": 143420,
+      "endMs": 148140,
+      "text": "Will help us to see the truth"
+    },
+    {
+      "startMs": 150240,
+      "endMs": 153610,
+      "text": "Sometimes I wonder what's the point"
+    },
+    {
+      "startMs": 154130,
+      "endMs": 156870,
+      "text": "Of trying every day"
+    },
+    {
+      "startMs": 157470,
+      "endMs": 161950,
+      "text": "When we're all gonna die anyway"
+    },
+    {
+      "startMs": 164820,
+      "endMs": 167840,
+      "text": "But maybe everything that's sad"
+    },
+    {
+      "startMs": 168430,
+      "endMs": 171030,
+      "text": "Will come untrue someday"
+    },
+    {
+      "startMs": 171980,
+      "endMs": 176240,
+      "text": "We're all gonna die anyway"
+    },
+    {
+      "startMs": 180160,
+      "endMs": 185230,
+      "text": "We're all gonna die anyway"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music - o8CybhLH9KI",
+  "outputMp4Name": "We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music.mp4"
+}

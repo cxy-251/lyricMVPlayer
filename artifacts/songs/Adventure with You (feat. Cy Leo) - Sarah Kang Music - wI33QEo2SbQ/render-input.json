@@ -1,0 +1,242 @@
+{
+  "title": "Adventure with You (feat. Cy Leo)",
+  "artist": "Sarah Kang Music",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Adventure with You (feat. Cy Leo) - Sarah Kang Music - wI33QEo2SbQ/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 6330,
+  "renderDurationInFrames": 5820,
+  "durationInFrames": 6312,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Adventure with You (feat. Cy Leo) - Sarah Kang Music - wI33QEo2SbQ/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE MAGIC OF THE MUNDANE HOURS",
+    "rightVertical": "WHERE SHARED EFFORT BECOMES ADVENTURE",
+    "bottomLine": "TIME SLOWLY BLENDS WITH GOLDEN LIGHT",
+    "sonnetLines": [
+      "The ordinary holds a secret gleam,",
+      "A quiet joy within the daily flow.",
+      "We find the magic in a shared soft dream,",
+      "Where simple moments help our spirits grow.",
+      "The years drift past like light upon the pane,",
+      "Each gentle effort makes the spirit whole.",
+      "Through sunlit tasks and whispered, sweet refrain,",
+      "A deeper story finds its lasting soul.",
+      "No grand escape was needed to see,",
+      "The wonder woven in the simple thread.",
+      "Just you beside me, wild and free to be,",
+      "The quiet comfort that my heart has bred.",
+      "For every laugh beneath the fading gleam,",
+      "You are the adventure of my waking dream."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 9330,
+      "endMs": 11260,
+      "text": "Who knew doing the laundry"
+    },
+    {
+      "startMs": 11670,
+      "endMs": 13760,
+      "text": "Could make me so happy"
+    },
+    {
+      "startMs": 13940,
+      "endMs": 17000,
+      "text": "When I don't have to do it all alone"
+    },
+    {
+      "startMs": 18540,
+      "endMs": 20460,
+      "text": "Who knew doing the dishes"
+    },
+    {
+      "startMs": 20920,
+      "endMs": 23100,
+      "text": "Could lead to some kisses"
+    },
+    {
+      "startMs": 23240,
+      "endMs": 26060,
+      "text": "I think I could do another load"
+    },
+    {
+      "startMs": 27810,
+      "endMs": 31620,
+      "text": "Cause when you take an inconvenience"
+    },
+    {
+      "startMs": 32130,
+      "endMs": 36380,
+      "text": "And you put a little spin on it"
+    },
+    {
+      "startMs": 36740,
+      "endMs": 41740,
+      "text": "Somehow life becomes more adventurous"
+    },
+    {
+      "startMs": 46160,
+      "endMs": 49960,
+      "text": "It's not an easy thing to do"
+    },
+    {
+      "startMs": 50930,
+      "endMs": 54880,
+      "text": "To hold onto this point of view"
+    },
+    {
+      "startMs": 55580,
+      "endMs": 61080,
+      "text": "But I still want to adventure with you"
+    },
+    {
+      "startMs": 61080,
+      "endMs": 65280,
+      "text": "♪"
+    },
+    {
+      "startMs": 69460,
+      "endMs": 71160,
+      "text": "Who knew doing nothing"
+    },
+    {
+      "startMs": 71760,
+      "endMs": 73880,
+      "text": "Could still feel like something"
+    },
+    {
+      "startMs": 74030,
+      "endMs": 76850,
+      "text": "Let's spend another lazy afternoon"
+    },
+    {
+      "startMs": 78620,
+      "endMs": 80460,
+      "text": "Who knew getting older"
+    },
+    {
+      "startMs": 80940,
+      "endMs": 82700,
+      "text": "Could feel so tender"
+    },
+    {
+      "startMs": 83260,
+      "endMs": 86880,
+      "text": "When I'm getting older with you"
+    },
+    {
+      "startMs": 87860,
+      "endMs": 91640,
+      "text": "Cause when you take an inconvenience"
+    },
+    {
+      "startMs": 92140,
+      "endMs": 96360,
+      "text": "And you put a little spin on it"
+    },
+    {
+      "startMs": 96720,
+      "endMs": 101720,
+      "text": "Somehow life becomes more adventurous"
+    },
+    {
+      "startMs": 106259,
+      "endMs": 110490,
+      "text": "It's not an easy thing to do"
+    },
+    {
+      "startMs": 110960,
+      "endMs": 114890,
+      "text": "To hold onto this point of view"
+    },
+    {
+      "startMs": 115580,
+      "endMs": 121450,
+      "text": "But I still want to adventure with you"
+    },
+    {
+      "startMs": 121450,
+      "endMs": 125650,
+      "text": "♪"
+    },
+    {
+      "startMs": 134220,
+      "endMs": 136380,
+      "text": "Who knew it would fly by"
+    },
+    {
+      "startMs": 136790,
+      "endMs": 139140,
+      "text": "The days and the goodnights"
+    },
+    {
+      "startMs": 139329,
+      "endMs": 142609,
+      "text": "I don't know what I'll do without you"
+    },
+    {
+      "startMs": 144280,
+      "endMs": 146460,
+      "text": "I hope you were happy"
+    },
+    {
+      "startMs": 147020,
+      "endMs": 149460,
+      "text": "To spend your days with me"
+    },
+    {
+      "startMs": 149720,
+      "endMs": 153300,
+      "text": "It won't be long, I'll see you very soon"
+    },
+    {
+      "startMs": 154760,
+      "endMs": 158560,
+      "text": "Cause when we took an inconvenience"
+    },
+    {
+      "startMs": 159100,
+      "endMs": 163260,
+      "text": "And we put a little spin on it"
+    },
+    {
+      "startMs": 163680,
+      "endMs": 168660,
+      "text": "Somehow life became more adventurous"
+    },
+    {
+      "startMs": 173230,
+      "endMs": 177330,
+      "text": "It wasn't always easy to do"
+    },
+    {
+      "startMs": 177840,
+      "endMs": 181660,
+      "text": "To hold onto this point of view"
+    },
+    {
+      "startMs": 182520,
+      "endMs": 189120,
+      "text": "But I was glad to adventure with you"
+    },
+    {
+      "startMs": 191930,
+      "endMs": 198330,
+      "text": "Thank you for this adventure with you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Adventure with You (feat. Cy Leo) - Sarah Kang Music - wI33QEo2SbQ",
+  "outputMp4Name": "Adventure with You (feat. Cy Leo) - Sarah Kang Music.mp4"
+}

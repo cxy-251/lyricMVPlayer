@@ -1,0 +1,352 @@
+{
+  "title": "Telephone",
+  "artist": "Lady Gaga",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Telephone - Lady Gaga - XkGIneCJRlc/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 5750,
+  "renderDurationInFrames": 6446,
+  "durationInFrames": 6619,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Telephone - Lady Gaga - XkGIneCJRlc/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE PULSE OF THE MUSIC IS ALL THAT MATTERS NOW. NO WORDS, ONLY RHYTHM.",
+    "rightVertical": "LOST IN THE SPARKLE AND THE DEEP END. A TEMPORARY, GLAMOROUS DISCONNECTION.",
+    "bottomLine": "THIS NIGHT BELONGS TO THE DANCE FLOOR'S ECHOES",
+    "sonnetLines": [
+      "The signal breaks against the glass,",
+      "A humming rhythm starts to rise.",
+      "We lose ourselves where shadows pass,",
+      "Beneath electric, pulsing skies.",
+      "No need for words or careful plea,",
+      "Just motion caught in amber light.",
+      "The current pulls relentlessly,",
+      "Into the depth of pure delight.",
+      "Let calls ring out and fade away,",
+      "To music's perfect, blinding crest.",
+      "We choose this beautiful decay,",
+      "A temporary, vibrant rest.",
+      "The heart is left where rhythm reigns,",
+      "Beyond the reach of telephone chains."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 8750,
+      "endMs": 11680,
+      "text": "Hello, hello, baby, you called? I can't hear a thing"
+    },
+    {
+      "startMs": 12750,
+      "endMs": 16120,
+      "text": "I have got no service in the club, you say, say, say?"
+    },
+    {
+      "startMs": 16160,
+      "endMs": 19340,
+      "text": "Wha-wha-what did you say, huh? You're breakin' up on me"
+    },
+    {
+      "startMs": 19760,
+      "endMs": 24280,
+      "text": "Sorry, I cannot hear you, I'm kinda busy (I'm kinda busy)"
+    },
+    {
+      "startMs": 24280,
+      "endMs": 27830,
+      "text": "K-kinda busy (I'm kinda busy), k-kinda busy (I'm kinda busy)"
+    },
+    {
+      "startMs": 27830,
+      "endMs": 31430,
+      "text": "Sorry, I cannot hear you, I'm kinda busy"
+    },
+    {
+      "startMs": 31430,
+      "endMs": 35630,
+      "text": "Just a second, it's my favorite song they're gonna play (play)"
+    },
+    {
+      "startMs": 35930,
+      "endMs": 39680,
+      "text": "And I cannot text you with a drink in my hand, eh"
+    },
+    {
+      "startMs": 39680,
+      "endMs": 43540,
+      "text": "You should've made some plans with me, you knew that I was free"
+    },
+    {
+      "startMs": 43540,
+      "endMs": 47740,
+      "text": "And now you won't stop callin' me, I'm kinda busy"
+    },
+    {
+      "startMs": 47900,
+      "endMs": 51620,
+      "text": "Stop callin', stop callin', I don't wanna think anymore"
+    },
+    {
+      "startMs": 51620,
+      "endMs": 53140,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 53140,
+      "endMs": 57340,
+      "text": "Stop callin', stop callin', I don't wanna talk anymore"
+    },
+    {
+      "startMs": 60080,
+      "endMs": 62860,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 62980,
+      "endMs": 67240,
+      "text": "Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (stop telephonin' me)"
+    },
+    {
+      "startMs": 67360,
+      "endMs": 71280,
+      "text": "Stop telephonin' me! Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (I'm busy)"
+    },
+    {
+      "startMs": 71400,
+      "endMs": 75610,
+      "text": "I'm busy! Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (stop telephonin' me)"
+    },
+    {
+      "startMs": 75730,
+      "endMs": 78760,
+      "text": "Stop telephonin' me, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (I'm busy)"
+    },
+    {
+      "startMs": 78880,
+      "endMs": 82940,
+      "text": "Can call all you want but there's no one home and you're not gonna reach my telephone (no)"
+    },
+    {
+      "startMs": 83060,
+      "endMs": 84340,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub and you're not gonna reach my telephone (no)"
+    },
+    {
+      "startMs": 84460,
+      "endMs": 88510,
+      "text": "Can call all you want but there's no one home and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 88630,
+      "endMs": 94759,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 94759,
+      "endMs": 96550,
+      "text": "Boy, the way you blowin' up my phone"
+    },
+    {
+      "startMs": 96550,
+      "endMs": 98310,
+      "text": "Won't make me leave no faster"
+    },
+    {
+      "startMs": 98310,
+      "endMs": 102460,
+      "text": "Put my coat on faster, leave my girls no faster"
+    },
+    {
+      "startMs": 102460,
+      "endMs": 106660,
+      "text": "I should've left my phone at home 'cause this is a disaster"
+    },
+    {
+      "startMs": 106670,
+      "endMs": 108420,
+      "text": "Callin' like a collector"
+    },
+    {
+      "startMs": 108420,
+      "endMs": 110270,
+      "text": "Sorry, I cannot answer"
+    },
+    {
+      "startMs": 110390,
+      "endMs": 114240,
+      "text": "It's not that I don't like you, I'm just at a party"
+    },
+    {
+      "startMs": 114360,
+      "endMs": 117889,
+      "text": "And I am sick and tired of my phone r-ringin'"
+    },
+    {
+      "startMs": 118009,
+      "endMs": 121520,
+      "text": "Sometimes I feel like I live in Grand Central Station (station)"
+    },
+    {
+      "startMs": 121640,
+      "endMs": 125820,
+      "text": "Tonight I'm not takin' no calls, 'cause I'll be dancin'"
+    },
+    {
+      "startMs": 125820,
+      "endMs": 127470,
+      "text": "('Cause tonight I'm dancin') 'cause I'll be dancin'"
+    },
+    {
+      "startMs": 127470,
+      "endMs": 129590,
+      "text": "('Cause tonight I'm dancin') 'cause I'll be dancin'"
+    },
+    {
+      "startMs": 129590,
+      "endMs": 129910,
+      "text": "('Cause tonight I'm dancin')"
+    },
+    {
+      "startMs": 129990,
+      "endMs": 133770,
+      "text": "Tonight I'm not takin' no calls, 'cause I'll be dancin'"
+    },
+    {
+      "startMs": 133890,
+      "endMs": 138209,
+      "text": "Stop callin', stop callin', I don't wanna think anymore"
+    },
+    {
+      "startMs": 138329,
+      "endMs": 141810,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 141930,
+      "endMs": 146270,
+      "text": "Stop callin', stop callin', I don't wanna talk anymore"
+    },
+    {
+      "startMs": 146390,
+      "endMs": 149630,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 149750,
+      "endMs": 154030,
+      "text": "Stop callin', stop callin', I don't wanna think anymore"
+    },
+    {
+      "startMs": 154150,
+      "endMs": 157390,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 157510,
+      "endMs": 161970,
+      "text": "Stop callin', stop callin', I don't wanna talk anymore"
+    },
+    {
+      "startMs": 162090,
+      "endMs": 165310,
+      "text": "I left my head and my heart on the dance floor"
+    },
+    {
+      "startMs": 165430,
+      "endMs": 167970,
+      "text": "Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (stop telephonin' me)"
+    },
+    {
+      "startMs": 168090,
+      "endMs": 172330,
+      "text": "Stop telephonin' me! Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (I'm busy)"
+    },
+    {
+      "startMs": 172450,
+      "endMs": 176000,
+      "text": "I'm busy! Eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (stop telephonin' me)"
+    },
+    {
+      "startMs": 176120,
+      "endMs": 181190,
+      "text": "Stop telephonin' me, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh, eh (I'm busy)"
+    },
+    {
+      "startMs": 181310,
+      "endMs": 185100,
+      "text": "Can call all you want but there's no one home and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 185220,
+      "endMs": 188680,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 188800,
+      "endMs": 192660,
+      "text": "Can call all you want but there's no one home and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 192780,
+      "endMs": 196150,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub and you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 196150,
+      "endMs": 197140,
+      "text": "(Darkchild)"
+    },
+    {
+      "startMs": 197140,
+      "endMs": 200600,
+      "text": "My telephone, m-m-my telephone"
+    },
+    {
+      "startMs": 200720,
+      "endMs": 203030,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub"
+    },
+    {
+      "startMs": 203150,
+      "endMs": 204610,
+      "text": "And you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 204610,
+      "endMs": 208560,
+      "text": "My telephone, m-m-my telephone"
+    },
+    {
+      "startMs": 208680,
+      "endMs": 210040,
+      "text": "'Cause I'm out in the club and I'm sippin' that bub"
+    },
+    {
+      "startMs": 210160,
+      "endMs": 213280,
+      "text": "And you're not gonna reach my telephone"
+    },
+    {
+      "startMs": 213280,
+      "endMs": 214220,
+      "text": "We're sorry- (we're sorry)"
+    },
+    {
+      "startMs": 214340,
+      "endMs": 216860,
+      "text": "The number you have reached (is not in service at this time)"
+    },
+    {
+      "startMs": 216980,
+      "endMs": 219160,
+      "text": "Please check the number or try your call again"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Telephone - Lady Gaga - XkGIneCJRlc",
+  "outputMp4Name": "Telephone - Lady Gaga.mp4"
+}

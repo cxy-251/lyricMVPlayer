@@ -1,0 +1,357 @@
+{
+  "title": "Worth It.",
+  "artist": "RAYE",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Worth It. - RAYE - Y4_l-9Uxvhg/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 7201,
+  "durationInFrames": 7404,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Worth It. - RAYE - Y4_l-9Uxvhg/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF ALL UNTOLD DESIRE HANGS IN THE AIR",
+    "rightVertical": "A PROMISE CHASED ACROSS GOLD-FILLED HOURGLASSES",
+    "bottomLine": "LET THE DAWN WASH AWAY WHAT WAS LOST TONIGHT",
+    "sonnetLines": [
+      "The hour breaks with gilded light,",
+      "A silent promise in the pane.",
+      "We shed the shadows of the night,",
+      "And wash away the former pain.",
+      "You are the vintage, rich and deep,",
+      "The careful craft of passing time.",
+      "Secrets that the city keeps,",
+      "In rhythms perfectly sublime.",
+      "I give my breath to your command,",
+      "A yielding grace, a steady tide.",
+      "With open palm and willing hand,",
+      "There is no place left now to hide.",
+      "Just this bright dawn, worth every cost,",
+      "The moment gained, forever crossed."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 1420,
+      "endMs": 5620,
+      "text": "Oh, no, no, no, no, no, no"
+    },
+    {
+      "startMs": 6470,
+      "endMs": 10670,
+      "text": "Oh, pa-pa-ba-da hope you're gonna"
+    },
+    {
+      "startMs": 12960,
+      "endMs": 17160,
+      "text": "Ooh, ooh, ooh, ooh, no, no, no, no, my love"
+    },
+    {
+      "startMs": 18640,
+      "endMs": 22840,
+      "text": "You're gonna make it worth it"
+    },
+    {
+      "startMs": 28060,
+      "endMs": 29810,
+      "text": "(I just wanna tell you how I feel, ooh!)"
+    },
+    {
+      "startMs": 29810,
+      "endMs": 33460,
+      "text": "If my body was a boat, could you steer that, sailor? (Mmh)"
+    },
+    {
+      "startMs": 33460,
+      "endMs": 37660,
+      "text": "Make it feel like it's a 1960s Hollywood trailer (old-school, I like)"
+    },
+    {
+      "startMs": 38080,
+      "endMs": 42280,
+      "text": "Classic like cars, classic like Elizabeth Taylor (Taylor, Taylor)"
+    },
+    {
+      "startMs": 42460,
+      "endMs": 46750,
+      "text": "Need you to romance me, I need a giver, not a taker (ooh, it's what I need)"
+    },
+    {
+      "startMs": 46750,
+      "endMs": 50950,
+      "text": "Yes, 'cause I could love you"
+    },
+    {
+      "startMs": 51830,
+      "endMs": 56030,
+      "text": "If I really wanted to"
+    },
+    {
+      "startMs": 56340,
+      "endMs": 59500,
+      "text": "You could be, be my glass of wine"
+    },
+    {
+      "startMs": 59500,
+      "endMs": 62880,
+      "text": "When the sun set, help me exhale all the excess"
+    },
+    {
+      "startMs": 62880,
+      "endMs": 66140,
+      "text": "Baby, bae, b-b-bae-b-b-baby, would you?"
+    },
+    {
+      "startMs": 66140,
+      "endMs": 68289,
+      "text": "Would you make it all right? (Mm)"
+    },
+    {
+      "startMs": 68289,
+      "endMs": 70130,
+      "text": "Or maybe that much better?"
+    },
+    {
+      "startMs": 70130,
+      "endMs": 73680,
+      "text": "If you wanted, you could make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 73680,
+      "endMs": 78410,
+      "text": "Ooh, when I see the sun rising, you make it that much better"
+    },
+    {
+      "startMs": 78410,
+      "endMs": 82160,
+      "text": "So I hope you gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 82160,
+      "endMs": 87350,
+      "text": "Ooh, worth all of the time I'm 'bout to give you, baby"
+    },
+    {
+      "startMs": 87350,
+      "endMs": 91160,
+      "text": "So I hope you're gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 91160,
+      "endMs": 95920,
+      "text": "Ooh, give all of the time I should be working on me"
+    },
+    {
+      "startMs": 95920,
+      "endMs": 100550,
+      "text": "So I hope you're gonna make it all worth it, worth it, worth it, worth it (hmm)"
+    },
+    {
+      "startMs": 100550,
+      "endMs": 104430,
+      "text": "This is the night (something 'bout it's making me cry)"
+    },
+    {
+      "startMs": 104430,
+      "endMs": 109220,
+      "text": "My soul, it did decide (feel my body shiver in your moonlight)"
+    },
+    {
+      "startMs": 109220,
+      "endMs": 112440,
+      "text": "And I need you to (let me have the time of my life)"
+    },
+    {
+      "startMs": 112440,
+      "endMs": 114800,
+      "text": "Checked your credentials, South residentials"
+    },
+    {
+      "startMs": 114800,
+      "endMs": 117100,
+      "text": "Ooh, baby boy, you got so much potential"
+    },
+    {
+      "startMs": 117100,
+      "endMs": 124100,
+      "text": "I could love you if I really wanted to"
+    },
+    {
+      "startMs": 125910,
+      "endMs": 129320,
+      "text": "You could be, be my glass of wine"
+    },
+    {
+      "startMs": 129320,
+      "endMs": 132530,
+      "text": "When the sun set, help me exhale all the excess"
+    },
+    {
+      "startMs": 132530,
+      "endMs": 136090,
+      "text": "Baby, bae, b-b-bae-b-b-baby, would you? (Oh, baby, would you?)"
+    },
+    {
+      "startMs": 136090,
+      "endMs": 138180,
+      "text": "Would you make it all right? (Would you make it all right?)"
+    },
+    {
+      "startMs": 138180,
+      "endMs": 140170,
+      "text": "Or maybe that much better? (Or maybe that much better, babe?)"
+    },
+    {
+      "startMs": 140170,
+      "endMs": 143460,
+      "text": "If you wanted, you could make it all worth it, worth it, worth it, worth it (if you wanted to, oh)"
+    },
+    {
+      "startMs": 143460,
+      "endMs": 148500,
+      "text": "Ooh, when I see the sun rising, you make it that much better"
+    },
+    {
+      "startMs": 148500,
+      "endMs": 152130,
+      "text": "So I hope you gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 152130,
+      "endMs": 157040,
+      "text": "Ooh, worth all of the time I'm 'bout to give you, baby"
+    },
+    {
+      "startMs": 157040,
+      "endMs": 160860,
+      "text": "So I hope you're gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 160860,
+      "endMs": 165790,
+      "text": "Ooh, give all of the time I should be working on me"
+    },
+    {
+      "startMs": 165790,
+      "endMs": 169079,
+      "text": "So I hope you're gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 169079,
+      "endMs": 171900,
+      "text": "Drip me out in six-carat Cartier rings, baby (babe)"
+    },
+    {
+      "startMs": 171900,
+      "endMs": 173790,
+      "text": "Top floor on the penthouse"
+    },
+    {
+      "startMs": 173790,
+      "endMs": 176460,
+      "text": "Sipping on Chardonnay 2016, baby (on the top floor)"
+    },
+    {
+      "startMs": 176460,
+      "endMs": 179140,
+      "text": "Something like a dream, babe"
+    },
+    {
+      "startMs": 179140,
+      "endMs": 180890,
+      "text": "Somehow, I'm so captured by you"
+    },
+    {
+      "startMs": 180890,
+      "endMs": 183190,
+      "text": "I'm rearranging all of my plans"
+    },
+    {
+      "startMs": 183190,
+      "endMs": 185130,
+      "text": "And I'm holding my breath"
+    },
+    {
+      "startMs": 185130,
+      "endMs": 188600,
+      "text": "As I hope you make it worth it"
+    },
+    {
+      "startMs": 188600,
+      "endMs": 190460,
+      "text": "Would you make it all right?"
+    },
+    {
+      "startMs": 190460,
+      "endMs": 192690,
+      "text": "Or maybe that much better? (My baby)"
+    },
+    {
+      "startMs": 192690,
+      "endMs": 195880,
+      "text": "If you wanted, you could make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 195880,
+      "endMs": 200890,
+      "text": "Ooh, when I see the sun rising, you make it that much better"
+    },
+    {
+      "startMs": 200890,
+      "endMs": 204340,
+      "text": "So I hope you gonna make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 204340,
+      "endMs": 209700,
+      "text": "Ooh, worth all of the time I'm 'bout to give you, baby"
+    },
+    {
+      "startMs": 209700,
+      "endMs": 213210,
+      "text": "So I hope you gon' make it all worth it, worth it, worth it, worth it"
+    },
+    {
+      "startMs": 213210,
+      "endMs": 218390,
+      "text": "Ooh, give all of the time I should be working on me"
+    },
+    {
+      "startMs": 218390,
+      "endMs": 221710,
+      "text": "So I hope you're gonna make it all (worth it, worth it, worth it)"
+    },
+    {
+      "startMs": 221710,
+      "endMs": 226420,
+      "text": "This is the night (this is the night)"
+    },
+    {
+      "startMs": 226420,
+      "endMs": 230200,
+      "text": "My soul, it did decide (worth it)"
+    },
+    {
+      "startMs": 230200,
+      "endMs": 233030,
+      "text": "And I need you to (I need you to)"
+    },
+    {
+      "startMs": 233030,
+      "endMs": 234860,
+      "text": "I'm all in, I can't reverse it"
+    },
+    {
+      "startMs": 234860,
+      "endMs": 238060,
+      "text": "So I hope and pray you make it worth it (ah, yeah)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Worth It. - RAYE - Y4_l-9Uxvhg",
+  "outputMp4Name": "Worth It. - RAYE.mp4"
+}

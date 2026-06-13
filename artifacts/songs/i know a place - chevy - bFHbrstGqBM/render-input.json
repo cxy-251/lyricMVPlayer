@@ -1,0 +1,187 @@
+{
+  "title": "chevy - i know a place",
+  "artist": "chevy",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/i know a place - chevy - bFHbrstGqBM/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 10550,
+  "renderDurationInFrames": 3600,
+  "durationInFrames": 3870,
+  "fps": 30,
+  "background": {
+    "kind": "color",
+    "src": null,
+    "color": "#101828"
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WHERE THE WORLD FORGETS TO LOOK, A SECRET SHELTER WAITS",
+    "rightVertical": "A MOMENT BEYOND ALL REALITY, JUST US AND THE TIDE",
+    "bottomLine": "THIS IS WHERE OUR STORIES BEGIN AND END",
+    "sonnetLines": [
+      "We build our haven in the fading light,",
+      "Where whispers drown out every passing fear.",
+      "A fragile promise held through endless night,",
+      "A perfect moment meant to last right here.",
+      "The water mirrors skies of deepest gold,",
+      "And time slows down upon a velvet breath.",
+      "Stories untold, secrets to unfold,",
+      "Defying the harsh edges of our death.",
+      "We chase the echo where the wild streams flow,",
+      "Content within this temporary grace.",
+      "Knowing that such beauty cannot grow,",
+      "Leaving only memory in its place.",
+      "Yet still we cling to what the heart desires,",
+      "Fueling these beautiful, fragile fires."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 13550,
+      "endMs": 14530,
+      "text": "I know a place"
+    },
+    {
+      "startMs": 14870,
+      "endMs": 16149,
+      "text": "That's sound and safe"
+    },
+    {
+      "startMs": 16530,
+      "endMs": 18211,
+      "text": "For us now"
+    },
+    {
+      "startMs": 19820,
+      "endMs": 21230,
+      "text": "No need to hide"
+    },
+    {
+      "startMs": 21480,
+      "endMs": 23010,
+      "text": "Or say goodbyes"
+    },
+    {
+      "startMs": 23120,
+      "endMs": 24660,
+      "text": "Leave them out"
+    },
+    {
+      "startMs": 25650,
+      "endMs": 27510,
+      "text": "We'll run away"
+    },
+    {
+      "startMs": 28940,
+      "endMs": 30740,
+      "text": "It'll be okay"
+    },
+    {
+      "startMs": 36140,
+      "endMs": 40340,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 40480,
+      "endMs": 44680,
+      "text": "♪"
+    },
+    {
+      "startMs": 46310,
+      "endMs": 47930,
+      "text": "We can chase waterfalls and"
+    },
+    {
+      "startMs": 48380,
+      "endMs": 51220,
+      "text": "Talk 'til all my hair dries"
+    },
+    {
+      "startMs": 52950,
+      "endMs": 54290,
+      "text": "Just lie on the sand"
+    },
+    {
+      "startMs": 54610,
+      "endMs": 56030,
+      "text": "Each hand in hand"
+    },
+    {
+      "startMs": 56240,
+      "endMs": 57320,
+      "text": "In paradise"
+    },
+    {
+      "startMs": 58510,
+      "endMs": 61250,
+      "text": "'Cause we don't got long"
+    },
+    {
+      "startMs": 61840,
+      "endMs": 64580,
+      "text": "'Til we say so long"
+    },
+    {
+      "startMs": 69270,
+      "endMs": 73310,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 73310,
+      "endMs": 77510,
+      "text": "♪"
+    },
+    {
+      "startMs": 79400,
+      "endMs": 86090,
+      "text": "We can live in this lovely dream"
+    },
+    {
+      "startMs": 86090,
+      "endMs": 90290,
+      "text": "It'll be my reality"
+    },
+    {
+      "startMs": 93039,
+      "endMs": 97239,
+      "text": "♪"
+    },
+    {
+      "startMs": 99110,
+      "endMs": 103310,
+      "text": "Hmm"
+    },
+    {
+      "startMs": 106500,
+      "endMs": 108100,
+      "text": "I know a place"
+    },
+    {
+      "startMs": 108100,
+      "endMs": 110030,
+      "text": "That has no trace"
+    },
+    {
+      "startMs": 110030,
+      "endMs": 111910,
+      "text": "Of us now"
+    },
+    {
+      "startMs": 114870,
+      "endMs": 117300,
+      "text": "It's just a thought"
+    },
+    {
+      "startMs": 117890,
+      "endMs": 120590,
+      "text": "So don't tell me it's wrong"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/i know a place - chevy - bFHbrstGqBM",
+  "outputMp4Name": "i know a place - chevy.mp4"
+}

@@ -1,0 +1,267 @@
+{
+  "title": "Sweatshirt (with Gabe Bondoc)",
+  "artist": "Patrick Hizon",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sweatshirt (with Gabe Bondoc) - Patrick Hizon - P8kgKKd-dqY/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 4935,
+  "durationInFrames": 4979,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sweatshirt (with Gabe Bondoc) - Patrick Hizon - P8kgKKd-dqY/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE WEIGHT OF DISTANCE IS MEASURED IN COLD BREWS AND PHONE SCREENS",
+    "rightVertical": "WE ARE BOUND BY THE MAYHEM OF OUR CITY HEARTBEATS",
+    "bottomLine": "A RETURN IS ALWAYS BETTER THAN A MEMORY",
+    "sonnetLines": [
+      "The threadbare comfort of a borrowed sleeve,",
+      "Holds the ghost warmth of where you used to be.",
+      "We count the hours that we must receive,",
+      "A slow, sweet ache of deep dependency.",
+      "The city breathes its electric haze,",
+      "A backdrop for the moments left unsaid.",
+      "Like coffee cooling through the passing days,",
+      "Our patience waits until the tears are shed.",
+      "You said you were warm enough to roam,",
+      "But I remember how your spirit shone.",
+      "Now time is calling us back to our home,",
+      "To where two separate lives were once known.",
+      "The journey ends beneath a single gleam,",
+      "Waking up within the shared, bright dream."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 50,
+      "endMs": 3820,
+      "text": "I still have your faded Nike sweatshirt"
+    },
+    {
+      "startMs": 4040,
+      "endMs": 6660,
+      "text": "So when you coming back home"
+    },
+    {
+      "startMs": 6680,
+      "endMs": 9320,
+      "text": "To the city, streetlights, mayhem"
+    },
+    {
+      "startMs": 9910,
+      "endMs": 12710,
+      "text": "I know you're missing that, oh"
+    },
+    {
+      "startMs": 12710,
+      "endMs": 14730,
+      "text": "I've almost had enough"
+    },
+    {
+      "startMs": 15000,
+      "endMs": 17800,
+      "text": "Of just your face on my phone"
+    },
+    {
+      "startMs": 18070,
+      "endMs": 23890,
+      "text": "It's old news but I miss you"
+    },
+    {
+      "startMs": 24720,
+      "endMs": 26380,
+      "text": "Counting down the days"
+    },
+    {
+      "startMs": 26830,
+      "endMs": 29530,
+      "text": "Every minute every hour"
+    },
+    {
+      "startMs": 30480,
+      "endMs": 32200,
+      "text": "Got me going insane"
+    },
+    {
+      "startMs": 32590,
+      "endMs": 35350,
+      "text": "While the leaves fall off your flowers"
+    },
+    {
+      "startMs": 36480,
+      "endMs": 38200,
+      "text": "I'm wishing you were closer"
+    },
+    {
+      "startMs": 38950,
+      "endMs": 40540,
+      "text": "Your coffee's getting colder"
+    },
+    {
+      "startMs": 40900,
+      "endMs": 43780,
+      "text": "Can't you see I'm waking up"
+    },
+    {
+      "startMs": 43890,
+      "endMs": 47090,
+      "text": "Without the piece of me I love"
+    },
+    {
+      "startMs": 47960,
+      "endMs": 50140,
+      "text": "Wondering if it's all worth it"
+    },
+    {
+      "startMs": 51910,
+      "endMs": 56190,
+      "text": "But I know in my heart it's right"
+    },
+    {
+      "startMs": 56190,
+      "endMs": 57890,
+      "text": "Cause I"
+    },
+    {
+      "startMs": 58040,
+      "endMs": 61000,
+      "text": "I still have your faded Nike sweatshirt"
+    },
+    {
+      "startMs": 61830,
+      "endMs": 64510,
+      "text": "So when you coming back home"
+    },
+    {
+      "startMs": 64510,
+      "endMs": 67110,
+      "text": "To the city, streetlights, mayhem"
+    },
+    {
+      "startMs": 67670,
+      "endMs": 70390,
+      "text": "I know you're missing that, oh"
+    },
+    {
+      "startMs": 70390,
+      "endMs": 72450,
+      "text": "I've almost had enough"
+    },
+    {
+      "startMs": 72770,
+      "endMs": 75550,
+      "text": "Of just your face on my phone"
+    },
+    {
+      "startMs": 75900,
+      "endMs": 81640,
+      "text": "It's old news but I miss you"
+    },
+    {
+      "startMs": 82880,
+      "endMs": 85350,
+      "text": "Well I still remember it"
+    },
+    {
+      "startMs": 85350,
+      "endMs": 88270,
+      "text": "Your outfit on the day I left"
+    },
+    {
+      "startMs": 88360,
+      "endMs": 90880,
+      "text": "You said that you were warm enough"
+    },
+    {
+      "startMs": 91090,
+      "endMs": 93110,
+      "text": "But honey I know you well"
+    },
+    {
+      "startMs": 94400,
+      "endMs": 96770,
+      "text": "So I gave you all the warmth I had"
+    },
+    {
+      "startMs": 96770,
+      "endMs": 98830,
+      "text": "And I traded it to hold your hand"
+    },
+    {
+      "startMs": 99009,
+      "endMs": 101810,
+      "text": "The breeze was crazy but my heart was racing"
+    },
+    {
+      "startMs": 101840,
+      "endMs": 104740,
+      "text": "Keep my sweater cuz I'm coming back"
+    },
+    {
+      "startMs": 105890,
+      "endMs": 109010,
+      "text": "Wondering how we're so perfect"
+    },
+    {
+      "startMs": 109660,
+      "endMs": 112400,
+      "text": "You tell me that your heart is mine"
+    },
+    {
+      "startMs": 113660,
+      "endMs": 116940,
+      "text": "So I'm coming back for my"
+    },
+    {
+      "startMs": 117330,
+      "endMs": 120510,
+      "text": "Faded Nike sweatshirt"
+    },
+    {
+      "startMs": 120510,
+      "endMs": 122710,
+      "text": "So when you coming back home"
+    },
+    {
+      "startMs": 122710,
+      "endMs": 124790,
+      "text": "To the city, streetlights, mayhem"
+    },
+    {
+      "startMs": 125510,
+      "endMs": 127770,
+      "text": "I know you're missing that, oh"
+    },
+    {
+      "startMs": 128490,
+      "endMs": 130770,
+      "text": "I've almost had enough"
+    },
+    {
+      "startMs": 130810,
+      "endMs": 133230,
+      "text": "Of just your face on my phone"
+    },
+    {
+      "startMs": 133760,
+      "endMs": 139580,
+      "text": "It's old news but I miss you"
+    },
+    {
+      "startMs": 139670,
+      "endMs": 143870,
+      "text": "♪"
+    },
+    {
+      "startMs": 157100,
+      "endMs": 162500,
+      "text": "It's old news but I miss you"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Sweatshirt (with Gabe Bondoc) - Patrick Hizon - P8kgKKd-dqY",
+  "outputMp4Name": "Sweatshirt (with Gabe Bondoc) - Patrick Hizon.mp4"
+}

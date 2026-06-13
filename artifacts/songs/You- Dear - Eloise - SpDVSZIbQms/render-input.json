@@ -1,0 +1,257 @@
+{
+  "title": "You, Dear",
+  "artist": "Eloise",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/You- Dear - Eloise - SpDVSZIbQms/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 1370,
+  "renderDurationInFrames": 5333,
+  "durationInFrames": 5613,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/You- Dear - Eloise - SpDVSZIbQms/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE CITY IS ONLY A FRAME FOR WHAT WE FEEL INSIDE. ALWAYS LOOKING OUT, NEVER REALLY ARRIVING.",
+    "rightVertical": "A SECRET NOTE HIDDEN BENEATH THE SURFACE OF EVERYTHING. THE TRUTH THAT MUST REMAIN UNREAD TO SURVIVE.",
+    "bottomLine": "WE ARE DEFINED BY THE DISTANCE BETWEEN US AND OUR THOUGHTS.",
+    "sonnetLines": [
+      "The window shows a life untold,",
+      "A map of streets we never knew.",
+      "We trace the lines with hands so cold,",
+      "And find the echo of you.",
+      "You were the comfort I ignored,",
+      "The steady light behind the pane.",
+      "A simple story, softly scored,",
+      "Washed clean by unexpected rain.",
+      "I found your presence in my mind's deep fold,",
+      "Where quiet corners hold the key.",
+      "A narrative too sweet to be controlled,",
+      "A necessary mystery.",
+      "You wore your heart upon your sleeve,",
+      "And I missed it until I believed."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 4370,
+      "endMs": 7760,
+      "text": "I've spent a lot of time looking out of hotel windows"
+    },
+    {
+      "startMs": 7760,
+      "endMs": 10600,
+      "text": "I've seen the trees concave when that Colorado wind blows"
+    },
+    {
+      "startMs": 10600,
+      "endMs": 11080,
+      "text": "I know the metro system inside out"
+    },
+    {
+      "startMs": 11600,
+      "endMs": 16180,
+      "text": "Paris never changes I know my way about"
+    },
+    {
+      "startMs": 31270,
+      "endMs": 34250,
+      "text": "If only I said no when you asked me to dance"
+    },
+    {
+      "startMs": 34440,
+      "endMs": 36510,
+      "text": "As I pulled away you whispered stay"
+    },
+    {
+      "startMs": 36510,
+      "endMs": 37790,
+      "text": "I was in a trance"
+    },
+    {
+      "startMs": 38170,
+      "endMs": 40970,
+      "text": "I happen to know that what I felt you felt too"
+    },
+    {
+      "startMs": 41050,
+      "endMs": 42730,
+      "text": "But that makes no difference to me"
+    },
+    {
+      "startMs": 43120,
+      "endMs": 45650,
+      "text": "I know this love is doomed"
+    },
+    {
+      "startMs": 46400,
+      "endMs": 54800,
+      "text": "But you, dear, I didn't think I'd find you here"
+    },
+    {
+      "startMs": 56850,
+      "endMs": 59350,
+      "text": "Roaming in the corners of my mind"
+    },
+    {
+      "startMs": 60810,
+      "endMs": 63010,
+      "text": "Well in there you'll find"
+    },
+    {
+      "startMs": 63370,
+      "endMs": 65630,
+      "text": "A note that I wrote the other day"
+    },
+    {
+      "startMs": 66410,
+      "endMs": 69590,
+      "text": "Don't read it just leave it"
+    },
+    {
+      "startMs": 70160,
+      "endMs": 73360,
+      "text": "It might give me away"
+    },
+    {
+      "startMs": 81980,
+      "endMs": 83300,
+      "text": "I never liked you much"
+    },
+    {
+      "startMs": 83690,
+      "endMs": 85280,
+      "text": "You're always so complacent"
+    },
+    {
+      "startMs": 85370,
+      "endMs": 86770,
+      "text": "And though I laugh along"
+    },
+    {
+      "startMs": 87000,
+      "endMs": 88500,
+      "text": "I find you test my patience"
+    },
+    {
+      "startMs": 88930,
+      "endMs": 91660,
+      "text": "Sure I have less fun when you are not around"
+    },
+    {
+      "startMs": 92110,
+      "endMs": 95820,
+      "text": "And when I come to think of it my feet don't touch the ground"
+    },
+    {
+      "startMs": 96410,
+      "endMs": 99190,
+      "text": "But you, dear"
+    },
+    {
+      "startMs": 100979,
+      "endMs": 108179,
+      "text": "I didn't think I'd find you here"
+    },
+    {
+      "startMs": 108179,
+      "endMs": 110219,
+      "text": "Roaming in the corners of my mind"
+    },
+    {
+      "startMs": 111550,
+      "endMs": 112990,
+      "text": "Well in there you'll find"
+    },
+    {
+      "startMs": 114050,
+      "endMs": 116720,
+      "text": "A note I wrote the other day"
+    },
+    {
+      "startMs": 117150,
+      "endMs": 120500,
+      "text": "Don't read it just leave it"
+    },
+    {
+      "startMs": 120750,
+      "endMs": 123850,
+      "text": "It might give me away"
+    },
+    {
+      "startMs": 124480,
+      "endMs": 127419,
+      "text": "Why was it you my heart cried for"
+    },
+    {
+      "startMs": 129020,
+      "endMs": 130720,
+      "text": "(Heart cried for)"
+    },
+    {
+      "startMs": 130720,
+      "endMs": 134030,
+      "text": "You were everything I didn't need"
+    },
+    {
+      "startMs": 134030,
+      "endMs": 137190,
+      "text": "Just a book I was told I should read"
+    },
+    {
+      "startMs": 137190,
+      "endMs": 141390,
+      "text": "Never looked close enough to see"
+    },
+    {
+      "startMs": 142329,
+      "endMs": 144200,
+      "text": "That you were standing there with your heart"
+    },
+    {
+      "startMs": 144200,
+      "endMs": 147720,
+      "text": "On your sleeve right from the start"
+    },
+    {
+      "startMs": 147720,
+      "endMs": 151240,
+      "text": "Competing for my heart"
+    },
+    {
+      "startMs": 151240,
+      "endMs": 155079,
+      "text": "But you, dear"
+    },
+    {
+      "startMs": 155079,
+      "endMs": 159279,
+      "text": "I didn't think I'd find you here"
+    },
+    {
+      "startMs": 161480,
+      "endMs": 165650,
+      "text": "Roaming in the corners of my mind"
+    },
+    {
+      "startMs": 165650,
+      "endMs": 171290,
+      "text": "Well in there you'll find a note that I wrote the other day"
+    },
+    {
+      "startMs": 171290,
+      "endMs": 174829,
+      "text": "Don't read it, just leave it"
+    },
+    {
+      "startMs": 174829,
+      "endMs": 177149,
+      "text": "It might give me away"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/You- Dear - Eloise - SpDVSZIbQms",
+  "outputMp4Name": "You, Dear - Eloise.mp4"
+}
