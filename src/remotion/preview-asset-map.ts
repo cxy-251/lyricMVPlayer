@@ -1,7 +1,7 @@
 import type {AudioFeatureTrack} from "../../modules/render-core/src";
 import type {PreviewAssetMap, RawRenderInput, SelectedPreviewSongData} from "./preview-library/types";
-import selectedAudioFeatures from "../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/audio-features.json";
-import selectedRenderInput from "../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/render-input.json";
+import selectedAudioFeatures from "../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio-features.json";
+import selectedRenderInput from "../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/render-input.json";
 
 const loadJson = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
@@ -12,16 +12,16 @@ const loadJson = async <T>(url: string): Promise<T> => {
 };
 
 export const selectedSongData: SelectedPreviewSongData = {
-  id: "Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w",
+  id: "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
   renderInput: selectedRenderInput as RawRenderInput,
   audioFeatures: selectedAudioFeatures as AudioFeatureTrack,
 };
 
 export const previewAssetMap: PreviewAssetMap = {
-  "Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w": {
-    audioSrc: new URL("../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/audio.mp3", import.meta.url).href,
-    backgroundSrc: new URL("../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/background.png", import.meta.url).href,
-    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/render-input.json", import.meta.url).href),
-    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w/audio-features.json", import.meta.url).href)
+  "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ": {
+    audioSrc: new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio.mp3", import.meta.url).href,
+    backgroundSrc: new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/background.png", import.meta.url).href,
+    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/render-input.json", import.meta.url).href),
+    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio-features.json", import.meta.url).href)
   }
 };

@@ -1,309 +1,194 @@
 {
-  "playlist_url": "https://music.youtube.com/playlist?list=PLxlutlgTqDRpq9S-9BbHtk2mkOiroOnyt",
-  "generated_at": "2026-06-06T15:16:23.920Z",
-  "count": 28,
-  "lyrics_review_count": 11,
+  "playlist_url": "https://music.youtube.com/playlist?list=PLYGBfUx8aPvdIBp1Zvtx6qvfA1kgh5FyQ",
+  "generated_at": "2026-06-18T08:35:39.410Z",
+  "count": 12,
+  "lyrics_review_count": 8,
   "items": [
     {
-      "video_id": "XkGIneCJRlc",
-      "source_url": "https://www.youtube.com/watch?v=XkGIneCJRlc",
-      "song_dir": "Telephone - Lady Gaga - XkGIneCJRlc",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "bFHbrstGqBM",
-      "source_url": "https://www.youtube.com/watch?v=bFHbrstGqBM",
-      "song_dir": "i know a place - chevy - bFHbrstGqBM",
+      "video_id": "Rt9tW3cMLhI",
+      "source_url": "https://www.youtube.com/watch?v=Rt9tW3cMLhI",
+      "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
       "ok": true,
       "lyrics_review": {
-        "song_dir": "i know a place - chevy - bFHbrstGqBM",
+        "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
         "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "bFHbrstGqBM",
-        "lyric_video_id": "K6QK_dVk8BY",
-        "detail": "ytmusic search -> K6QK_dVk8BY"
+        "expected_video_id": "Rt9tW3cMLhI",
+        "lyric_video_id": "P7VgXIZSN_w",
+        "detail": "ytmusic search -> P7VgXIZSN_w"
       }
     },
     {
-      "video_id": "q7JcmvbygpM",
-      "source_url": "https://www.youtube.com/watch?v=q7JcmvbygpM",
-      "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
+      "video_id": "o6RkncuPKT0",
+      "source_url": "https://www.youtube.com/watch?v=o6RkncuPKT0",
+      "song_dir": "People You Know - Selena Gomez - o6RkncuPKT0",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "62yox0F5lcA",
+      "source_url": "https://www.youtube.com/watch?v=62yox0F5lcA",
+      "song_dir": "Please Please Please - Sabrina Carpenter - 62yox0F5lcA",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Fq_LG6SPSFU",
+      "source_url": "https://www.youtube.com/watch?v=Fq_LG6SPSFU",
+      "song_dir": "Good Graces - Sabrina Carpenter - Fq_LG6SPSFU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "xSL2eeKvxIQ",
+      "source_url": "https://www.youtube.com/watch?v=xSL2eeKvxIQ",
+      "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
       "ok": false,
       "lyrics_review": {
-        "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
+        "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "iS5ex1oBfTI",
-      "source_url": "https://www.youtube.com/watch?v=iS5ex1oBfTI",
-      "song_dir": "Walk Away - Mina Okabe - iS5ex1oBfTI",
+      "video_id": "-MtKC5wXqdQ",
+      "source_url": "https://www.youtube.com/watch?v=-MtKC5wXqdQ",
+      "song_dir": "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "AQdy73E-l3g",
-      "source_url": "https://www.youtube.com/watch?v=AQdy73E-l3g",
-      "song_dir": "When It Snows - Sarah Kang Music - AQdy73E-l3g",
+      "video_id": "6NXnxTNIWkc",
+      "source_url": "https://www.youtube.com/watch?v=6NXnxTNIWkc",
+      "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
       "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "o8CybhLH9KI",
-      "source_url": "https://www.youtube.com/watch?v=o8CybhLH9KI",
-      "song_dir": "We're All Gonna Die Anyway (feat. Jackson Lundy) - Sarah Kang Music - o8CybhLH9KI",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "P8kgKKd-dqY",
-      "source_url": "https://www.youtube.com/watch?v=P8kgKKd-dqY",
-      "song_dir": "Sweatshirt (with Gabe Bondoc) - Patrick Hizon - P8kgKKd-dqY",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "SzJXikN_4wA",
-      "source_url": "https://www.youtube.com/watch?v=SzJXikN_4wA",
-      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
-      "ok": false,
       "lyrics_review": {
-        "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "6NXnxTNIWkc",
+        "lyric_video_id": "B6GdsRIbTSk",
+        "detail": "ytmusic search -> B6GdsRIbTSk"
       }
     },
     {
-      "video_id": "CzED0ifV9uM",
-      "source_url": "https://www.youtube.com/watch?v=CzED0ifV9uM",
-      "song_dir": "It’s Okay Today - Jigoooo Radio - CzED0ifV9uM",
+      "video_id": "78wrful9cVU",
+      "source_url": "https://www.youtube.com/watch?v=78wrful9cVU",
+      "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
       "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "VB-LtTddtBw",
-      "source_url": "https://www.youtube.com/watch?v=VB-LtTddtBw",
-      "song_dir": "Dreamer - Laufey - VB-LtTddtBw",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "y-STe_g795o",
-      "source_url": "https://www.youtube.com/watch?v=y-STe_g795o",
-      "song_dir": "Fall In Love Alone - Stacey Ryan - y-STe_g795o",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "sLSMRPompnk",
-      "source_url": "https://www.youtube.com/watch?v=sLSMRPompnk",
-      "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
-      "ok": false,
       "lyrics_review": {
-        "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "78wrful9cVU",
+        "lyric_video_id": "G1--F4N-Gvs",
+        "detail": "ytmusic search -> G1--F4N-Gvs"
       }
     },
     {
-      "video_id": "h_PDqnuEXfg",
-      "source_url": "https://www.youtube.com/watch?v=h_PDqnuEXfg",
-      "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
-      "ok": false,
+      "video_id": "rK5TyISxZ_M",
+      "source_url": "https://www.youtube.com/watch?v=rK5TyISxZ_M",
+      "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
+      "ok": true,
       "lyrics_review": {
-        "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "rK5TyISxZ_M",
+        "lyric_video_id": "94mq0YBsn8U",
+        "detail": "ytmusic search -> 94mq0YBsn8U"
       }
     },
     {
-      "video_id": "2L-2zBOaq_g",
-      "source_url": "https://www.youtube.com/watch?v=2L-2zBOaq_g",
-      "song_dir": "Fool Moon - ARCANA - Topic - 2L-2zBOaq_g",
+      "video_id": "woLfAvD5iXI",
+      "source_url": "https://www.youtube.com/watch?v=woLfAvD5iXI",
+      "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
       "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "Ns3MbpQMNBs",
-      "source_url": "https://www.youtube.com/watch?v=Ns3MbpQMNBs",
-      "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
-      "ok": false,
       "lyrics_review": {
-        "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "woLfAvD5iXI",
+        "lyric_video_id": "6ARhsXF9eWQ",
+        "detail": "ytmusic search -> 6ARhsXF9eWQ"
       }
     },
     {
-      "video_id": "4YYcWdW8vDM",
-      "source_url": "https://www.youtube.com/watch?v=4YYcWdW8vDM",
-      "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
-      "ok": false,
+      "video_id": "Oa_RSwwpPaA",
+      "source_url": "https://www.youtube.com/watch?v=Oa_RSwwpPaA",
+      "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
+      "ok": true,
       "lyrics_review": {
-        "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "Oa_RSwwpPaA",
+        "lyric_video_id": "eLhSxOAaWmg",
+        "detail": "ytmusic search -> eLhSxOAaWmg"
       }
     },
     {
-      "video_id": "JEXBW0hhk38",
-      "source_url": "https://www.youtube.com/watch?v=JEXBW0hhk38",
-      "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
-      "ok": false,
+      "video_id": "kPa7bsKwL-c",
+      "source_url": "https://www.youtube.com/watch?v=kPa7bsKwL-c",
+      "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
+      "ok": true,
       "lyrics_review": {
-        "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
+        "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
+        "reason": "lyrics_source_video_mismatch",
+        "expected_video_id": "kPa7bsKwL-c",
+        "lyric_video_id": "DlFXDl_ROAM",
+        "detail": "ytmusic search -> DlFXDl_ROAM"
       }
-    },
-    {
-      "video_id": "SncwslSGA1k",
-      "source_url": "https://www.youtube.com/watch?v=SncwslSGA1k",
-      "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "f2PdKjdPMmU",
-      "source_url": "https://www.youtube.com/watch?v=f2PdKjdPMmU",
-      "song_dir": "Silver Lining - Laufey - f2PdKjdPMmU",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "Y4_l-9Uxvhg",
-      "source_url": "https://www.youtube.com/watch?v=Y4_l-9Uxvhg",
-      "song_dir": "Worth It. - RAYE - Y4_l-9Uxvhg",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "dqsxlYtWM-k",
-      "source_url": "https://www.youtube.com/watch?v=dqsxlYtWM-k",
-      "song_dir": "Stumblin' in (Acoustic Cover) - Audrey Stclair Acoustic Covers on Spotify - dqsxlYtWM-k",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "a0VPrYLHvJA",
-      "source_url": "https://www.youtube.com/watch?v=a0VPrYLHvJA",
-      "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "tDDdmYGgBXA",
-      "source_url": "https://www.youtube.com/watch?v=tDDdmYGgBXA",
-      "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "wI33QEo2SbQ",
-      "source_url": "https://www.youtube.com/watch?v=wI33QEo2SbQ",
-      "song_dir": "Adventure with You (feat. Cy Leo) - Sarah Kang Music - wI33QEo2SbQ",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "SpDVSZIbQms",
-      "source_url": "https://www.youtube.com/watch?v=SpDVSZIbQms",
-      "song_dir": "You- Dear - Eloise - SpDVSZIbQms",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "yjzNbYpPOKE",
-      "source_url": "https://www.youtube.com/watch?v=yjzNbYpPOKE",
-      "song_dir": "Alright - Couch - yjzNbYpPOKE",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "pzYFPxEXSU8",
-      "source_url": "https://www.youtube.com/watch?v=pzYFPxEXSU8",
-      "song_dir": "Time Traveling - Anthony Lazaro - pzYFPxEXSU8",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "b2gTGEeB12w",
-      "source_url": "https://www.youtube.com/watch?v=b2gTGEeB12w",
-      "song_dir": "Like I'm Gonna Lose You - Meghan Trainor - b2gTGEeB12w",
-      "ok": true,
-      "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "i know a place - chevy - bFHbrstGqBM",
+      "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
       "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "bFHbrstGqBM",
-      "lyric_video_id": "K6QK_dVk8BY",
-      "detail": "ytmusic search -> K6QK_dVk8BY"
+      "expected_video_id": "Rt9tW3cMLhI",
+      "lyric_video_id": "P7VgXIZSN_w",
+      "detail": "ytmusic search -> P7VgXIZSN_w"
     },
     {
-      "song_dir": "It's a Vibe - Muse Petal - q7JcmvbygpM",
+      "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     },
     {
-      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "6NXnxTNIWkc",
+      "lyric_video_id": "B6GdsRIbTSk",
+      "detail": "ytmusic search -> B6GdsRIbTSk"
     },
     {
-      "song_dir": "This Pace Is Still Progress - asafuwari - sLSMRPompnk",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "78wrful9cVU",
+      "lyric_video_id": "G1--F4N-Gvs",
+      "detail": "ytmusic search -> G1--F4N-Gvs"
     },
     {
-      "song_dir": "Canción De Amor - DannyHO - h_PDqnuEXfg",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "rK5TyISxZ_M",
+      "lyric_video_id": "94mq0YBsn8U",
+      "detail": "ytmusic search -> 94mq0YBsn8U"
     },
     {
-      "song_dir": "No Competition - syd B - Ns3MbpQMNBs",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "woLfAvD5iXI",
+      "lyric_video_id": "6ARhsXF9eWQ",
+      "detail": "ytmusic search -> 6ARhsXF9eWQ"
     },
     {
-      "song_dir": "Soft Smiles Only - Mimi Chill Music - 4YYcWdW8vDM",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "Oa_RSwwpPaA",
+      "lyric_video_id": "eLhSxOAaWmg",
+      "detail": "ytmusic search -> eLhSxOAaWmg"
     },
     {
-      "song_dir": "Telescope - Milena 밀레나 - JEXBW0hhk38",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Loving you came easy - 9Duck - SncwslSGA1k",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Last Receipt - ZeroZoneZone - a0VPrYLHvJA",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "goodnight - Sarah Kang Music - tDDdmYGgBXA",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
+      "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
+      "reason": "lyrics_source_video_mismatch",
+      "expected_video_id": "kPa7bsKwL-c",
+      "lyric_video_id": "DlFXDl_ROAM",
+      "detail": "ytmusic search -> DlFXDl_ROAM"
     }
   ]
 }
