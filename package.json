@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "node tools/dev-with-sync.mjs",
     "dev:web": "node tools/build-web-public.mjs && vite --host 127.0.0.1 --port 3212",
-    "build:web": "node tools/build-web-public.mjs && vite build",
+    "build:web": "node tools/build-web-public.mjs --demo && vite build",
+    "build:web:local": "node tools/build-web-public.mjs && vite build",
+    "clean:media": "node tools/clean-media.mjs",
     "refresh:cookies": "conda run -n kwai python modules/audio-download/refresh_youtube_cookies.py /Users/cxy251/Code/04AIMedia/lyricMVPlayer",
     "prepare:playlist": "node tools/prepare-playlist.mjs",
     "generate:background:current": "node tools/generate-backgrounds.mjs current",

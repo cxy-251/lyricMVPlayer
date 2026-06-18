@@ -69,12 +69,20 @@ Common commands for the frontend preview and render layer:
 - `npm run build:web`
   Build the deployable static web player into:
   `dist/`
-  This command first prepares deployable static song assets under:
+  This command builds the fixed 10-song GitHub demo and first prepares its static assets under:
   `public-web/`
   This is the command to use for Cloudflare Pages builds.
   Recommended Cloudflare Pages settings:
   - Build command: `npm run build:web`
   - Build output directory: `dist`
+
+- `npm run build:web:local`
+  Build the web player from the complete local library under `artifacts/songs/`.
+  Local production songs remain outside Git and are not uploaded by the demo build.
+
+- `npm run clean:media`
+  Preview removable media without deleting anything. It lists reusable vocal stems for published songs and files under `artifacts/songsout/trash/`.
+  Run `npm run clean:media -- --apply` only after reviewing the dry-run output.
 
 - `npm run use:song -- "<song-folder-name>"`
   Switch the active direct-render song package.

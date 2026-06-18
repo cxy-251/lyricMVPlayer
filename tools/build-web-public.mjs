@@ -10,6 +10,8 @@ const publicRoot = path.join(projectRoot, "public-web");
 const currentSongConfigPath = path.join(projectRoot, "src", "remotion", "current-song.json");
 const libraryStatePath = path.join(commonRoot, "library-state.json");
 const queueCsvPath = path.join(commonRoot, "production-queue.csv");
+const demoSongsPath = path.join(projectRoot, "config", "demo-songs.json");
+const demoOnly = process.argv.includes("--demo");
 
 const ensureDir = (targetPath) => {
   fs.mkdirSync(targetPath, {recursive: true});
@@ -242,16 +244,27 @@ const queueRows = fs.existsSync(queueCsvPath)
   : [];
 
 const queueSongIds = queueRows.map((row) => row.song_dir).filter(Boolean);
-const songDirNames = Array.from(
-  new Set([
-    currentSongConfig.songDirName,
-    ...queueSongIds,
-    ...fs
-      .readdirSync(songsRoot, {withFileTypes: true})
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name),
-  ].filter(Boolean))
-);
+const demoConfig = demoOnly ? readJsonIfExists(demoSongsPath) : null;
+const demoSongIds = Array.isArray(demoConfig?.songIds)
+  ? demoConfig.songIds.filter((songId) => typeof songId === "string" && songId.trim())
+  : [];
+
+if (demoOnly && demoSongIds.length !== 10) {
+  throw new Error(`Demo build requires exactly 10 song IDs in ${demoSongsPath}`);
+}
+
+const songDirNames = demoOnly
+  ? demoSongIds
+  : Array.from(
+      new Set([
+        currentSongConfig.songDirName,
+        ...queueSongIds,
+        ...fs
+          .readdirSync(songsRoot, {withFileTypes: true})
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => entry.name),
+      ].filter(Boolean))
+    );
 
 resetDir(publicRoot);
 ensureDir(path.join(publicRoot, "songs"));
@@ -322,12 +335,38 @@ for (const songDirName of songDirNames) {
   });
 }
 
+const availableSongIds = new Set(songs.map((song) => song.id));
+const filterTrackIds = (trackIds) => {
+  if (trackIds === "__ALL__") {
+    return trackIds;
+  }
+  return Array.isArray(trackIds) ? trackIds.filter((trackId) => availableSongIds.has(trackId)) : [];
+};
+const filteredPlaylists = Array.isArray(libraryState.customPlaylists)
+  ? libraryState.customPlaylists.map((playlist) => ({
+      ...playlist,
+      trackIds: filterTrackIds(playlist.trackIds),
+    }))
+  : [];
+const currentSongDirName = availableSongIds.has(currentSongConfig.songDirName)
+  ? currentSongConfig.songDirName
+  : songs[0]?.id || "";
+
+if (demoOnly && songs.length !== demoSongIds.length) {
+  const missingSongIds = demoSongIds.filter((songId) => !availableSongIds.has(songId));
+  throw new Error(`Demo assets are incomplete: ${missingSongIds.join(", ")}`);
+}
+
 const manifest = {
   nickname: libraryState.nickname ?? "CleanKsen",
-  selectedPlaylistId: libraryState.selectedPlaylistId ?? "new-downloads",
-  currentSongDirName: currentSongConfig.songDirName || songs[0]?.id || "",
-  likedTrackIds: Array.isArray(libraryState.likedTrackIds) ? libraryState.likedTrackIds : [],
-  customPlaylists: Array.isArray(libraryState.customPlaylists) ? libraryState.customPlaylists : [],
+  selectedPlaylistId: demoOnly ? "demo" : libraryState.selectedPlaylistId ?? "new-downloads",
+  currentSongDirName,
+  likedTrackIds: Array.isArray(libraryState.likedTrackIds)
+    ? libraryState.likedTrackIds.filter((trackId) => availableSongIds.has(trackId))
+    : [],
+  customPlaylists: demoOnly
+    ? [{id: "demo", name: "Demo", trackIds: "__ALL__"}]
+    : filteredPlaylists,
   songs,
 };
 

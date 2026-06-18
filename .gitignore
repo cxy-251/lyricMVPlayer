@@ -34,17 +34,9 @@ artifacts/common/playlist-pipeline.json
 artifacts/common/*.pipeline.json
 artifacts/common/models/
 
-# Song packages: keep only the minimum assets required by the deployed player.
-artifacts/songs/*
-!artifacts/songs/*/
-artifacts/songs/*/*
-!artifacts/songs/*/audio.mp3
-!artifacts/songs/*/render-input.json
-!artifacts/songs/*/audio-features.json
-!artifacts/songs/*/background.png
-!artifacts/songs/*/background.jpg
-!artifacts/songs/*/background.jpeg
-!artifacts/songs/*/background.webp
+# The complete song library is local production data. The fixed demo files that
+# are already tracked remain tracked even though this directory is ignored.
+artifacts/songs/
 
 # Render outputs are publish artifacts, not required for the player site bundle.
 artifacts/songsout/

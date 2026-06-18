@@ -1,0 +1,287 @@
+{
+  "title": "People You Know",
+  "artist": "Selena Gomez",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/People You Know - Selena Gomez - o6RkncuPKT0/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 3750,
+  "renderDurationInFrames": 4746,
+  "durationInFrames": 5847,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/People You Know - Selena Gomez - o6RkncuPKT0/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "THE ECHO OF WATER WHERE THE FIRE ONCE BURNED SO BRIGHT.",
+    "rightVertical": "REMEMBERING WHEN WE WERE CLOSE, BUT TIME ALWAYS FLOWS APART.",
+    "bottomLine": "WE ARE ONLY GHOSTS IN THIS QUIET EXPANSION.",
+    "sonnetLines": [
+      "The current fades to dust and grit,",
+      "Where laughter once was freely lit.",
+      "A phantom sweetness on the tongue,",
+      "A song that should have never sung.",
+      "We built our world too fast, too high,",
+      "Beneath a vast and changing sky.",
+      "Now only shadows softly creep,",
+      "From promises we failed to keep.",
+      "The edges blur with fading light,",
+      "Into the coming endless night.",
+      "Just echoes where the warmth resided,",
+      "A memory gently misguided.",
+      "Of moments that refused to stay,",
+      "And drifted far, and slipped away."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 6750,
+      "endMs": 8970,
+      "text": "You were running through me like water"
+    },
+    {
+      "startMs": 10290,
+      "endMs": 12970,
+      "text": "Now the feeling's leaving me dry"
+    },
+    {
+      "startMs": 13590,
+      "endMs": 16250,
+      "text": "These days we couldn't be farther"
+    },
+    {
+      "startMs": 16300,
+      "endMs": 19660,
+      "text": "So how's it feel to be on the other side?"
+    },
+    {
+      "startMs": 19660,
+      "endMs": 21180,
+      "text": "So many wasted (wasted)"
+    },
+    {
+      "startMs": 22000,
+      "endMs": 26640,
+      "text": "Nights with (nights with) you (you)"
+    },
+    {
+      "startMs": 26640,
+      "endMs": 28120,
+      "text": "I still could taste it (taste it)"
+    },
+    {
+      "startMs": 28120,
+      "endMs": 31920,
+      "text": "I hate it, wish I could take it back, 'cause"
+    },
+    {
+      "startMs": 31920,
+      "endMs": 35300,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 35300,
+      "endMs": 38490,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 38490,
+      "endMs": 41540,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 41540,
+      "endMs": 44740,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 44740,
+      "endMs": 47890,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 47890,
+      "endMs": 51170,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 51170,
+      "endMs": 54390,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 54390,
+      "endMs": 57870,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 57870,
+      "endMs": 61210,
+      "text": "When it was good, we were on fire"
+    },
+    {
+      "startMs": 61210,
+      "endMs": 64030,
+      "text": "Now I'm breathing ashes and dust"
+    },
+    {
+      "startMs": 64030,
+      "endMs": 67540,
+      "text": "I always wanna get higher"
+    },
+    {
+      "startMs": 67540,
+      "endMs": 70410,
+      "text": "I never know when enough is enough"
+    },
+    {
+      "startMs": 70410,
+      "endMs": 72980,
+      "text": "So many wasted (wasted)"
+    },
+    {
+      "startMs": 72980,
+      "endMs": 76640,
+      "text": "Nights with (nights with) you (you)"
+    },
+    {
+      "startMs": 76640,
+      "endMs": 79160,
+      "text": "I still could taste it (taste it)"
+    },
+    {
+      "startMs": 79160,
+      "endMs": 82760,
+      "text": "I hate it, wish I could take it back, 'cause"
+    },
+    {
+      "startMs": 82760,
+      "endMs": 86380,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 86380,
+      "endMs": 89650,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 89650,
+      "endMs": 92720,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 92720,
+      "endMs": 95960,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 95960,
+      "endMs": 99130,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 99130,
+      "endMs": 102330,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 102330,
+      "endMs": 105630,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 105630,
+      "endMs": 108300,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 108300,
+      "endMs": 109311,
+      "text": "(People you don't)"
+    },
+    {
+      "startMs": 111440,
+      "endMs": 115640,
+      "text": "(People you don't)"
+    },
+    {
+      "startMs": 115640,
+      "endMs": 117662,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 117662,
+      "endMs": 120982,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 120982,
+      "endMs": 124152,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 124152,
+      "endMs": 127142,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 127142,
+      "endMs": 130292,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 131270,
+      "endMs": 134449,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 134590,
+      "endMs": 137811,
+      "text": "We used to be close, but people can go"
+    },
+    {
+      "startMs": 137811,
+      "endMs": 141021,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 141021,
+      "endMs": 144281,
+      "text": "And what hurts the most is people can go"
+    },
+    {
+      "startMs": 144281,
+      "endMs": 147461,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 147461,
+      "endMs": 150491,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 150491,
+      "endMs": 153611,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 153611,
+      "endMs": 156521,
+      "text": "From people you know to people you don't"
+    },
+    {
+      "startMs": 156770,
+      "endMs": 159970,
+      "text": "From people you know to people you don't"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/People You Know - Selena Gomez - o6RkncuPKT0",
+  "outputMp4Name": "People You Know - Selena Gomez.mp4"
+}

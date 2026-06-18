@@ -1,0 +1,272 @@
+{
+  "title": "Good Graces",
+  "artist": "Sabrina Carpenter",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Good Graces - Sabrina Carpenter - Fq_LG6SPSFU/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 0,
+  "renderDurationInFrames": 5257,
+  "durationInFrames": 5557,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Good Graces - Sabrina Carpenter - Fq_LG6SPSFU/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "DO NOT CONFUSE MILDNESS FOR A LACK OF EDGE. MY GRACE IS EARNED, NEVER ASSUMED.",
+    "rightVertical": "THE SHIFT FROM LOVE TO ZERO DOESN'T TAKE A MOMENT; IT'S AN INSTANTANEOUS CUT.",
+    "bottomLine": "MY AFFECTION HAS TERMS; THE CONTRACT IS NON-NEGOTIABLE.",
+    "sonnetLines": [
+      "The sweet smile hides a polished steel core,",
+      "A promise whispered on the evening air.",
+      "Do not mistake the gentle hand for poor,",
+      "Or think that kindness means you should care.",
+      "The vows we spoke were built on shifting sand,",
+      "And trust is just a game I understand.",
+      "I mastered every turn and subtle art,",
+      "Of pulling back the heart, then tearing it apart.",
+      "Stay within the orbit of my favor,",
+      "Lest I discard your worth with careless ease.",
+      "A sudden flash, a sharp, decisive waiver,",
+      "Like turning off all lights upon the breeze.",
+      "You think you know the measure of my soul?",
+      "But I can shatter what you deem as whole."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 270,
+      "endMs": 4470,
+      "text": "I won't give a fuck about you"
+    },
+    {
+      "startMs": 6630,
+      "endMs": 7900,
+      "text": "Oh-mm"
+    },
+    {
+      "startMs": 7900,
+      "endMs": 10270,
+      "text": "I won't give a fuck about you"
+    },
+    {
+      "startMs": 10270,
+      "endMs": 14470,
+      "text": "Mm"
+    },
+    {
+      "startMs": 14850,
+      "endMs": 19050,
+      "text": "When I love you, I'm sweet like an angel"
+    },
+    {
+      "startMs": 20330,
+      "endMs": 24200,
+      "text": "Drawin' hearts 'round our names and dreamin' of"
+    },
+    {
+      "startMs": 24200,
+      "endMs": 28150,
+      "text": "Writing vows, rocking cradles"
+    },
+    {
+      "startMs": 28150,
+      "endMs": 30610,
+      "text": "Don't mistake my nice for naive"
+    },
+    {
+      "startMs": 30610,
+      "endMs": 34280,
+      "text": "I don't waste a second, I know lots of guys"
+    },
+    {
+      "startMs": 34280,
+      "endMs": 38010,
+      "text": "You do something suspect, this cute ass bye-bye"
+    },
+    {
+      "startMs": 38010,
+      "endMs": 42210,
+      "text": "Like, ooh, baby, you say you really like it being mine"
+    },
+    {
+      "startMs": 42860,
+      "endMs": 45980,
+      "text": "So let me give you some advice"
+    },
+    {
+      "startMs": 45980,
+      "endMs": 49790,
+      "text": "Boy, it's not that complicated"
+    },
+    {
+      "startMs": 49790,
+      "endMs": 53670,
+      "text": "You should stay in my good graces"
+    },
+    {
+      "startMs": 53670,
+      "endMs": 56300,
+      "text": "Or I'll switch it up like that, so fast"
+    },
+    {
+      "startMs": 56300,
+      "endMs": 60500,
+      "text": "'Cause no one's more amazing at turning loving into hatred"
+    },
+    {
+      "startMs": 61230,
+      "endMs": 64910,
+      "text": "Boy, it's not that complicated"
+    },
+    {
+      "startMs": 64910,
+      "endMs": 68910,
+      "text": "You should stay in my good graces"
+    },
+    {
+      "startMs": 68910,
+      "endMs": 71580,
+      "text": "Or I'll switch it up like that (like that), so fast (so fast)"
+    },
+    {
+      "startMs": 71580,
+      "endMs": 75780,
+      "text": "'Cause no one's more amazing at turning loving into hatred"
+    },
+    {
+      "startMs": 76310,
+      "endMs": 80260,
+      "text": "(I won't give a fuck about you, I won't give a fuck about you)"
+    },
+    {
+      "startMs": 80260,
+      "endMs": 84050,
+      "text": "(I won't give a fuck about you) that was cool"
+    },
+    {
+      "startMs": 84050,
+      "endMs": 87950,
+      "text": "(I won't give a fuck about you, I won't give a fuck about you)"
+    },
+    {
+      "startMs": 87950,
+      "endMs": 90950,
+      "text": "(I won't give a fuck about you) yeah"
+    },
+    {
+      "startMs": 90950,
+      "endMs": 95150,
+      "text": "I'll tell the world you finish your chores prematurely"
+    },
+    {
+      "startMs": 96680,
+      "endMs": 100620,
+      "text": "Break my heart, and I swear I'm movin' on"
+    },
+    {
+      "startMs": 100620,
+      "endMs": 104120,
+      "text": "With your favorite athlete"
+    },
+    {
+      "startMs": 104120,
+      "endMs": 106630,
+      "text": "Shoot his shot every night"
+    },
+    {
+      "startMs": 106630,
+      "endMs": 110580,
+      "text": "Want you every second, don't need other guys"
+    },
+    {
+      "startMs": 110580,
+      "endMs": 114630,
+      "text": "You do something sus', kiss my cute ass bye-ye-ye"
+    },
+    {
+      "startMs": 114630,
+      "endMs": 118300,
+      "text": "Boy, it's not that complicated"
+    },
+    {
+      "startMs": 118300,
+      "endMs": 122320,
+      "text": "You should stay in my good graces"
+    },
+    {
+      "startMs": 122320,
+      "endMs": 124730,
+      "text": "Or I'll switch it up like that, so fast"
+    },
+    {
+      "startMs": 124730,
+      "endMs": 128930,
+      "text": "'Cause no one's more amazing (amazing) at turning loving into hatred"
+    },
+    {
+      "startMs": 129880,
+      "endMs": 133570,
+      "text": "Boy, it's not that complicated"
+    },
+    {
+      "startMs": 133570,
+      "endMs": 137450,
+      "text": "You should stay in my good graces"
+    },
+    {
+      "startMs": 137450,
+      "endMs": 140190,
+      "text": "Or I'll switch it up like that (like that), so fast (so fast)"
+    },
+    {
+      "startMs": 140190,
+      "endMs": 144390,
+      "text": "'Cause no one's more amazing at turning loving into hatred"
+    },
+    {
+      "startMs": 144940,
+      "endMs": 148670,
+      "text": "(I won't give a fuck about you, I won't give a fuck about you)"
+    },
+    {
+      "startMs": 148670,
+      "endMs": 152660,
+      "text": "(I won't give a fuck about you) oh, no"
+    },
+    {
+      "startMs": 152660,
+      "endMs": 156460,
+      "text": "(I won't give a fuck about you, I won't give a fuck about you)"
+    },
+    {
+      "startMs": 156460,
+      "endMs": 160230,
+      "text": "(I won't give a fuck about you) oh"
+    },
+    {
+      "startMs": 160230,
+      "endMs": 163950,
+      "text": "No, I won't, I won't give a fuck about you"
+    },
+    {
+      "startMs": 163950,
+      "endMs": 167740,
+      "text": "No, I won't (I won't, I won't, I won't)"
+    },
+    {
+      "startMs": 167740,
+      "endMs": 171660,
+      "text": "No, I won't, I won't give a fuck about you"
+    },
+    {
+      "startMs": 171700,
+      "endMs": 173240,
+      "text": "No, I won't (I won't, I won't, I won't)"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Good Graces - Sabrina Carpenter - Fq_LG6SPSFU",
+  "outputMp4Name": "Good Graces - Sabrina Carpenter.mp4"
+}

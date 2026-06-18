@@ -1,0 +1,457 @@
+{
+  "title": "Blank Space (Taylor's Version)",
+  "artist": "Taylor Swift",
+  "audioSrc": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio.mp3",
+  "lyricOffsetMs": 0,
+  "renderTrimStartMs": 2770,
+  "renderDurationInFrames": 6871,
+  "durationInFrames": 6954,
+  "fps": 30,
+  "background": {
+    "kind": "image",
+    "src": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/background.png",
+    "color": null
+  },
+  "poetryFrame": {
+    "nickname": "@xcai43323",
+    "topLabel": "@xcai43323 · AUDIO DIARY",
+    "leftVertical": "WE ARE YOUNG AND WE ARE RECKLESS TONIGHT; A NIGHT OF MAGIC, MADNESS, AND SIN.",
+    "rightVertical": "THE GAME IS HIGH STAKES: FOREVER OR DOWN IN FLAMES? TELL ME WHEN IT ENDS.",
+    "bottomLine": "LOVE IS THE MOST BEAUTIFUL KIND OF TORTURE",
+    "sonnetLines": [
+      "Whispers echo through the velvet hall,",
+      "A dangerous promise on every breath;",
+      "We dance where shadows start to fall,",
+      "Embracing beauty bordering on death.",
+      "The game requires a reckless hand,",
+      "To build a myth from fragile, pretty lies;",
+      "Across this gilded, unsuspecting land,",
+      "A brilliant chaos meets expectant eyes.",
+      "You are the void I learn to fill at last,",
+      "With painted lips and skies of crystal hue;",
+      "A memory too beautiful to cast,",
+      "Forever bound by me, my love, my view.",
+      "We burn so bright beneath the midnight stain,",
+      "And write your name where nothing was in vain."
+    ]
+  },
+  "lyrics": [
+    {
+      "startMs": 0,
+      "endMs": 4200,
+      "text": "♪"
+    },
+    {
+      "startMs": 5770,
+      "endMs": 8170,
+      "text": "Nice to meet you, where you been?"
+    },
+    {
+      "startMs": 8170,
+      "endMs": 10610,
+      "text": "I could show you incredible things"
+    },
+    {
+      "startMs": 10870,
+      "endMs": 12990,
+      "text": "Magic, madness, heaven, sin"
+    },
+    {
+      "startMs": 13370,
+      "endMs": 15250,
+      "text": "Saw you there and I thought"
+    },
+    {
+      "startMs": 15280,
+      "endMs": 17530,
+      "text": "\"Oh, my God, look at that face"
+    },
+    {
+      "startMs": 17830,
+      "endMs": 20190,
+      "text": "You look like my next mistake"
+    },
+    {
+      "startMs": 20330,
+      "endMs": 22590,
+      "text": "Love's a game, wanna play?\" Ay"
+    },
+    {
+      "startMs": 25780,
+      "endMs": 28030,
+      "text": "New money, suit and tie"
+    },
+    {
+      "startMs": 28460,
+      "endMs": 30410,
+      "text": "I can read you like a magazine"
+    },
+    {
+      "startMs": 30720,
+      "endMs": 33170,
+      "text": "Ain't it funny? Rumors fly"
+    },
+    {
+      "startMs": 33270,
+      "endMs": 35470,
+      "text": "And I know you heard about me"
+    },
+    {
+      "startMs": 35470,
+      "endMs": 37450,
+      "text": "So, hey, let's be friends"
+    },
+    {
+      "startMs": 37660,
+      "endMs": 40050,
+      "text": "I'm dying to see how this one ends"
+    },
+    {
+      "startMs": 40110,
+      "endMs": 42650,
+      "text": "Grab your passport and my hand"
+    },
+    {
+      "startMs": 42770,
+      "endMs": 45090,
+      "text": "I can make the bad guys good for a weekend"
+    },
+    {
+      "startMs": 45530,
+      "endMs": 47330,
+      "text": "So, it's gonna be forever"
+    },
+    {
+      "startMs": 48160,
+      "endMs": 50070,
+      "text": "Or it's gonna go down in flames?"
+    },
+    {
+      "startMs": 50660,
+      "endMs": 53190,
+      "text": "You can tell me when it's over, mm"
+    },
+    {
+      "startMs": 53190,
+      "endMs": 55150,
+      "text": "If the high was worth the pain"
+    },
+    {
+      "startMs": 55490,
+      "endMs": 57570,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 58130,
+      "endMs": 62910,
+      "text": "They'll tell you I'm insane"
+    },
+    {
+      "startMs": 62910,
+      "endMs": 63230,
+      "text": "'Cause you know I love the players"
+    },
+    {
+      "startMs": 63230,
+      "endMs": 65519,
+      "text": "And you love the game"
+    },
+    {
+      "startMs": 65519,
+      "endMs": 68130,
+      "text": "'Cause we're young and we're reckless"
+    },
+    {
+      "startMs": 68130,
+      "endMs": 70640,
+      "text": "We'll take this way too far"
+    },
+    {
+      "startMs": 70640,
+      "endMs": 73030,
+      "text": "It'll leave you breathless, mm"
+    },
+    {
+      "startMs": 73030,
+      "endMs": 75600,
+      "text": "Or with a nasty scar"
+    },
+    {
+      "startMs": 75600,
+      "endMs": 78090,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 78090,
+      "endMs": 80690,
+      "text": "They'll tell you I'm insane"
+    },
+    {
+      "startMs": 80690,
+      "endMs": 84060,
+      "text": "But I've got a blank space, baby"
+    },
+    {
+      "startMs": 84060,
+      "endMs": 88260,
+      "text": "And I'll write your name"
+    },
+    {
+      "startMs": 90860,
+      "endMs": 93229,
+      "text": "Cherry lips, crystal skies"
+    },
+    {
+      "startMs": 93229,
+      "endMs": 95840,
+      "text": "I could show you incredible things"
+    },
+    {
+      "startMs": 95840,
+      "endMs": 98340,
+      "text": "Stolen kisses, pretty lies"
+    },
+    {
+      "startMs": 98340,
+      "endMs": 100620,
+      "text": "You're the king, baby, I'm your queen"
+    },
+    {
+      "startMs": 100620,
+      "endMs": 102970,
+      "text": "Find out what you want"
+    },
+    {
+      "startMs": 102970,
+      "endMs": 105280,
+      "text": "Be that girl for a month"
+    },
+    {
+      "startMs": 105280,
+      "endMs": 110800,
+      "text": "Wait, the worst is yet to come, oh, no"
+    },
+    {
+      "startMs": 110800,
+      "endMs": 113340,
+      "text": "Screaming, crying, perfect storms"
+    },
+    {
+      "startMs": 113340,
+      "endMs": 115800,
+      "text": "I can make all the tables turn"
+    },
+    {
+      "startMs": 115800,
+      "endMs": 118470,
+      "text": "Rose garden filled with thorns"
+    },
+    {
+      "startMs": 118470,
+      "endMs": 120360,
+      "text": "Keep you second-guessing, like"
+    },
+    {
+      "startMs": 120360,
+      "endMs": 122870,
+      "text": "\"Oh, my God, who is she?\""
+    },
+    {
+      "startMs": 122870,
+      "endMs": 125070,
+      "text": "I get drunk on jealousy"
+    },
+    {
+      "startMs": 125070,
+      "endMs": 127530,
+      "text": "But you'll come back each time you leave"
+    },
+    {
+      "startMs": 127530,
+      "endMs": 130500,
+      "text": "'Cause, darling, I'm a nightmare dressed like a daydream"
+    },
+    {
+      "startMs": 130500,
+      "endMs": 133030,
+      "text": "So, it's gonna be forever"
+    },
+    {
+      "startMs": 133030,
+      "endMs": 135500,
+      "text": "Or it's gonna go down in flames?"
+    },
+    {
+      "startMs": 135500,
+      "endMs": 137930,
+      "text": "You can tell me when it's over, mm"
+    },
+    {
+      "startMs": 137930,
+      "endMs": 140630,
+      "text": "If the high was worth the pain"
+    },
+    {
+      "startMs": 140630,
+      "endMs": 142950,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 142950,
+      "endMs": 145440,
+      "text": "They'll tell you I'm insane"
+    },
+    {
+      "startMs": 145440,
+      "endMs": 147910,
+      "text": "'Cause you know I love the players"
+    },
+    {
+      "startMs": 147910,
+      "endMs": 150460,
+      "text": "And you love the game"
+    },
+    {
+      "startMs": 150460,
+      "endMs": 152990,
+      "text": "'Cause we're young and we're reckless (oh)"
+    },
+    {
+      "startMs": 152990,
+      "endMs": 155660,
+      "text": "We'll take this way too far"
+    },
+    {
+      "startMs": 155660,
+      "endMs": 158190,
+      "text": "It'll leave you breathless, mm (oh-oh)"
+    },
+    {
+      "startMs": 158190,
+      "endMs": 160470,
+      "text": "Or with a nasty scar"
+    },
+    {
+      "startMs": 160470,
+      "endMs": 163150,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 163150,
+      "endMs": 165780,
+      "text": "They'll tell you I'm insane (insane)"
+    },
+    {
+      "startMs": 165780,
+      "endMs": 169140,
+      "text": "But I've got a blank space, baby"
+    },
+    {
+      "startMs": 169140,
+      "endMs": 170420,
+      "text": "And I'll write your name"
+    },
+    {
+      "startMs": 170420,
+      "endMs": 175520,
+      "text": "Boys only want love if it's torture"
+    },
+    {
+      "startMs": 175520,
+      "endMs": 180480,
+      "text": "Don't say I didn't, say I didn't warn ya"
+    },
+    {
+      "startMs": 180480,
+      "endMs": 185470,
+      "text": "Boys only want love if it's torture"
+    },
+    {
+      "startMs": 185470,
+      "endMs": 190540,
+      "text": "Don't say I didn't, say I didn't warn ya"
+    },
+    {
+      "startMs": 190540,
+      "endMs": 193060,
+      "text": "So, it's gonna be forever"
+    },
+    {
+      "startMs": 193060,
+      "endMs": 195550,
+      "text": "Or it's gonna go down in flames?"
+    },
+    {
+      "startMs": 195550,
+      "endMs": 198040,
+      "text": "You can tell me when it's over, mm (over)"
+    },
+    {
+      "startMs": 198040,
+      "endMs": 200500,
+      "text": "If the high was worth the pain"
+    },
+    {
+      "startMs": 200500,
+      "endMs": 203060,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 203060,
+      "endMs": 205510,
+      "text": "They'll tell you I'm insane (I'm insane)"
+    },
+    {
+      "startMs": 205510,
+      "endMs": 207970,
+      "text": "'Cause you know I love the players"
+    },
+    {
+      "startMs": 207970,
+      "endMs": 210430,
+      "text": "And you love the game (love the game)"
+    },
+    {
+      "startMs": 210430,
+      "endMs": 213079,
+      "text": "'Cause we're young and we're reckless (yeah)"
+    },
+    {
+      "startMs": 213079,
+      "endMs": 215510,
+      "text": "We'll take this way too far (ooh)"
+    },
+    {
+      "startMs": 215510,
+      "endMs": 218040,
+      "text": "It'll leave you breathless, mm"
+    },
+    {
+      "startMs": 218040,
+      "endMs": 220520,
+      "text": "Or with a nasty scar (or leave a nasty scar)"
+    },
+    {
+      "startMs": 220520,
+      "endMs": 223110,
+      "text": "Got a long list of ex-lovers"
+    },
+    {
+      "startMs": 223110,
+      "endMs": 225760,
+      "text": "They'll tell you I'm insane"
+    },
+    {
+      "startMs": 225760,
+      "endMs": 229160,
+      "text": "But I've got a blank space, baby"
+    },
+    {
+      "startMs": 229160,
+      "endMs": 229880,
+      "text": "And I'll write your name"
+    }
+  ],
+  "songDir": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
+  "outputMp4Name": "Blank Space (Taylor's Version) - Taylor Swift.mp4"
+}
