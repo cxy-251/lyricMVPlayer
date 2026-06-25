@@ -1,21 +1,21 @@
 {
-  "selectedSongDirName": "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
+  "selectedSongDirName": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
   "songs": [
     {
-      "id": "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
-      "title": "Blank Space (Taylor's Version)",
+      "id": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
+      "title": "Cruel Summer",
       "artist": "Taylor Swift",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 2770,
-      "renderDurationInFrames": 6871,
-      "durationInFrames": 6954,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 5265,
+      "durationInFrames": 5352,
       "fps": 30
     }
   ],
   "queue": [
     {
-      "id": "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
-      "title": "Blank Space (Taylor's Version)",
+      "id": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
+      "title": "Cruel Summer",
       "artist": "Taylor Swift",
       "accent": "rgba(163, 206, 255, 0.7)"
     }

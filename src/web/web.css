@@ -907,6 +907,153 @@
   }
 }
 
+.effect-lab-audio {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(130px, 220px) minmax(180px, 360px) auto;
+  align-items: center;
+  gap: 12px;
+  width: min(760px, calc(100% - 48px));
+  padding: 10px 12px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(8, 10, 14, 0.88);
+  color: #fff;
+  backdrop-filter: blur(18px);
+}
+
+.effect-lab-audio button,
+.effect-lab-compose-actions button,
+.effect-lab-compose-actions select,
+.effect-lab-layer-actions button {
+  min-height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+}
+
+.effect-lab-audio button {
+  min-width: 62px;
+}
+
+.effect-lab-audio div {
+  display: grid;
+  min-width: 0;
+}
+
+.effect-lab-audio strong,
+.effect-lab-audio span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.effect-lab-audio span,
+.effect-lab-audio output {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 12px;
+}
+
+.effect-lab-audio em {
+  grid-column: 1 / -1;
+  color: #ffbd75;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.effect-lab-panel--composer {
+  overflow: auto;
+}
+
+.effect-lab-compose-actions,
+.effect-lab-layer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.effect-lab-compose-actions {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.effect-lab-compose-actions select {
+  padding: 0 10px;
+}
+
+.effect-lab-layer-list {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.effect-lab-layer-list button {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 6px 9px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+  text-align: left;
+}
+
+.effect-lab-layer-list button[aria-pressed="true"] {
+  border-color: rgba(80, 226, 255, 0.7);
+  background: rgba(80, 226, 255, 0.12);
+  color: #fff;
+}
+
+.effect-lab-layer-list button span,
+.effect-lab-layer-list button em {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.effect-lab-layer-editor {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.effect-lab-layer-actions {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.effect-lab-layer-actions button:disabled,
+.effect-lab-audio button:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+@media (max-width: 760px) {
+  .effect-lab-audio {
+    bottom: 14px;
+    grid-template-columns: auto 1fr auto;
+    width: calc(100% - 28px);
+  }
+
+  .effect-lab-audio input {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .effect-lab-panel--composer {
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+  }
+}
+
 .effect-lab-toolbar {
   position: fixed;
   z-index: 24;

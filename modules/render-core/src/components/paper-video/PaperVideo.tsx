@@ -24,7 +24,7 @@ import type {
   RenderScene,
   SubtitleSegment,
 } from "@paper-to-video/shared-types";
-import {EffectCanvas} from "../../visual-effects/runtime";
+import {RemotionEffectLayer} from "../../visual-effects/runtime";
 import type {VisualEffectConfigMap, VisualEffectId} from "../../visual-effects/types";
 
 declare const __WORKSPACE_ROOT__: string | undefined;
@@ -179,9 +179,7 @@ const CreativeEffectLayer: React.FC<{
   creativeEffect: PaperCreativeEffect;
 }> = ({creativeEffect}) => (
   <EffectSafeFrame config={creativeEffectLayerConfigs[creativeEffect.id]}>
-    <EffectCanvas
-      className="visual-effect-canvas visual-effect-canvas--paper"
-      config={creativeEffect.config}
+    <RemotionEffectLayer
       effectId={creativeEffect.id}
       seed={1307}
     />

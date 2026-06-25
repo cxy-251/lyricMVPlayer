@@ -100,12 +100,12 @@ NEGATIVE_PROMPT = (
 
 LOCAL_LLM_BASE_URL = "http://127.0.0.1:1234/v1"
 LOCAL_LLM_ENDPOINT = f"{LOCAL_LLM_BASE_URL}/chat/completions"
-LOCAL_LLM_MODEL = "google/gemma-4-e4b"
+LOCAL_LLM_MODEL = "google/gemma-4-12b-qat" #gemma-4-e4b"
 COMFYUI_API_URL = "http://127.0.0.1:8000"
 VISUAL_PLAN_KEYS = (
     "mood",
     "palette",
-    "scene",
+    "scene",ß
     "style",
     "composition",
     "lyric_reading",

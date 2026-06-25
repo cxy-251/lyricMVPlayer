@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+packages:
+  - "modules/visual-effects"
+  - "modules/paper-video/apps/*"
+  - "modules/paper-video/packages/*"

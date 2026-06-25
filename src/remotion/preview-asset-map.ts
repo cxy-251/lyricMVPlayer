@@ -1,7 +1,7 @@
 import type {AudioFeatureTrack} from "../../modules/render-core/src";
 import type {PreviewAssetMap, RawRenderInput, SelectedPreviewSongData} from "./preview-library/types";
-import selectedAudioFeatures from "../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio-features.json";
-import selectedRenderInput from "../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/render-input.json";
+import selectedAudioFeatures from "../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/audio-features.json";
+import selectedRenderInput from "../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/render-input.json";
 
 const loadJson = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
@@ -12,16 +12,16 @@ const loadJson = async <T>(url: string): Promise<T> => {
 };
 
 export const selectedSongData: SelectedPreviewSongData = {
-  id: "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
+  id: "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
   renderInput: selectedRenderInput as RawRenderInput,
   audioFeatures: selectedAudioFeatures as AudioFeatureTrack,
 };
 
 export const previewAssetMap: PreviewAssetMap = {
-  "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ": {
-    audioSrc: new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio.mp3", import.meta.url).href,
-    backgroundSrc: new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/background.png", import.meta.url).href,
-    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/render-input.json", import.meta.url).href),
-    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ/audio-features.json", import.meta.url).href)
+  "Cruel Summer - Taylor Swift - aC9HkZW2hZk": {
+    audioSrc: new URL("../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/audio.mp3", import.meta.url).href,
+    backgroundSrc: new URL("../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/background.png", import.meta.url).href,
+    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/render-input.json", import.meta.url).href),
+    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/audio-features.json", import.meta.url).href)
   }
 };

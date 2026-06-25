@@ -4,4 +4,5 @@ import {enableTailwind} from "@remotion/tailwind-v4";
 Config.setVideoImageFormat("png");
 Config.setOverwriteOutput(true);
 Config.setCodec("h264");
+Config.setChromiumOpenGlRenderer("angle");
 Config.overrideWebpackConfig(enableTailwind);

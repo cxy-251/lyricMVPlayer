@@ -1,194 +1,252 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLYGBfUx8aPvdIBp1Zvtx6qvfA1kgh5FyQ",
-  "generated_at": "2026-06-18T08:35:39.410Z",
-  "count": 12,
-  "lyrics_review_count": 8,
+  "generated_at": "2026-06-22T04:39:52.951Z",
+  "count": 27,
+  "lyrics_review_count": 5,
   "items": [
     {
-      "video_id": "Rt9tW3cMLhI",
-      "source_url": "https://www.youtube.com/watch?v=Rt9tW3cMLhI",
-      "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
-      "ok": true,
-      "lyrics_review": {
-        "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "Rt9tW3cMLhI",
-        "lyric_video_id": "P7VgXIZSN_w",
-        "detail": "ytmusic search -> P7VgXIZSN_w"
-      }
-    },
-    {
-      "video_id": "o6RkncuPKT0",
-      "source_url": "https://www.youtube.com/watch?v=o6RkncuPKT0",
-      "song_dir": "People You Know - Selena Gomez - o6RkncuPKT0",
+      "video_id": "n0GXk_T2zs8",
+      "source_url": "https://www.youtube.com/watch?v=n0GXk_T2zs8",
+      "song_dir": "Training Season - Dua Lipa - n0GXk_T2zs8",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "62yox0F5lcA",
-      "source_url": "https://www.youtube.com/watch?v=62yox0F5lcA",
-      "song_dir": "Please Please Please - Sabrina Carpenter - 62yox0F5lcA",
+      "video_id": "j360s9CtZTs",
+      "source_url": "https://www.youtube.com/watch?v=j360s9CtZTs",
+      "song_dir": "Juno - Sabrina Carpenter - j360s9CtZTs",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Fq_LG6SPSFU",
-      "source_url": "https://www.youtube.com/watch?v=Fq_LG6SPSFU",
-      "song_dir": "Good Graces - Sabrina Carpenter - Fq_LG6SPSFU",
+      "video_id": "T_UEawa2wCk",
+      "source_url": "https://www.youtube.com/watch?v=T_UEawa2wCk",
+      "song_dir": "u + me = ᐸ3 - Olivia Rodrigo - T_UEawa2wCk",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "xSL2eeKvxIQ",
-      "source_url": "https://www.youtube.com/watch?v=xSL2eeKvxIQ",
-      "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
+      "video_id": "UodZ1TwbzBQ",
+      "source_url": "https://www.youtube.com/watch?v=UodZ1TwbzBQ",
+      "song_dir": "Say My Name In Your Sleep - Maisie Peters - UodZ1TwbzBQ",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "SzJXikN_4wA",
+      "source_url": "https://www.youtube.com/watch?v=SzJXikN_4wA",
+      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
       "ok": false,
       "lyrics_review": {
-        "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
+        "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "-MtKC5wXqdQ",
-      "source_url": "https://www.youtube.com/watch?v=-MtKC5wXqdQ",
-      "song_dir": "Blank Space (Taylor's Version) - Taylor Swift - -MtKC5wXqdQ",
+      "video_id": "Zj-LCZCjV4o",
+      "source_url": "https://www.youtube.com/watch?v=Zj-LCZCjV4o",
+      "song_dir": "Brutus - Em Beihold - Zj-LCZCjV4o",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "6NXnxTNIWkc",
-      "source_url": "https://www.youtube.com/watch?v=6NXnxTNIWkc",
-      "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
+      "video_id": "ZYUql_ZPHrc",
+      "source_url": "https://www.youtube.com/watch?v=ZYUql_ZPHrc",
+      "song_dir": "expectations - Olivia Rodrigo - ZYUql_ZPHrc",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "SEznlnk8Zaw",
+      "source_url": "https://www.youtube.com/watch?v=SEznlnk8Zaw",
+      "song_dir": "Anything but Ordinary - Avril Lavigne - SEznlnk8Zaw",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "sW6f4FXFzA0",
+      "source_url": "https://www.youtube.com/watch?v=sW6f4FXFzA0",
+      "song_dir": "Cure For Me - AURORA - sW6f4FXFzA0",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "RpvAB49Zmt0",
+      "source_url": "https://www.youtube.com/watch?v=RpvAB49Zmt0",
+      "song_dir": "Everybody Hurts - Avril Lavigne - RpvAB49Zmt0",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "fRQg_9ulGuI",
+      "source_url": "https://www.youtube.com/watch?v=fRQg_9ulGuI",
+      "song_dir": "Summertime Sadness - Lana Del Rey - fRQg_9ulGuI",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "d_HlPboLRL8",
+      "source_url": "https://www.youtube.com/watch?v=d_HlPboLRL8",
+      "song_dir": "Runaway - AURORA - d_HlPboLRL8",
       "ok": true,
       "lyrics_review": {
-        "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
+        "song_dir": "Runaway - AURORA - d_HlPboLRL8",
         "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "6NXnxTNIWkc",
-        "lyric_video_id": "B6GdsRIbTSk",
-        "detail": "ytmusic search -> B6GdsRIbTSk"
+        "expected_video_id": "d_HlPboLRL8",
+        "lyric_video_id": "1f5dO89GtuE",
+        "detail": "ytmusic search -> 1f5dO89GtuE"
       }
     },
     {
-      "video_id": "78wrful9cVU",
-      "source_url": "https://www.youtube.com/watch?v=78wrful9cVU",
-      "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
+      "video_id": "dmVAmlpbnD4",
+      "source_url": "https://www.youtube.com/watch?v=dmVAmlpbnD4",
+      "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
       "ok": true,
       "lyrics_review": {
-        "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
+        "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
         "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "78wrful9cVU",
-        "lyric_video_id": "G1--F4N-Gvs",
-        "detail": "ytmusic search -> G1--F4N-Gvs"
+        "expected_video_id": "dmVAmlpbnD4",
+        "lyric_video_id": "7pOFG7lw1r0",
+        "detail": "ytmusic search -> 7pOFG7lw1r0"
       }
     },
     {
-      "video_id": "rK5TyISxZ_M",
-      "source_url": "https://www.youtube.com/watch?v=rK5TyISxZ_M",
-      "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
+      "video_id": "n2ITLWyCLD4",
+      "source_url": "https://www.youtube.com/watch?v=n2ITLWyCLD4",
+      "song_dir": "Running with the Wolves - AURORA - n2ITLWyCLD4",
       "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "FYFNzSTVvJk",
+      "source_url": "https://www.youtube.com/watch?v=FYFNzSTVvJk",
+      "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
+      "ok": false,
       "lyrics_review": {
-        "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "rK5TyISxZ_M",
-        "lyric_video_id": "94mq0YBsn8U",
-        "detail": "ytmusic search -> 94mq0YBsn8U"
+        "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "woLfAvD5iXI",
-      "source_url": "https://www.youtube.com/watch?v=woLfAvD5iXI",
-      "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
-      "ok": true,
+      "video_id": "eT6dLJd3rYk",
+      "source_url": "https://www.youtube.com/watch?v=eT6dLJd3rYk",
+      "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
+      "ok": false,
       "lyrics_review": {
-        "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "woLfAvD5iXI",
-        "lyric_video_id": "6ARhsXF9eWQ",
-        "detail": "ytmusic search -> 6ARhsXF9eWQ"
+        "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "Oa_RSwwpPaA",
-      "source_url": "https://www.youtube.com/watch?v=Oa_RSwwpPaA",
-      "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
+      "video_id": "0cmbxttS-RY",
+      "source_url": "https://www.youtube.com/watch?v=0cmbxttS-RY",
+      "song_dir": "you broke me first - Tate McRae - 0cmbxttS-RY",
       "ok": true,
-      "lyrics_review": {
-        "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "Oa_RSwwpPaA",
-        "lyric_video_id": "eLhSxOAaWmg",
-        "detail": "ytmusic search -> eLhSxOAaWmg"
-      }
+      "lyrics_review": null
     },
     {
-      "video_id": "kPa7bsKwL-c",
-      "source_url": "https://www.youtube.com/watch?v=kPa7bsKwL-c",
-      "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
+      "video_id": "Meu5o7MzNuM",
+      "source_url": "https://www.youtube.com/watch?v=Meu5o7MzNuM",
+      "song_dir": "Artemis - AURORA - Meu5o7MzNuM",
       "ok": true,
-      "lyrics_review": {
-        "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "kPa7bsKwL-c",
-        "lyric_video_id": "DlFXDl_ROAM",
-        "detail": "ytmusic search -> DlFXDl_ROAM"
-      }
+      "lyrics_review": null
+    },
+    {
+      "video_id": "GkaFFlBZk5k",
+      "source_url": "https://www.youtube.com/watch?v=GkaFFlBZk5k",
+      "song_dir": "The Innocent - AURORA - GkaFFlBZk5k",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "_qHWIvq_WR4",
+      "source_url": "https://www.youtube.com/watch?v=_qHWIvq_WR4",
+      "song_dir": "I'm with You - Avril Lavigne - _qHWIvq_WR4",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Cmm9coKobBM",
+      "source_url": "https://www.youtube.com/watch?v=Cmm9coKobBM",
+      "song_dir": "Nobody’s Son - Sabrina Carpenter - Cmm9coKobBM",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "a5Icr9m8vbc",
+      "source_url": "https://www.youtube.com/watch?v=a5Icr9m8vbc",
+      "song_dir": "Safe & Sound (Taylor's Version) - Taylor Swift - a5Icr9m8vbc",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "zT0a4u-cFlY",
+      "source_url": "https://www.youtube.com/watch?v=zT0a4u-cFlY",
+      "song_dir": "what’s wrong with me - Olivia Rodrigo - zT0a4u-cFlY",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Ynkoeno5cfU",
+      "source_url": "https://www.youtube.com/watch?v=Ynkoeno5cfU",
+      "song_dir": "Such A Funny Way - Sabrina Carpenter - Ynkoeno5cfU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "qxrMpCMdYwk",
+      "source_url": "https://www.youtube.com/watch?v=qxrMpCMdYwk",
+      "song_dir": "willow - Taylor Swift - qxrMpCMdYwk",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "XezOkkUM--w",
+      "source_url": "https://www.youtube.com/watch?v=XezOkkUM--w",
+      "song_dir": "honeybee - Olivia Rodrigo - XezOkkUM--w",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "aC9HkZW2hZk",
+      "source_url": "https://www.youtube.com/watch?v=aC9HkZW2hZk",
+      "song_dir": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
+      "ok": true,
+      "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "stupid song (Official Music Video) - Olivia Rodrigo - Rt9tW3cMLhI",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "Rt9tW3cMLhI",
-      "lyric_video_id": "P7VgXIZSN_w",
-      "detail": "ytmusic search -> P7VgXIZSN_w"
-    },
-    {
-      "song_dir": "The Perfect Men - KAESOR - xSL2eeKvxIQ",
+      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     },
     {
-      "song_dir": "What's Up (Official Music Video) - 4 Non Blondes - 6NXnxTNIWkc",
+      "song_dir": "Runaway - AURORA - d_HlPboLRL8",
       "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "6NXnxTNIWkc",
-      "lyric_video_id": "B6GdsRIbTSk",
-      "detail": "ytmusic search -> B6GdsRIbTSk"
+      "expected_video_id": "d_HlPboLRL8",
+      "lyric_video_id": "1f5dO89GtuE",
+      "detail": "ytmusic search -> 1f5dO89GtuE"
     },
     {
-      "song_dir": "drop dead (Official Music Video) - Olivia Rodrigo - 78wrful9cVU",
+      "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
       "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "78wrful9cVU",
-      "lyric_video_id": "G1--F4N-Gvs",
-      "detail": "ytmusic search -> G1--F4N-Gvs"
+      "expected_video_id": "dmVAmlpbnD4",
+      "lyric_video_id": "7pOFG7lw1r0",
+      "detail": "ytmusic search -> 7pOFG7lw1r0"
     },
     {
-      "song_dir": "WHERE IS MY HUSBAND! (Official Music Video) - RAYE - rK5TyISxZ_M",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "rK5TyISxZ_M",
-      "lyric_video_id": "94mq0YBsn8U",
-      "detail": "ytmusic search -> 94mq0YBsn8U"
+      "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
     },
     {
-      "song_dir": "The Subway (Official Music Video) - Chappell Roan - woLfAvD5iXI",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "woLfAvD5iXI",
-      "lyric_video_id": "6ARhsXF9eWQ",
-      "detail": "ytmusic search -> 6ARhsXF9eWQ"
-    },
-    {
-      "song_dir": "Beautiful Things (Official Music Video) - Benson Boone - Oa_RSwwpPaA",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "Oa_RSwwpPaA",
-      "lyric_video_id": "eLhSxOAaWmg",
-      "detail": "ytmusic search -> eLhSxOAaWmg"
-    },
-    {
-      "song_dir": "Lady Gaga- Bruno Mars - Die With A Smile (Official Music Video) - Lady Gaga - kPa7bsKwL-c",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "kPa7bsKwL-c",
-      "lyric_video_id": "DlFXDl_ROAM",
-      "detail": "ytmusic search -> DlFXDl_ROAM"
+      "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
     }
   ]
 }

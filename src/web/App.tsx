@@ -184,7 +184,7 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isNonLyricsRoute) {
+    if (isNonLyricsRoute && !isEffectLabRoute) {
       return undefined;
     }
 
@@ -385,7 +385,7 @@ export const App: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [isNonLyricsRoute]);
+  }, [isEffectLabRoute, isNonLyricsRoute]);
 
   const body = useMemo(() => {
     if (error) {
@@ -425,9 +425,22 @@ export const App: React.FC = () => {
   }
 
   if (isEffectLabRoute) {
+    if (!props) {
+      return <div className="web-route-status">Loading the selected lyric song...</div>;
+    }
     return (
       <Suspense fallback={<div className="web-route-status">Loading effect lab...</div>}>
-        <EffectLabPage />
+        <EffectLabPage
+          song={{
+            id: props.initialTrackId ?? props.title,
+            title: props.title,
+            artist: props.artist,
+            audioSrc: props.audioSrc,
+            audioFeatures: props.audioFeatures,
+            fps: props.fps,
+            durationInFrames: props.durationInFrames,
+          }}
+        />
       </Suspense>
     );
   }

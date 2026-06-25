@@ -60,7 +60,7 @@ const parseArgs = (args: string[]) => {
 
   const lmStudioConfig: LmStudioSummaryConfig = {
     baseUrl: take("--lm-studio-base-url") ?? process.env.LM_STUDIO_BASE_URL ?? "http://127.0.0.1:1234/v1",
-    model: take("--lm-studio-model") ?? process.env.LM_STUDIO_MODEL ?? "google/gemma-4-e4b",
+    model: take("--lm-studio-model") ?? process.env.LM_STUDIO_MODEL ?? "google/gemma-4-12b-qat" //gemma-4-e4b",
     apiKey: take("--lm-studio-api-key") ?? process.env.LM_STUDIO_API_KEY ?? "lm-studio",
     temperature: Number.parseFloat(take("--lm-studio-temperature") ?? process.env.LM_STUDIO_TEMPERATURE ?? "0.2"),
     maxOutputTokens: Number.parseInt(

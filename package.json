@@ -4,6 +4,7 @@
   "private": true,
   "description": "Automated lyric video production pipeline using Remotion, TypeScript, and generated visuals.",
   "workspaces": [
+    "modules/visual-effects",
     "modules/paper-video/apps/*",
     "modules/paper-video/packages/*"
   ],
@@ -41,9 +42,13 @@
     "paper:scaffold-manifests": "cd modules/paper-video && node --import tsx ../../tools/paper-video/scaffold-paper-manifests.ts",
     "use:song": "node tools/select-song-for-preview.mjs",
     "render": "node tools/render-current-song.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:visual-effects": "node --import tsx tools/validate-visual-effects.ts"
   },
   "dependencies": {
+    "@lyric-mv/visual-effects": "workspace:*",
+    "@paper-to-video/content-pipeline": "workspace:*",
+    "@paper-to-video/timeline-engine": "workspace:*",
     "@remotion/player": "^4.0.461",
     "@remotion/tailwind-v4": "^4.0.461",
     "@tailwindcss/postcss": "^4.3.0",
@@ -58,10 +63,10 @@
   "devDependencies": {
     "@remotion/cli": "^4.0.461",
     "@types/node": "^24.9.1",
-    "@types/three": "^0.184.0",
-    "@vitejs/plugin-react": "^5.0.4",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.184.0",
+    "@vitejs/plugin-react": "^5.0.4",
     "tsx": "^4.20.6",
     "typescript": "^5.8.0",
     "vite": "^7.1.7"
