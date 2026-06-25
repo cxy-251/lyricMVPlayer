@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
+import {Link} from "react-router";
 import {
   EFFECT_ATOMS,
   EffectRuntimeAdapter,
@@ -286,7 +287,7 @@ export const EffectLabPage: React.FC<{song: LabSong}> = ({song}) => {
       </section>
 
       <div className="effect-lab-toolbar">
-        <a className="effect-lab-back" href="/studio">Studio</a>
+        <Link className="effect-lab-back" to="/studio">Studio</Link>
         <button className="effect-lab-picker" onClick={() => setEffectListOpen(true)} type="button">
           <span>{selectedEntry.kind === "recipe" ? selectedEntry.recipe.source : "paper"}</span>
           <strong>{selectedEntry.kind === "recipe" ? selectedEntry.recipe.title : selectedEntry.title}</strong>

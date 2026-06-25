@@ -56,6 +56,7 @@
     "lucide-react": "^1.16.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router": "^8.0.1",
     "remotion": "^4.0.0",
     "tailwindcss": "^4.3.0",
     "three": "^0.184.0"

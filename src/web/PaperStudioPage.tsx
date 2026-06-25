@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
+import {Link} from "react-router";
 import {Player} from "@remotion/player";
 import {FileText, Home, Info} from "lucide-react";
 import type {BackgroundEffectId, RenderManifest} from "@paper-to-video/shared-types";
@@ -265,9 +266,9 @@ export const PaperStudioPage: React.FC = () => {
       <section className="paper-studio__stage">
         <div className="paper-studio__phone">
           <div className="paper-studio__toolbar">
-            <a className="paper-studio__back" href="/studio" aria-label="Open studio home" title="Home">
+            <Link className="paper-studio__back" to="/studio" aria-label="Open studio home" title="Home">
               <Home size={15} strokeWidth={1.9} />
-            </a>
+            </Link>
             <button
               className="paper-studio__drawer-button"
               onClick={() => {

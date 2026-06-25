@@ -1,25 +1,26 @@
 import React from "react";
+import {Link} from "react-router";
 
 export const StudioHomePage: React.FC = () => {
   return (
     <main className="studio-page">
-      <a className="studio-home-link" href="/">
+      <Link className="studio-home-link" to="/">
         LyricsMusic
-      </a>
+      </Link>
       <section className="studio-index">
         <div className="studio-index__header">
           <p>Studio</p>
           <h1>Media Lab</h1>
         </div>
         <div className="studio-index__grid">
-          <a className="studio-index__item" href="/studio/effects">
+          <Link className="studio-index__item" to="/studio/effects">
             <span>Effects</span>
             <strong>Visual Lab</strong>
-          </a>
-          <a className="studio-index__item" href="/studio/papers">
+          </Link>
+          <Link className="studio-index__item" to="/studio/papers">
             <span>Papers</span>
             <strong>Paper Player</strong>
-          </a>
+          </Link>
         </div>
       </section>
     </main>
