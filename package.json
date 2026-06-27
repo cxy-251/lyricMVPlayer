@@ -4,7 +4,6 @@
   "private": true,
   "description": "Automated lyric video production pipeline using Remotion, TypeScript, and generated visuals.",
   "workspaces": [
-    "modules/visual-effects",
     "modules/paper-video/apps/*",
     "modules/paper-video/packages/*"
   ],
@@ -46,14 +45,19 @@
     "test:visual-effects": "node --import tsx tools/validate-visual-effects.ts"
   },
   "dependencies": {
-    "@lyric-mv/visual-effects": "workspace:*",
     "@paper-to-video/content-pipeline": "workspace:*",
     "@paper-to-video/timeline-engine": "workspace:*",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/postprocessing": "^3.0.4",
+    "@react-three/rapier": "^2.2.0",
     "@remotion/player": "^4.0.461",
     "@remotion/tailwind-v4": "^4.0.461",
     "@tailwindcss/postcss": "^4.3.0",
     "clsx": "^2.1.1",
+    "leva": "^0.10.1",
     "lucide-react": "^1.16.0",
+    "postprocessing": "^6.39.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^8.0.1",
@@ -70,6 +74,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "tsx": "^4.20.6",
     "typescript": "^5.8.0",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "vite-plugin-glsl": "^1.6.0"
   }
 }

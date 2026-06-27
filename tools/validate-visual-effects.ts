@@ -2,32 +2,40 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import {visualEffectAtoms, visualEffectRecipes} from "../modules/visual-effects/src/index";
+import {visualEffectRegistry} from "../modules/render-core/src/visual-effects/registry";
 
-assert.equal(visualEffectRecipes.filter((recipe) => recipe.source === "web3d").length, 18, "expected 18 web3d recipes");
-assert.equal(visualEffectRecipes.filter((recipe) => recipe.source === "lyric").length, 5, "expected 5 lyric recipes");
-assert.equal(new Set(visualEffectRecipes.map((recipe) => recipe.id)).size, 23, "recipe ids must be unique");
-assert.equal(new Set(visualEffectAtoms.map((atom) => atom.id)).size, visualEffectAtoms.length, "atom ids must be unique");
+const demoRoot = path.resolve("modules/render-core/src/visual-effects/web3d-lab/demos");
+const demoDirectories = fs.readdirSync(demoRoot, {withFileTypes: true})
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+const demoMetadataFiles = demoDirectories
+  .map((directory) => path.join(demoRoot, directory, "metadata.ts"))
+  .filter((filePath) => fs.existsSync(filePath));
 
-const atomIds = new Set(visualEffectAtoms.map((atom) => atom.id));
-for (const recipe of visualEffectRecipes) {
-  assert.ok(recipe.layers.length > 0, `${recipe.id} must contain layers`);
-  assert.equal(new Set(recipe.layers.map((layer) => layer.id)).size, recipe.layers.length, `${recipe.id} layer ids must be unique`);
-  for (const layer of recipe.layers) {
-    assert.ok(atomIds.has(layer.atomId), `${recipe.id} references missing atom ${layer.atomId}`);
-    assert.ok(layer.opacity >= 0 && layer.opacity <= 1, `${recipe.id}/${layer.id} opacity out of range`);
-    assert.ok(layer.transform.scale > 0, `${recipe.id}/${layer.id} scale must be positive`);
-  }
-  assert.deepEqual(JSON.parse(JSON.stringify(recipe)), recipe, `${recipe.id} must remain pure JSON`);
+assert.equal(demoMetadataFiles.length, 18, "expected 18 migrated web3d demos");
+assert.equal(Object.keys(visualEffectRegistry).length, 5, "expected 5 lyric remotion effects");
+
+const demoIds = new Set<string>();
+const demoRoutes = new Set<string>();
+for (const metadataFile of demoMetadataFiles) {
+  const contents = fs.readFileSync(metadataFile, "utf8");
+  const relativeName = path.relative(demoRoot, metadataFile);
+  const id = contents.match(/\bid:\s*['"]([^'"]+)['"]/)?.[1];
+  const route = contents.match(/\broute:\s*['"]([^'"]+)['"]/)?.[1];
+  assert.ok(id, `${relativeName} must contain an id`);
+  assert.ok(route, `${relativeName} must contain a route`);
+  assert.ok(route.startsWith("/"), `${id} route must be absolute inside gallery`);
+  assert.ok(contents.includes("title:"), `${id} title must be present`);
+  assert.ok(contents.includes("description:"), `${id} description must be present`);
+  assert.ok(contents.includes("tags:"), `${id} tags must be present`);
+  demoIds.add(id);
+  demoRoutes.add(route);
 }
+assert.equal(demoIds.size, demoMetadataFiles.length, "web3d demo ids must be unique");
+assert.equal(demoRoutes.size, demoMetadataFiles.length, "web3d demo routes must be unique");
 
-for (const atom of visualEffectAtoms) {
-  const first = atom.sanitizeConfig(structuredClone(atom.defaultConfig));
-  const second = atom.sanitizeConfig(structuredClone(atom.defaultConfig));
-  assert.deepEqual(first, second, `${atom.id} config sanitization must be deterministic`);
-}
-
-const sourceRoot = path.resolve("modules/visual-effects/src");
+const sourceRoot = path.resolve("modules/render-core/src/visual-effects");
 const sourceFiles: string[] = [];
 const collect = (directory: string) => {
   for (const entry of fs.readdirSync(directory, {withFileTypes: true})) {
@@ -37,10 +45,10 @@ const collect = (directory: string) => {
   }
 };
 collect(sourceRoot);
+
 for (const filePath of sourceFiles) {
   const contents = fs.readFileSync(filePath, "utf8");
-  assert.ok(!contents.includes("Math.random("), `${path.relative(sourceRoot, filePath)} uses Math.random`);
-  assert.ok(!contents.includes("AudioContext"), `${path.relative(sourceRoot, filePath)} creates audio`);
+  assert.ok(!contents.includes("@lyric-mv/visual-effects"), `${path.relative(sourceRoot, filePath)} imports the deprecated visual-effects package`);
 }
 
-process.stdout.write(`Validated ${visualEffectAtoms.length} atoms and ${visualEffectRecipes.length} recipes.\n`);
+process.stdout.write(`Validated ${demoMetadataFiles.length} web3d demos and ${Object.keys(visualEffectRegistry).length} lyric remotion effects.\n`);

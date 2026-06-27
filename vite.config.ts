@@ -1,5 +1,6 @@
 import {defineConfig} from "vite";
 import react from "@vitejs/plugin-react";
+import glsl from "vite-plugin-glsl";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -8,7 +9,7 @@ const paperWorkspaceRoot = path.join(repoRoot, "modules", "paper-video");
 const paperArtifactRoot = path.join(repoRoot, "artifacts", "paper-video", "output");
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), glsl()],
   publicDir: "public-web",
   define: {
     __PROJECT_ROOT__: JSON.stringify(repoRoot),
