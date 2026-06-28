@@ -50,7 +50,7 @@ def get_default_audio_download_config(project_root: str) -> AudioDownloadConfig:
         songs_output_dir=root / "artifacts" / "songs",
         download_archive_path=root / "artifacts" / "common" / "yt-dlp-archive.txt",
         cookies_file_path=root / "artifacts" / "common" / "youtube-cookies.txt",
-        cookies_from_browsers=("safari", "brave", "chromium", "chrome"),
+        cookies_from_browsers=("safari",),
         remote_components=("ejs:github",),
     )
 

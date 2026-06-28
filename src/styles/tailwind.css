@@ -1,9 +1,7 @@
-@import "tailwindcss";
-@source "../components/**/*.{ts,tsx}";
-@source "../remotion/**/*.{ts,tsx}";
-@source "../../packages/**/*.{ts,tsx}";
-@source "../lib/**/*.{ts,tsx}";
-@source "../web/**/*.{ts,tsx}";
+@import "tailwindcss" source(none);
+@source "../web/**/*.{js,ts,jsx,tsx,html}";
+@source "../../packages/lyric-video/components/**/*.{js,ts,jsx,tsx,html}";
+@source "../../packages/paper-video/src/**/*.{js,ts,jsx,tsx,html}";
 
 html,
 body,

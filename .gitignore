@@ -1,44 +1,65 @@
+# ==============================================================================
+# Environment & IDE
+# ==============================================================================
 .DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json
+*.log
+__pycache__/
+*.pyc
+
+# ==============================================================================
+# Node & Build
+# ==============================================================================
 node_modules/
 dist/
 public-web/
 .turbo/
 .cache/
 coverage/
-*.log
-__pycache__/
-*.pyc
 
+# ==============================================================================
+# Modules & External
+# ==============================================================================
 # Paper video source is integrated under modules; generated outputs stay isolated.
 modules/paper-video/apps/editor-web/dist/
 modules/paper-video/output/
 modules/paper-video/release/
 modules/paper-video/build/
 
-# Keep artifacts under version control only when they are needed by the web player.
+# ==============================================================================
+# Artifacts (Media, State, Outputs)
+# ==============================================================================
+# By default, ignore all artifacts
 artifacts/*
-!artifacts/common/
-!artifacts/songs/
-!artifacts/paper-video/
 
-# Common files needed for queue/library playback state.
+# Whitelist common config/state files
+!artifacts/common/
 artifacts/common/*
 !artifacts/common/library-state.json
 !artifacts/common/production-queue.csv
 !artifacts/common/recent-downloads.json
 
-# Never commit local secrets or machine-specific runtime files.
+# Never commit local secrets or machine-specific runtime files
 artifacts/common/youtube-cookies.txt
 artifacts/common/yt-dlp-archive.txt
 artifacts/common/playlist-pipeline.json
 artifacts/common/*.pipeline.json
 artifacts/common/models/
 
-# The complete song library is local production data. The fixed demo files that
-# are already tracked remain tracked even though this directory is ignored.
+# The complete song library is local production data.
+# Ignore songs and songsout directories.
+# (Note: previously tracked demo files will remain tracked in git).
 artifacts/songs/
-
-# Render outputs are publish artifacts, not required for the player site bundle.
 artifacts/songsout/
+
+# Keep paper-video artifacts out, except the .gitkeep
+!artifacts/paper-video/
 artifacts/paper-video/*
 !artifacts/paper-video/.gitkeep
+
+# ==============================================================================
+# Generated Source Files
+# ==============================================================================
+src/web/tailwind.compiled.css

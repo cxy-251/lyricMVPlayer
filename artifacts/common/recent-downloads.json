@@ -1,250 +1,255 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLYGBfUx8aPvdIBp1Zvtx6qvfA1kgh5FyQ",
-  "generated_at": "2026-06-22T04:39:52.951Z",
-  "count": 27,
-  "lyrics_review_count": 5,
+  "generated_at": "2026-06-28T10:47:55.431849Z",
+  "count": 34,
+  "lyrics_review_count": 1,
   "items": [
     {
-      "video_id": "n0GXk_T2zs8",
-      "source_url": "https://www.youtube.com/watch?v=n0GXk_T2zs8",
-      "song_dir": "Training Season - Dua Lipa - n0GXk_T2zs8",
+      "video_id": "RzktOzUTZR4",
+      "source_url": "https://www.youtube.com/watch?v=RzktOzUTZR4",
+      "song_dir": "You You You - Maisie Peters - RzktOzUTZR4",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "j360s9CtZTs",
-      "source_url": "https://www.youtube.com/watch?v=j360s9CtZTs",
-      "song_dir": "Juno - Sabrina Carpenter - j360s9CtZTs",
+      "video_id": "q5sVys7jk2I",
+      "source_url": "https://www.youtube.com/watch?v=q5sVys7jk2I",
+      "song_dir": "Somewhere Only We Know - Keane - q5sVys7jk2I",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "T_UEawa2wCk",
-      "source_url": "https://www.youtube.com/watch?v=T_UEawa2wCk",
-      "song_dir": "u + me = ᐸ3 - Olivia Rodrigo - T_UEawa2wCk",
+      "video_id": "DPpthIjUVBE",
+      "source_url": "https://www.youtube.com/watch?v=DPpthIjUVBE",
+      "song_dir": "Everybody's Changing - Keane - DPpthIjUVBE",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "UodZ1TwbzBQ",
-      "source_url": "https://www.youtube.com/watch?v=UodZ1TwbzBQ",
-      "song_dir": "Say My Name In Your Sleep - Maisie Peters - UodZ1TwbzBQ",
+      "video_id": "APe922QQTN0",
+      "source_url": "https://www.youtube.com/watch?v=APe922QQTN0",
+      "song_dir": "My Happy Ending - Avril Lavigne - APe922QQTN0",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "SzJXikN_4wA",
-      "source_url": "https://www.youtube.com/watch?v=SzJXikN_4wA",
-      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
+      "video_id": "vbjYtwN9bPU",
+      "source_url": "https://www.youtube.com/watch?v=vbjYtwN9bPU",
+      "song_dir": "Van Gogh - Em Beihold - vbjYtwN9bPU",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "HCwUQRECknw",
+      "source_url": "https://www.youtube.com/watch?v=HCwUQRECknw",
+      "song_dir": "ceilings - Lizzy McAlpine - HCwUQRECknw",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "92jy750yv00",
+      "source_url": "https://www.youtube.com/watch?v=92jy750yv00",
+      "song_dir": "august - Taylor Swift - 92jy750yv00",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "9qnqYL0eNNI",
+      "source_url": "https://www.youtube.com/watch?v=9qnqYL0eNNI",
+      "song_dir": "Yellow - Coldplay - 9qnqYL0eNNI",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "Kf5pXDhx5Vc",
+      "source_url": "https://www.youtube.com/watch?v=Kf5pXDhx5Vc",
+      "song_dir": "End of Beginning - Djo Music - Kf5pXDhx5Vc",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "DTtb9rt1tnk",
+      "source_url": "https://www.youtube.com/watch?v=DTtb9rt1tnk",
+      "song_dir": "Complicated - Avril Lavigne - DTtb9rt1tnk",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "uziIDxPrjJc",
+      "source_url": "https://www.youtube.com/watch?v=uziIDxPrjJc",
+      "song_dir": "SNAP - Rosa Linn - uziIDxPrjJc",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "lbaVbgbeKaI",
+      "source_url": "https://www.youtube.com/watch?v=lbaVbgbeKaI",
+      "song_dir": "The One That Got Away - Katy Perry - lbaVbgbeKaI",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "V1Pl8CzNzCw",
+      "source_url": "https://www.youtube.com/watch?v=V1Pl8CzNzCw",
+      "song_dir": "Billie Eilish- Khalid - lovely - Billie Eilish - V1Pl8CzNzCw",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "GqQIhi86k7M",
+      "source_url": "https://www.youtube.com/watch?v=GqQIhi86k7M",
+      "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
       "ok": false,
       "lyrics_review": {
-        "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
+        "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "Zj-LCZCjV4o",
-      "source_url": "https://www.youtube.com/watch?v=Zj-LCZCjV4o",
-      "song_dir": "Brutus - Em Beihold - Zj-LCZCjV4o",
+      "video_id": "ge6hWtFgiHM",
+      "source_url": "https://www.youtube.com/watch?v=ge6hWtFgiHM",
+      "song_dir": "21 - Gracie Abrams - ge6hWtFgiHM",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "ZYUql_ZPHrc",
-      "source_url": "https://www.youtube.com/watch?v=ZYUql_ZPHrc",
-      "song_dir": "expectations - Olivia Rodrigo - ZYUql_ZPHrc",
+      "video_id": "hmkJMYt-VSg",
+      "source_url": "https://www.youtube.com/watch?v=hmkJMYt-VSg",
+      "song_dir": "Goodbye - Sabrina Carpenter - hmkJMYt-VSg",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "SEznlnk8Zaw",
-      "source_url": "https://www.youtube.com/watch?v=SEznlnk8Zaw",
-      "song_dir": "Anything but Ordinary - Avril Lavigne - SEznlnk8Zaw",
+      "video_id": "ka_-p5RY1MA",
+      "source_url": "https://www.youtube.com/watch?v=ka_-p5RY1MA",
+      "song_dir": "Mess It Up - Gracie Abrams - ka_-p5RY1MA",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "sW6f4FXFzA0",
-      "source_url": "https://www.youtube.com/watch?v=sW6f4FXFzA0",
-      "song_dir": "Cure For Me - AURORA - sW6f4FXFzA0",
+      "video_id": "0X1agIHq7mQ",
+      "source_url": "https://www.youtube.com/watch?v=0X1agIHq7mQ",
+      "song_dir": "123 - Claire Rosinkranz - 0X1agIHq7mQ",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "RpvAB49Zmt0",
-      "source_url": "https://www.youtube.com/watch?v=RpvAB49Zmt0",
-      "song_dir": "Everybody Hurts - Avril Lavigne - RpvAB49Zmt0",
+      "video_id": "erNoYnBvQpw",
+      "source_url": "https://www.youtube.com/watch?v=erNoYnBvQpw",
+      "song_dir": "We Almost Broke Up Again Last Night - Sabrina Carpenter - erNoYnBvQpw",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "fRQg_9ulGuI",
-      "source_url": "https://www.youtube.com/watch?v=fRQg_9ulGuI",
-      "song_dir": "Summertime Sadness - Lana Del Rey - fRQg_9ulGuI",
+      "video_id": "Xegz8KFs2XY",
+      "source_url": "https://www.youtube.com/watch?v=Xegz8KFs2XY",
+      "song_dir": "Swinging at the Stars - Claire Rosinkranz - Xegz8KFs2XY",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "d_HlPboLRL8",
-      "source_url": "https://www.youtube.com/watch?v=d_HlPboLRL8",
-      "song_dir": "Runaway - AURORA - d_HlPboLRL8",
-      "ok": true,
-      "lyrics_review": {
-        "song_dir": "Runaway - AURORA - d_HlPboLRL8",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "d_HlPboLRL8",
-        "lyric_video_id": "1f5dO89GtuE",
-        "detail": "ytmusic search -> 1f5dO89GtuE"
-      }
-    },
-    {
-      "video_id": "dmVAmlpbnD4",
-      "source_url": "https://www.youtube.com/watch?v=dmVAmlpbnD4",
-      "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
-      "ok": true,
-      "lyrics_review": {
-        "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
-        "reason": "lyrics_source_video_mismatch",
-        "expected_video_id": "dmVAmlpbnD4",
-        "lyric_video_id": "7pOFG7lw1r0",
-        "detail": "ytmusic search -> 7pOFG7lw1r0"
-      }
-    },
-    {
-      "video_id": "n2ITLWyCLD4",
-      "source_url": "https://www.youtube.com/watch?v=n2ITLWyCLD4",
-      "song_dir": "Running with the Wolves - AURORA - n2ITLWyCLD4",
+      "video_id": "kej2LYSoYRY",
+      "source_url": "https://www.youtube.com/watch?v=kej2LYSoYRY",
+      "song_dir": "Blonde - Maisie Peters - kej2LYSoYRY",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "FYFNzSTVvJk",
-      "source_url": "https://www.youtube.com/watch?v=FYFNzSTVvJk",
-      "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "eT6dLJd3rYk",
-      "source_url": "https://www.youtube.com/watch?v=eT6dLJd3rYk",
-      "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
-      "ok": false,
-      "lyrics_review": {
-        "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
-        "reason": "lyrics_resolution_failed",
-        "detail": "No acceptable timed lyric source was found."
-      }
-    },
-    {
-      "video_id": "0cmbxttS-RY",
-      "source_url": "https://www.youtube.com/watch?v=0cmbxttS-RY",
-      "song_dir": "you broke me first - Tate McRae - 0cmbxttS-RY",
+      "video_id": "_ScxHNanGrM",
+      "source_url": "https://www.youtube.com/watch?v=_ScxHNanGrM",
+      "song_dir": "Dare To Love Me - Avril Lavigne - _ScxHNanGrM",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Meu5o7MzNuM",
-      "source_url": "https://www.youtube.com/watch?v=Meu5o7MzNuM",
-      "song_dir": "Artemis - AURORA - Meu5o7MzNuM",
+      "video_id": "WWqX8gxF33E",
+      "source_url": "https://www.youtube.com/watch?v=WWqX8gxF33E",
+      "song_dir": "Dancer - Claire Rosinkranz - WWqX8gxF33E",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "GkaFFlBZk5k",
-      "source_url": "https://www.youtube.com/watch?v=GkaFFlBZk5k",
-      "song_dir": "The Innocent - AURORA - GkaFFlBZk5k",
+      "video_id": "4BpkETs_18E",
+      "source_url": "https://www.youtube.com/watch?v=4BpkETs_18E",
+      "song_dir": "My World - Conan Gray - 4BpkETs_18E",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "_qHWIvq_WR4",
-      "source_url": "https://www.youtube.com/watch?v=_qHWIvq_WR4",
-      "song_dir": "I'm with You - Avril Lavigne - _qHWIvq_WR4",
+      "video_id": "U33SqsU39R4",
+      "source_url": "https://www.youtube.com/watch?v=U33SqsU39R4",
+      "song_dir": "Sad in Hawaii - Claire Rosinkranz - U33SqsU39R4",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Cmm9coKobBM",
-      "source_url": "https://www.youtube.com/watch?v=Cmm9coKobBM",
-      "song_dir": "Nobody’s Son - Sabrina Carpenter - Cmm9coKobBM",
+      "video_id": "Bc9ijogGmtU",
+      "source_url": "https://www.youtube.com/watch?v=Bc9ijogGmtU",
+      "song_dir": "good 4 u - Olivia Rodrigo - Bc9ijogGmtU",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "a5Icr9m8vbc",
-      "source_url": "https://www.youtube.com/watch?v=a5Icr9m8vbc",
-      "song_dir": "Safe & Sound (Taylor's Version) - Taylor Swift - a5Icr9m8vbc",
+      "video_id": "fxXEOWcQwzo",
+      "source_url": "https://www.youtube.com/watch?v=fxXEOWcQwzo",
+      "song_dir": "Pedestal - Em Beihold - fxXEOWcQwzo",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "zT0a4u-cFlY",
-      "source_url": "https://www.youtube.com/watch?v=zT0a4u-cFlY",
-      "song_dir": "what’s wrong with me - Olivia Rodrigo - zT0a4u-cFlY",
+      "video_id": "oR4VhXjIlf4",
+      "source_url": "https://www.youtube.com/watch?v=oR4VhXjIlf4",
+      "song_dir": "Almost- So Close- Maybe - Mercer Henderson - oR4VhXjIlf4",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Ynkoeno5cfU",
-      "source_url": "https://www.youtube.com/watch?v=Ynkoeno5cfU",
-      "song_dir": "Such A Funny Way - Sabrina Carpenter - Ynkoeno5cfU",
+      "video_id": "tDaFv67fRfw",
+      "source_url": "https://www.youtube.com/watch?v=tDaFv67fRfw",
+      "song_dir": "Close To You - Gracie Abrams - tDaFv67fRfw",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "qxrMpCMdYwk",
-      "source_url": "https://www.youtube.com/watch?v=qxrMpCMdYwk",
-      "song_dir": "willow - Taylor Swift - qxrMpCMdYwk",
+      "video_id": "3vMQzdeF05g",
+      "source_url": "https://www.youtube.com/watch?v=3vMQzdeF05g",
+      "song_dir": "stuck on us - Claire Rosinkranz - 3vMQzdeF05g",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "XezOkkUM--w",
-      "source_url": "https://www.youtube.com/watch?v=XezOkkUM--w",
-      "song_dir": "honeybee - Olivia Rodrigo - XezOkkUM--w",
+      "video_id": "WxQf2tv07p8",
+      "source_url": "https://www.youtube.com/watch?v=WxQf2tv07p8",
+      "song_dir": "death wish - lyn lapid - WxQf2tv07p8",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "aC9HkZW2hZk",
-      "source_url": "https://www.youtube.com/watch?v=aC9HkZW2hZk",
-      "song_dir": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
+      "video_id": "T7ZgB7EGjzg",
+      "source_url": "https://www.youtube.com/watch?v=T7ZgB7EGjzg",
+      "song_dir": "death wish - L\u00d8L\u00d8 - T7ZgB7EGjzg",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "xF1Yu-amFfk",
+      "source_url": "https://www.youtube.com/watch?v=xF1Yu-amFfk",
+      "song_dir": "Sofia - Claire Cottrill - xF1Yu-amFfk",
+      "ok": true,
+      "lyrics_review": null
+    },
+    {
+      "video_id": "aR-HiYvqS_A",
+      "source_url": "https://www.youtube.com/watch?v=aR-HiYvqS_A",
+      "song_dir": "White Flag - Claire Cottrill - aR-HiYvqS_A",
       "ok": true,
       "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "I Knew It- I Knew You - Taylor Swift - SzJXikN_4wA",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "Runaway - AURORA - d_HlPboLRL8",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "d_HlPboLRL8",
-      "lyric_video_id": "1f5dO89GtuE",
-      "detail": "ytmusic search -> 1f5dO89GtuE"
-    },
-    {
-      "song_dir": "Conqueror - AURORA - dmVAmlpbnD4",
-      "reason": "lyrics_source_video_mismatch",
-      "expected_video_id": "dmVAmlpbnD4",
-      "lyric_video_id": "7pOFG7lw1r0",
-      "detail": "ytmusic search -> 7pOFG7lw1r0"
-    },
-    {
-      "song_dir": "Winter Bird - AURORA - FYFNzSTVvJk",
-      "reason": "lyrics_resolution_failed",
-      "detail": "No acceptable timed lyric source was found."
-    },
-    {
-      "song_dir": "I Went Too Far - AURORA - eT6dLJd3rYk",
+      "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     }

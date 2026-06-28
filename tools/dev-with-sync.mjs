@@ -31,24 +31,34 @@ const webApp = spawn(viteCommand, ["--host", "127.0.0.1", "--port", "3212"], {
   shell: process.platform === "win32",
 });
 
+const tailwindCli = spawn(
+  process.platform === "win32" ? "npx.cmd" : "npx",
+  ["@tailwindcss/cli", "-i", "src/styles/tailwind.css", "-o", "src/web/tailwind.compiled.css", "--watch"],
+  {
+    cwd: projectRoot,
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  }
+);
+
+process.on("exit", () => {
+  if (!syncServer.killed) syncServer.kill("SIGKILL");
+  if (!webApp.killed) webApp.kill("SIGKILL");
+  if (!tailwindCli.killed) tailwindCli.kill("SIGKILL");
+});
+
 const shutdown = (code = 0) => {
-  if (!syncServer.killed) {
-    syncServer.kill("SIGTERM");
-  }
-  if (!webApp.killed) {
-    webApp.kill("SIGTERM");
-  }
   process.exit(code);
 };
 
 syncServer.on("exit", (code) => {
-  if (code && code !== 0) {
+  if (code && code !== 0 && code !== 137) { // 137 is SIGKILL
     shutdown(code);
   }
 });
 
 webApp.on("exit", (code) => {
-  shutdown(code ?? 0);
+  if (code !== 137) shutdown(code ?? 0);
 });
 
 process.on("SIGINT", () => shutdown(0));

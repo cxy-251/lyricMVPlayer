@@ -65,7 +65,7 @@ export const ControlBar: React.FC<ControlBarProps> = ({
         <SkipBack size={38} strokeWidth={1.8} />
       </button>
       <button
-        className="flex h-[96px] w-[96px] items-center justify-center rounded-full border border-blue-300/70 bg-black/20 text-white/95 shadow-[0_0_36px_rgba(90,150,255,0.42)] backdrop-blur-sm transition active:scale-95"
+        className="flex h-[96px] w-[96px] items-center justify-center rounded-full border border-blue-300/70 bg-white/10 text-white/95 shadow-[0_0_36px_rgba(90,150,255,0.42)] backdrop-blur-sm transition active:scale-95"
         onClick={onTogglePlay}
         title={isPlaying ? "暂停" : "播放"}
       >

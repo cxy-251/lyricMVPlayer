@@ -29,14 +29,14 @@ def _serialize(value):
 
 
 def _module_paths(project_root: Path) -> dict[str, Path]:
-    modules_root = project_root / "modules"
+    backend_root = project_root / "backend"
     return {
-        "source_ingestion": modules_root / "source-ingestion" / "source_ingestion.py",
-        "audio_download": modules_root / "audio-download" / "audio_download.py",
-        "lyrics": modules_root / "lyrics" / "lyrics.py",
-        "audio_lyrics_alignment": modules_root / "audio-lyrics-alignment" / "audio_lyrics_alignment.py",
-        "background_generation": modules_root / "background-generation" / "background_generation.py",
-        "video_render": modules_root / "video-render" / "video_render.py",
+        "source_ingestion": backend_root / "source-ingestion" / "source_ingestion.py",
+        "audio_download": backend_root / "audio-download" / "audio_download.py",
+        "lyrics": backend_root / "lyrics" / "lyrics.py",
+        "audio_lyrics_alignment": backend_root / "audio-lyrics-alignment" / "audio_lyrics_alignment.py",
+        "background_generation": backend_root / "background-generation" / "background_generation.py",
+        "video_render": backend_root / "video-render" / "video_render.py",
     }
 
 

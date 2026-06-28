@@ -105,7 +105,7 @@ COMFYUI_API_URL = "http://127.0.0.1:8000"
 VISUAL_PLAN_KEYS = (
     "mood",
     "palette",
-    "scene",ß
+    "scene",
     "style",
     "composition",
     "lyric_reading",
@@ -680,7 +680,7 @@ def refresh_song_background_assets(song_dir: str, require_llm: bool = True) -> d
 
 
 def refresh_render_input_for_song(song_dir: str, project_root: str) -> str:
-    video_render_path = Path(project_root) / "modules" / "video-render" / "video_render.py"
+    video_render_path = Path(project_root) / "backend" / "video-render" / "video_render.py"
     import importlib.util
     import sys
 

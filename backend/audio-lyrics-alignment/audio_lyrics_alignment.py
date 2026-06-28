@@ -75,7 +75,7 @@ def run_audio_lyrics_alignment(
     project_root: str,
     lyrics_format: str = "auto",
 ) -> tuple[AudioLyricsAlignmentResult | None, dict | None]:
-    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    module_root = Path(project_root) / "backend" / "audio-lyrics-alignment"
     paths = _module_paths(module_root)
 
     separate_vocals = _load_module("audio_lyrics_alignment_separate_vocals", paths["separate_vocals"])
@@ -122,7 +122,7 @@ def run_audio_lyrics_alignment(
 
 
 def run_alignment_diagnostic(song_dir: str, project_root: str) -> tuple[dict | None, dict | None]:
-    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    module_root = Path(project_root) / "backend" / "audio-lyrics-alignment"
     paths = _module_paths(module_root)
     diagnose_alignment = _load_module("audio_lyrics_alignment_diagnose_alignment", paths["diagnose_alignment"])
 
@@ -146,7 +146,7 @@ def run_transcription_fallback(
     song_dir: str,
     project_root: str,
 ) -> tuple[TranscriptionFallbackResult | None, dict | None]:
-    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    module_root = Path(project_root) / "backend" / "audio-lyrics-alignment"
     paths = _module_paths(module_root)
 
     separate_vocals = _load_module("audio_lyrics_fallback_separate_vocals", paths["separate_vocals"])
@@ -209,7 +209,7 @@ def _align_existing_vocals(
     project_root: str,
     aligned_output_path: str,
 ) -> tuple[AudioLyricsAlignmentResult | None, dict | None]:
-    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    module_root = Path(project_root) / "backend" / "audio-lyrics-alignment"
     paths = _module_paths(module_root)
     separate_vocals = _load_module("audio_lyrics_alignment_existing_vocals_config", paths["separate_vocals"])
     align_lyrics = _load_module("audio_lyrics_alignment_existing_vocals_align", paths["align_lyrics"])
@@ -329,7 +329,7 @@ def apply_manual_lyrics(
         encoding="utf-8",
     )
 
-    module_root = Path(project_root) / "modules" / "audio-lyrics-alignment"
+    module_root = Path(project_root) / "backend" / "audio-lyrics-alignment"
     paths = _module_paths(module_root)
     background_generation = _load_module("audio_lyrics_alignment_bg_refresh", paths["background_generation"])
     video_render = _load_module("audio_lyrics_alignment_render_refresh", paths["video_render"])

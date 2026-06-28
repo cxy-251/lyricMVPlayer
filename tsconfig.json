@@ -15,8 +15,7 @@
       "@paper-to-video/content-pipeline": ["./packages/paper-video/content-pipeline/index.ts"],
       "@paper-to-video/shared-types": ["./packages/paper-video/shared-types/index.ts"],
       "@lyric-mv/lyric-video": ["./packages/lyric-video/index.ts"],
-      "@lyric-mv/web3dlab": ["./packages/web3dlab/index.ts"],
-      "@lyric-mv/web3dlab/runtime": ["./packages/web3dlab/runtime.ts"]
+      "@lyric-mv/web3dlab": ["./packages/web3dlab/index.ts"]
     }
   },
   "include": [

@@ -10,4 +10,10 @@ import {router} from "./router";
  * Data loading lives in LyricDataLayout.tsx.
  * Page components: LyricPlayerPage, StudioHomePage, PaperStudioPage, EffectLabPage.
  */
-export const App: React.FC = () => <RouterProvider router={router} />;
+import {ErrorBoundary} from "./ErrorBoundary";
+
+export const App: React.FC = () => (
+  <ErrorBoundary>
+    <RouterProvider router={router} />
+  </ErrorBoundary>
+);

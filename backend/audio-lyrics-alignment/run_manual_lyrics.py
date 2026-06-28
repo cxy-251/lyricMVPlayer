@@ -28,7 +28,7 @@ def _main(argv: list[str]) -> int:
     song_dir = project_root / "artifacts" / "songs" / song_dir_name
     module = _load_module(
         "audio_lyrics_alignment_manual_runtime",
-        project_root / "modules" / "audio-lyrics-alignment" / "audio_lyrics_alignment.py",
+        project_root / "backend" / "audio-lyrics-alignment" / "audio_lyrics_alignment.py",
     )
     result, error = module.apply_manual_lyrics(str(song_dir), str(project_root), manual_file_name)
     payload = {"ok": error is None, "result": result, "error": error}

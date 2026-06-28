@@ -5,7 +5,7 @@ import type {HTMLAttributes, ReactNode} from 'react';
 import {Suspense} from 'react';
 import * as THREE from 'three';
 
-import {SceneCanvas} from '../components/scene/SceneCanvas';
+import {SceneCanvas} from '../gallery/scene/SceneCanvas';
 
 export interface Web3DEngineConfig {
   background?: THREE.ColorRepresentation;

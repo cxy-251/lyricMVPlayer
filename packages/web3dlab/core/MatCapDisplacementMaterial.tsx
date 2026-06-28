@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import * as THREE from 'three';
 import { AutoShaderMaterial } from './AutoShaderMaterial';
-import simplex3d from '../shaders/includes/simplex3d.glsl?raw';
+import simplex3d from './shaders/includes/simplex3d.glsl?raw';
 
 export interface MatCapDisplacementMaterialProps {
   flowSpeed?: number;

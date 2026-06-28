@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [react(), glsl()],
   publicDir: "public-web",
   resolve: {
+    dedupe: ["react", "react-dom", "react-router"],
     alias: {
       "@paper-to-video/ui": path.join(repoRoot, "packages/paper-video/ui/index.ts"),
       "@paper-to-video/components": path.join(repoRoot, "packages/paper-video/index.ts"),
@@ -39,6 +40,9 @@ export default defineConfig({
   server: {
     host: "127.0.0.1",
     port: 3212,
+    watch: {
+      ignored: ["**/artifacts/**", "**/backend/**", "**/.conda/**"]
+    },
     fs: {
       allow: [repoRoot],
     },

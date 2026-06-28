@@ -25,7 +25,7 @@ export {
 } from "./module-api";
 
 export {getTextMotionState} from "./text-motion";
-export {EFFECT_ATOMS, createModuleOverride, getEffectAtomDefinition} from "../../web3dlab/atoms";
+export {EFFECT_ATOMS, createModuleOverride, getEffectAtomDefinition} from "../../web3dlab/core/atoms";
 export type {
   EffectAtomDefinition,
   EffectAtomId,
