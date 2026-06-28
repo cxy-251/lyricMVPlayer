@@ -10,7 +10,7 @@ import type {
   QueueTrack,
   SongLibraryItem,
   TimedLyricLine,
-} from "../../modules/render-core/src";
+} from "@lyric-mv/lyric-video";
 
 // ─── Local types ─────────────────────────────────────────────────────────────
 

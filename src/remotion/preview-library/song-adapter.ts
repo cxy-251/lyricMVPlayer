@@ -5,7 +5,7 @@ import type {
   PoetryFrame,
   SongLibraryItem,
   TimedLyricLine,
-} from "../../../modules/render-core/src";
+} from "@lyric-mv/lyric-video";
 
 import type {
   PreviewSongAssets,

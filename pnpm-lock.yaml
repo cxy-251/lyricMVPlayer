@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@paper-to-video/content-pipeline':
-        specifier: workspace:*
-        version: link:modules/paper-video/packages/content-pipeline
-      '@paper-to-video/timeline-engine':
-        specifier: workspace:*
-        version: link:modules/paper-video/packages/timeline-engine
       '@react-three/drei':
         specifier: ^10.7.7
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(three@0.184.0))(@types/react@19.2.14)(@types/three@0.184.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(three@0.184.0)
@@ -96,22 +90,6 @@ importers:
       vite-plugin-glsl:
         specifier: ^1.6.0
         version: 1.6.0(esbuild@0.28.0)(vite@7.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.22.4))
-
-  modules/paper-video/apps/editor-web: {}
-
-  modules/paper-video/apps/video-renderer: {}
-
-  modules/paper-video/packages/atomic-ui: {}
-
-  modules/paper-video/packages/content-pipeline: {}
-
-  modules/paper-video/packages/shared-types: {}
-
-  modules/paper-video/packages/timeline-engine:
-    dependencies:
-      '@paper-to-video/atomic-ui':
-        specifier: workspace:*
-        version: link:../atomic-ui
 
 packages:
 

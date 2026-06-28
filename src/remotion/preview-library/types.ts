@@ -3,7 +3,7 @@ import type {
   BackgroundAsset,
   PlaylistSummary,
   QueueTrack,
-} from "../../../modules/render-core/src";
+} from "@lyric-mv/lyric-video";
 
 export type RawTimedLyricLine = {
   startMs?: number;

@@ -10,19 +10,18 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@modules/*": [
-        "./modules/*/src",
-        "./modules/*/src/index.ts"
-      ],
-      "@paper-to-video/atomic-ui": ["./modules/paper-video/packages/atomic-ui/src/index.tsx"],
-      "@paper-to-video/content-pipeline": ["./modules/paper-video/packages/content-pipeline/src/index.ts"],
-      "@paper-to-video/shared-types": ["./modules/paper-video/packages/shared-types/src/index.ts"],
-      "@paper-to-video/timeline-engine": ["./modules/paper-video/packages/timeline-engine/src/index.tsx"]
+      "@paper-to-video/ui": ["./packages/paper-video/ui/index.ts"],
+      "@paper-to-video/components": ["./packages/paper-video/index.ts"],
+      "@paper-to-video/content-pipeline": ["./packages/paper-video/content-pipeline/index.ts"],
+      "@paper-to-video/shared-types": ["./packages/paper-video/shared-types/index.ts"],
+      "@lyric-mv/lyric-video": ["./packages/lyric-video/index.ts"],
+      "@lyric-mv/web3dlab": ["./packages/web3dlab/index.ts"],
+      "@lyric-mv/web3dlab/runtime": ["./packages/web3dlab/runtime.ts"]
     }
   },
   "include": [
     "src",
-    "modules",
+    "packages",
     "remotion.config.ts"
   ]
 }

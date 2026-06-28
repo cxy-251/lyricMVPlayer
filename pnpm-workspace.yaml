@@ -1,5 +1,2 @@
 allowBuilds:
   esbuild: true
-packages:
-  - "modules/paper-video/apps/*"
-  - "modules/paper-video/packages/*"

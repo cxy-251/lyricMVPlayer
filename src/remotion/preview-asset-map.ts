@@ -1,4 +1,4 @@
-import type {AudioFeatureTrack} from "../../modules/render-core/src";
+import type {AudioFeatureTrack} from "@lyric-mv/lyric-video";
 import type {PreviewAssetMap, RawRenderInput, SelectedPreviewSongData} from "./preview-library/types";
 import selectedAudioFeatures from "../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/audio-features.json";
 import selectedRenderInput from "../../artifacts/songs/Cruel Summer - Taylor Swift - aC9HkZW2hZk/render-input.json";

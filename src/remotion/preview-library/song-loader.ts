@@ -1,4 +1,4 @@
-import type {SongLibraryItem} from "../../../modules/render-core/src";
+import type {SongLibraryItem} from "@lyric-mv/lyric-video";
 
 import manifestJson from "../preview-library-manifest.json";
 import {previewAssetMap} from "../preview-asset-map";

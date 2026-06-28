@@ -23,17 +23,13 @@ It is not only a UI project. It is a multi-stage automation pipeline.
 ## Recommended reading order
 
 1. [AGENTS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/AGENTS.md)
-2. [docs/PROJECT_SCOPE.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/PROJECT_SCOPE.md)
-3. [docs/PROJECT_MAP.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/PROJECT_MAP.md)
-4. [docs/FEATURE_STATUS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/FEATURE_STATUS.md)
-5. [PROJECT_REQUIREMENTS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/PROJECT_REQUIREMENTS.md)
+2. [docs/ARCHITECTURE.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/ARCHITECTURE.md)
+3. [PROJECT_REQUIREMENTS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/PROJECT_REQUIREMENTS.md)
 
 ## Control files
 
 - [AGENTS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/AGENTS.md): highest-priority rules for agents
-- [docs/PROJECT_SCOPE.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/PROJECT_SCOPE.md): MVP boundaries and staged scope
-- [docs/PROJECT_MAP.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/PROJECT_MAP.md): current structure and where future modules should live
-- [docs/FEATURE_STATUS.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/FEATURE_STATUS.md): current workstream and feature status
+- [docs/ARCHITECTURE.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/docs/ARCHITECTURE.md): project architecture, scope, map, and status
 - [tasks/TASK_TEMPLATE.md](/Users/cxy251/Code/04AIMedia/lyricMVPlayer/tasks/TASK_TEMPLATE.md): task format for future implementation work
 
 ## npm commands
@@ -100,6 +96,7 @@ Common commands for the frontend preview and render layer:
   The fixed playlist `Alignment Error` is for songs whose lyric source may be correct but whose listening result still needs alignment review.
 
 - `npm run prepare:playlist -- "<playlist-url>" [default-render-batch]`
+  *(Under the hood, this executes: `conda run -n kwai python backend/playlist-pipeline/playlist_pipeline.py`)*
   Run the playlist preparation pipeline.
   This downloads and prepares each song package, resolves lyrics, aligns lyrics, generates prompt/workflow assets for the future background step, generates `audio-features.json`, and writes or updates:
   `artifacts/common/production-queue.csv`
@@ -118,14 +115,17 @@ Common commands for the frontend preview and render layer:
   Song resource directory names normalize filesystem-sensitive characters and also replace commas with `-` to avoid queue parsing issues.
 
 - `npm run refresh:cookies`
+  *(Under the hood, this executes: `conda run -n kwai python backend/audio-download/refresh_youtube_cookies.py`)*
   Try to export reusable YouTube browser cookies into:
   `artifacts/common/youtube-cookies.txt`
   Future download steps will reuse this file automatically when it exists.
 
 - `npm run generate:background:current`
+  *(Under the hood, this executes: `conda run -n kwai python backend/background-generation/run_background_generation.py current .`)*
   Submit the current song's existing `background-workflow.json` to the local ComfyUI API and overwrite the song background image.
 
 - `npm run generate:backgrounds`
+  *(Under the hood, this executes: `conda run -n kwai python backend/background-generation/run_background_generation.py queue .`)*
   Read `artifacts/common/production-queue.csv` and submit existing `background-workflow.json` files to ComfyUI for rows where:
   - `background_ready = false`
   - `render_batch = 0`
@@ -138,6 +138,7 @@ Common commands for the frontend preview and render layer:
   Explicit non-zero batches include rendered/published rows and existing-ready backgrounds so older published songs can be rebuilt intentionally.
 
 - `npm run regenerate:lyrics-llm-workflow-text`
+  *(Under the hood, this executes: `conda run -n kwai python backend/background-generation/run_background_generation.py lyrics-llm-workflow-text .`)*
   Regenerate only the lyric-understanding, workflow, and frame-text files for every `artifacts/common/production-queue.csv` row where `render_batch = 0` and `video_status` is not `rendered` or `published`.
   This starts from existing song metadata and lyrics, without redownloading audio or generating images.
   For each target song it overwrites `background-prompt.json`, `poetry-frame.json`, `background-workflow.json`, refreshes `render-input.json`, and marks `background_ready=false` so `npm run generate:backgrounds` can generate a new image from the new workflow.

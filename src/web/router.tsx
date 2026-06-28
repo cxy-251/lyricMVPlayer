@@ -8,7 +8,7 @@ import {StudioHomePage} from "./StudioHomePage"; // direct import — too small 
 // ─── Lazy page imports ────────────────────────────────────────────────────────
 
 const EffectLabPage = lazy(() =>
-  import("../../modules/render-core/src/visual-effects/lab/EffectLabPage").then((m) => ({
+  import("@lyric-mv/web3dlab").then((m) => ({
     default: m.EffectLabPage,
   })),
 );
@@ -19,31 +19,58 @@ const PaperStudioPage = lazy(() =>
 
 // ─── Route wrapper components ─────────────────────────────────────────────────
 
-/**
- * Connects EffectLabPage to the lyric data loaded by LyricDataLayout.
- * Mirrors the original App.tsx behaviour: shows a loading state until the
- * selected song is ready, then passes a LabSong-compatible object to the page.
- */
 const EffectLabRoute: React.FC = () => {
-  const {props} = useLyricData();
+  const [song, setSong] = React.useState<any>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
-  if (!props) {
-    return <div className="web-route-status">Loading the selected lyric song...</div>;
+  React.useEffect(() => {
+    let cancelled = false;
+    const loadSong = async () => {
+      try {
+        const manifestResponse = await fetch("/library-manifest.json");
+        if (!manifestResponse.ok) throw new Error("Failed to load manifest");
+        const manifest = await manifestResponse.json();
+        
+        const initialManifestSong =
+          manifest.songs.find((s: any) => s.id === manifest.currentSongDirName) ?? manifest.songs[0];
+          
+        if (!initialManifestSong) throw new Error("No songs available");
+
+        const [renderInput, audioFeatures] = await Promise.all([
+          fetch(initialManifestSong.renderInputUrl).then(r => r.json()),
+          fetch(initialManifestSong.audioFeaturesUrl).then(r => r.json())
+        ]);
+
+        if (!cancelled) {
+          setSong({
+            id: initialManifestSong.id,
+            title: renderInput.title,
+            artist: renderInput.artist,
+            audioSrc: renderInput.audioSrc,
+            audioFeatures: audioFeatures,
+            fps: renderInput.fps,
+            durationInFrames: renderInput.durationInFrames,
+          });
+        }
+      } catch (e) {
+        if (!cancelled) setError(String(e));
+      }
+    };
+    void loadSong();
+    return () => { cancelled = true; };
+  }, []);
+
+  if (error) {
+    return <div className="web-route-status">Failed to load lab song: {error}</div>;
+  }
+
+  if (!song) {
+    return <div className="web-route-status">Loading effect lab resources...</div>;
   }
 
   return (
     <Suspense fallback={<div className="web-route-status">Loading effect lab...</div>}>
-      <EffectLabPage
-        song={{
-          id: props.initialTrackId ?? props.title,
-          title: props.title,
-          artist: props.artist,
-          audioSrc: props.audioSrc,
-          audioFeatures: props.audioFeatures,
-          fps: props.fps,
-          durationInFrames: props.durationInFrames,
-        }}
-      />
+      <EffectLabPage song={song} />
     </Suspense>
   );
 };
@@ -81,17 +108,17 @@ export const router = createBrowserRouter([
     element: <LyricDataLayout />,
     children: [
       {path: "/", element: <LyricPlayerPage />},
-      {path: "/LyricsMusic", element: <LyricPlayerPage />},
-
-      // Effect lab — current paths
-      {path: "/studio/effects", element: <EffectLabRoute />},
-      {path: "/studio/effects/*", element: <EffectLabRoute />},
-
-      // Effect lab — legacy paths
-      {path: "/effects", element: <EffectLabRoute />},
-      {path: "/effects/*", element: <EffectLabRoute />},
-      {path: "/paper/effects/*", element: <EffectLabRoute />},
     ],
+  },
+
+  // Effect lab — current paths
+  {
+    path: "/studio/effects",
+    element: <EffectLabRoute />,
+  },
+  {
+    path: "/studio/effects/*",
+    element: <EffectLabRoute />,
   },
 
   // Studio home (no lyric data needed — rendered synchronously, no Suspense)
@@ -107,24 +134,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "/studio/papers/*",
-    element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
-  },
-
-  // Paper player — legacy paths
-  {
-    path: "/paper",
-    element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
-  },
-  {
-    path: "/paper/*",
-    element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
-  },
-  {
-    path: "/previews/*",
-    element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
-  },
-  {
-    path: "/templates/*",
     element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
   },
 ]);

@@ -1,4 +1,4 @@
-import type {LyricVideoCompositionProps, SongLibraryItem} from "../../../modules/render-core/src";
+import type {LyricVideoCompositionProps, SongLibraryItem} from "@lyric-mv/lyric-video";
 
 import type {PreviewAssetMap, PreviewLibraryManifest, SelectedPreviewSongData} from "./types";
 import {createSeedSong, createSongFromRenderInput, songToCompositionProps} from "./song-adapter";

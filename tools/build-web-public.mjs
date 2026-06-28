@@ -10,7 +10,6 @@ const publicRoot = path.join(projectRoot, "public-web");
 const currentSongConfigPath = path.join(projectRoot, "src", "remotion", "current-song.json");
 const libraryStatePath = path.join(commonRoot, "library-state.json");
 const queueCsvPath = path.join(commonRoot, "production-queue.csv");
-const demoSongsPath = path.join(projectRoot, "config", "demo-songs.json");
 const demoOnly = process.argv.includes("--demo");
 
 const ensureDir = (targetPath) => {
@@ -244,13 +243,12 @@ const queueRows = fs.existsSync(queueCsvPath)
   : [];
 
 const queueSongIds = queueRows.map((row) => row.song_dir).filter(Boolean);
-const demoConfig = demoOnly ? readJsonIfExists(demoSongsPath) : null;
-const demoSongIds = Array.isArray(demoConfig?.songIds)
-  ? demoConfig.songIds.filter((songId) => typeof songId === "string" && songId.trim())
-  : [];
+
+const demoPlaylist = libraryState?.customPlaylists?.find((p) => p.id === "demo");
+const demoSongIds = demoPlaylist?.trackIds?.filter((songId) => typeof songId === "string" && songId.trim()) ?? [];
 
 if (demoOnly && demoSongIds.length !== 10) {
-  throw new Error(`Demo build requires exactly 10 song IDs in ${demoSongsPath}`);
+  throw new Error(`Demo build requires exactly 10 song IDs in demo playlist of ${libraryStatePath}`);
 }
 
 const songDirNames = demoOnly

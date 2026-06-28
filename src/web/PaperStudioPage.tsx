@@ -4,20 +4,16 @@ import {Player} from "@remotion/player";
 import {FileText, Home, Info} from "lucide-react";
 import type {BackgroundEffectId, RenderManifest} from "@paper-to-video/shared-types";
 
-import demoPaperManifest from "../../modules/paper-video/data/manifests/demo-paper.render.json";
-import {PaperVideo} from "../../modules/render-core/src";
-import {getVisualEffectDefinition, visualEffectRegistry} from "../../modules/render-core/src/visual-effects";
-import type {VisualEffectId} from "../../modules/render-core/src/visual-effects";
+import {PaperListDrawer} from "./components/PaperListDrawer";
+import type {PaperItem} from "./components/PaperListDrawer";
+import {PaperInfoDrawer} from "./components/PaperInfoDrawer";
+import type {PaperEffectOption} from "./components/PaperInfoDrawer";
+
+import demoPaperManifest from "../../packages/paper-video/data/manifests/demo-paper.render.json";
+import {PaperVideo} from "@paper-to-video/components";
 
 declare const __LATEST_RUN_FILE__: string;
 declare const __PROJECT_ROOT__: string;
-
-type PaperItem = {
-  id: string;
-  label: string;
-  source: string;
-  manifest: RenderManifest;
-};
 
 type PaperLibraryEntry = {
   id: string;
@@ -27,14 +23,7 @@ type PaperLibraryEntry = {
   renderManifestPath: string;
 };
 
-type CreativePaperEffectSelection = `creative:${VisualEffectId}`;
-type PaperEffectSelection = "manifest" | BackgroundEffectId | CreativePaperEffectSelection;
-
-type PaperEffectOption = {
-  description: string;
-  id: PaperEffectSelection;
-  label: string;
-};
+type PaperEffectSelection = "manifest" | BackgroundEffectId;
 
 const paperEffectOptions: PaperEffectOption[] = [
   {id: "manifest", label: "Manifest Default", description: "Use the effect stored in each scene."},
@@ -48,18 +37,7 @@ const paperEffectOptions: PaperEffectOption[] = [
   {id: "grid-drift", label: "Grid Drift", description: "Lightweight technical grid."},
   {id: "noise-bloom", label: "Noise Bloom", description: "Subtle glowing noise layer."},
   {id: "none", label: "None", description: "Disable scene effects."},
-  ...(Object.keys(visualEffectRegistry) as VisualEffectId[]).map((effectId) => {
-    const definition = getVisualEffectDefinition(effectId);
-    return {
-      id: `creative:${definition.id}` as const,
-      label: definition.title,
-      description: `3DLab · ${definition.description}`,
-    };
-  }),
 ];
-
-const isCreativeEffectSelection = (effectId: PaperEffectSelection): effectId is CreativePaperEffectSelection =>
-  effectId.startsWith("creative:");
 
 const getFileName = (filePath: string | undefined) => filePath?.split("/").pop() ?? "missing file path";
 
@@ -84,11 +62,16 @@ const fetchPublicJson = async <T,>(url: string): Promise<T> => {
 };
 
 const normalizeManifestPaths = (manifest: RenderManifest): RenderManifest => {
-  const oldOutputRoot = "/Users/cxy251/Code/02codeX/output";
   const currentOutputRoot = `${__PROJECT_ROOT__}/artifacts/paper-video/output`;
+  const artifactSuffix = "/artifacts/paper-video/output";
+  
   const rewrite = (value: unknown): unknown => {
     if (typeof value === "string") {
-      return value.startsWith(oldOutputRoot) ? value.replace(oldOutputRoot, currentOutputRoot) : value;
+      const index = value.indexOf(artifactSuffix);
+      if (index >= 0) {
+        return currentOutputRoot + value.slice(index + artifactSuffix.length);
+      }
+      return value;
     }
     if (Array.isArray(value)) {
       return value.map(rewrite);
@@ -114,41 +97,29 @@ const getInitialPaperId = () => {
   return pathname.includes("latest") ? "latest" : "demo";
 };
 
-export const PaperStudioPage: React.FC = () => {
-  const [selectedPaperId, setSelectedPaperId] = useState(getInitialPaperId);
-  const [selectedEffectId, setSelectedEffectId] = useState<PaperEffectSelection>("manifest");
-  const [paperListOpen, setPaperListOpen] = useState(false);
-  const [paperInfoOpen, setPaperInfoOpen] = useState(false);
+const useLatestRun = () => {
   const [latestManifest, setLatestManifest] = useState<RenderManifest | null>(null);
-  const [artifactPapers, setArtifactPapers] = useState<PaperItem[]>([]);
-
   useEffect(() => {
     let cancelled = false;
-
     const loadLatest = async () => {
       try {
         const latestRun = await fetchJson<{renderManifestPath: string}>(__LATEST_RUN_FILE__);
         const manifest = normalizeManifestPaths(await fetchJson<RenderManifest>(latestRun.renderManifestPath));
-        if (!cancelled) {
-          setLatestManifest(manifest);
-        }
+        if (!cancelled) setLatestManifest(manifest);
       } catch {
-        if (!cancelled) {
-          setLatestManifest(null);
-        }
+        if (!cancelled) setLatestManifest(null);
       }
     };
-
     void loadLatest();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
+  return latestManifest;
+};
 
+const usePaperLibrary = () => {
+  const [artifactPapers, setArtifactPapers] = useState<PaperItem[]>([]);
   useEffect(() => {
     let cancelled = false;
-
     const loadPaperLibrary = async () => {
       try {
         const library = await fetchPublicJson<{papers: PaperLibraryEntry[]}>("/paper-library.json");
@@ -161,24 +132,26 @@ export const PaperStudioPage: React.FC = () => {
               source: paper.source,
               manifest,
             } satisfies PaperItem;
-          }),
+          })
         );
-        if (!cancelled) {
-          setArtifactPapers(manifests);
-        }
+        if (!cancelled) setArtifactPapers(manifests);
       } catch {
-        if (!cancelled) {
-          setArtifactPapers([]);
-        }
+        if (!cancelled) setArtifactPapers([]);
       }
     };
-
     void loadPaperLibrary();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
+  return artifactPapers;
+};
+
+export const PaperStudioPage: React.FC = () => {
+  const [selectedPaperId, setSelectedPaperId] = useState(getInitialPaperId);
+  const [selectedEffectId, setSelectedEffectId] = useState<PaperEffectSelection>("manifest");
+  const [paperListOpen, setPaperListOpen] = useState(false);
+  const [paperInfoOpen, setPaperInfoOpen] = useState(false);
+  const latestManifest = useLatestRun();
+  const artifactPapers = usePaperLibrary();
 
   const papers = useMemo<PaperItem[]>(() => {
     const byId = new Map<string, PaperItem>();
@@ -210,7 +183,7 @@ export const PaperStudioPage: React.FC = () => {
 
   const selectedPaper = papers.find((paper) => paper.id === selectedPaperId) ?? papers[0];
   const previewManifest = useMemo<RenderManifest>(() => {
-    if (selectedEffectId === "manifest" || isCreativeEffectSelection(selectedEffectId)) {
+    if (selectedEffectId === "manifest") {
       return selectedPaper.manifest;
     }
 
@@ -222,16 +195,6 @@ export const PaperStudioPage: React.FC = () => {
       })),
     };
   }, [selectedEffectId, selectedPaper.manifest]);
-  const creativeEffect = useMemo(() => {
-    if (!isCreativeEffectSelection(selectedEffectId)) {
-      return undefined;
-    }
-    const effectId = selectedEffectId.replace("creative:", "") as VisualEffectId;
-    return {
-      id: effectId,
-      config: getVisualEffectDefinition(effectId).defaultConfig,
-    };
-  }, [selectedEffectId]);
   const scenes = previewManifest.scenes;
   const effectLabelsById = useMemo(
     () => new Map(paperEffectOptions.map((effect) => [effect.id, effect.label])),
@@ -300,9 +263,10 @@ export const PaperStudioPage: React.FC = () => {
             compositionHeight={previewManifest.height}
             compositionWidth={previewManifest.width}
             controls
+            clickToPlay={false}
             durationInFrames={previewManifest.totalFrames}
             fps={previewManifest.fps}
-            inputProps={{creativeEffect, manifest: previewManifest}}
+            inputProps={{manifest: previewManifest}}
             key={`${selectedPaper.id}:${selectedEffectId}`}
             loop={false}
             style={{width: "100%", height: "100%", backgroundColor: "#050a10"}}
@@ -311,131 +275,30 @@ export const PaperStudioPage: React.FC = () => {
       </section>
 
       {paperListOpen ? (
-        <div className="paper-studio__drawer-layer">
-          <button
-            aria-label="Close paper list"
-            className="paper-studio__scrim"
-            onClick={() => setPaperListOpen(false)}
-            type="button"
-          />
-          <aside className="paper-studio__rail">
-            <div className="paper-studio__drawer-head">
-              <div>
-                <p className="paper-studio__kicker">Papers</p>
-                <h1>Paper Player</h1>
-              </div>
-              <button
-                aria-label="Close paper list"
-                className="paper-studio__close"
-                onClick={() => setPaperListOpen(false)}
-                type="button"
-              >
-                ×
-              </button>
-            </div>
-            <nav className="paper-studio__list" aria-label="Papers">
-              {papers.map((paper) => (
-                <button
-                  aria-pressed={paper.id === selectedPaper.id}
-                  key={paper.id}
-                  onClick={() => selectPaper(paper.id)}
-                  type="button"
-                >
-                  <span>{paper.label}</span>
-                  <strong>{paper.manifest.paper.title}</strong>
-                </button>
-              ))}
-            </nav>
-          </aside>
-        </div>
+        <PaperListDrawer
+          onClose={() => setPaperListOpen(false)}
+          onSelect={selectPaper}
+          papers={papers}
+          selectedPaper={selectedPaper}
+        />
       ) : null}
 
       {paperInfoOpen ? (
-        <div className="paper-studio__drawer-layer paper-studio__drawer-layer--right">
-          <button
-            aria-label="Close paper information"
-            className="paper-studio__scrim"
-            onClick={() => setPaperInfoOpen(false)}
-            type="button"
-          />
-          <aside className="paper-studio__meta">
-            <div className="paper-studio__drawer-head">
-              <p>{selectedPaper.source}</p>
-              <button
-                aria-label="Close paper information"
-                className="paper-studio__close"
-                onClick={() => setPaperInfoOpen(false)}
-                type="button"
-              >
-                ×
-              </button>
-            </div>
-            <h2>{previewManifest.paper.title}</h2>
-            <div className="paper-studio__stats">
-              <span>{scenes.length} scenes</span>
-              <span>{(previewManifest.totalFrames / previewManifest.fps).toFixed(1)}s</span>
-              <span>{previewManifest.theme.id}</span>
-            </div>
-            <section className="paper-studio__effect-section">
-              <p className="paper-studio__kicker">Visual Effect</p>
-              <div className="paper-studio__effect-list">
-                {paperEffectOptions.map((effect) => (
-                  <button
-                    aria-pressed={effect.id === selectedEffectId}
-                    key={effect.id}
-                    onClick={() => setSelectedEffectId(effect.id)}
-                    type="button"
-                  >
-                    <strong>{effect.label}</strong>
-                    <span>{effect.description}</span>
-                  </button>
-                ))}
-              </div>
-            </section>
-            <section className="paper-studio__asset-section">
-              <p className="paper-studio__kicker">Assets</p>
-              <div className="paper-studio__asset-grid">
-                <div>
-                  <span>Audio</span>
-                  <strong>{previewManifest.audioAssets.length} files</strong>
-                  <small>{previewManifest.audioAssets.map((asset) => getFileName(asset.filePath)).join(" · ")}</small>
-                </div>
-                <div>
-                  <span>Subtitles</span>
-                  <strong>{previewManifest.subtitleSegments.length} segments</strong>
-                  <small>
-                    {previewManifest.subtitleSegments.length > 0
-                      ? previewManifest.subtitleSegments.slice(0, 3).map((segment) => segment.text).join(" / ")
-                      : "No subtitle segments in this manifest."}
-                  </small>
-                </div>
-                <div>
-                  <span>Background</span>
-                  <strong>{selectedEffectLabel}</strong>
-                  <small>
-                    {previewManifest.imageAssets.length > 0
-                      ? `${previewManifest.imageAssets.length} image assets · ${layoutIds.join(", ")}`
-                      : `Procedural effect only · ${manifestEffectIds.join(", ") || "none"}`}
-                  </small>
-                </div>
-              </div>
-            </section>
-            <div className="paper-studio__scene-section">
-              <p className="paper-studio__kicker">Scenes</p>
-              <div className="paper-studio__scene-list">
-                {scenes.map((scene) => (
-                  <div key={scene.id}>
-                    <span>{scene.type}</span>
-                    <strong>{typeof scene.content.title === "string" ? scene.content.title : scene.id}</strong>
-                    <small>
-                      audio {audioCountByScene.get(scene.id) ?? 0} · subtitles {subtitleCountByScene.get(scene.id) ?? 0} · {scene.backgroundEffectId}
-                    </small>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
+        <PaperInfoDrawer
+          audioCountByScene={audioCountByScene}
+          getFileName={getFileName}
+          layoutIds={layoutIds}
+          manifestEffectIds={manifestEffectIds}
+          onClose={() => setPaperInfoOpen(false)}
+          onSelectEffect={(id) => setSelectedEffectId(id as PaperEffectSelection)}
+          paperEffectOptions={paperEffectOptions}
+          previewManifest={previewManifest}
+          scenes={scenes}
+          selectedEffectId={selectedEffectId}
+          selectedEffectLabel={selectedEffectLabel}
+          selectedPaper={selectedPaper}
+          subtitleCountByScene={subtitleCountByScene}
+        />
       ) : null}
     </main>
   );

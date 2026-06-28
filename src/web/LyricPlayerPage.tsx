@@ -2,7 +2,7 @@ import React, {useMemo} from "react";
 import {Link} from "react-router";
 import {Player} from "@remotion/player";
 
-import {MusicVideoComposition} from "../../modules/render-core/src/compositions/MusicVideoComposition";
+import {MusicVideoComposition} from "@lyric-mv/lyric-video";
 import {useLyricData} from "./LyricDataLayout";
 
 /**
@@ -28,6 +28,7 @@ export const LyricPlayerPage: React.FC = () => {
         compositionWidth={1080}
         compositionHeight={1920}
         controls={false}
+        clickToPlay={false}
         autoPlay={false}
         loop={false}
         style={{
