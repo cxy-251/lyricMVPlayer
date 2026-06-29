@@ -1,0 +1,791 @@
+{
+  "projectId": "arxiv-2605-16217v1-cover-local-donut-spin",
+  "seed": 1494595899,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "totalFrames": 1409,
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "data/templates/paper-digest-v1.json"
+  },
+  "templateDocument": {
+    "id": "paper-digest-v1",
+    "version": "1.0.0",
+    "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+    "sceneTemplates": [
+      {
+        "sceneType": "hero",
+        "nodes": [
+          {
+            "id": "hero-avatar",
+            "componentId": "cover-avatar",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      },
+      {
+        "sceneType": "default",
+        "nodes": [
+          {
+            "id": "default-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "default-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "default-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "default-bullets",
+            "componentId": "scene-bullets",
+            "zone": "primary"
+          },
+          {
+            "id": "default-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.16217v1",
+    "title": "Argus: Evidence Assembly for Scalable Deep Research Agents",
+    "pdfUrl": "https://arxiv.org/pdf/2605.16217v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/paper/source.pdf",
+    "categories": [
+      "cs.CL",
+      "cs.AI",
+      "cs.IR"
+    ],
+    "publishedAt": "2026-05-15T17:29:27Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "arcade",
+      "ringRadius": 0.96,
+      "tubeRadius": 0.26,
+      "spinSpeed": 0.85,
+      "orbitSpeed": 0.65,
+      "wobbleAmount": 0.15,
+      "pearlCount": 8,
+      "glowIntensity": 0.2,
+      "primaryColor": "#f4f17a",
+      "secondaryColor": "#8ddcf8",
+      "accentColor": "#f99be7"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "fromFrame": 0,
+      "durationInFrames": 123,
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-hero"
+      ],
+      "subtitleSegmentIds": [
+        "scene-hero-subtitle-1",
+        "scene-hero-subtitle-2"
+      ],
+      "content": {
+        "kicker": "Argus: Evidence Assembly for Scalable Deep Research Agents",
+        "title": "Argus：用于可扩展深度研究智能体的证据组装系统",
+        "body": "Argus 这篇论文盯住的问题是：很多检索链路越做越复杂，但最终答案质量不一定真的更稳。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 99,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "fromFrame": 123,
+      "durationInFrames": 306,
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-problem"
+      ],
+      "subtitleSegmentIds": [
+        "scene-problem-subtitle-1",
+        "scene-problem-subtitle-2",
+        "scene-problem-subtitle-3",
+        "scene-problem-subtitle-4",
+        "scene-problem-subtitle-5"
+      ],
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：很多检索链路越做越复杂，但最终答案质量不一定真的更稳。最难的地方不是把链路做长，而是弄清哪些证据真的在帮答案变稳，哪些只是把流程变复杂。",
+        "bullets": [
+          "论文主角：Argus",
+          "核心场景：检索链路对答案质量的影响"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 282,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "fromFrame": 429,
+      "durationInFrames": 273,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-method"
+      ],
+      "subtitleSegmentIds": [
+        "scene-method-subtitle-1",
+        "scene-method-subtitle-2",
+        "scene-method-subtitle-3",
+        "scene-method-subtitle-4",
+        "scene-method-subtitle-5",
+        "scene-method-subtitle-6"
+      ],
+      "content": {
+        "title": "核心方法",
+        "body": "作者真正提出的主方法是Argus。作者提出Argus，并配套ReAct-style，分别处理评测标准、失败模式和真实瓶颈里的关键环节。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 249,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "fromFrame": 702,
+      "durationInFrames": 456,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-value"
+      ],
+      "subtitleSegmentIds": [
+        "scene-value-subtitle-1",
+        "scene-value-subtitle-2",
+        "scene-value-subtitle-3",
+        "scene-value-subtitle-4",
+        "scene-value-subtitle-5",
+        "scene-value-subtitle-6",
+        "scene-value-subtitle-7",
+        "scene-value-subtitle-8",
+        "scene-value-subtitle-9",
+        "scene-value-subtitle-10"
+      ],
+      "content": {
+        "title": "技术价值",
+        "body": "Argus 最关键的贡献，不是再堆一个更大的系统，而是把评测标准、失败模式和真实瓶颈里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 432,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "fromFrame": 1158,
+      "durationInFrames": 251,
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-ending"
+      ],
+      "subtitleSegmentIds": [
+        "scene-ending-subtitle-1",
+        "scene-ending-subtitle-2",
+        "scene-ending-subtitle-3",
+        "scene-ending-subtitle-4",
+        "scene-ending-subtitle-5"
+      ],
+      "content": {
+        "title": "一句话结论",
+        "body": "简单来说，Argus证明了解决复杂问题的关键不在于让AI搜索更多、更快，而在于构建一个能够系统化管理、识别缺失证据点的知识组装框架。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 227,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "id": "audio-scene-hero",
+      "sceneId": "scene-hero",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/audio/scene-hero.mp3",
+      "durationMs": 3288,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "Argus 这篇论文真正盯住的",
+          "startMs": 0,
+          "endMs": 1761,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "是检索链路对答案质量的影响",
+          "startMs": 1761,
+          "endMs": 3288,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-problem",
+      "sceneId": "scene-problem",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/audio/scene-problem.mp3",
+      "durationMs": 9384,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "作者真正想解决的是：很多检索链路越做越复杂",
+          "startMs": 0,
+          "endMs": 2700,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "但最终答案质量不一定真的更稳",
+          "startMs": 2700,
+          "endMs": 4500,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "最难的地方不是把链路做长",
+          "startMs": 4500,
+          "endMs": 6043,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "而是弄清哪些证据真的在帮答案变稳",
+          "startMs": 6043,
+          "endMs": 8100,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "哪些只是把流程变复杂",
+          "startMs": 8100,
+          "endMs": 9384,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-method",
+      "sceneId": "scene-method",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/audio/scene-method.mp3",
+      "durationMs": 8304,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文的主方法叫Argus",
+          "startMs": 0,
+          "endMs": 1530,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "配套组件是ReAct-style",
+          "startMs": 1530,
+          "endMs": 3278,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "作者提出Argus",
+          "startMs": 3278,
+          "endMs": 4261,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "并配套ReAct-style",
+          "startMs": 4261,
+          "endMs": 5791,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "分别处理评测标准",
+          "startMs": 5791,
+          "endMs": 6665,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "失败模式和真实瓶颈里的关键环节",
+          "startMs": 6665,
+          "endMs": 8304,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-value",
+      "sceneId": "scene-value",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/audio/scene-value.mp3",
+      "durationMs": 14400,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "Argus 最关键的贡献",
+          "startMs": 0,
+          "endMs": 1490,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不是再堆一个更大的系统",
+          "startMs": 1490,
+          "endMs": 2856,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是把评测标准",
+          "startMs": 2856,
+          "endMs": 3725,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+          "startMs": 3725,
+          "endMs": 6456,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "实验进一步说明",
+          "startMs": 6456,
+          "endMs": 7325,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "这种差别会真实改变系统表现",
+          "startMs": 7325,
+          "endMs": 8939,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "而不是只影响一个抽象总分",
+          "startMs": 8939,
+          "endMs": 10429,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "这说明真正有效的提升路径",
+          "startMs": 10429,
+          "endMs": 11919,
+          "role": "narration"
+        },
+        {
+          "id": "seg-9",
+          "text": "和大家直觉里觉得会涨分的做法",
+          "startMs": 11919,
+          "endMs": 13657,
+          "role": "narration"
+        },
+        {
+          "id": "seg-10",
+          "text": "并不是一回事",
+          "startMs": 13657,
+          "endMs": 14400,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-ending",
+      "sceneId": "scene-ending",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/audio/scene-ending.mp3",
+      "durationMs": 7560,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "简单来说",
+          "startMs": 0,
+          "endMs": 496,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "Argus证明了解决复杂问题的关键不在于让AI搜索更多",
+          "startMs": 496,
+          "endMs": 3842,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "更快",
+          "startMs": 3842,
+          "endMs": 4090,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "而在于构建一个能够系统化管理",
+          "startMs": 4090,
+          "endMs": 5825,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "识别缺失证据点的知识组装框架",
+          "startMs": 5825,
+          "endMs": 7560,
+          "role": "narration"
+        }
+      ]
+    }
+  ],
+  "imageAssets": [],
+  "subtitleSegments": [
+    {
+      "id": "scene-hero-subtitle-1",
+      "sceneId": "scene-hero",
+      "text": "Argus 这篇论文真正盯住的",
+      "startFrame": 13,
+      "endFrame": 65,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-hero-subtitle-2",
+      "sceneId": "scene-hero",
+      "text": "是检索链路对答案质量的影响",
+      "startFrame": 65,
+      "endFrame": 111,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-1",
+      "sceneId": "scene-problem",
+      "text": "作者真正想解决的是：很多检索链路越做越复杂",
+      "startFrame": 136,
+      "endFrame": 216,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-problem-subtitle-2",
+      "sceneId": "scene-problem",
+      "text": "但最终答案质量不一定真的更稳",
+      "startFrame": 216,
+      "endFrame": 270,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-3",
+      "sceneId": "scene-problem",
+      "text": "最难的地方不是把链路做长",
+      "startFrame": 270,
+      "endFrame": 316,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-4",
+      "sceneId": "scene-problem",
+      "text": "而是弄清哪些证据真的在帮答案变稳",
+      "startFrame": 316,
+      "endFrame": 378,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-5",
+      "sceneId": "scene-problem",
+      "text": "哪些只是把流程变复杂",
+      "startFrame": 378,
+      "endFrame": 417,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-1",
+      "sceneId": "scene-method",
+      "text": "这篇论文的主方法叫Argus",
+      "startFrame": 442,
+      "endFrame": 487,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-method-subtitle-2",
+      "sceneId": "scene-method",
+      "text": "配套组件是ReAct-style",
+      "startFrame": 487,
+      "endFrame": 539,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-3",
+      "sceneId": "scene-method",
+      "text": "作者提出Argus",
+      "startFrame": 539,
+      "endFrame": 569,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-4",
+      "sceneId": "scene-method",
+      "text": "并配套ReAct-style",
+      "startFrame": 569,
+      "endFrame": 615,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-5",
+      "sceneId": "scene-method",
+      "text": "分别处理评测标准",
+      "startFrame": 615,
+      "endFrame": 641,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-6",
+      "sceneId": "scene-method",
+      "text": "失败模式和真实瓶颈里的关键环节",
+      "startFrame": 641,
+      "endFrame": 690,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-1",
+      "sceneId": "scene-value",
+      "text": "Argus 最关键的贡献",
+      "startFrame": 715,
+      "endFrame": 759,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-value-subtitle-2",
+      "sceneId": "scene-value",
+      "text": "不是再堆一个更大的系统",
+      "startFrame": 759,
+      "endFrame": 800,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-3",
+      "sceneId": "scene-value",
+      "text": "而是把评测标准",
+      "startFrame": 800,
+      "endFrame": 826,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-4",
+      "sceneId": "scene-value",
+      "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+      "startFrame": 826,
+      "endFrame": 908,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-5",
+      "sceneId": "scene-value",
+      "text": "实验进一步说明",
+      "startFrame": 908,
+      "endFrame": 934,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-6",
+      "sceneId": "scene-value",
+      "text": "这种差别会真实改变系统表现",
+      "startFrame": 934,
+      "endFrame": 982,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-7",
+      "sceneId": "scene-value",
+      "text": "而不是只影响一个抽象总分",
+      "startFrame": 982,
+      "endFrame": 1027,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-8",
+      "sceneId": "scene-value",
+      "text": "这说明真正有效的提升路径",
+      "startFrame": 1027,
+      "endFrame": 1072,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-9",
+      "sceneId": "scene-value",
+      "text": "和大家直觉里觉得会涨分的做法",
+      "startFrame": 1072,
+      "endFrame": 1124,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-10",
+      "sceneId": "scene-value",
+      "text": "并不是一回事",
+      "startFrame": 1124,
+      "endFrame": 1146,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-1",
+      "sceneId": "scene-ending",
+      "text": "简单来说",
+      "startFrame": 1171,
+      "endFrame": 1185,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-ending-subtitle-2",
+      "sceneId": "scene-ending",
+      "text": "Argus证明了解决复杂问题的关键不在于让AI搜索更多",
+      "startFrame": 1185,
+      "endFrame": 1285,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-3",
+      "sceneId": "scene-ending",
+      "text": "更快",
+      "startFrame": 1285,
+      "endFrame": 1293,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-4",
+      "sceneId": "scene-ending",
+      "text": "而在于构建一个能够系统化管理",
+      "startFrame": 1293,
+      "endFrame": 1345,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-5",
+      "sceneId": "scene-ending",
+      "text": "识别缺失证据点的知识组装框架",
+      "startFrame": 1345,
+      "endFrame": 1397,
+      "emphasisLevel": 1
+    }
+  ]
+}

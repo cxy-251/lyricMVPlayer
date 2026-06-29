@@ -1,8 +1,0 @@
-{
-  "projectId": "demo-paper-001",
-  "runId": "20260601-095448",
-  "sourceManifestPath": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/paper-video/data/manifests/demo-paper.json",
-  "productionManifestPath": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/paper-video/output/runs/demo-paper-001/20260601-095448/inputs/production-manifest.json",
-  "renderManifestPath": "/Users/cxy251/Code/04AIMedia/lyricMVPlayer/artifacts/paper-video/output/runs/demo-paper-001/20260601-095448/manifests/render-manifest.json",
-  "stage": "manifest-composed"
-}

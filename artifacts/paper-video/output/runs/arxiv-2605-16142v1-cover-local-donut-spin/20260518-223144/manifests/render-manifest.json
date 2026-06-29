@@ -1,0 +1,726 @@
+{
+  "projectId": "arxiv-2605-16142v1-cover-local-donut-spin",
+  "seed": 1494596808,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "totalFrames": 1305,
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "artifacts/paper-video/templates/paper-digest-v1.json"
+  },
+  "templateDocument": {
+    "id": "paper-digest-v1",
+    "version": "1.0.0",
+    "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+    "sceneTemplates": [
+      {
+        "sceneType": "hero",
+        "nodes": [
+          {
+            "id": "hero-avatar",
+            "componentId": "cover-avatar",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      },
+      {
+        "sceneType": "default",
+        "nodes": [
+          {
+            "id": "default-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "default-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "default-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "default-bullets",
+            "componentId": "scene-bullets",
+            "zone": "primary"
+          },
+          {
+            "id": "default-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.16142v1",
+    "title": "Property-Guided LLM Program Synthesis for Planning",
+    "pdfUrl": "https://arxiv.org/pdf/2605.16142v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/paper/source.pdf",
+    "categories": [
+      "cs.AI",
+      "cs.LG"
+    ],
+    "publishedAt": "2026-05-15T16:23:35Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "classic",
+      "ringRadius": 0.9,
+      "tubeRadius": 0.22,
+      "spinSpeed": 0.74,
+      "orbitSpeed": 0.76,
+      "wobbleAmount": 0.13,
+      "pearlCount": 9,
+      "glowIntensity": 0.24,
+      "primaryColor": "#fa90ee",
+      "secondaryColor": "#c7fb8e",
+      "accentColor": "#80d5fc"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "fromFrame": 0,
+      "durationInFrames": 131,
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-hero"
+      ],
+      "subtitleSegmentIds": [
+        "scene-hero-subtitle-1",
+        "scene-hero-subtitle-2"
+      ],
+      "content": {
+        "kicker": "Property-Guided LLM Program Synthesis for Planning",
+        "title": "属性引导的大语言模型程序合成用于规划",
+        "body": "Property-Guided 这篇论文盯住的问题是：很多检索链路越做越复杂，但最终答案质量不一定真的更稳。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 107,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "fromFrame": 131,
+      "durationInFrames": 306,
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-problem"
+      ],
+      "subtitleSegmentIds": [
+        "scene-problem-subtitle-1",
+        "scene-problem-subtitle-2",
+        "scene-problem-subtitle-3",
+        "scene-problem-subtitle-4",
+        "scene-problem-subtitle-5"
+      ],
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：很多检索链路越做越复杂，但最终答案质量不一定真的更稳。最难的地方不是把链路做长，而是弄清哪些证据真的在帮答案变稳，哪些只是把流程变复杂。",
+        "bullets": [
+          "论文主角：Property-Guided",
+          "核心场景：检索链路对答案质量的影响"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 282,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "fromFrame": 437,
+      "durationInFrames": 293,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-method"
+      ],
+      "subtitleSegmentIds": [
+        "scene-method-subtitle-1",
+        "scene-method-subtitle-2",
+        "scene-method-subtitle-3",
+        "scene-method-subtitle-4",
+        "scene-method-subtitle-5",
+        "scene-method-subtitle-6"
+      ],
+      "content": {
+        "title": "核心方法",
+        "body": "作者真正提出的主方法是Property-Guided。作者提出Property-Guided，并配套PDDL，分别处理评测标准、失败模式和真实瓶颈里的关键环节。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 269,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "fromFrame": 730,
+      "durationInFrames": 467,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-value"
+      ],
+      "subtitleSegmentIds": [
+        "scene-value-subtitle-1",
+        "scene-value-subtitle-2",
+        "scene-value-subtitle-3",
+        "scene-value-subtitle-4",
+        "scene-value-subtitle-5",
+        "scene-value-subtitle-6",
+        "scene-value-subtitle-7",
+        "scene-value-subtitle-8",
+        "scene-value-subtitle-9",
+        "scene-value-subtitle-10"
+      ],
+      "content": {
+        "title": "技术价值",
+        "body": "Property-Guided 最关键的贡献，不是再堆一个更大的系统，而是把评测标准、失败模式和真实瓶颈里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 443,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "fromFrame": 1197,
+      "durationInFrames": 108,
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-ending"
+      ],
+      "subtitleSegmentIds": [
+        "scene-ending-subtitle-1"
+      ],
+      "content": {
+        "title": "一句话结论",
+        "body": "因此，对于复杂的规划任务，不能只看最终的总分。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 84,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "id": "audio-scene-hero",
+      "sceneId": "scene-hero",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/audio/scene-hero.mp3",
+      "durationMs": 3576,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "Property-Guided 这篇论文真正盯住的",
+          "startMs": 0,
+          "endMs": 2353,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "是检索链路对答案质量的影响",
+          "startMs": 2353,
+          "endMs": 3576,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-problem",
+      "sceneId": "scene-problem",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/audio/scene-problem.mp3",
+      "durationMs": 9384,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "作者真正想解决的是：很多检索链路越做越复杂",
+          "startMs": 0,
+          "endMs": 2700,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "但最终答案质量不一定真的更稳",
+          "startMs": 2700,
+          "endMs": 4500,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "最难的地方不是把链路做长",
+          "startMs": 4500,
+          "endMs": 6043,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "而是弄清哪些证据真的在帮答案变稳",
+          "startMs": 6043,
+          "endMs": 8100,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "哪些只是把流程变复杂",
+          "startMs": 8100,
+          "endMs": 9384,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-method",
+      "sceneId": "scene-method",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/audio/scene-method.mp3",
+      "durationMs": 8952,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文的主方法叫Property-Guided",
+          "startMs": 0,
+          "endMs": 2620,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "配套组件是PDDL",
+          "startMs": 2620,
+          "endMs": 3603,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "作者提出Property-Guided",
+          "startMs": 3603,
+          "endMs": 5677,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "并配套PDDL",
+          "startMs": 5677,
+          "endMs": 6441,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "分别处理评测标准",
+          "startMs": 6441,
+          "endMs": 7314,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "失败模式和真实瓶颈里的关键环节",
+          "startMs": 7314,
+          "endMs": 8952,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-value",
+      "sceneId": "scene-value",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/audio/scene-value.mp3",
+      "durationMs": 14760,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "Property-Guided 最关键的贡献",
+          "startMs": 0,
+          "endMs": 2577,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不是再堆一个更大的系统",
+          "startMs": 2577,
+          "endMs": 3866,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是把评测标准",
+          "startMs": 3866,
+          "endMs": 4686,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+          "startMs": 4686,
+          "endMs": 7263,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "实验进一步说明",
+          "startMs": 7263,
+          "endMs": 8083,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "这种差别会真实改变系统表现",
+          "startMs": 8083,
+          "endMs": 9606,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "而不是只影响一个抽象总分",
+          "startMs": 9606,
+          "endMs": 11012,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "这说明真正有效的提升路径",
+          "startMs": 11012,
+          "endMs": 12418,
+          "role": "narration"
+        },
+        {
+          "id": "seg-9",
+          "text": "和大家直觉里觉得会涨分的做法",
+          "startMs": 12418,
+          "endMs": 14058,
+          "role": "narration"
+        },
+        {
+          "id": "seg-10",
+          "text": "并不是一回事",
+          "startMs": 14058,
+          "endMs": 14760,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-ending",
+      "sceneId": "scene-ending",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/audio/scene-ending.mp3",
+      "durationMs": 2808,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "因此，对于复杂的规划任务，不能只看最终的总分",
+          "startMs": 0,
+          "endMs": 2808,
+          "role": "narration"
+        }
+      ]
+    }
+  ],
+  "imageAssets": [],
+  "subtitleSegments": [
+    {
+      "id": "scene-hero-subtitle-1",
+      "sceneId": "scene-hero",
+      "text": "Property-Guided 这篇论文真正盯住的",
+      "startFrame": 13,
+      "endFrame": 83,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-hero-subtitle-2",
+      "sceneId": "scene-hero",
+      "text": "是检索链路对答案质量的影响",
+      "startFrame": 83,
+      "endFrame": 119,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-1",
+      "sceneId": "scene-problem",
+      "text": "作者真正想解决的是：很多检索链路越做越复杂",
+      "startFrame": 144,
+      "endFrame": 224,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-problem-subtitle-2",
+      "sceneId": "scene-problem",
+      "text": "但最终答案质量不一定真的更稳",
+      "startFrame": 224,
+      "endFrame": 278,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-3",
+      "sceneId": "scene-problem",
+      "text": "最难的地方不是把链路做长",
+      "startFrame": 278,
+      "endFrame": 324,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-4",
+      "sceneId": "scene-problem",
+      "text": "而是弄清哪些证据真的在帮答案变稳",
+      "startFrame": 324,
+      "endFrame": 386,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-5",
+      "sceneId": "scene-problem",
+      "text": "哪些只是把流程变复杂",
+      "startFrame": 386,
+      "endFrame": 425,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-1",
+      "sceneId": "scene-method",
+      "text": "这篇论文的主方法叫Property-Guided",
+      "startFrame": 450,
+      "endFrame": 528,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-method-subtitle-2",
+      "sceneId": "scene-method",
+      "text": "配套组件是PDDL",
+      "startFrame": 528,
+      "endFrame": 557,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-3",
+      "sceneId": "scene-method",
+      "text": "作者提出Property-Guided",
+      "startFrame": 557,
+      "endFrame": 619,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-4",
+      "sceneId": "scene-method",
+      "text": "并配套PDDL",
+      "startFrame": 619,
+      "endFrame": 642,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-5",
+      "sceneId": "scene-method",
+      "text": "分别处理评测标准",
+      "startFrame": 642,
+      "endFrame": 668,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-6",
+      "sceneId": "scene-method",
+      "text": "失败模式和真实瓶颈里的关键环节",
+      "startFrame": 668,
+      "endFrame": 718,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-1",
+      "sceneId": "scene-value",
+      "text": "Property-Guided 最关键的贡献",
+      "startFrame": 743,
+      "endFrame": 819,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-value-subtitle-2",
+      "sceneId": "scene-value",
+      "text": "不是再堆一个更大的系统",
+      "startFrame": 819,
+      "endFrame": 858,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-3",
+      "sceneId": "scene-value",
+      "text": "而是把评测标准",
+      "startFrame": 858,
+      "endFrame": 883,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-4",
+      "sceneId": "scene-value",
+      "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+      "startFrame": 883,
+      "endFrame": 960,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-5",
+      "sceneId": "scene-value",
+      "text": "实验进一步说明",
+      "startFrame": 960,
+      "endFrame": 984,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-6",
+      "sceneId": "scene-value",
+      "text": "这种差别会真实改变系统表现",
+      "startFrame": 984,
+      "endFrame": 1030,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-7",
+      "sceneId": "scene-value",
+      "text": "而不是只影响一个抽象总分",
+      "startFrame": 1030,
+      "endFrame": 1072,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-8",
+      "sceneId": "scene-value",
+      "text": "这说明真正有效的提升路径",
+      "startFrame": 1072,
+      "endFrame": 1115,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-9",
+      "sceneId": "scene-value",
+      "text": "和大家直觉里觉得会涨分的做法",
+      "startFrame": 1115,
+      "endFrame": 1164,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-10",
+      "sceneId": "scene-value",
+      "text": "并不是一回事",
+      "startFrame": 1164,
+      "endFrame": 1185,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-1",
+      "sceneId": "scene-ending",
+      "text": "因此，对于复杂的规划任务，不能只看最终的总分",
+      "startFrame": 1210,
+      "endFrame": 1293,
+      "emphasisLevel": 2
+    }
+  ]
+}

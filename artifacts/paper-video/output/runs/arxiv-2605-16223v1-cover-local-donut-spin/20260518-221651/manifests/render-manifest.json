@@ -1,0 +1,758 @@
+{
+  "projectId": "arxiv-2605-16223v1-cover-local-donut-spin",
+  "seed": 1494595798,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "totalFrames": 1349,
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "data/templates/paper-digest-v1.json"
+  },
+  "templateDocument": {
+    "id": "paper-digest-v1",
+    "version": "1.0.0",
+    "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+    "sceneTemplates": [
+      {
+        "sceneType": "hero",
+        "nodes": [
+          {
+            "id": "hero-avatar",
+            "componentId": "cover-avatar",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      },
+      {
+        "sceneType": "default",
+        "nodes": [
+          {
+            "id": "default-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "default-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "default-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "default-bullets",
+            "componentId": "scene-bullets",
+            "zone": "primary"
+          },
+          {
+            "id": "default-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.16223v1",
+    "title": "Evaluating Design Video Generation: Metrics for Compositional Fidelity",
+    "pdfUrl": "https://arxiv.org/pdf/2605.16223v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/paper/source.pdf",
+    "categories": [
+      "cs.GR",
+      "cs.AI",
+      "cs.CV"
+    ],
+    "publishedAt": "2026-05-15T17:34:05Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "arcade",
+      "ringRadius": 0.94,
+      "tubeRadius": 0.29,
+      "spinSpeed": 0.87,
+      "orbitSpeed": 0.75,
+      "wobbleAmount": 0.18,
+      "pearlCount": 5,
+      "glowIntensity": 0.17,
+      "primaryColor": "#fac288",
+      "secondaryColor": "#94f7a6",
+      "accentColor": "#969afa"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "fromFrame": 0,
+      "durationInFrames": 110,
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-hero"
+      ],
+      "subtitleSegmentIds": [
+        "scene-hero-subtitle-1",
+        "scene-hero-subtitle-2"
+      ],
+      "content": {
+        "kicker": "Evaluating Design Video Generation: Metrics for Compositional Fidelity",
+        "title": "评估设计视频生成：构成保真度指标",
+        "body": "总分看起来不错，不代表关键能力真的被测到了。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 86,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "fromFrame": 110,
+      "durationInFrames": 264,
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-problem"
+      ],
+      "subtitleSegmentIds": [
+        "scene-problem-subtitle-1",
+        "scene-problem-subtitle-2",
+        "scene-problem-subtitle-3",
+        "scene-problem-subtitle-4",
+        "scene-problem-subtitle-5"
+      ],
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：总分看起来不错，不代表关键能力真的被测到了。真正的麻烦是，平均分会把失败模式盖住，让你误以为系统已经能稳定落地。",
+        "bullets": [
+          "核心场景：评测指标与真实能力的差距"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 240,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "fromFrame": 374,
+      "durationInFrames": 311,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-method"
+      ],
+      "subtitleSegmentIds": [
+        "scene-method-subtitle-1",
+        "scene-method-subtitle-2",
+        "scene-method-subtitle-3",
+        "scene-method-subtitle-4",
+        "scene-method-subtitle-5"
+      ],
+      "content": {
+        "title": "核心方法",
+        "body": "作者的核心做法不是只改一个局部模块，而是重新组织整套系统，直接处理评测标准、失败模式和真实瓶颈里最关键的失稳环节。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 287,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "fromFrame": 685,
+      "durationInFrames": 457,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-value"
+      ],
+      "subtitleSegmentIds": [
+        "scene-value-subtitle-1",
+        "scene-value-subtitle-2",
+        "scene-value-subtitle-3",
+        "scene-value-subtitle-4",
+        "scene-value-subtitle-5",
+        "scene-value-subtitle-6",
+        "scene-value-subtitle-7",
+        "scene-value-subtitle-8",
+        "scene-value-subtitle-9",
+        "scene-value-subtitle-10"
+      ],
+      "content": {
+        "title": "技术价值",
+        "body": "这项工作的关键贡献，不是再堆一个更大的系统，而是把评测标准、失败模式和真实瓶颈里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 433,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "fromFrame": 1142,
+      "durationInFrames": 207,
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-ending"
+      ],
+      "subtitleSegmentIds": [
+        "scene-ending-subtitle-1",
+        "scene-ending-subtitle-2",
+        "scene-ending-subtitle-3",
+        "scene-ending-subtitle-4"
+      ],
+      "content": {
+        "title": "一句话结论",
+        "body": "总结来说，评估专业设计的AI视频生成，不能只看整体效果，必须建立一套能拆解到部件级约束的精确指标体系。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 183,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "id": "audio-scene-hero",
+      "sceneId": "scene-hero",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/audio/scene-hero.mp3",
+      "durationMs": 2880,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文真正盯住的",
+          "startMs": 0,
+          "endMs": 1178,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "是评测指标与真实能力的差距",
+          "startMs": 1178,
+          "endMs": 2880,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-problem",
+      "sceneId": "scene-problem",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/audio/scene-problem.mp3",
+      "durationMs": 8016,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "作者真正想解决的是：总分看起来不错",
+          "startMs": 0,
+          "endMs": 2234,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不代表关键能力真的被测到了",
+          "startMs": 2234,
+          "endMs": 3942,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "真正的麻烦是",
+          "startMs": 3942,
+          "endMs": 4730,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "平均分会把失败模式盖住",
+          "startMs": 4730,
+          "endMs": 6176,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "让你误以为系统已经能稳定落地",
+          "startMs": 6176,
+          "endMs": 8016,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-method",
+      "sceneId": "scene-method",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/audio/scene-method.mp3",
+      "durationMs": 9576,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文的做法，是直接对出问题的中间机制下手",
+          "startMs": 0,
+          "endMs": 2809,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "作者的核心做法不是只改一个局部模块",
+          "startMs": 2809,
+          "endMs": 4980,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是重新组织整套系统",
+          "startMs": 4980,
+          "endMs": 6257,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "直接处理评测标准",
+          "startMs": 6257,
+          "endMs": 7278,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "失败模式和真实瓶颈里最关键的失稳环节",
+          "startMs": 7278,
+          "endMs": 9576,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-value",
+      "sceneId": "scene-value",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/audio/scene-value.mp3",
+      "durationMs": 14448,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这项工作的关键贡献",
+          "startMs": 0,
+          "endMs": 1151,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不是再堆一个更大的系统",
+          "startMs": 1151,
+          "endMs": 2557,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是把评测标准",
+          "startMs": 2557,
+          "endMs": 3452,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+          "startMs": 3452,
+          "endMs": 6265,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "实验进一步说明",
+          "startMs": 6265,
+          "endMs": 7160,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "这种差别会真实改变系统表现",
+          "startMs": 7160,
+          "endMs": 8822,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "而不是只影响一个抽象总分",
+          "startMs": 8822,
+          "endMs": 10356,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "这说明真正有效的提升路径",
+          "startMs": 10356,
+          "endMs": 11890,
+          "role": "narration"
+        },
+        {
+          "id": "seg-9",
+          "text": "和大家直觉里觉得会涨分的做法",
+          "startMs": 11890,
+          "endMs": 13680,
+          "role": "narration"
+        },
+        {
+          "id": "seg-10",
+          "text": "并不是一回事",
+          "startMs": 13680,
+          "endMs": 14448,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-ending",
+      "sceneId": "scene-ending",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/audio/scene-ending.mp3",
+      "durationMs": 6096,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "总结来说",
+          "startMs": 0,
+          "endMs": 519,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "评估专业设计的AI视频生成",
+          "startMs": 519,
+          "endMs": 2205,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "不能只看整体效果",
+          "startMs": 2205,
+          "endMs": 3243,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "必须建立一套能拆解到部件级约束的精确指标体系",
+          "startMs": 3243,
+          "endMs": 6096,
+          "role": "narration"
+        }
+      ]
+    }
+  ],
+  "imageAssets": [],
+  "subtitleSegments": [
+    {
+      "id": "scene-hero-subtitle-1",
+      "sceneId": "scene-hero",
+      "text": "这篇论文真正盯住的",
+      "startFrame": 13,
+      "endFrame": 47,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-hero-subtitle-2",
+      "sceneId": "scene-hero",
+      "text": "是评测指标与真实能力的差距",
+      "startFrame": 47,
+      "endFrame": 98,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-1",
+      "sceneId": "scene-problem",
+      "text": "作者真正想解决的是：总分看起来不错",
+      "startFrame": 123,
+      "endFrame": 189,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-problem-subtitle-2",
+      "sceneId": "scene-problem",
+      "text": "不代表关键能力真的被测到了",
+      "startFrame": 189,
+      "endFrame": 240,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-3",
+      "sceneId": "scene-problem",
+      "text": "真正的麻烦是",
+      "startFrame": 240,
+      "endFrame": 264,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-4",
+      "sceneId": "scene-problem",
+      "text": "平均分会把失败模式盖住",
+      "startFrame": 264,
+      "endFrame": 307,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-5",
+      "sceneId": "scene-problem",
+      "text": "让你误以为系统已经能稳定落地",
+      "startFrame": 307,
+      "endFrame": 362,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-1",
+      "sceneId": "scene-method",
+      "text": "这篇论文的做法，是直接对出问题的中间机制下手",
+      "startFrame": 387,
+      "endFrame": 470,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-method-subtitle-2",
+      "sceneId": "scene-method",
+      "text": "作者的核心做法不是只改一个局部模块",
+      "startFrame": 470,
+      "endFrame": 535,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-3",
+      "sceneId": "scene-method",
+      "text": "而是重新组织整套系统",
+      "startFrame": 535,
+      "endFrame": 574,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-4",
+      "sceneId": "scene-method",
+      "text": "直接处理评测标准",
+      "startFrame": 574,
+      "endFrame": 604,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-5",
+      "sceneId": "scene-method",
+      "text": "失败模式和真实瓶颈里最关键的失稳环节",
+      "startFrame": 604,
+      "endFrame": 673,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-1",
+      "sceneId": "scene-value",
+      "text": "这项工作的关键贡献",
+      "startFrame": 698,
+      "endFrame": 732,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-value-subtitle-2",
+      "sceneId": "scene-value",
+      "text": "不是再堆一个更大的系统",
+      "startFrame": 732,
+      "endFrame": 774,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-3",
+      "sceneId": "scene-value",
+      "text": "而是把评测标准",
+      "startFrame": 774,
+      "endFrame": 801,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-4",
+      "sceneId": "scene-value",
+      "text": "失败模式和真实瓶颈里真正会失稳的环节拆开验证",
+      "startFrame": 801,
+      "endFrame": 885,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-5",
+      "sceneId": "scene-value",
+      "text": "实验进一步说明",
+      "startFrame": 885,
+      "endFrame": 912,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-6",
+      "sceneId": "scene-value",
+      "text": "这种差别会真实改变系统表现",
+      "startFrame": 912,
+      "endFrame": 962,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-7",
+      "sceneId": "scene-value",
+      "text": "而不是只影响一个抽象总分",
+      "startFrame": 962,
+      "endFrame": 1008,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-8",
+      "sceneId": "scene-value",
+      "text": "这说明真正有效的提升路径",
+      "startFrame": 1008,
+      "endFrame": 1054,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-9",
+      "sceneId": "scene-value",
+      "text": "和大家直觉里觉得会涨分的做法",
+      "startFrame": 1054,
+      "endFrame": 1107,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-10",
+      "sceneId": "scene-value",
+      "text": "并不是一回事",
+      "startFrame": 1107,
+      "endFrame": 1130,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-1",
+      "sceneId": "scene-ending",
+      "text": "总结来说",
+      "startFrame": 1155,
+      "endFrame": 1170,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-ending-subtitle-2",
+      "sceneId": "scene-ending",
+      "text": "评估专业设计的AI视频生成",
+      "startFrame": 1170,
+      "endFrame": 1220,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-3",
+      "sceneId": "scene-ending",
+      "text": "不能只看整体效果",
+      "startFrame": 1220,
+      "endFrame": 1251,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-4",
+      "sceneId": "scene-ending",
+      "text": "必须建立一套能拆解到部件级约束的精确指标体系",
+      "startFrame": 1251,
+      "endFrame": 1337,
+      "emphasisLevel": 1
+    }
+  ]
+}

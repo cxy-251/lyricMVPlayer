@@ -369,4 +369,5 @@ const manifest = {
 };
 
 fs.writeFileSync(path.join(publicRoot, "library-manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
-fs.writeFileSync(path.join(publicRoot, "paper-library.json"), JSON.stringify({papers: buildPaperLibrary()}, null, 2) + "\n");
+const paperLibrary = demoOnly ? {papers: []} : {papers: buildPaperLibrary()};
+fs.writeFileSync(path.join(publicRoot, "paper-library.json"), JSON.stringify(paperLibrary, null, 2) + "\n");

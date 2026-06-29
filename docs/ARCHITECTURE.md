@@ -11,7 +11,7 @@
 
 ## 2. Directory Structure
 
-- `artifacts/`: Local caching directory for all pipeline data (songs, manifests, render output). **Not checked into git**.
+- `artifacts/`: Local caching directory for pipeline data (songs, manifests, render output). Production artifacts are not checked into git, except for the explicitly whitelisted lightweight demo manifests required by the Web demo build.
 - `docs/`: Core project documentation.
 - `modules/`: Discrete business logic packages.
   - `audio-download/`: `yt-dlp` based audio ingestion.

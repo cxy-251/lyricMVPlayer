@@ -1,0 +1,811 @@
+{
+  "projectId": "arxiv-2605-16198v1-cover-local-donut-spin",
+  "seed": 1494596303,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "totalFrames": 1676,
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "data/templates/paper-digest-v1.json"
+  },
+  "templateDocument": {
+    "id": "paper-digest-v1",
+    "version": "1.0.0",
+    "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+    "sceneTemplates": [
+      {
+        "sceneType": "hero",
+        "nodes": [
+          {
+            "id": "hero-avatar",
+            "componentId": "cover-avatar",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      },
+      {
+        "sceneType": "default",
+        "nodes": [
+          {
+            "id": "default-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "default-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "default-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "default-bullets",
+            "componentId": "scene-bullets",
+            "zone": "primary"
+          },
+          {
+            "id": "default-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.16198v1",
+    "title": "Formal Methods Meet LLMs: Auditing, Monitoring, and Intervention for Compliance of Advanced AI Systems",
+    "pdfUrl": "https://arxiv.org/pdf/2605.16198v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/paper/source.pdf",
+    "categories": [
+      "cs.AI",
+      "cs.CY",
+      "cs.LG",
+      "cs.LO"
+    ],
+    "publishedAt": "2026-05-15T17:13:27Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "arcade",
+      "ringRadius": 0.92,
+      "tubeRadius": 0.26,
+      "spinSpeed": 0.8,
+      "orbitSpeed": 0.92,
+      "wobbleAmount": 0.16,
+      "pearlCount": 7,
+      "glowIntensity": 0.2,
+      "primaryColor": "#78f9e1",
+      "secondaryColor": "#df7ef3",
+      "accentColor": "#fcdea9"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "fromFrame": 0,
+      "durationInFrames": 191,
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-hero"
+      ],
+      "subtitleSegmentIds": [
+        "scene-hero-subtitle-1",
+        "scene-hero-subtitle-2"
+      ],
+      "content": {
+        "kicker": "Formal Methods Meet LLMs: Auditing, Monitoring, and Intervention for Compliance of Advanced AI Systems",
+        "title": "形式化方法结合大型语言模型：高级AI系统合规性的审计、监控和干预",
+        "body": "techniques that enable AI-enabled 这篇论文盯住的问题是：模型内部会冒出一小批权重过高、但局部语义被破坏的异常token，最后把图像生成过程带偏。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 167,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "fromFrame": 191,
+      "durationInFrames": 369,
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-problem"
+      ],
+      "subtitleSegmentIds": [
+        "scene-problem-subtitle-1",
+        "scene-problem-subtitle-2",
+        "scene-problem-subtitle-3",
+        "scene-problem-subtitle-4",
+        "scene-problem-subtitle-5",
+        "scene-problem-subtitle-6"
+      ],
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：模型内部会冒出一小批权重过高、但局部语义被破坏的异常token，最后把图像生成过程带偏。在DiT 这类架构里，真正失稳的往往不是最后那一张图，而是中间注意力已经被少数异常token 抢走。",
+        "bullets": [
+          "核心场景：扩散Transformer 里的异常token 为什么会破坏生成质量",
+          "术语解释：扩散Transformer（DiT），负责在逐步去噪过程中生成图像的主干网络"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 345,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "fromFrame": 560,
+      "durationInFrames": 421,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-method"
+      ],
+      "subtitleSegmentIds": [
+        "scene-method-subtitle-1",
+        "scene-method-subtitle-2",
+        "scene-method-subtitle-3",
+        "scene-method-subtitle-4",
+        "scene-method-subtitle-5",
+        "scene-method-subtitle-6",
+        "scene-method-subtitle-7",
+        "scene-method-subtitle-8"
+      ],
+      "content": {
+        "title": "核心方法",
+        "body": "作者真正提出的主方法是techniques that enable AI-enabled。它本质上是扩散Transformer（DiT），负责在逐步去噪过程中生成图像的主干网络。核心机制是让系统像医生一样主动追问，把缺失的关键信息补齐后，再继续做判断。",
+        "bullets": [
+          "配套组件：AI-enabled",
+          "先主动追问再做症状判断"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 397,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "fromFrame": 981,
+      "durationInFrames": 464,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-value"
+      ],
+      "subtitleSegmentIds": [
+        "scene-value-subtitle-1",
+        "scene-value-subtitle-2",
+        "scene-value-subtitle-3",
+        "scene-value-subtitle-4",
+        "scene-value-subtitle-5",
+        "scene-value-subtitle-6",
+        "scene-value-subtitle-7",
+        "scene-value-subtitle-8",
+        "scene-value-subtitle-9"
+      ],
+      "content": {
+        "title": "技术价值",
+        "body": "最关键的贡献，不是再堆一个更大的系统，而是把扩散Transformer 内部异常token 对生成质量的影响里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 440,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "fromFrame": 1445,
+      "durationInFrames": 231,
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-ending"
+      ],
+      "subtitleSegmentIds": [
+        "scene-ending-subtitle-1",
+        "scene-ending-subtitle-2",
+        "scene-ending-subtitle-3",
+        "scene-ending-subtitle-4"
+      ],
+      "content": {
+        "title": "一句话结论",
+        "body": "总之，要让先进AI真正安全落地，必须建立起一套结合形式逻辑和实时监测能力的\"护栏\"，实现从设计到部署的全流程合规保障。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 207,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "id": "audio-scene-hero",
+      "sceneId": "scene-hero",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/audio/scene-hero.mp3",
+      "durationMs": 5568,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "techniques that enable AI-enabled 这篇论文真正盯住的",
+          "startMs": 0,
+          "endMs": 3070,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "是扩散Transformer 里的异常token 为什么会破坏生成质量",
+          "startMs": 3070,
+          "endMs": 5568,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-problem",
+      "sceneId": "scene-problem",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/audio/scene-problem.mp3",
+      "durationMs": 11496,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "作者真正想解决的是：模型内部会冒出一小批权重过高",
+          "startMs": 0,
+          "endMs": 2815,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "但局部语义被破坏的异常token",
+          "startMs": 2815,
+          "endMs": 4692,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "最后把图像生成过程带偏",
+          "startMs": 4692,
+          "endMs": 5982,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "在DiT 这类架构里",
+          "startMs": 5982,
+          "endMs": 7155,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "真正失稳的往往不是最后那一张图",
+          "startMs": 7155,
+          "endMs": 8915,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "而是中间注意力已经被少数异常token 抢走",
+          "startMs": 8915,
+          "endMs": 11496,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-method",
+      "sceneId": "scene-method",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/audio/scene-method.mp3",
+      "durationMs": 13248,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文的主方法叫techniques that enable AI-enabled",
+          "startMs": 0,
+          "endMs": 4061,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "如果翻成人话",
+          "startMs": 4061,
+          "endMs": 4641,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "它就是扩散Transformer（DiT）",
+          "startMs": 4641,
+          "endMs": 6672,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "负责在逐步去噪过程中生成图像的主干网络",
+          "startMs": 6672,
+          "endMs": 8509,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "配套组件是AI-enabled",
+          "startMs": 8509,
+          "endMs": 9960,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "核心机制是让系统像医生一样主动追问",
+          "startMs": 9960,
+          "endMs": 11604,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "把缺失的关键信息补齐后",
+          "startMs": 11604,
+          "endMs": 12668,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "再继续做判断",
+          "startMs": 12668,
+          "endMs": 13248,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-value",
+      "sceneId": "scene-value",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/audio/scene-value.mp3",
+      "durationMs": 14664,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "最关键的贡献",
+          "startMs": 0,
+          "endMs": 682,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不是再堆一个更大的系统",
+          "startMs": 682,
+          "endMs": 1932,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是把扩散Transformer 内部异常token 对生成质量的影响里真正会失稳的环节拆开验证",
+          "startMs": 1932,
+          "endMs": 7388,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "实验进一步说明",
+          "startMs": 7388,
+          "endMs": 8184,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "这种差别会真实改变系统表现",
+          "startMs": 8184,
+          "endMs": 9662,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "而不是只影响一个抽象总分",
+          "startMs": 9662,
+          "endMs": 11026,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "这说明真正有效的提升路径",
+          "startMs": 11026,
+          "endMs": 12390,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "和大家直觉里觉得会涨分的做法",
+          "startMs": 12390,
+          "endMs": 13981,
+          "role": "narration"
+        },
+        {
+          "id": "seg-9",
+          "text": "并不是一回事",
+          "startMs": 13981,
+          "endMs": 14664,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-ending",
+      "sceneId": "scene-ending",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/audio/scene-ending.mp3",
+      "durationMs": 6912,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "总之",
+          "startMs": 0,
+          "endMs": 251,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "要让先进AI真正安全落地",
+          "startMs": 251,
+          "endMs": 1759,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "必须建立起一套结合形式逻辑和实时监测能力的\"护栏\"",
+          "startMs": 1759,
+          "endMs": 4901,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "实现从设计到部署的全流程合规保障",
+          "startMs": 4901,
+          "endMs": 6912,
+          "role": "narration"
+        }
+      ]
+    }
+  ],
+  "imageAssets": [],
+  "subtitleSegments": [
+    {
+      "id": "scene-hero-subtitle-1",
+      "sceneId": "scene-hero",
+      "text": "techniques that enable AI-enabled 这篇论文真正盯住的",
+      "startFrame": 13,
+      "endFrame": 104,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-hero-subtitle-2",
+      "sceneId": "scene-hero",
+      "text": "是扩散Transformer 里的异常token 为什么会破坏生成质量",
+      "startFrame": 104,
+      "endFrame": 179,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-1",
+      "sceneId": "scene-problem",
+      "text": "作者真正想解决的是：模型内部会冒出一小批权重过高",
+      "startFrame": 204,
+      "endFrame": 287,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-problem-subtitle-2",
+      "sceneId": "scene-problem",
+      "text": "但局部语义被破坏的异常token",
+      "startFrame": 287,
+      "endFrame": 344,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-3",
+      "sceneId": "scene-problem",
+      "text": "最后把图像生成过程带偏",
+      "startFrame": 344,
+      "endFrame": 382,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-4",
+      "sceneId": "scene-problem",
+      "text": "在DiT 这类架构里",
+      "startFrame": 382,
+      "endFrame": 418,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-5",
+      "sceneId": "scene-problem",
+      "text": "真正失稳的往往不是最后那一张图",
+      "startFrame": 418,
+      "endFrame": 470,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-6",
+      "sceneId": "scene-problem",
+      "text": "而是中间注意力已经被少数异常token 抢走",
+      "startFrame": 470,
+      "endFrame": 548,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-1",
+      "sceneId": "scene-method",
+      "text": "这篇论文的主方法叫techniques that enable AI-enabled",
+      "startFrame": 573,
+      "endFrame": 694,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-method-subtitle-2",
+      "sceneId": "scene-method",
+      "text": "如果翻成人话",
+      "startFrame": 694,
+      "endFrame": 711,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-3",
+      "sceneId": "scene-method",
+      "text": "它就是扩散Transformer（DiT）",
+      "startFrame": 711,
+      "endFrame": 772,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-4",
+      "sceneId": "scene-method",
+      "text": "负责在逐步去噪过程中生成图像的主干网络",
+      "startFrame": 772,
+      "endFrame": 827,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-5",
+      "sceneId": "scene-method",
+      "text": "配套组件是AI-enabled",
+      "startFrame": 827,
+      "endFrame": 871,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-6",
+      "sceneId": "scene-method",
+      "text": "核心机制是让系统像医生一样主动追问",
+      "startFrame": 871,
+      "endFrame": 920,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-7",
+      "sceneId": "scene-method",
+      "text": "把缺失的关键信息补齐后",
+      "startFrame": 920,
+      "endFrame": 952,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-8",
+      "sceneId": "scene-method",
+      "text": "再继续做判断",
+      "startFrame": 952,
+      "endFrame": 969,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-1",
+      "sceneId": "scene-value",
+      "text": "最关键的贡献",
+      "startFrame": 994,
+      "endFrame": 1013,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-value-subtitle-2",
+      "sceneId": "scene-value",
+      "text": "不是再堆一个更大的系统",
+      "startFrame": 1013,
+      "endFrame": 1051,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-3",
+      "sceneId": "scene-value",
+      "text": "而是把扩散Transformer 内部异常token 对生成质量的影响里真正会失稳的环节拆开验证",
+      "startFrame": 1051,
+      "endFrame": 1215,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-4",
+      "sceneId": "scene-value",
+      "text": "实验进一步说明",
+      "startFrame": 1215,
+      "endFrame": 1239,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-5",
+      "sceneId": "scene-value",
+      "text": "这种差别会真实改变系统表现",
+      "startFrame": 1239,
+      "endFrame": 1283,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-6",
+      "sceneId": "scene-value",
+      "text": "而不是只影响一个抽象总分",
+      "startFrame": 1283,
+      "endFrame": 1324,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-7",
+      "sceneId": "scene-value",
+      "text": "这说明真正有效的提升路径",
+      "startFrame": 1324,
+      "endFrame": 1365,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-8",
+      "sceneId": "scene-value",
+      "text": "和大家直觉里觉得会涨分的做法",
+      "startFrame": 1365,
+      "endFrame": 1412,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-9",
+      "sceneId": "scene-value",
+      "text": "并不是一回事",
+      "startFrame": 1412,
+      "endFrame": 1433,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-1",
+      "sceneId": "scene-ending",
+      "text": "总之",
+      "startFrame": 1458,
+      "endFrame": 1465,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-ending-subtitle-2",
+      "sceneId": "scene-ending",
+      "text": "要让先进AI真正安全落地",
+      "startFrame": 1465,
+      "endFrame": 1510,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-3",
+      "sceneId": "scene-ending",
+      "text": "必须建立起一套结合形式逻辑和实时监测能力的\"护栏\"",
+      "startFrame": 1510,
+      "endFrame": 1604,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-4",
+      "sceneId": "scene-ending",
+      "text": "实现从设计到部署的全流程合规保障",
+      "startFrame": 1604,
+      "endFrame": 1664,
+      "emphasisLevel": 1
+    }
+  ]
+}

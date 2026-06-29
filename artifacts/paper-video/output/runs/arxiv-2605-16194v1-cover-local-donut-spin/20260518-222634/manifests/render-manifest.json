@@ -1,0 +1,728 @@
+{
+  "projectId": "arxiv-2605-16194v1-cover-local-donut-spin",
+  "seed": 1494596404,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "totalFrames": 1424,
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "data/templates/paper-digest-v1.json"
+  },
+  "templateDocument": {
+    "id": "paper-digest-v1",
+    "version": "1.0.0",
+    "description": "PaperToVideo 第一版 Lego 模板，使用原子组件按配置顺序拼装。",
+    "sceneTemplates": [
+      {
+        "sceneType": "hero",
+        "nodes": [
+          {
+            "id": "hero-avatar",
+            "componentId": "cover-avatar",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "hero-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      },
+      {
+        "sceneType": "default",
+        "nodes": [
+          {
+            "id": "default-kicker",
+            "componentId": "scene-kicker",
+            "zone": "primary"
+          },
+          {
+            "id": "default-title",
+            "componentId": "scene-title",
+            "zone": "primary"
+          },
+          {
+            "id": "default-body",
+            "componentId": "scene-body",
+            "zone": "primary"
+          },
+          {
+            "id": "default-bullets",
+            "componentId": "scene-bullets",
+            "zone": "primary"
+          },
+          {
+            "id": "default-subtitle",
+            "componentId": "subtitle-panel",
+            "zone": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.16194v1",
+    "title": "paper.json: A Coordination Convention for LLM-Agent-Actionable Papers",
+    "pdfUrl": "https://arxiv.org/pdf/2605.16194v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/paper/source.pdf",
+    "categories": [
+      "cs.DL",
+      "cs.AI",
+      "cs.IR",
+      "cs.MA"
+    ],
+    "publishedAt": "2026-05-15T17:10:50Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "arcade",
+      "ringRadius": 0.94,
+      "tubeRadius": 0.23,
+      "spinSpeed": 0.79,
+      "orbitSpeed": 0.82,
+      "wobbleAmount": 0.12,
+      "pearlCount": 4,
+      "glowIntensity": 0.24,
+      "primaryColor": "#91dbf6",
+      "secondaryColor": "#f377f4",
+      "accentColor": "#fbe5ad"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "fromFrame": 0,
+      "durationInFrames": 112,
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-hero"
+      ],
+      "subtitleSegmentIds": [
+        "scene-hero-subtitle-1",
+        "scene-hero-subtitle-2"
+      ],
+      "content": {
+        "kicker": "paper.json: A Coordination Convention for LLM-Agent-Actionable Papers",
+        "title": "paper.json：面向大语言模型智能体可操作的论文协调规范",
+        "body": "paper 这篇论文盯住的问题是：系统能不能完成复杂任务，往往卡在长期规划、环境反馈和动作衔接这一环。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 88,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "fromFrame": 112,
+      "durationInFrames": 321,
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-problem"
+      ],
+      "subtitleSegmentIds": [
+        "scene-problem-subtitle-1",
+        "scene-problem-subtitle-2",
+        "scene-problem-subtitle-3",
+        "scene-problem-subtitle-4",
+        "scene-problem-subtitle-5",
+        "scene-problem-subtitle-6"
+      ],
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：系统能不能完成复杂任务，往往卡在长期规划、环境反馈和动作衔接这一环。真正的瓶颈往往出在多步执行过程中，一环判断失真，后面的行动就会连续偏掉。",
+        "bullets": [
+          "论文主角：paper",
+          "核心场景：智能体的长期行动策略"
+        ]
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 297,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "fromFrame": 433,
+      "durationInFrames": 352,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-method"
+      ],
+      "subtitleSegmentIds": [
+        "scene-method-subtitle-1",
+        "scene-method-subtitle-2",
+        "scene-method-subtitle-3",
+        "scene-method-subtitle-4",
+        "scene-method-subtitle-5"
+      ],
+      "content": {
+        "title": "核心方法",
+        "body": "作者真正提出的主方法是paper。作者提出paper，并配套大语言模型（LLM）-智能体-Actionable，分别处理智能体系统在复杂任务里的关键能力里的关键环节。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 328,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "fromFrame": 785,
+      "durationInFrames": 454,
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-value"
+      ],
+      "subtitleSegmentIds": [
+        "scene-value-subtitle-1",
+        "scene-value-subtitle-2",
+        "scene-value-subtitle-3",
+        "scene-value-subtitle-4",
+        "scene-value-subtitle-5",
+        "scene-value-subtitle-6",
+        "scene-value-subtitle-7",
+        "scene-value-subtitle-8",
+        "scene-value-subtitle-9"
+      ],
+      "content": {
+        "title": "技术价值",
+        "body": "paper 最关键的贡献，不是再堆一个更大的系统，而是把智能体系统在复杂任务里的关键能力里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 430,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "fromFrame": 1239,
+      "durationInFrames": 185,
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "imageAssetIds": [],
+      "audioSegmentIds": [
+        "audio-scene-ending"
+      ],
+      "subtitleSegmentIds": [
+        "scene-ending-subtitle-1",
+        "scene-ending-subtitle-2"
+      ],
+      "content": {
+        "title": "一句话结论",
+        "body": "通过这种规范化的协作机制，未来的AI系统可以从\"阅读\"论文进化到真正能\"操作\"并验证论文论点的阶段。"
+      },
+      "timing": {
+        "enterFrames": 12,
+        "holdFrames": 161,
+        "exitFrames": 12,
+        "audioOffsetFrames": 12,
+        "interactionFrameOffset": 12,
+        "effectStartFrameOffset": 12
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "id": "audio-scene-hero",
+      "sceneId": "scene-hero",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/audio/scene-hero.mp3",
+      "durationMs": 2928,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "paper 这篇论文真正盯住的",
+          "startMs": 0,
+          "endMs": 1689,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "是智能体的长期行动策略",
+          "startMs": 1689,
+          "endMs": 2928,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-problem",
+      "sceneId": "scene-problem",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/audio/scene-problem.mp3",
+      "durationMs": 9912,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "作者真正想解决的是：系统能不能完成复杂任务",
+          "startMs": 0,
+          "endMs": 2813,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "往往卡在长期规划",
+          "startMs": 2813,
+          "endMs": 3885,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "环境反馈和动作衔接这一环",
+          "startMs": 3885,
+          "endMs": 5492,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "真正的瓶颈往往出在多步执行过程中",
+          "startMs": 5492,
+          "endMs": 7635,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "一环判断失真",
+          "startMs": 7635,
+          "endMs": 8439,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "后面的行动就会连续偏掉",
+          "startMs": 8439,
+          "endMs": 9912,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-method",
+      "sceneId": "scene-method",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/audio/scene-method.mp3",
+      "durationMs": 10920,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "这篇论文的主方法叫paper",
+          "startMs": 0,
+          "endMs": 1429,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "配套组件是大语言模型（LLM）-智能体-Actionable",
+          "startMs": 1429,
+          "endMs": 4491,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "作者提出paper",
+          "startMs": 4491,
+          "endMs": 5410,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "并配套大语言模型（LLM）-智能体-Actionable",
+          "startMs": 5410,
+          "endMs": 8268,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "分别处理智能体系统在复杂任务里的关键能力里的关键环节",
+          "startMs": 8268,
+          "endMs": 10920,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-value",
+      "sceneId": "scene-value",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/audio/scene-value.mp3",
+      "durationMs": 14328,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "paper 最关键的贡献",
+          "startMs": 0,
+          "endMs": 1445,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "不是再堆一个更大的系统",
+          "startMs": 1445,
+          "endMs": 2769,
+          "role": "narration"
+        },
+        {
+          "id": "seg-3",
+          "text": "而是把智能体系统在复杂任务里的关键能力里真正会失稳的环节拆开验证",
+          "startMs": 2769,
+          "endMs": 6622,
+          "role": "narration"
+        },
+        {
+          "id": "seg-4",
+          "text": "实验进一步说明",
+          "startMs": 6622,
+          "endMs": 7465,
+          "role": "narration"
+        },
+        {
+          "id": "seg-5",
+          "text": "这种差别会真实改变系统表现",
+          "startMs": 7465,
+          "endMs": 9030,
+          "role": "narration"
+        },
+        {
+          "id": "seg-6",
+          "text": "而不是只影响一个抽象总分",
+          "startMs": 9030,
+          "endMs": 10475,
+          "role": "narration"
+        },
+        {
+          "id": "seg-7",
+          "text": "这说明真正有效的提升路径",
+          "startMs": 10475,
+          "endMs": 11920,
+          "role": "narration"
+        },
+        {
+          "id": "seg-8",
+          "text": "和大家直觉里觉得会涨分的做法",
+          "startMs": 11920,
+          "endMs": 13606,
+          "role": "narration"
+        },
+        {
+          "id": "seg-9",
+          "text": "并不是一回事",
+          "startMs": 13606,
+          "endMs": 14328,
+          "role": "narration"
+        }
+      ]
+    },
+    {
+      "id": "audio-scene-ending",
+      "sceneId": "scene-ending",
+      "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/audio/scene-ending.mp3",
+      "durationMs": 5352,
+      "segments": [
+        {
+          "id": "seg-1",
+          "text": "通过这种规范化的协作机制",
+          "startMs": 0,
+          "endMs": 1338,
+          "role": "narration"
+        },
+        {
+          "id": "seg-2",
+          "text": "未来的AI系统可以从\"阅读\"论文进化到真正能\"操作\"并验证论文论点的阶段",
+          "startMs": 1338,
+          "endMs": 5352,
+          "role": "narration"
+        }
+      ]
+    }
+  ],
+  "imageAssets": [],
+  "subtitleSegments": [
+    {
+      "id": "scene-hero-subtitle-1",
+      "sceneId": "scene-hero",
+      "text": "paper 这篇论文真正盯住的",
+      "startFrame": 13,
+      "endFrame": 63,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-hero-subtitle-2",
+      "sceneId": "scene-hero",
+      "text": "是智能体的长期行动策略",
+      "startFrame": 63,
+      "endFrame": 100,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-1",
+      "sceneId": "scene-problem",
+      "text": "作者真正想解决的是：系统能不能完成复杂任务",
+      "startFrame": 125,
+      "endFrame": 208,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-problem-subtitle-2",
+      "sceneId": "scene-problem",
+      "text": "往往卡在长期规划",
+      "startFrame": 208,
+      "endFrame": 241,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-3",
+      "sceneId": "scene-problem",
+      "text": "环境反馈和动作衔接这一环",
+      "startFrame": 241,
+      "endFrame": 289,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-4",
+      "sceneId": "scene-problem",
+      "text": "真正的瓶颈往往出在多步执行过程中",
+      "startFrame": 289,
+      "endFrame": 353,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-5",
+      "sceneId": "scene-problem",
+      "text": "一环判断失真",
+      "startFrame": 353,
+      "endFrame": 377,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-problem-subtitle-6",
+      "sceneId": "scene-problem",
+      "text": "后面的行动就会连续偏掉",
+      "startFrame": 377,
+      "endFrame": 421,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-1",
+      "sceneId": "scene-method",
+      "text": "这篇论文的主方法叫paper",
+      "startFrame": 446,
+      "endFrame": 488,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-method-subtitle-2",
+      "sceneId": "scene-method",
+      "text": "配套组件是大语言模型（LLM）-智能体-Actionable",
+      "startFrame": 488,
+      "endFrame": 580,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-3",
+      "sceneId": "scene-method",
+      "text": "作者提出paper",
+      "startFrame": 580,
+      "endFrame": 607,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-4",
+      "sceneId": "scene-method",
+      "text": "并配套大语言模型（LLM）-智能体-Actionable",
+      "startFrame": 607,
+      "endFrame": 693,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-method-subtitle-5",
+      "sceneId": "scene-method",
+      "text": "分别处理智能体系统在复杂任务里的关键能力里的关键环节",
+      "startFrame": 693,
+      "endFrame": 773,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-1",
+      "sceneId": "scene-value",
+      "text": "paper 最关键的贡献",
+      "startFrame": 798,
+      "endFrame": 840,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-value-subtitle-2",
+      "sceneId": "scene-value",
+      "text": "不是再堆一个更大的系统",
+      "startFrame": 840,
+      "endFrame": 880,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-3",
+      "sceneId": "scene-value",
+      "text": "而是把智能体系统在复杂任务里的关键能力里真正会失稳的环节拆开验证",
+      "startFrame": 880,
+      "endFrame": 996,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-4",
+      "sceneId": "scene-value",
+      "text": "实验进一步说明",
+      "startFrame": 996,
+      "endFrame": 1021,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-5",
+      "sceneId": "scene-value",
+      "text": "这种差别会真实改变系统表现",
+      "startFrame": 1021,
+      "endFrame": 1068,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-6",
+      "sceneId": "scene-value",
+      "text": "而不是只影响一个抽象总分",
+      "startFrame": 1068,
+      "endFrame": 1111,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-7",
+      "sceneId": "scene-value",
+      "text": "这说明真正有效的提升路径",
+      "startFrame": 1111,
+      "endFrame": 1155,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-8",
+      "sceneId": "scene-value",
+      "text": "和大家直觉里觉得会涨分的做法",
+      "startFrame": 1155,
+      "endFrame": 1205,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-value-subtitle-9",
+      "sceneId": "scene-value",
+      "text": "并不是一回事",
+      "startFrame": 1205,
+      "endFrame": 1227,
+      "emphasisLevel": 1
+    },
+    {
+      "id": "scene-ending-subtitle-1",
+      "sceneId": "scene-ending",
+      "text": "通过这种规范化的协作机制",
+      "startFrame": 1252,
+      "endFrame": 1291,
+      "emphasisLevel": 2
+    },
+    {
+      "id": "scene-ending-subtitle-2",
+      "sceneId": "scene-ending",
+      "text": "未来的AI系统可以从\"阅读\"论文进化到真正能\"操作\"并验证论文论点的阶段",
+      "startFrame": 1291,
+      "endFrame": 1412,
+      "emphasisLevel": 1
+    }
+  ]
+}

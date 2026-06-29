@@ -61,13 +61,14 @@
 - `pnpm run build:web`
   打包可用于生产部署的静态 Web 播放器至 `dist/` 目录。
   该命令**默认使用 `--demo` 参数**，只会打包固定的 10 首 GitHub Demo 歌曲，并将其资产准备至 `public-web/`。
+  Paper Studio 只包含仓库内置的 10 个轻量 demo manifests；本机批量生成的 paper runs 不会进入部署包。
   推荐用于 Cloudflare Pages 等托管平台的构建。
   - Build command: `pnpm run build:web`
   - Build output directory: `dist`
 
 - `pnpm run build:web:local`
   使用本地 `artifacts/songs/` 下所有的完整音乐库来打包 Web 播放器。
-  本地生产的歌曲不包含在 Git 仓库内，也不会被上传到 Demo 展示中。
+  本地生产的歌曲和 paper runs 不包含在 Git 仓库内，也不会被上传到 Demo 展示中。
 
 - `pnpm run clean:media`
   预览可删除的冗余媒体文件（不会直接删除）。它会列出已发布歌曲的可复用人声分离文件以及 `artifacts/songsout/trash/` 下的文件。

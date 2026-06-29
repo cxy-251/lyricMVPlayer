@@ -4,6 +4,15 @@ import {Player} from "@remotion/player";
 import {Home, BookOpen, Menu, X} from "lucide-react";
 import type {RenderManifest} from "@paper-to-video/shared-types";
 import demoPaperManifest from "../../artifacts/paper-video/output/runs/demo-paper-001/demo-default/manifests/render-manifest.json";
+import firstTokenKnowsManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/20260518-223301/manifests/render-manifest.json";
+import propertyGuidedSynthesisManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/manifests/render-manifest.json";
+import lookBeforeLeapManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16143v1-cover-local-donut-spin/20260518-223030/manifests/render-manifest.json";
+import paperJsonManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/manifests/render-manifest.json";
+import formalMethodsManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/manifests/render-manifest.json";
+import tutoringAgentsManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16207v1-cover-local-donut-spin/20260518-222045/manifests/render-manifest.json";
+import argusManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/manifests/render-manifest.json";
+import designVideoGenerationManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/manifests/render-manifest.json";
+import collectiveOpinionManifest from "../../artifacts/paper-video/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/manifests/render-manifest.json";
 import {PaperVideo} from "@paper-to-video/components";
 
 declare const __LATEST_RUN_FILE__: string;
@@ -23,6 +32,83 @@ export type PaperItem = {
   source: string;
   manifest: RenderManifest;
 };
+
+const repositoryPaperSamples: Array<{
+  id: string;
+  label: string;
+  source: string;
+  manifest: RenderManifest;
+}> = [
+  {
+    id: "demo",
+    label: "Repository Demo",
+    source: "artifacts/paper-video/output/runs/demo-paper-001/demo-default/manifests/render-manifest.json",
+    manifest: demoPaperManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-05166v1",
+    label: "2605.05166v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/20260518-223301/manifests/render-manifest.json",
+    manifest: firstTokenKnowsManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16142v1",
+    label: "2605.16142v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16142v1-cover-local-donut-spin/20260518-223144/manifests/render-manifest.json",
+    manifest: propertyGuidedSynthesisManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16143v1",
+    label: "2605.16143v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16143v1-cover-local-donut-spin/20260518-223030/manifests/render-manifest.json",
+    manifest: lookBeforeLeapManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16194v1",
+    label: "2605.16194v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16194v1-cover-local-donut-spin/20260518-222634/manifests/render-manifest.json",
+    manifest: paperJsonManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16198v1",
+    label: "2605.16198v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16198v1-cover-local-donut-spin/20260518-222507/manifests/render-manifest.json",
+    manifest: formalMethodsManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16207v1",
+    label: "2605.16207v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16207v1-cover-local-donut-spin/20260518-222045/manifests/render-manifest.json",
+    manifest: tutoringAgentsManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16217v1",
+    label: "2605.16217v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16217v1-cover-local-donut-spin/20260518-221809/manifests/render-manifest.json",
+    manifest: argusManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16223v1",
+    label: "2605.16223v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16223v1-cover-local-donut-spin/20260518-221651/manifests/render-manifest.json",
+    manifest: designVideoGenerationManifest as RenderManifest,
+  },
+  {
+    id: "arxiv-2605-16245v1",
+    label: "2605.16245v1",
+    source:
+      "artifacts/paper-video/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/manifests/render-manifest.json",
+    manifest: collectiveOpinionManifest as RenderManifest,
+  },
+];
 
 const fetchJson = async <T,>(absolutePath: string): Promise<T> => {
   const response = await fetch(`/@fs${absolutePath}`);
@@ -141,12 +227,12 @@ export const PaperStudioPage: React.FC = () => {
       byId.set(item.id, item);
     };
 
-    addPaper({
-      id: "demo",
-      label: "Repository Demo",
-      source: "artifacts/paper-video/output/runs/demo-paper-001/demo-default/manifests/render-manifest.json",
-      manifest: normalizeManifestPaths(demoPaperManifest as RenderManifest),
-    });
+    repositoryPaperSamples.forEach((sample) =>
+      addPaper({
+        ...sample,
+        manifest: normalizeManifestPaths(sample.manifest),
+      })
+    );
 
     if (latestManifest) {
       addPaper({
