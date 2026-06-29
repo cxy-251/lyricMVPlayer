@@ -63,3 +63,14 @@ artifacts/paper-video/*
 # Generated Source Files
 # ==============================================================================
 src/web/tailwind.compiled.css
+
+# Keep sample paper runs tracked in git
+!artifacts/paper-video/output/runs/demo-paper-001/
+!artifacts/paper-video/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/
+!artifacts/paper-video/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/
+
+# Ignore heavy assets in sample runs
+artifacts/paper-video/output/runs/*/audio/
+artifacts/paper-video/output/runs/*/video/
+artifacts/paper-video/output/runs/*/paper/
+artifacts/paper-video/output/runs/*/meta/

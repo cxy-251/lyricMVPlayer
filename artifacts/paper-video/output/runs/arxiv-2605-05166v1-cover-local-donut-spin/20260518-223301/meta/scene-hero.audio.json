@@ -1,0 +1,22 @@
+{
+  "id": "audio-scene-hero",
+  "sceneId": "scene-hero",
+  "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/20260518-223301/audio/scene-hero.mp3",
+  "durationMs": 4656,
+  "segments": [
+    {
+      "id": "seg-1",
+      "text": "Single-Decode 这篇论文真正盯住的",
+      "startMs": 0,
+      "endMs": 1846,
+      "role": "narration"
+    },
+    {
+      "id": "seg-2",
+      "text": "是扩散Transformer 里的异常token 为什么会破坏生成质量",
+      "startMs": 1846,
+      "endMs": 4656,
+      "role": "narration"
+    }
+  ]
+}

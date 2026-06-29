@@ -1,15 +1,9 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Link} from "react-router";
 import {Player} from "@remotion/player";
-import {FileText, Home, Info} from "lucide-react";
-import type {BackgroundEffectId, RenderManifest} from "@paper-to-video/shared-types";
-
-import {PaperListDrawer} from "./components/PaperListDrawer";
-import type {PaperItem} from "./components/PaperListDrawer";
-import {PaperInfoDrawer} from "./components/PaperInfoDrawer";
-import type {PaperEffectOption} from "./components/PaperInfoDrawer";
-
-import demoPaperManifest from "../../packages/paper-video/data/manifests/demo-paper.render.json";
+import {Home, BookOpen, Menu, X} from "lucide-react";
+import type {RenderManifest} from "@paper-to-video/shared-types";
+import demoPaperManifest from "../../artifacts/paper-video/manifests/demo-paper.render.json";
 import {PaperVideo} from "@paper-to-video/components";
 
 declare const __LATEST_RUN_FILE__: string;
@@ -23,32 +17,18 @@ type PaperLibraryEntry = {
   renderManifestPath: string;
 };
 
-type PaperEffectSelection = "manifest" | BackgroundEffectId;
-
-const paperEffectOptions: PaperEffectOption[] = [
-  {id: "manifest", label: "Manifest Default", description: "Use the effect stored in each scene."},
-  {id: "cellular-life", label: "Cellular Life", description: "WebGL life-grid motion layer."},
-  {id: "snake-grid", label: "Snake Grid", description: "Arcade grid path motion."},
-  {id: "particle-orbit", label: "Particle Orbit", description: "Central particle field."},
-  {id: "donut-spin", label: "Donut Spin", description: "Rotating 3D anchor object."},
-  {id: "lights-beams", label: "Lights Beams", description: "Cinematic beam field."},
-  {id: "rubiks-auto-solve", label: "Rubiks Auto Solve", description: "Procedural cube motion."},
-  {id: "aurora", label: "Aurora", description: "Soft gradient atmosphere."},
-  {id: "grid-drift", label: "Grid Drift", description: "Lightweight technical grid."},
-  {id: "noise-bloom", label: "Noise Bloom", description: "Subtle glowing noise layer."},
-  {id: "none", label: "None", description: "Disable scene effects."},
-];
-
-const getFileName = (filePath: string | undefined) => filePath?.split("/").pop() ?? "missing file path";
-
-const getUniqueValues = (values: string[]) => Array.from(new Set(values.filter(Boolean)));
+export type PaperItem = {
+  id: string;
+  label: string;
+  source: string;
+  manifest: RenderManifest;
+};
 
 const fetchJson = async <T,>(absolutePath: string): Promise<T> => {
   const response = await fetch(`/@fs${absolutePath}`);
   if (!response.ok) {
     throw new Error(`Failed to load ${absolutePath}: ${response.status}`);
   }
-
   return (await response.json()) as T;
 };
 
@@ -57,19 +37,23 @@ const fetchPublicJson = async <T,>(url: string): Promise<T> => {
   if (!response.ok) {
     throw new Error(`Failed to load ${url}: ${response.status}`);
   }
-
   return (await response.json()) as T;
 };
 
 const normalizeManifestPaths = (manifest: RenderManifest): RenderManifest => {
   const currentOutputRoot = `${__PROJECT_ROOT__}/artifacts/paper-video/output`;
-  const artifactSuffix = "/artifacts/paper-video/output";
   
   const rewrite = (value: unknown): unknown => {
     if (typeof value === "string") {
-      const index = value.indexOf(artifactSuffix);
-      if (index >= 0) {
-        return currentOutputRoot + value.slice(index + artifactSuffix.length);
+      // Handle the new artifacts/paper-video/output suffix
+      let suffixIndex = value.indexOf("/artifacts/paper-video/output");
+      if (suffixIndex >= 0) {
+        return currentOutputRoot + value.slice(suffixIndex + "/artifacts/paper-video/output".length);
+      }
+      // Handle the legacy 02codeX/output/runs/ suffix
+      suffixIndex = value.indexOf("/output/runs/");
+      if (suffixIndex >= 0) {
+        return currentOutputRoot + "/runs/" + value.slice(suffixIndex + "/output/runs/".length);
       }
       return value;
     }
@@ -80,7 +64,7 @@ const normalizeManifestPaths = (manifest: RenderManifest): RenderManifest => {
       return Object.fromEntries(Object.entries(value).map(([key, nextValue]) => [key, rewrite(nextValue)]));
     }
     return value;
-  };
+  }
 
   return rewrite(manifest) as RenderManifest;
 };
@@ -93,7 +77,6 @@ const getInitialPaperId = () => {
   if (routePaperId) {
     return routePaperId;
   }
-
   return pathname.includes("latest") ? "latest" : "demo";
 };
 
@@ -147,9 +130,8 @@ const usePaperLibrary = () => {
 
 export const PaperStudioPage: React.FC = () => {
   const [selectedPaperId, setSelectedPaperId] = useState(getInitialPaperId);
-  const [selectedEffectId, setSelectedEffectId] = useState<PaperEffectSelection>("manifest");
-  const [paperListOpen, setPaperListOpen] = useState(false);
-  const [paperInfoOpen, setPaperInfoOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   const latestManifest = useLatestRun();
   const artifactPapers = usePaperLibrary();
 
@@ -159,14 +141,12 @@ export const PaperStudioPage: React.FC = () => {
       byId.set(item.id, item);
     };
 
-    addPaper(
-      {
-        id: "demo",
-        label: "Repository Demo",
-        source: "modules/paper-video/data/manifests/demo-paper.render.json",
-        manifest: normalizeManifestPaths(demoPaperManifest as RenderManifest),
-      },
-    );
+    addPaper({
+      id: "demo",
+      label: "Repository Demo",
+      source: "artifacts/paper-video/manifests/demo-paper.render.json",
+      manifest: normalizeManifestPaths(demoPaperManifest as RenderManifest),
+    });
 
     if (latestManifest) {
       addPaper({
@@ -182,124 +162,91 @@ export const PaperStudioPage: React.FC = () => {
   }, [artifactPapers, latestManifest]);
 
   const selectedPaper = papers.find((paper) => paper.id === selectedPaperId) ?? papers[0];
-  const previewManifest = useMemo<RenderManifest>(() => {
-    if (selectedEffectId === "manifest") {
-      return selectedPaper.manifest;
-    }
-
-    return {
-      ...selectedPaper.manifest,
-      scenes: selectedPaper.manifest.scenes.map((scene) => ({
-        ...scene,
-        backgroundEffectId: selectedEffectId,
-      })),
-    };
-  }, [selectedEffectId, selectedPaper.manifest]);
-  const scenes = previewManifest.scenes;
-  const effectLabelsById = useMemo(
-    () => new Map(paperEffectOptions.map((effect) => [effect.id, effect.label])),
-    [],
-  );
-  const selectedEffectLabel = effectLabelsById.get(selectedEffectId) ?? selectedEffectId;
-  const manifestEffectIds = getUniqueValues(scenes.map((scene) => scene.backgroundEffectId));
-  const layoutIds = getUniqueValues(scenes.map((scene) => scene.backgroundImageLayoutId));
-  const subtitleCountByScene = useMemo(() => {
-    const counts = new Map<string, number>();
-    previewManifest.subtitleSegments.forEach((segment) => {
-      counts.set(segment.sceneId, (counts.get(segment.sceneId) ?? 0) + 1);
-    });
-    return counts;
-  }, [previewManifest.subtitleSegments]);
-  const audioCountByScene = useMemo(() => {
-    const counts = new Map<string, number>();
-    previewManifest.audioAssets.forEach((asset) => {
-      counts.set(asset.sceneId, (counts.get(asset.sceneId) ?? 0) + 1);
-    });
-    return counts;
-  }, [previewManifest.audioAssets]);
-
+  const manifest = selectedPaper.manifest;
+  
   const selectPaper = (paperId: string) => {
     setSelectedPaperId(paperId);
-    setPaperListOpen(false);
     window.history.pushState({}, "", `/studio/papers/${paperId}`);
+    setIsSidebarOpen(false); // Auto close sidebar on mobile/selection
   };
 
   return (
-    <main className="paper-studio">
-      <section className="paper-studio__stage">
-        <div className="paper-studio__phone">
-          <div className="paper-studio__toolbar">
-            <Link className="paper-studio__back" to="/studio" aria-label="Open studio home" title="Home">
-              <Home size={15} strokeWidth={1.9} />
-            </Link>
-            <button
-              className="paper-studio__drawer-button"
-              onClick={() => {
-                setPaperListOpen(true);
-                setPaperInfoOpen(false);
-              }}
-              type="button"
-              aria-label="Open paper list"
-              title="Papers"
-            >
-              <FileText size={16} strokeWidth={1.8} />
-            </button>
-            <button
-              className="paper-studio__info-button"
-              onClick={() => {
-                setPaperInfoOpen(true);
-                setPaperListOpen(false);
-              }}
-              type="button"
-              aria-label="Open paper information"
-              title="Info"
-            >
-              <Info size={16} strokeWidth={1.8} />
-            </button>
+    <div className="web-shell bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
+      {/* Abstract glowing background blobs */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="web-stage-frame relative">
+        <Link className="web-studio-link !z-[100]" to="/studio" title="Studio" aria-label="Open studio">
+          <span>Lab</span>
+        </Link>
+        
+        {/* Toggle Sidebar Button */}
+        <button 
+          className="absolute z-[60] top-4 left-4 p-2 bg-black/40 hover:bg-black/60 rounded-full border border-white/10 text-white/70 hover:text-white transition-all backdrop-blur-md"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
+        {/* Floating Sidebar */}
+        <aside 
+          className={`absolute z-50 left-0 top-0 h-full w-72 flex flex-col border-r border-white/10 bg-slate-950/80 backdrop-blur-xl shadow-2xl transition-transform duration-300 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="p-6 pb-2 pt-16 border-b border-white/10 flex items-center gap-4">
+            <h1 className="text-xl font-medium tracking-wide text-white">Papers</h1>
           </div>
-          <Player
-            autoPlay={false}
-            component={PaperVideo}
-            compositionHeight={previewManifest.height}
-            compositionWidth={previewManifest.width}
-            controls
-            clickToPlay={false}
-            durationInFrames={previewManifest.totalFrames}
-            fps={previewManifest.fps}
-            inputProps={{manifest: previewManifest}}
-            key={`${selectedPaper.id}:${selectedEffectId}`}
-            loop={false}
-            style={{width: "100%", height: "100%", backgroundColor: "#050a10"}}
-          />
-        </div>
-      </section>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+            {papers.map((paper) => {
+              const isSelected = paper.id === selectedPaper.id;
+              return (
+                <button
+                  key={paper.id}
+                  onClick={() => selectPaper(paper.id)}
+                  className={`w-full text-left p-4 rounded-xl transition-all duration-200 border flex flex-col gap-1 
+                    ${isSelected 
+                      ? "bg-indigo-500/20 border-indigo-500/50 shadow-lg shadow-indigo-500/10" 
+                      : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10"
+                    }`}
+                >
+                  <div className="flex items-start justify-between w-full">
+                    <span className={`text-sm font-medium ${isSelected ? "text-indigo-300" : "text-slate-400"}`}>
+                      {paper.label}
+                    </span>
+                    {isSelected && <BookOpen size={16} className="text-indigo-400" />}
+                  </div>
+                  <strong className="text-base font-normal leading-snug line-clamp-2 text-slate-200 mt-1">
+                    {paper.manifest.paper.title}
+                  </strong>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
 
-      {paperListOpen ? (
-        <PaperListDrawer
-          onClose={() => setPaperListOpen(false)}
-          onSelect={selectPaper}
-          papers={papers}
-          selectedPaper={selectedPaper}
+        {/* Video Player */}
+        <Player
+          autoPlay={false}
+          component={PaperVideo}
+          compositionHeight={manifest.height}
+          compositionWidth={manifest.width}
+          controls
+          clickToPlay={true}
+          durationInFrames={manifest.totalFrames}
+          fps={manifest.fps}
+          inputProps={{manifest}}
+          key={selectedPaper.id}
+          loop={false}
+          style={{
+            width: "100%", 
+            height: "100%", 
+            backgroundColor: "#050a10"
+          }}
         />
-      ) : null}
-
-      {paperInfoOpen ? (
-        <PaperInfoDrawer
-          audioCountByScene={audioCountByScene}
-          getFileName={getFileName}
-          layoutIds={layoutIds}
-          manifestEffectIds={manifestEffectIds}
-          onClose={() => setPaperInfoOpen(false)}
-          onSelectEffect={(id) => setSelectedEffectId(id as PaperEffectSelection)}
-          paperEffectOptions={paperEffectOptions}
-          previewManifest={previewManifest}
-          scenes={scenes}
-          selectedEffectId={selectedEffectId}
-          selectedEffectLabel={selectedEffectLabel}
-          selectedPaper={selectedPaper}
-          subtitleCountByScene={subtitleCountByScene}
-        />
-      ) : null}
-    </main>
+      </div>
+    </div>
   );
 };

@@ -1,30 +1,19 @@
 import type {RenderManifest, RenderScene} from "@paper-to-video/shared-types";
+
 export {
-  getCoverLayoutConfig,
-  getInterpolatedCoverLayoutConfig,
-  getSceneVisualIds,
-  resolveSceneBackgroundImageLayoutId,
-} from "./visual-system";
-export {
-  DEFAULT_BACKGROUND_MOTION,
   DEFAULT_CELLULAR_EFFECT,
   DEFAULT_DONUT_EFFECT,
   DEFAULT_LIGHTS_EFFECT,
   DEFAULT_PARTICLE_EFFECT,
   DEFAULT_RUBIKS_EFFECT,
-  DEFAULT_TEXT_MOTIONS,
   DEFAULT_TYPOGRAPHY_SCALE,
-  resolveBackgroundMotionConfig,
   resolveCellularEffectConfig,
   resolveDonutEffectConfig,
   resolveLightsEffectConfig,
   resolveParticleEffectConfig,
   resolveRubiksEffectConfig,
-  resolveTextMotionConfig,
   resolveTypographyScaleConfig,
 } from "./module-api";
-
-export {getTextMotionState} from "./text-motion";
 export {EFFECT_ATOMS, createModuleOverride, getEffectAtomDefinition} from "../../web3dlab/core/atoms";
 export type {
   EffectAtomDefinition,

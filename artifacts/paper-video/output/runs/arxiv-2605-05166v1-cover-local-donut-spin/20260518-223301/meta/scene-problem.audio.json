@@ -1,0 +1,50 @@
+{
+  "id": "audio-scene-problem",
+  "sceneId": "scene-problem",
+  "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/20260518-223301/audio/scene-problem.mp3",
+  "durationMs": 11496,
+  "segments": [
+    {
+      "id": "seg-1",
+      "text": "作者真正想解决的是：模型内部会冒出一小批权重过高",
+      "startMs": 0,
+      "endMs": 2815,
+      "role": "narration"
+    },
+    {
+      "id": "seg-2",
+      "text": "但局部语义被破坏的异常token",
+      "startMs": 2815,
+      "endMs": 4692,
+      "role": "narration"
+    },
+    {
+      "id": "seg-3",
+      "text": "最后把图像生成过程带偏",
+      "startMs": 4692,
+      "endMs": 5982,
+      "role": "narration"
+    },
+    {
+      "id": "seg-4",
+      "text": "在DiT 这类架构里",
+      "startMs": 5982,
+      "endMs": 7155,
+      "role": "narration"
+    },
+    {
+      "id": "seg-5",
+      "text": "真正失稳的往往不是最后那一张图",
+      "startMs": 7155,
+      "endMs": 8915,
+      "role": "narration"
+    },
+    {
+      "id": "seg-6",
+      "text": "而是中间注意力已经被少数异常token 抢走",
+      "startMs": 8915,
+      "endMs": 11496,
+      "role": "narration"
+    }
+  ]
+}

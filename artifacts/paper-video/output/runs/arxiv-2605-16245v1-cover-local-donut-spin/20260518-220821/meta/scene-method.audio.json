@@ -1,0 +1,64 @@
+{
+  "id": "audio-scene-method",
+  "sceneId": "scene-method",
+  "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/audio/scene-method.mp3",
+  "durationMs": 15960,
+  "segments": [
+    {
+      "id": "seg-1",
+      "text": "这篇论文的主方法叫directional biases when instructed",
+      "startMs": 0,
+      "endMs": 3449,
+      "role": "narration"
+    },
+    {
+      "id": "seg-2",
+      "text": "如果翻成人话",
+      "startMs": 3449,
+      "endMs": 3930,
+      "role": "narration"
+    },
+    {
+      "id": "seg-3",
+      "text": "它就是扩散Transformer（DiT）",
+      "startMs": 3930,
+      "endMs": 5614,
+      "role": "narration"
+    },
+    {
+      "id": "seg-4",
+      "text": "负责在逐步去噪过程中生成图像的主干网络",
+      "startMs": 5614,
+      "endMs": 7138,
+      "role": "narration"
+    },
+    {
+      "id": "seg-5",
+      "text": "配套组件是AI-Mediated",
+      "startMs": 7138,
+      "endMs": 8421,
+      "role": "narration"
+    },
+    {
+      "id": "seg-6",
+      "text": "作者提出directional biases when instructed",
+      "startMs": 8421,
+      "endMs": 11469,
+      "role": "narration"
+    },
+    {
+      "id": "seg-7",
+      "text": "并配套AI-Mediated",
+      "startMs": 11469,
+      "endMs": 12592,
+      "role": "narration"
+    },
+    {
+      "id": "seg-8",
+      "text": "分别处理扩散Transformer 内部异常token 对生成质量的影响里的关键环节",
+      "startMs": 12592,
+      "endMs": 15960,
+      "role": "narration"
+    }
+  ]
+}

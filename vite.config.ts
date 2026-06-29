@@ -25,16 +25,16 @@ export default defineConfig({
   },
   define: {
     __PROJECT_ROOT__: JSON.stringify(repoRoot),
-    __WORKSPACE_ROOT__: JSON.stringify(paperWorkspaceRoot),
+    __WORKSPACE_ROOT__: JSON.stringify(repoRoot),
     __LATEST_RUN_FILE__: JSON.stringify(path.join(paperArtifactRoot, "latest-run.json")),
     __DEFAULT_PRODUCTION_MANIFEST__: JSON.stringify(
-      path.join(paperWorkspaceRoot, "data", "manifests", "demo-paper.json"),
+      path.join(repoRoot, "artifacts", "paper-video", "manifests", "demo-paper.json"),
     ),
     __DEFAULT_RENDER_MANIFEST__: JSON.stringify(
-      path.join(paperWorkspaceRoot, "data", "manifests", "demo-paper.render.json"),
+      path.join(repoRoot, "artifacts", "paper-video", "manifests", "demo-paper.render.json"),
     ),
     __CONTENT_PROFILE_REGISTRY__: JSON.stringify(
-      path.join(paperWorkspaceRoot, "data", "content-profiles", "index.json"),
+      path.join(repoRoot, "artifacts", "paper-video", "content-profiles", "index.json"),
     ),
   },
   server: {

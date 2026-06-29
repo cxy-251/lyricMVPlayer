@@ -1,0 +1,43 @@
+{
+  "id": "audio-scene-ending",
+  "sceneId": "scene-ending",
+  "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-05166v1-cover-local-donut-spin/20260518-223301/audio/scene-ending.mp3",
+  "durationMs": 6216,
+  "segments": [
+    {
+      "id": "seg-1",
+      "text": "因此",
+      "startMs": 0,
+      "endMs": 265,
+      "role": "narration"
+    },
+    {
+      "id": "seg-2",
+      "text": "未来评估大模型的可靠性时",
+      "startMs": 265,
+      "endMs": 1852,
+      "role": "narration"
+    },
+    {
+      "id": "seg-3",
+      "text": "应将单次解码置信度作为默认",
+      "startMs": 1852,
+      "endMs": 3571,
+      "role": "narration"
+    },
+    {
+      "id": "seg-4",
+      "text": "低成本的基线指标",
+      "startMs": 3571,
+      "endMs": 4629,
+      "role": "narration"
+    },
+    {
+      "id": "seg-5",
+      "text": "而非依赖高开销的采样方法",
+      "startMs": 4629,
+      "endMs": 6216,
+      "role": "narration"
+    }
+  ]
+}

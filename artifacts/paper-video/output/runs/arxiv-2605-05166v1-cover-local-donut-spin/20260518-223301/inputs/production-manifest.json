@@ -1,0 +1,172 @@
+{
+  "projectId": "arxiv-2605-05166v1-cover-local-donut-spin",
+  "seed": 1494596909,
+  "locale": "zh-CN",
+  "template": {
+    "id": "paper-digest-v1",
+    "path": "artifacts/paper-video/templates/paper-digest-v1.json"
+  },
+  "contentProfile": {
+    "id": "arxiv-2605-05166v1",
+    "path": "artifacts/paper-video/content-profiles/generated/arxiv-2605-05166v1.json"
+  },
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "platform": "douyin"
+  },
+  "paper": {
+    "source": "arxiv",
+    "paperId": "2605.05166v1",
+    "title": "The First Token Knows: Single-Decode Confidence for Hallucination Detection",
+    "pdfUrl": "https://arxiv.org/pdf/2605.05166v1.pdf",
+    "localPdfPath": "/Users/cxy251/Code/02codeX/output/cache/papers/2605.05166v1/source.pdf",
+    "categories": [
+      "cs.CL",
+      "cs.AI"
+    ],
+    "publishedAt": "2026-05-06T17:34:00Z"
+  },
+  "theme": {
+    "id": "clean-tech",
+    "paletteId": "teal-slate",
+    "fontPackId": "modern-cn"
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "name": "zh-CN-XiaoxiaoNeural",
+    "rate": "+80%",
+    "pitch": "+0Hz"
+  },
+  "effectProfile": {
+    "id": "donut-spin"
+  },
+  "modules": {
+    "backgroundMotion": {
+      "overscanPercent": 36,
+      "panTravelPercent": 0.82
+    },
+    "cellularEffect": {
+      "cellColumns": 44,
+      "cellRows": 78,
+      "stepEveryFrames": 2,
+      "cellPadding": 0.5,
+      "cornerRadius": 0.45,
+      "edgeMode": "wrap",
+      "primaryColor": "#b6ffea",
+      "secondaryColor": "#fffaf1",
+      "birthColor": "#addcff",
+      "launchClickRatio": 0.22,
+      "launchSettleRatio": 0,
+      "minLaunchClickFrames": 8,
+      "maxLaunchClickFrames": 28,
+      "minLaunchSettleFrames": 0,
+      "maxLaunchSettleFrames": 1
+    },
+    "typography": {
+      "kickerSize": "clamp(0.88rem, 1.15vw + 0.5rem, 1.62rem)",
+      "titleSize": "clamp(2.52rem, 5.15vw + 0.74rem, 5.72rem)",
+      "bodySize": "clamp(1.02rem, 1.7vw + 0.5rem, 2.08rem)",
+      "bulletSize": "clamp(0.94rem, 1.45vw + 0.48rem, 1.78rem)",
+      "subtitleSize": "clamp(1.14rem, 1.55vw + 0.56rem, 1.98rem)"
+    },
+    "donutEffect": {
+      "variant": "arcade",
+      "ringRadius": 0.92,
+      "tubeRadius": 0.28,
+      "spinSpeed": 0.72,
+      "orbitSpeed": 0.66,
+      "wobbleAmount": 0.24,
+      "pearlCount": 6,
+      "glowIntensity": 0.27,
+      "primaryColor": "#f482b3",
+      "secondaryColor": "#b1fc88",
+      "accentColor": "#85cdfb"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-hero",
+      "type": "hero",
+      "contentRef": "hook",
+      "backgroundPresetId": "aurora",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio",
+      "narrationText": "Single-Decode 这篇论文真正盯住的，是扩散Transformer 里的异常token 为什么会破坏生成质量。",
+      "content": {
+        "kicker": "The First Token Knows: Single-Decode Confidence for Hallucination Detection",
+        "title": "第一个标记知道：单次解码置信度用于幻觉检测",
+        "body": "Single-Decode 这篇论文盯住的问题是：模型内部会冒出一小批权重过高、但局部语义被破坏的异常token，最后把图像生成过程带偏。"
+      }
+    },
+    {
+      "id": "scene-problem",
+      "type": "paper-intro",
+      "contentRef": "problem",
+      "backgroundPresetId": "cover-grid-drift",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "slide-up",
+      "durationStrategy": "auto-by-audio",
+      "narrationText": "作者真正想解决的是：模型内部会冒出一小批权重过高、但局部语义被破坏的异常token，最后把图像生成过程带偏。在DiT 这类架构里，真正失稳的往往不是最后那一张图，而是中间注意力已经被少数异常token 抢走。",
+      "content": {
+        "title": "这篇论文在解决什么？",
+        "body": "作者想解决的是：模型内部会冒出一小批权重过高、但局部语义被破坏的异常token，最后把图像生成过程带偏。在DiT 这类架构里，真正失稳的往往不是最后那一张图，而是中间注意力已经被少数异常token 抢走。",
+        "bullets": [
+          "论文主角：Single-Decode",
+          "核心场景：扩散Transformer 里的异常token 为什么会破坏生成质量"
+        ]
+      }
+    },
+    {
+      "id": "scene-method",
+      "type": "summary",
+      "contentRef": "method",
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio",
+      "narrationText": "这篇论文的主方法叫Single-Decode。配套组件是Self-consistency。作者提出Single-Decode，并配套Self-consistency，分别处理评测标准、失败模式和真实瓶颈里的关键环节。",
+      "content": {
+        "title": "核心方法",
+        "body": "作者真正提出的主方法是Single-Decode。作者提出Single-Decode，并配套Self-consistency，分别处理评测标准、失败模式和真实瓶颈里的关键环节。",
+        "bullets": []
+      }
+    },
+    {
+      "id": "scene-value",
+      "type": "bullet",
+      "contentRef": "value",
+      "backgroundPresetId": "cover-cellular-mask",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "stagger-rise",
+      "durationStrategy": "auto-by-audio",
+      "narrationText": "Single-Decode 最关键的贡献，不是再堆一个更大的系统，而是把评测标准、失败模式和真实瓶颈里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。这说明真正有效的提升路径，和大家直觉里觉得会涨分的做法，并不是一回事。",
+      "content": {
+        "title": "技术价值",
+        "body": "Single-Decode 最关键的贡献，不是再堆一个更大的系统，而是把评测标准、失败模式和真实瓶颈里真正会失稳的环节拆开验证。实验进一步说明，这种差别会真实改变系统表现，而不是只影响一个抽象总分。",
+        "bullets": []
+      }
+    },
+    {
+      "id": "scene-ending",
+      "type": "ending",
+      "contentRef": "ending",
+      "backgroundPresetId": "cover-soft-focus",
+      "backgroundImageLayoutId": "gradient-default",
+      "backgroundEffectId": "donut-spin",
+      "motionPresetId": "fade-up",
+      "durationStrategy": "auto-by-audio",
+      "narrationText": "因此，未来评估大模型的可靠性时，应将单次解码置信度作为默认、低成本的基线指标，而非依赖高开销的采样方法。",
+      "content": {
+        "title": "一句话结论",
+        "body": "因此，未来评估大模型的可靠性时，应将单次解码置信度作为默认、低成本的基线指标，而非依赖高开销的采样方法。"
+      }
+    }
+  ]
+}

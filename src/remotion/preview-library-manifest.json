@@ -1,22 +1,22 @@
 {
-  "selectedSongDirName": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
+  "selectedSongDirName": "White Flag - Claire Cottrill - aR-HiYvqS_A",
   "songs": [
     {
-      "id": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
-      "title": "Cruel Summer",
-      "artist": "Taylor Swift",
+      "id": "White Flag - Claire Cottrill - aR-HiYvqS_A",
+      "title": "White Flag",
+      "artist": "Claire Cottrill",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 0,
-      "renderDurationInFrames": 5265,
-      "durationInFrames": 5352,
+      "renderTrimStartMs": 16320,
+      "renderDurationInFrames": 3927,
+      "durationInFrames": 5437,
       "fps": 30
     }
   ],
   "queue": [
     {
-      "id": "Cruel Summer - Taylor Swift - aC9HkZW2hZk",
-      "title": "Cruel Summer",
-      "artist": "Taylor Swift",
+      "id": "White Flag - Claire Cottrill - aR-HiYvqS_A",
+      "title": "White Flag",
+      "artist": "Claire Cottrill",
       "accent": "rgba(163, 206, 255, 0.7)"
     }
   ],

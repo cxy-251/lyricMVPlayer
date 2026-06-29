@@ -1,0 +1,10 @@
+{
+  "projectId": "arxiv-2605-16245v1-cover-local-donut-spin",
+  "runId": "20260518-220821",
+  "productionManifestPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/inputs/production-manifest.json",
+  "renderManifestPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/manifests/render-manifest.json",
+  "outputVideoPath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/video/arxiv-2605-16245v1-cover-local-donut-spin.mp4",
+  "audioDir": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/audio",
+  "metaDir": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/meta",
+  "stage": "video-rendered"
+}

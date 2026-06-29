@@ -1,0 +1,22 @@
+{
+  "id": "audio-scene-ending",
+  "sceneId": "scene-ending",
+  "filePath": "/Users/cxy251/Code/02codeX/output/runs/arxiv-2605-16245v1-cover-local-donut-spin/20260518-220821/audio/scene-ending.mp3",
+  "durationMs": 4224,
+  "segments": [
+    {
+      "id": "seg-1",
+      "text": "因此",
+      "startMs": 0,
+      "endMs": 256,
+      "role": "narration"
+    },
+    {
+      "id": "seg-2",
+      "text": "我们需要更深入地理解AI在社交媒体中如何改变人类群体的认知边界",
+      "startMs": 256,
+      "endMs": 4224,
+      "role": "narration"
+    }
+  ]
+}

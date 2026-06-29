@@ -1,7 +1,0 @@
-# enabled,row_id,content_profile_id,cover_image_path,cover_profile_id,effect_profile_id,project_id,cover_image_source,seed,voice_name,voice_rate,voice_pitch,base_manifest_path
-true,demo-life,demo-layout-priors,,portrait-default,life-game,,,42,zh-CN-XiaoxiaoNeural,+80%,+0Hz,
-true,demo-snake,demo-layout-priors,,abstract-orbit,snake-grid,,,43,zh-CN-XiaoxiaoNeural,+80%,+0Hz,
-true,demo-particle,demo-layout-priors,,abstract-orbit,particle-orbit,,,44,zh-CN-XiaoxiaoNeural,+80%,+0Hz,
-true,demo-lights,demo-layout-priors,,abstract-orbit,lights-beams,,,46,zh-CN-XiaoxiaoNeural,+80%,+0Hz,
-true,demo-rubiks,demo-layout-priors,,abstract-orbit,rubiks-solver,,,45,zh-CN-XiaoxiaoNeural,+80%,+0Hz,
-true,agentic-life,agentic-world-modeling,,abstract-orbit,life-game,,,52,zh-CN-XiaoxiaoNeural,+80%,+0Hz,

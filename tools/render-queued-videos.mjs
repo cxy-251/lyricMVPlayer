@@ -4,7 +4,7 @@ import path from "node:path";
 const projectRoot = process.cwd();
 const batchValue = process.argv[2] ?? "0";
 
-const renderQueueScript = path.join(projectRoot, "modules", "render-queue", "render_queue.py");
+const renderQueueScript = path.join(projectRoot, "backend", "render-queue", "render_queue.py");
 const selectSongScript = path.join(projectRoot, "tools", "select-song-for-preview.mjs");
 const listResult = spawnSync(
   "conda",

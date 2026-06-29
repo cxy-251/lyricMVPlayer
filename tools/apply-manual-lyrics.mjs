@@ -9,7 +9,7 @@ if (!songDirName) {
   throw new Error('Usage: npm run apply:manual-lyrics -- "<song-folder-name>"');
 }
 
-const scriptPath = path.join(projectRoot, "modules", "audio-lyrics-alignment", "run_manual_lyrics.py");
+const scriptPath = path.join(projectRoot, "backend", "audio-lyrics-alignment", "run_manual_lyrics.py");
 const result = spawnSync(
   "conda",
   ["run", "-n", "kwai", "python", scriptPath, projectRoot, songDirName],
