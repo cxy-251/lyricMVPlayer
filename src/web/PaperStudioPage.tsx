@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import {Player} from "@remotion/player";
 import {Home, BookOpen, Menu, X} from "lucide-react";
 import type {RenderManifest} from "@paper-to-video/shared-types";
-import demoPaperManifest from "../../artifacts/paper-video/manifests/demo-paper.render.json";
+import demoPaperManifest from "../../artifacts/paper-video/output/runs/demo-paper-001/demo-default/manifests/render-manifest.json";
 import {PaperVideo} from "@paper-to-video/components";
 
 declare const __LATEST_RUN_FILE__: string;
@@ -144,7 +144,7 @@ export const PaperStudioPage: React.FC = () => {
     addPaper({
       id: "demo",
       label: "Repository Demo",
-      source: "artifacts/paper-video/manifests/demo-paper.render.json",
+      source: "artifacts/paper-video/output/runs/demo-paper-001/demo-default/manifests/render-manifest.json",
       manifest: normalizeManifestPaths(demoPaperManifest as RenderManifest),
     });
 
