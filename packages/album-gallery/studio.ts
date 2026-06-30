@@ -1,0 +1,1 @@
+export {AlbumGalleryStudioPage} from "./AlbumGalleryStudioPage";

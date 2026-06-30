@@ -2,6 +2,7 @@
 @source "../web/**/*.{js,ts,jsx,tsx,html}";
 @source "../../packages/lyric-video/components/**/*.{js,ts,jsx,tsx,html}";
 @source "../../packages/paper-video/src/**/*.{js,ts,jsx,tsx,html}";
+@source "../../packages/album-gallery/**/*.{js,ts,jsx,tsx,html}";
 
 html,
 body,

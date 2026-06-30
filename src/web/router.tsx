@@ -17,6 +17,10 @@ const PaperStudioPage = lazy(() =>
   import("./PaperStudioPage").then((m) => ({default: m.PaperStudioPage})),
 );
 
+const AlbumGalleryStudioPage = lazy(() =>
+  import("../../packages/album-gallery/studio").then((m) => ({default: m.AlbumGalleryStudioPage})),
+);
+
 // ─── Route wrapper components ─────────────────────────────────────────────────
 
 const EffectLabRoute: React.FC = () => {
@@ -78,6 +82,7 @@ const EffectLabRoute: React.FC = () => {
 // ─── Shared fallback elements ─────────────────────────────────────────────────
 
 const paperFallback = <div className="web-route-status">Loading paper player...</div>;
+const albumGalleryFallback = <div className="web-route-status">Loading album gallery...</div>;
 
 // ─── Route table ──────────────────────────────────────────────────────────────
 //
@@ -96,6 +101,7 @@ const paperFallback = <div className="web-route-status">Loading paper player...<
 //
 //   /studio/papers      → PaperStudioPage  (current)
 //   /studio/papers/*                       (sub-paths)
+//   /studio/album-gallery → AlbumGalleryStudioPage
 //   /paper              → PaperStudioPage  (legacy)
 //   /paper/*            → PaperStudioPage  (legacy; /paper/effects/* is more
 //                                           specific and wins in the layout above)
@@ -125,6 +131,12 @@ export const router = createBrowserRouter([
   {
     path: "/studio",
     element: <StudioHomePage />,
+  },
+
+  // Album gallery — current paths
+  {
+    path: "/studio/album-gallery",
+    element: <Suspense fallback={albumGalleryFallback}><AlbumGalleryStudioPage /></Suspense>,
   },
 
   // Paper player — current paths

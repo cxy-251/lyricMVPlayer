@@ -21,6 +21,10 @@ export const StudioHomePage: React.FC = () => {
             <span>Papers</span>
             <strong>Paper Player</strong>
           </Link>
+          <Link className="studio-index__item" to="/studio/album-gallery">
+            <span>Albums</span>
+            <strong>Album Gallery</strong>
+          </Link>
         </div>
       </section>
     </main>

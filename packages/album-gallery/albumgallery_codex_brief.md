@@ -168,6 +168,18 @@ Remotion composition 需要支持 props：
 9. 音乐结束后画面回到 Gallery。
 10. 视频总时长跟随目标音乐时长自动变化。
 
+## 当前实现结构
+
+`AlbumGalleryExperience.tsx` 只负责时间轴、选中音乐、Gallery/Player 状态切换和 Remotion frame 映射。
+
+`GalleryEntry.tsx` 负责音乐入口 Gallery：10 张封面 Cover Flow、鼠标拖拽、滚轮切换、点击进入播放器、底部迷你播放器。
+
+`VinylPlayer.tsx` 负责 1920×1080 Remotion 播放画面：封面、黑胶、唱针、主题色、播放进度和控制条。黑胶转速当前使用 `1.1deg/frame`，避免早期版本过快。
+
+`effects.css` 只保留 Tailwind 不适合表达的效果：专辑厚度、黑胶纹理/沟槽/高光、唱针旋转原点。普通布局、间距、文字、面板、按钮和响应式尺寸都应优先写在 Tailwind className 中。
+
+`src/styles/tailwind.css` 必须包含 `../../packages/album-gallery/**/*.{js,ts,jsx,tsx,html}`，否则远程构建时 album-gallery 的 Tailwind class 不会进入编译结果。
+
 ## 质量重点
 
 质感优先级：Gallery 空间排布、专辑厚度、相机缓动、封面清晰度、黑胶唱片纹理、唱针动作、返回 Gallery 的收束感。

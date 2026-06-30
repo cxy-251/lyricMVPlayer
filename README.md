@@ -53,6 +53,7 @@
   - `http://127.0.0.1:3212/studio` (工作室首页)
   - `http://127.0.0.1:3212/studio/effects` (特效实验室)
   - `http://127.0.0.1:3212/studio/papers` (论文视频工作室)
+  - `http://127.0.0.1:3212/studio/album-gallery` (专辑 Gallery / 黑胶播放器视频模板)
 
 - `pnpm run dev:web`
   仅启动 Vite 本地 Web 应用，不开启歌单状态同步 API。
