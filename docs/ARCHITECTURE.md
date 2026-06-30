@@ -27,6 +27,7 @@
 - `src/`: The unified Web Studio and Remotion roots.
   - `src/web/`: The Vite studio frontend (Paper Player, Effect Lab, etc).
   - `src/remotion/`: The Remotion renderer entry points.
+- `packages/web3dlab/`: Browser-native Web3D effect lab demos. Some demos include small Blender-generated `.glb` runtime assets with local `scripts/*.py` regeneration scripts. The current demo list is tracked in `docs/WEB3DLAB_DEMOS.md`.
 
 ## 3. Pipeline Stages
 

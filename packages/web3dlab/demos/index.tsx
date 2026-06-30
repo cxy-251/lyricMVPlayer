@@ -73,6 +73,108 @@ import {paperThreeLifeMetadata} from './023-paper-three-life/metadata';
 import Demo024PaperThreeParticle from './024-paper-three-particle/024-PaperThreeParticle';
 import {paperThreeParticleMetadata} from './024-paper-three-particle/metadata';
 
+import Demo025ASCIIShapeRenderer from './025-ascii-shape-renderer/025-ASCIIShapeRenderer';
+import {asciiShapeRendererMetadata} from './025-ascii-shape-renderer/metadata';
+
+import Demo026CodeMeltdown from './026-code-meltdown/026-CodeMeltdown';
+import {codeMeltdownMetadata} from './026-code-meltdown/metadata';
+
+import Demo027FluidNeonShader from './027-fluid-neon-shader/027-FluidNeonShader';
+import {fluidNeonShaderMetadata} from './027-fluid-neon-shader/metadata';
+
+import Demo028GoldParticleSphere from './028-gold-particle-sphere/028-GoldParticleSphere';
+import {goldParticleSphereMetadata} from './028-gold-particle-sphere/metadata';
+
+import Demo029ResonancePendulumLab from './029-resonance-pendulum-lab/029-ResonancePendulumLab';
+import {resonancePendulumLabMetadata} from './029-resonance-pendulum-lab/metadata';
+
+import Demo030ColorSortingParticles from './030-color-sorting-particles/030-ColorSortingParticles';
+import {colorSortingParticlesMetadata} from './030-color-sorting-particles/metadata';
+
+import Demo031AsciiMotionCards from './031-ascii-motion-cards/031-AsciiMotionCards';
+import {asciiMotionCardsMetadata} from './031-ascii-motion-cards/metadata';
+
+import Demo032ParametricJellyfish from './032-parametric-jellyfish/032-ParametricJellyfish';
+import {parametricJellyfishMetadata} from './032-parametric-jellyfish/metadata';
+
+import Demo033GeometricBreathing from './033-geometric-breathing/033-GeometricBreathing';
+import {geometricBreathingMetadata} from './033-geometric-breathing/metadata';
+
+import Demo034RecursiveJuggler from './034-recursive-juggler/034-RecursiveJuggler';
+import {recursiveJugglerMetadata} from './034-recursive-juggler/metadata';
+
+import Demo035TrajectoryDataCinema from './035-trajectory-data-cinema/035-TrajectoryDataCinema';
+import {trajectoryDataCinemaMetadata} from './035-trajectory-data-cinema/metadata';
+
+import Demo036SimulationUniverse from './036-simulation-universe/036-SimulationUniverse';
+import {simulationUniverseMetadata} from './036-simulation-universe/metadata';
+
+import Demo037POMBubbles from './037-pom-bubbles/037-POMBubbles';
+import {pomBubblesMetadata} from './037-pom-bubbles/metadata';
+
+import Demo038MarbleMusicMachine from './038-marble-music-machine/038-MarbleMusicMachine';
+import {marbleMusicMachineMetadata} from './038-marble-music-machine/metadata';
+
+import Demo039AirSurfaceMouse from './039-air-surface-mouse/039-AirSurfaceMouse';
+import {airSurfaceMouseMetadata} from './039-air-surface-mouse/metadata';
+
+import Demo040SoftBotanicalCompositor from './040-soft-botanical-compositor/040-SoftBotanicalCompositor';
+import {softBotanicalCompositorMetadata} from './040-soft-botanical-compositor/metadata';
+
+import Demo041AnimeLightningCity from './041-anime-lightning-city/041-AnimeLightningCity';
+import {animeLightningCityMetadata} from './041-anime-lightning-city/metadata';
+
+import Demo042ProbeDensityVisualControl from './042-probe-density-visual-control/042-ProbeDensityVisualControl';
+import {probeDensityVisualControlMetadata} from './042-probe-density-visual-control/metadata';
+
+import Demo043MetaballLiquidUI from './043-metaball-liquid-ui/043-MetaballLiquidUI';
+import {metaballLiquidUIMetadata} from './043-metaball-liquid-ui/metadata';
+
+import Demo044PrismAlbumMotion from './044-prism-album-motion/044-PrismAlbumMotion';
+import {prismAlbumMotionMetadata} from './044-prism-album-motion/metadata';
+
+import Demo045LenticularHoloCard from './045-lenticular-holo-card/045-LenticularHoloCard';
+import {lenticularHoloCardMetadata} from './045-lenticular-holo-card/metadata';
+
+import Demo046ALifeParticleSelection from './046-alife-particle-selection/046-ALifeParticleSelection';
+import {alifeParticleSelectionMetadata} from './046-alife-particle-selection/metadata';
+
+import Demo047OrganicSeedformMotion from './047-organic-seedform-motion/047-OrganicSeedformMotion';
+import {organicSeedformMotionMetadata} from './047-organic-seedform-motion/metadata';
+
+import Demo048ContourGeometryMotion from './048-contour-geometry-motion/048-ContourGeometryMotion';
+import {contourGeometryMotionMetadata} from './048-contour-geometry-motion/metadata';
+
+import Demo049WebGPUPhysicsInstanceLab from './049-webgpu-physics-instance-lab/049-WebGPUPhysicsInstanceLab';
+import {webgpuPhysicsInstanceLabMetadata} from './049-webgpu-physics-instance-lab/metadata';
+
+import Demo050WeatherSnowScene from './050-weather-snow-scene/050-WeatherSnowScene';
+import {weatherSnowSceneMetadata} from './050-weather-snow-scene/metadata';
+
+import Demo051ReferenceCameraConsole from './051-reference-camera-console/051-ReferenceCameraConsole';
+import {referenceCameraConsoleMetadata} from './051-reference-camera-console/metadata';
+
+import Demo052HandPulledThoughtSculpture from './052-hand-pulled-thought-sculpture/052-HandPulledThoughtSculpture';
+import {handPulledThoughtSculptureMetadata} from './052-hand-pulled-thought-sculpture/metadata';
+
+import Demo053PlasmaFieldReconnection from './053-plasma-field-reconnection/053-PlasmaFieldReconnection';
+import {plasmaFieldReconnectionMetadata} from './053-plasma-field-reconnection/metadata';
+
+import Demo054VisualInspectorControlLayer from './054-visual-inspector-control-layer/054-VisualInspectorControlLayer';
+import {visualInspectorControlLayerMetadata} from './054-visual-inspector-control-layer/metadata';
+
+import Demo055AsciiMaskPainter from './055-ascii-mask-painter/055-AsciiMaskPainter';
+import {asciiMaskPainterMetadata} from './055-ascii-mask-painter/metadata';
+
+import Demo056CollectiveTrajectories from './056-collective-trajectories/056-CollectiveTrajectories';
+import {collectiveTrajectoriesMetadata} from './056-collective-trajectories/metadata';
+
+import Demo057SumOfSquaresProof from './057-sum-of-squares-proof/057-SumOfSquaresProof';
+import {sumOfSquaresProofMetadata} from './057-sum-of-squares-proof/metadata';
+
+import Demo058CinematicStyleSequence from './058-cinematic-style-sequence/058-CinematicStyleSequence';
+import {cinematicStyleSequenceMetadata} from './058-cinematic-style-sequence/metadata';
+
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -141,4 +243,38 @@ export const demos: DemoDefinition[] = [
   { ...paperSnakeGridMetadata, Component: createPaperDemo(Demo022PaperSnakeGrid) },
   { ...paperThreeLifeMetadata, Component: createPaperDemo(Demo023PaperThreeLife) },
   { ...paperThreeParticleMetadata, Component: createPaperDemo(Demo024PaperThreeParticle) },
+  { ...asciiShapeRendererMetadata, Component: Demo025ASCIIShapeRenderer },
+  { ...codeMeltdownMetadata, Component: Demo026CodeMeltdown },
+  { ...fluidNeonShaderMetadata, Component: Demo027FluidNeonShader },
+  { ...goldParticleSphereMetadata, Component: Demo028GoldParticleSphere },
+  { ...resonancePendulumLabMetadata, Component: Demo029ResonancePendulumLab },
+  { ...colorSortingParticlesMetadata, Component: Demo030ColorSortingParticles },
+  { ...asciiMotionCardsMetadata, Component: Demo031AsciiMotionCards },
+  { ...parametricJellyfishMetadata, Component: Demo032ParametricJellyfish },
+  { ...geometricBreathingMetadata, Component: Demo033GeometricBreathing },
+  { ...recursiveJugglerMetadata, Component: Demo034RecursiveJuggler },
+  { ...trajectoryDataCinemaMetadata, Component: Demo035TrajectoryDataCinema },
+  { ...simulationUniverseMetadata, Component: Demo036SimulationUniverse },
+  { ...pomBubblesMetadata, Component: Demo037POMBubbles },
+  { ...marbleMusicMachineMetadata, Component: Demo038MarbleMusicMachine },
+  { ...airSurfaceMouseMetadata, Component: Demo039AirSurfaceMouse },
+  { ...softBotanicalCompositorMetadata, Component: Demo040SoftBotanicalCompositor },
+  { ...animeLightningCityMetadata, Component: Demo041AnimeLightningCity },
+  { ...probeDensityVisualControlMetadata, Component: Demo042ProbeDensityVisualControl },
+  { ...metaballLiquidUIMetadata, Component: Demo043MetaballLiquidUI },
+  { ...prismAlbumMotionMetadata, Component: Demo044PrismAlbumMotion },
+  { ...lenticularHoloCardMetadata, Component: Demo045LenticularHoloCard },
+  { ...alifeParticleSelectionMetadata, Component: Demo046ALifeParticleSelection },
+  { ...organicSeedformMotionMetadata, Component: Demo047OrganicSeedformMotion },
+  { ...contourGeometryMotionMetadata, Component: Demo048ContourGeometryMotion },
+  { ...webgpuPhysicsInstanceLabMetadata, Component: Demo049WebGPUPhysicsInstanceLab },
+  { ...weatherSnowSceneMetadata, Component: Demo050WeatherSnowScene },
+  { ...referenceCameraConsoleMetadata, Component: Demo051ReferenceCameraConsole },
+  { ...handPulledThoughtSculptureMetadata, Component: Demo052HandPulledThoughtSculpture },
+  { ...plasmaFieldReconnectionMetadata, Component: Demo053PlasmaFieldReconnection },
+  { ...visualInspectorControlLayerMetadata, Component: Demo054VisualInspectorControlLayer },
+  { ...asciiMaskPainterMetadata, Component: Demo055AsciiMaskPainter },
+  { ...collectiveTrajectoriesMetadata, Component: Demo056CollectiveTrajectories },
+  { ...sumOfSquaresProofMetadata, Component: Demo057SumOfSquaresProof },
+  { ...cinematicStyleSequenceMetadata, Component: Demo058CinematicStyleSequence },
 ];

@@ -25,12 +25,14 @@
 
 1. [AGENTS.md](./AGENTS.md)
 2. [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
-3. [PROJECT_REQUIREMENTS.md](./PROJECT_REQUIREMENTS.md)
+3. [docs/WEB3DLAB_DEMOS.md](./docs/WEB3DLAB_DEMOS.md)
+4. [PROJECT_REQUIREMENTS.md](./PROJECT_REQUIREMENTS.md)
 
 ## 核心控制文件
 
 - [AGENTS.md](./AGENTS.md): AI Agent 需遵循的最高优先级工作流规则。
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): 项目架构、作用域、地图以及状态说明。
+- [docs/WEB3DLAB_DEMOS.md](./docs/WEB3DLAB_DEMOS.md): Web3D Lab demo 清单。
 - [tasks/TASK_TEMPLATE.md](./tasks/TASK_TEMPLATE.md): 用于未来开发任务的模板规范。
 
 ## pnpm 常用命令
@@ -116,10 +118,26 @@
 - `pnpm run typecheck`
   执行 TypeScript 静态类型检查，不进行打包。
 
+- `pnpm run test:visual-effects`
+  校验 Web3D Lab demo 的 metadata、注册入口和 `docs/WEB3DLAB_DEMOS.md` 清单覆盖情况。
+
 - `pnpm run render`
   将当前选中的歌曲资源直接渲染输出为: `artifacts/songsout/<song-folder-name>.mp4`
 
 所有命令均需在项目根目录 `/Users/cxy251/Code/04AIMedia/lyricMVPlayer` 下执行。
+
+## Web3D Lab Blender 资产
+
+部分 Web3D Lab demo 使用本机 Blender 生成轻量 `.glb` 运行时资产。仓库只保留必要的脚本和 Web 预览必须加载的 `.glb`，不提交 `.blend`、渲染缓存、视频中间文件或批量导出物。
+
+当前 Blender 资产脚本：
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python packages/web3dlab/demos/040-soft-botanical-compositor/scripts/make_botanical_asset.py
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python packages/web3dlab/demos/041-anime-lightning-city/scripts/make_city_asset.py
+```
+
+如果本地沙盒内 Blender 因 Metal/GPU 探测失败，需要在可访问本机 GPU 的环境里运行同样命令。Blender Python 脚本必须能从仓库根目录重生成对应 demo 的运行时资产。
 
 ## Python 数据预处理
 
