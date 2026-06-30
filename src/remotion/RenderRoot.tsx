@@ -9,6 +9,12 @@ import {
   getAlbumGalleryDurationInFrames,
   getAlbumGallerySelectedTrack,
 } from "../../packages/album-gallery";
+import {
+  Web3DLabComposition,
+  defaultWeb3DLabCompositionProps,
+  getWeb3DLabDurationInFrames,
+} from "../../packages/web3dlab";
+import type {Web3DLabCompositionProps} from "../../packages/web3dlab";
 
 import {previewCompositionProps} from "./preview-composition-props";
 
@@ -46,6 +52,23 @@ export const RenderRoot: React.FC = () => {
           return {
             fps,
             durationInFrames: getAlbumGalleryDurationInFrames({...props, fps}),
+          };
+        }}
+      />
+
+      <Composition
+        id="Web3DLab"
+        component={Web3DLabComposition}
+        width={1920}
+        height={1080}
+        fps={defaultWeb3DLabCompositionProps.fps ?? 30}
+        durationInFrames={getWeb3DLabDurationInFrames(defaultWeb3DLabCompositionProps)}
+        defaultProps={defaultWeb3DLabCompositionProps}
+        calculateMetadata={({props}) => {
+          const web3dProps = props as Web3DLabCompositionProps;
+          return {
+            fps: web3dProps.fps ?? defaultWeb3DLabCompositionProps.fps ?? 30,
+            durationInFrames: getWeb3DLabDurationInFrames(web3dProps),
           };
         }}
       />

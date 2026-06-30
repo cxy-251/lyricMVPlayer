@@ -1,4 +1,4 @@
-import type {AlbumGalleryTrack, PublicLibraryManifest, PublicRenderInput} from "./types";
+import type {AlbumGalleryTrack, PublicLibraryManifest, PublicRenderInput} from "../types";
 
 const palette = [
   "#83b7ff",

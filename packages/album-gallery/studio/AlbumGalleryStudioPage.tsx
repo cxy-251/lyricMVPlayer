@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router";
 
-import {AlbumGalleryExperience} from "./AlbumGalleryExperience";
-import {loadAlbumTracksFromPublicManifest} from "./data";
-import {buildAlbumGalleryTimeline, clamp, normalizeTrackIndex} from "./timing";
-import type {AlbumGalleryTrack} from "./types";
+import {AlbumGalleryExperience} from "../components/AlbumGalleryExperience";
+import {loadAlbumTracksFromPublicManifest} from "../data/albumTracks";
+import {buildAlbumGalleryTimeline, clamp, normalizeTrackIndex} from "../utils/timing";
+import type {AlbumGalleryTrack} from "../types";
 
 export const AlbumGalleryStudioPage: React.FC = () => {
   const [tracks, setTracks] = React.useState<AlbumGalleryTrack[]>([]);

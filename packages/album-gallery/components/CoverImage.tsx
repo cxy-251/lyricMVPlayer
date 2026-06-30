@@ -1,6 +1,6 @@
 import React from "react";
 
-import type {AlbumGalleryTrack} from "./types";
+import type {AlbumGalleryTrack} from "../types";
 
 type CoverImageProps = {
   track: AlbumGalleryTrack;

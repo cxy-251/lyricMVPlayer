@@ -4,7 +4,7 @@ import {ChevronLeft, ListMusic, Menu, Search} from "lucide-react";
 import {CoverImage} from "./CoverImage";
 import {GalleryEntry} from "./GalleryEntry";
 import {VinylPlayer} from "./VinylPlayer";
-import {clampIndex, playerThemes} from "./album-gallery-visuals";
+import {clampIndex, playerThemes} from "../utils/visuals";
 import {
   buildAlbumGalleryTimeline,
   clamp,
@@ -12,9 +12,9 @@ import {
   easeOutExpo,
   lerp,
   normalizeTrackIndex,
-} from "./timing";
-import type {AlbumGalleryTrack} from "./types";
-import "./effects.css";
+} from "../utils/timing";
+import type {AlbumGalleryTrack} from "../types";
+import "../styles/effects.css";
 
 type AlbumGalleryExperienceProps = {
   tracks: AlbumGalleryTrack[];

@@ -1,5 +1,16 @@
 # Web3D Lab Demo List
 
+## Remotion 导出
+
+Web3D Lab demo 可以通过统一的 render 命令导出 1920 x 1080 视频，不走歌词视频 CSV 队列：
+
+```bash
+pnpm run render -- --target web3dlab --demo cinematic-style-sequence --duration-seconds 10
+pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames 300 --output artifacts/songsout/web3dlab-fluid-cursor-field.mp4
+```
+
+默认输出为 `artifacts/songsout/web3dlab-<demo-id>.mp4`。当前 Remotion 入口复用 Web3D demo registry；完全依赖实时 `useFrame` 或 `requestAnimationFrame` 的 demo 后续可继续逐个升级为 frame-deterministic。
+
 | Demo | 效果目标 | 主要方法 | 复查指标 |
 | --- | --- | --- | --- |
 | 001 AI Blender: Fibonacci Orb | 展示黄金角粒子球的生长动画。 | Blender Python 生成的 glTF/关键帧动画，R3F 加载并提供相机控制。 | 物体不是静态球壳，能看到生长或播放状态变化；拖拽和缩放可用。 |

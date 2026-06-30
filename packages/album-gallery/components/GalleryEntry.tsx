@@ -2,9 +2,9 @@ import React from "react";
 import {Play, Volume2} from "lucide-react";
 
 import {CoverImage} from "./CoverImage";
-import {buildAlbumTransform, clampIndex} from "./album-gallery-visuals";
-import {formatDuration, lerp} from "./timing";
-import type {AlbumGalleryTrack} from "./types";
+import {buildAlbumTransform, clampIndex} from "../utils/visuals";
+import {formatDuration, lerp} from "../utils/timing";
+import type {AlbumGalleryTrack} from "../types";
 
 type GalleryEntryProps = {
   tracks: AlbumGalleryTrack[];

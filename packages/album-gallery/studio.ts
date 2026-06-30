@@ -1,1 +1,1 @@
-export {AlbumGalleryStudioPage} from "./AlbumGalleryStudioPage";
+export {AlbumGalleryStudioPage} from "./studio/AlbumGalleryStudioPage";

@@ -2,9 +2,9 @@ import React from "react";
 import {ChevronLeft, Pause, SkipBack, SkipForward} from "lucide-react";
 
 import {CoverImage} from "./CoverImage";
-import type {AlbumGalleryPlayerTheme} from "./album-gallery-visuals";
-import {formatDuration, lerp} from "./timing";
-import type {AlbumGalleryTimeline, AlbumGalleryTrack} from "./types";
+import type {AlbumGalleryPlayerTheme} from "../utils/visuals";
+import {formatDuration, lerp} from "../utils/timing";
+import type {AlbumGalleryTimeline, AlbumGalleryTrack} from "../types";
 
 type VinylPlayerProps = {
   track: AlbumGalleryTrack;

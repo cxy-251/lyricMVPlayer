@@ -1,10 +1,10 @@
 import React from "react";
 import {AbsoluteFill, Html5Audio, Sequence, useCurrentFrame, useVideoConfig} from "remotion";
 
-import {AlbumGalleryExperience} from "./AlbumGalleryExperience";
-import {demoAlbumTracks, defaultAlbumGalleryTrackId} from "./demo-tracks";
-import {buildAlbumGalleryTimeline, normalizeTrackIndex} from "./timing";
-import type {AlbumGalleryCompositionProps} from "./types";
+import {AlbumGalleryExperience} from "../components/AlbumGalleryExperience";
+import {demoAlbumTracks, defaultAlbumGalleryTrackId} from "../data/demoTracks";
+import {buildAlbumGalleryTimeline, normalizeTrackIndex} from "../utils/timing";
+import type {AlbumGalleryCompositionProps} from "../types";
 
 export const getAlbumGalleryCompositionTracks = (tracks?: AlbumGalleryCompositionProps["tracks"]) => (
   tracks && tracks.length > 0 ? tracks : demoAlbumTracks

@@ -1,11 +1,11 @@
-export {AlbumGalleryComposition} from "./AlbumGalleryComposition";
+export {AlbumGalleryComposition} from "./composition/AlbumGalleryComposition";
 export {
   defaultAlbumGalleryCompositionProps,
   getAlbumGalleryCompositionTracks,
   getAlbumGalleryDurationInFrames,
   getAlbumGallerySelectedTrack,
-} from "./AlbumGalleryComposition";
-export {AlbumGalleryExperience} from "./AlbumGalleryExperience";
-export {AlbumGalleryStudioPage} from "./AlbumGalleryStudioPage";
-export {demoAlbumTracks, defaultAlbumGalleryTrackId} from "./demo-tracks";
+} from "./composition/AlbumGalleryComposition";
+export {AlbumGalleryExperience} from "./components/AlbumGalleryExperience";
+export {AlbumGalleryStudioPage} from "./studio/AlbumGalleryStudioPage";
+export {demoAlbumTracks, defaultAlbumGalleryTrackId} from "./data/demoTracks";
 export type {AlbumGalleryCompositionProps, AlbumGalleryTrack} from "./types";

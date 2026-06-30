@@ -125,6 +125,16 @@
 - `pnpm run render`
   将当前选中的歌曲资源直接渲染输出为: `artifacts/songsout/<song-folder-name>.mp4`
 
+  `render` 也支持显式目标参数，不影响 `render:queue` 的 CSV 歌词视频队列：
+
+  ```bash
+  pnpm run render -- --target album
+  pnpm run render -- --target album --selected-track-id "<song-folder-name>"
+  pnpm run render -- --target web3dlab --demo cinematic-style-sequence --duration-seconds 10
+  ```
+
+  Album Gallery 输出默认写到 `artifacts/songsout/album-gallery*.mp4`，Web3D Lab 输出默认写到 `artifacts/songsout/web3dlab-*.mp4`。也可以追加 `--output <path>` 指定文件。
+
 所有命令均需在项目根目录 `/Users/cxy251/Code/04AIMedia/lyricMVPlayer` 下执行。
 
 ## Web3D Lab Blender 资产

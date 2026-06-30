@@ -16,6 +16,26 @@ const ensureDir = (targetPath) => {
   fs.mkdirSync(targetPath, {recursive: true});
 };
 
+const copyDir = (sourceDir, targetDir) => {
+  if (!fs.existsSync(sourceDir)) {
+    return;
+  }
+
+  ensureDir(targetDir);
+  for (const entry of fs.readdirSync(sourceDir, {withFileTypes: true})) {
+    if (entry.name.startsWith(".")) {
+      continue;
+    }
+    const sourcePath = path.join(sourceDir, entry.name);
+    const targetPath = path.join(targetDir, entry.name);
+    if (entry.isDirectory()) {
+      copyDir(sourcePath, targetPath);
+    } else if (entry.isFile()) {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  }
+};
+
 const resetDir = (targetPath) => {
   fs.rmSync(targetPath, {recursive: true, force: true});
   ensureDir(targetPath);
@@ -266,6 +286,7 @@ const songDirNames = demoOnly
 
 resetDir(publicRoot);
 ensureDir(path.join(publicRoot, "songs"));
+copyDir(path.join(artifactsRoot, "paper-video", "images"), path.join(publicRoot, "artifacts", "paper-video", "images"));
 
 const songs = [];
 
