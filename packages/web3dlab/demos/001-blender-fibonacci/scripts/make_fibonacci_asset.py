@@ -32,61 +32,65 @@ def create_material(name, base_color, metallic, roughness, emission_color, emiss
     return mat
 
 mat_gold = create_material("gold_emissive", (1.0, 0.8, 0.2, 1.0), 0.5, 0.3, (1.0, 0.8, 0.2, 1.0), 1.5)
-mat_core = create_material("core_emissive", (1.0, 0.95, 0.8, 1.0), 0.1, 0.4, (1.0, 0.95, 0.8, 1.0), 3.0)
-mat_dark = create_material("dark_metal", (0.1, 0.1, 0.1, 1.0), 0.9, 0.3, (0, 0, 0, 1), 0.0)
 
-# 3. Fibonacci Spheres
-count = 800
-scale = 0.3
+# 3. Fibonacci Spheres (VORTEX)
+count = 1000
+scale = 0.5
 golden_angle = math.pi * (3.0 - math.sqrt(5.0))
 
-# Create a base sphere to copy for performance
+# Create a base sphere
 bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, radius=1)
 base_sphere = bpy.context.active_object
 base_sphere.data.materials.append(mat_gold)
 bpy.ops.object.shade_smooth()
 
 collection = bpy.context.collection
-
-# Generate 800 orbs
 bpy.context.scene.frame_start = 1
-bpy.context.scene.frame_end = 180
+bpy.context.scene.frame_end = 200
+total_frames = 200
 
 for i in range(count):
-    r = math.sqrt(i) * scale
-    theta = i * golden_angle
-    x = r * math.cos(theta)
-    y = r * math.sin(theta)
-    z = 0.05 * math.sin(i * 0.12)
-    
     orb = base_sphere.copy()
     orb.data = base_sphere.data.copy()
     orb.name = f"fib_orb_{i:04d}"
-    
-    orb.location = (x, y, z)
-    # slight size variation
-    target_radius = 0.05 + 0.02 * math.sin(i * 0.5)
-    
     collection.objects.link(orb)
     
-    # Animate scale for dynamic growth effect
-    start_frame = int(1 + (i / count) * 120)
+    # We animate the orb's "index" along the Fibonacci spiral over time.
+    # This creates a continuous flowing vortex!
+    # Each orb is offset in time
+    time_offset = i / count
     
-    # Initial state (invisible)
-    orb.scale = (0, 0, 0)
-    orb.keyframe_insert(data_path="scale", frame=1)
-    
-    if start_frame > 1:
-        orb.keyframe_insert(data_path="scale", frame=start_frame - 1)
+    for frame in range(1, total_frames + 1, 10):
+        # Calculate a virtual index `v_i` that moves outwards over time
+        progress = (frame / total_frames + time_offset) % 1.0
+        v_i = progress * count
         
-    # Overshoot effect
-    overshoot_radius = target_radius * 1.3
-    orb.scale = (overshoot_radius, overshoot_radius, overshoot_radius)
-    orb.keyframe_insert(data_path="scale", frame=start_frame + 12)
-    
-    # Settle to final size
-    orb.scale = (target_radius, target_radius, target_radius)
-    orb.keyframe_insert(data_path="scale", frame=start_frame + 25)
+        # Vortex Math
+        target_r = math.sqrt(v_i) * scale
+        theta = v_i * golden_angle
+        
+        target_x = target_r * math.cos(theta)
+        target_y = target_r * math.sin(theta)
+        
+        # Z axis forms a deep funnel (Vortex)
+        # Deep in the center, curving outwards and upwards
+        target_z = (target_r * 0.4)**2 - 8.0
+        
+        # Scale: smaller in the center, bigger in the middle, then shrinks at the edge to fade out
+        if progress < 0.05:
+            target_scale = progress / 0.05 * 0.15
+        elif progress > 0.9:
+            target_scale = (1.0 - progress) / 0.1 * 0.15
+        else:
+            target_scale = 0.15
+            
+        orb.scale = (target_scale, target_scale, target_scale)
+        orb.location = (target_x, target_y, target_z)
+        
+        orb.keyframe_insert(data_path="scale", frame=frame)
+        orb.keyframe_insert(data_path="location", frame=frame)
+        
+    # (Animation interpolation defaults to BEZIER, which is smooth)
 
 # Remove base sphere
 bpy.data.objects.remove(base_sphere, do_unlink=True)

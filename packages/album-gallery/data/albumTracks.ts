@@ -63,18 +63,58 @@ export const loadAlbumTracksFromPublicManifest = async (): Promise<{
   currentSongDirName: string;
   tracks: AlbumGalleryTrack[];
 }> => {
-  const manifest = await fetchJson<PublicLibraryManifest>("/library-manifest.json");
-  const renderInputs = await Promise.all(
-    manifest.songs.map((song) => fetchJson<PublicRenderInput>(song.renderInputUrl)),
+  let manifest: PublicLibraryManifest;
+  try {
+    manifest = await fetchJson<PublicLibraryManifest>("/library-manifest.json");
+  } catch (err: any) {
+    throw new Error(`Failed to fetch /library-manifest.json: ${err?.message || err}`);
+  }
+
+  let gallerySongs = manifest.songs;
+  const demoPlaylist = manifest.customPlaylists?.find(p => p.id === "demo");
+  if (demoPlaylist) {
+    if (demoPlaylist.trackIds === "__ALL__") {
+      gallerySongs = manifest.songs;
+    } else if (Array.isArray(demoPlaylist.trackIds)) {
+      const demoSet = new Set(demoPlaylist.trackIds);
+      gallerySongs = manifest.songs.filter(s => demoSet.has(s.id));
+    }
+  } else {
+    // Fallback to first 10 if no demo playlist is found
+    gallerySongs = manifest.songs.slice(0, 10);
+  }
+
+  // Fetch all, but catch errors and return null for failed ones
+  const renderInputsOrNull = await Promise.all(
+    gallerySongs.map(async (song) => {
+      try {
+        return await fetchJson<PublicRenderInput>(song.renderInputUrl);
+      } catch (err: any) {
+        console.error(`Failed to fetch ${song.renderInputUrl}: ${err?.message || err}`);
+        return null; // Return null instead of throwing to avoid crashing the whole gallery
+      }
+    })
   );
-  const tracks = manifest.songs.map((song, index) =>
-    createAlbumTrack({
-      id: song.id,
-      index,
-      title: song.title,
-      artist: song.artist,
-      renderInput: renderInputs[index],
-    }),
-  );
+
+  const tracks: AlbumGalleryTrack[] = [];
+  gallerySongs.forEach((song, index) => {
+    const renderInput = renderInputsOrNull[index];
+    if (renderInput) {
+      try {
+        tracks.push(
+          createAlbumTrack({
+            id: song.id,
+            index: tracks.length,
+            title: song.title,
+            artist: song.artist,
+            renderInput,
+          })
+        );
+      } catch (err) {
+        console.error("Failed to create track for", song.id, err);
+      }
+    }
+  });
+
   return {currentSongDirName: manifest.currentSongDirName, tracks};
 };

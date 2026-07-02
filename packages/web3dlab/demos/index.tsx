@@ -175,6 +175,9 @@ import {sumOfSquaresProofMetadata} from './057-sum-of-squares-proof/metadata';
 import Demo058CinematicStyleSequence from './058-cinematic-style-sequence/058-CinematicStyleSequence';
 import {cinematicStyleSequenceMetadata} from './058-cinematic-style-sequence/metadata';
 
+import Demo059PerfectSphere from './059-perfect-sphere/059-PerfectSphere';
+import {perfectSphereMetadata} from './059-perfect-sphere/metadata';
+
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -277,4 +280,5 @@ export const demos: DemoDefinition[] = [
   { ...collectiveTrajectoriesMetadata, Component: Demo056CollectiveTrajectories },
   { ...sumOfSquaresProofMetadata, Component: Demo057SumOfSquaresProof },
   { ...cinematicStyleSequenceMetadata, Component: Demo058CinematicStyleSequence },
+  { ...perfectSphereMetadata, Component: Demo059PerfectSphere },
 ];

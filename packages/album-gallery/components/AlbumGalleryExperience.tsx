@@ -110,18 +110,22 @@ export const AlbumGalleryExperience: React.FC<AlbumGalleryExperienceProps> = ({
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.32),rgba(255,255,255,0)_42%,rgba(0,0,0,0.08))]" />
 
       <header className={`absolute inset-x-0 ${topbarTop} z-40 mx-auto flex w-[min(1440px,calc(100%-48px))] items-center justify-between`}>
-        <button
-          className={`grid h-11 w-11 place-items-center rounded-lg border shadow-sm backdrop-blur-xl ${
-            playerChrome && playerTheme.ink === "light"
-              ? "border-white/10 bg-white/10 text-white"
-              : "border-black/10 bg-white/70 text-neutral-950"
-          }`}
-          type="button"
-          aria-label={playerChrome ? "Back to gallery" : "Open library"}
-          onClick={playerChrome ? onBackToGallery : undefined}
-        >
-          {playerChrome ? <ChevronLeft size={21} strokeWidth={2.1} /> : <Menu size={20} strokeWidth={2.1} />}
-        </button>
+        {playerChrome ? (
+          <button
+            className={`grid h-11 w-11 place-items-center rounded-lg border shadow-sm backdrop-blur-xl ${
+              playerTheme.ink === "light"
+                ? "border-white/10 bg-white/10 text-white"
+                : "border-black/10 bg-white/70 text-neutral-950"
+            }`}
+            type="button"
+            aria-label="Back to gallery"
+            onClick={onBackToGallery}
+          >
+            <ChevronLeft size={21} strokeWidth={2.1} />
+          </button>
+        ) : (
+          <div className="h-11 w-11" />
+        )}
         <div className={`min-w-0 text-center ${topbarTextClass}`}>
           <strong className="block truncate text-base font-semibold">{playerChrome ? "Now Playing" : "Album Gallery"}</strong>
           <span className={`mt-1 block truncate text-xs font-medium ${playerChrome && playerTheme.ink === "light" ? "text-white/60" : "text-neutral-500"}`}>

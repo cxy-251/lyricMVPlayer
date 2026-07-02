@@ -44,6 +44,11 @@ export type PublicLibraryManifestSong = {
 export type PublicLibraryManifest = {
   currentSongDirName: string;
   songs: PublicLibraryManifestSong[];
+  customPlaylists?: {
+    id: string;
+    name: string;
+    trackIds: string[] | "__ALL__";
+  }[];
 };
 
 export type PublicRenderInput = {
