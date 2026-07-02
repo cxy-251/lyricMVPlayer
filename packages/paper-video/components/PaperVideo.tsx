@@ -42,11 +42,8 @@ const resolveAssetSrc = (assetPath?: string | null) => {
     }
   }
 
-  if (assetPath.startsWith("/")) {
-    return assetPath;
-  }
-
-  return staticFile(assetPath);
+  const normalizedPath = assetPath.startsWith("/") ? assetPath : `/${assetPath}`;
+  return staticFile(normalizedPath);
 };
 
 const resolveCoverImageSrc = (coverImage?: CoverImageAsset) => {

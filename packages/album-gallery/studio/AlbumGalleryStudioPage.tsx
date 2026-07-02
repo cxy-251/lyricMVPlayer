@@ -11,6 +11,7 @@ export const AlbumGalleryStudioPage: React.FC = () => {
   const [selectedTrackId, setSelectedTrackId] = React.useState("");
   const [galleryIndex, setGalleryIndex] = React.useState(0);
   const [playerOpen, setPlayerOpen] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(true);
   const [frame, setFrame] = React.useState(0);
   const frameRef = React.useRef(0);
 
@@ -32,7 +33,7 @@ export const AlbumGalleryStudioPage: React.FC = () => {
       const timeline = buildAlbumGalleryTimeline(selected, 30);
       const deltaFrames = ((now - last) / 1000) * 30;
       last = now;
-      if (playerOpen) {
+      if (playerOpen && isPlaying) {
         frameRef.current = Math.min(frameRef.current + deltaFrames, timeline.audioFrames);
       }
       setFrame(Math.floor(frameRef.current));
@@ -40,7 +41,7 @@ export const AlbumGalleryStudioPage: React.FC = () => {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playerOpen, selectedTrackId, tracks]);
+  }, [playerOpen, isPlaying, selectedTrackId, tracks]);
 
   const updateGalleryIndex = React.useCallback((nextIndex: number) => {
     if (!tracks.length) return;
@@ -49,6 +50,7 @@ export const AlbumGalleryStudioPage: React.FC = () => {
     setGalleryIndex(next);
     setSelectedTrackId(tracks[rounded]?.id || tracks[0].id);
     setPlayerOpen(false);
+    setIsPlaying(true);
     frameRef.current = 0;
     setFrame(0);
   }, [tracks]);
@@ -58,6 +60,7 @@ export const AlbumGalleryStudioPage: React.FC = () => {
     setGalleryIndex(index);
     setSelectedTrackId(trackId);
     setPlayerOpen(true);
+    setIsPlaying(true);
     frameRef.current = 0;
     setFrame(0);
   }, [tracks]);
@@ -66,6 +69,32 @@ export const AlbumGalleryStudioPage: React.FC = () => {
     setPlayerOpen(false);
     frameRef.current = 0;
     setFrame(0);
+  }, []);
+
+  const handleNextTrack = React.useCallback(() => {
+    if (!tracks.length) return;
+    const currentIndex = normalizeTrackIndex(tracks, selectedTrackId);
+    const nextIndex = (currentIndex + 1) % tracks.length;
+    setSelectedTrackId(tracks[nextIndex].id);
+    setGalleryIndex(nextIndex);
+    frameRef.current = 0;
+    setFrame(0);
+    setIsPlaying(true);
+  }, [tracks, selectedTrackId]);
+
+  const handlePrevTrack = React.useCallback(() => {
+    if (!tracks.length) return;
+    const currentIndex = normalizeTrackIndex(tracks, selectedTrackId);
+    const prevIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    setSelectedTrackId(tracks[prevIndex].id);
+    setGalleryIndex(prevIndex);
+    frameRef.current = 0;
+    setFrame(0);
+    setIsPlaying(true);
+  }, [tracks, selectedTrackId]);
+
+  const togglePlay = React.useCallback(() => {
+    setIsPlaying(p => !p);
   }, []);
 
   if (!tracks.length || !selectedTrackId) {
@@ -92,6 +121,10 @@ export const AlbumGalleryStudioPage: React.FC = () => {
         galleryIndex={galleryIndex}
         playerOpen={playerOpen}
         showPreviewChrome
+        isPlaying={isPlaying}
+        onTogglePlay={togglePlay}
+        onPreviousTrack={handlePrevTrack}
+        onNextTrack={handleNextTrack}
         onGalleryIndexChange={updateGalleryIndex}
         onSelectTrack={setSelectedTrackId}
         onOpenTrack={openTrack}

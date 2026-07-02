@@ -28,6 +28,10 @@ type AlbumGalleryExperienceProps = {
   onSelectTrack?: (trackId: string) => void;
   onOpenTrack?: (trackId: string) => void;
   onBackToGallery?: () => void;
+  isPlaying?: boolean;
+  onTogglePlay?: () => void;
+  onPreviousTrack?: () => void;
+  onNextTrack?: () => void;
 };
 
 export const AlbumGalleryExperience: React.FC<AlbumGalleryExperienceProps> = ({
@@ -42,6 +46,10 @@ export const AlbumGalleryExperience: React.FC<AlbumGalleryExperienceProps> = ({
   onSelectTrack,
   onOpenTrack,
   onBackToGallery,
+  isPlaying = true,
+  onTogglePlay,
+  onPreviousTrack,
+  onNextTrack,
 }) => {
   const safeTracks = tracks.length > 0 ? tracks : [];
   const selectedIndex = normalizeTrackIndex(safeTracks, selectedTrackId);
@@ -109,40 +117,30 @@ export const AlbumGalleryExperience: React.FC<AlbumGalleryExperienceProps> = ({
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.32),rgba(255,255,255,0)_42%,rgba(0,0,0,0.08))]" />
 
-      <header className={`absolute inset-x-0 ${topbarTop} z-40 mx-auto flex w-[min(1440px,calc(100%-48px))] items-center justify-between`}>
-        {playerChrome ? (
-          <button
-            className={`grid h-11 w-11 place-items-center rounded-lg border shadow-sm backdrop-blur-xl ${
-              playerTheme.ink === "light"
-                ? "border-white/10 bg-white/10 text-white"
-                : "border-black/10 bg-white/70 text-neutral-950"
-            }`}
-            type="button"
-            aria-label="Back to gallery"
-            onClick={onBackToGallery}
-          >
-            <ChevronLeft size={21} strokeWidth={2.1} />
-          </button>
-        ) : (
-          <div className="h-11 w-11" />
-        )}
+      {playerChrome && (
+        <button
+          className={`absolute left-5 top-5 z-50 grid h-11 w-11 place-items-center rounded-lg border shadow-sm backdrop-blur-xl ${
+            playerTheme.ink === "light"
+              ? "border-white/10 bg-white/10 text-white"
+              : "border-black/10 bg-white/70 text-neutral-950"
+          }`}
+          type="button"
+          aria-label="Back to gallery"
+          onClick={onBackToGallery}
+        >
+          <ChevronLeft size={21} strokeWidth={2.1} />
+        </button>
+      )}
+
+      <header className={`absolute inset-x-0 ${topbarTop} z-40 mx-auto flex w-[min(1440px,calc(100%-48px))] items-center justify-between pointer-events-none`}>
+        <div className="h-11 w-11" />
         <div className={`min-w-0 text-center ${topbarTextClass}`}>
           <strong className="block truncate text-base font-semibold">{playerChrome ? "Now Playing" : "Album Gallery"}</strong>
           <span className={`mt-1 block truncate text-xs font-medium ${playerChrome && playerTheme.ink === "light" ? "text-white/60" : "text-neutral-500"}`}>
             {playerChrome ? selectedTrack.artist : `${safeTracks.length} albums`}
           </span>
         </div>
-        <button
-          className={`grid h-11 w-11 place-items-center rounded-lg border shadow-sm backdrop-blur-xl ${
-            playerChrome && playerTheme.ink === "light"
-              ? "border-white/10 bg-white/10 text-white"
-              : "border-black/10 bg-white/70 text-neutral-950"
-          }`}
-          type="button"
-          aria-label={playerChrome ? "Queue" : "Search"}
-        >
-          {playerChrome ? <ListMusic size={20} strokeWidth={2.1} /> : <Search size={20} strokeWidth={2.1} />}
-        </button>
+        <div className="h-11 w-11" />
       </header>
 
       <GalleryEntry
@@ -169,6 +167,10 @@ export const AlbumGalleryExperience: React.FC<AlbumGalleryExperienceProps> = ({
         themes={playerThemes}
         interactive={interactive}
         onBackToGallery={onBackToGallery}
+        isPlaying={isPlaying}
+        onTogglePlay={onTogglePlay}
+        onPreviousTrack={onPreviousTrack}
+        onNextTrack={onNextTrack}
       />
     </div>
   );

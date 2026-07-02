@@ -1,5 +1,5 @@
 import React from "react";
-import {ChevronLeft, Pause, SkipBack, SkipForward} from "lucide-react";
+import {ChevronLeft, Pause, Play, SkipBack, SkipForward} from "lucide-react";
 
 import {CoverImage} from "./CoverImage";
 import type {AlbumGalleryPlayerTheme} from "../utils/visuals";
@@ -19,6 +19,10 @@ type VinylPlayerProps = {
   themes: AlbumGalleryPlayerTheme[];
   interactive: boolean;
   onBackToGallery?: () => void;
+  isPlaying?: boolean;
+  onTogglePlay?: () => void;
+  onPreviousTrack?: () => void;
+  onNextTrack?: () => void;
 };
 
 const vinylRotationSpeed = 1.1;
@@ -36,6 +40,10 @@ export const VinylPlayer: React.FC<VinylPlayerProps> = ({
   themes,
   interactive,
   onBackToGallery,
+  isPlaying = true,
+  onTogglePlay,
+  onPreviousTrack,
+  onNextTrack,
 }) => {
   const lightMode = theme.ink === "dark";
   const tonearmAngle = lerp(-18, 13, playerPresence * (1 - returnProgress) * (0.35 + playProgress * 0.65));
@@ -121,31 +129,33 @@ export const VinylPlayer: React.FC<VinylPlayerProps> = ({
             </div>
           </div>
 
-          {interactive ? (
-            <button
-              className={`inline-flex w-fit items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-transform duration-200 hover:scale-[1.02] ${
-                lightMode ? "border-black/10 bg-white/60 text-neutral-900" : "border-white/10 bg-white/10 text-white"
-              }`}
-              type="button"
-              onClick={onBackToGallery}
-            >
-              <ChevronLeft size={16} strokeWidth={2.4} />
-              Gallery
-            </button>
-          ) : null}
-
           <div className={`grid grid-cols-3 items-center gap-4 rounded-lg p-3 ${lightMode ? "bg-white/60" : "bg-white/10"}`}>
-            <button className="grid h-12 place-items-center rounded-lg text-current" type="button" aria-label="Previous">
+            <button 
+              className="grid h-12 place-items-center rounded-lg text-current transition-transform active:scale-95 hover:bg-black/5 dark:hover:bg-white/5" 
+              type="button" 
+              aria-label="Previous"
+              onClick={interactive ? onPreviousTrack : undefined}
+            >
               <SkipBack size={19} strokeWidth={2.3} />
             </button>
             <button
-              className={`grid h-14 place-items-center rounded-full shadow-lg ${lightMode ? "bg-neutral-950 text-white" : "bg-white text-neutral-950"}`}
+              className={`grid h-14 place-items-center rounded-full shadow-lg transition-transform active:scale-95 ${lightMode ? "bg-neutral-950 text-white hover:bg-neutral-800" : "bg-white text-neutral-950 hover:bg-neutral-200"}`}
               type="button"
-              aria-label="Pause"
+              aria-label={isPlaying ? "Pause" : "Play"}
+              onClick={interactive ? onTogglePlay : undefined}
             >
-              <Pause size={22} fill="currentColor" strokeWidth={0} />
+              {isPlaying ? (
+                <Pause size={22} fill="currentColor" strokeWidth={0} />
+              ) : (
+                <Play size={22} fill="currentColor" strokeWidth={0} className="ml-1" />
+              )}
             </button>
-            <button className="grid h-12 place-items-center rounded-lg text-current" type="button" aria-label="Next">
+            <button 
+              className="grid h-12 place-items-center rounded-lg text-current transition-transform active:scale-95 hover:bg-black/5 dark:hover:bg-white/5" 
+              type="button" 
+              aria-label="Next"
+              onClick={interactive ? onNextTrack : undefined}
+            >
               <SkipForward size={19} strokeWidth={2.3} />
             </button>
           </div>
