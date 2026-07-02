@@ -183,7 +183,7 @@ export const GalleryEntry: React.FC<GalleryEntryProps> = ({
             ))}
           </div>
           <button
-            className="grid w-full grid-cols-[56px_minmax(0,1fr)_40px_28px] items-center gap-4 rounded-lg border border-black/10 bg-white/75 p-3 text-left shadow-[0_20px_70px_rgba(30,24,18,0.18)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.01]"
+            className="grid w-full grid-cols-[56px_minmax(0,1fr)_auto] items-center gap-4 rounded-lg border border-black/10 bg-white/75 p-3 text-left shadow-[0_20px_70px_rgba(30,24,18,0.18)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.01]"
             type="button"
             onClick={() => openTrack(accentTrack, activeIndex)}
           >
@@ -191,13 +191,12 @@ export const GalleryEntry: React.FC<GalleryEntryProps> = ({
             <span className="min-w-0">
               <strong className="block truncate text-base font-semibold text-neutral-950">{accentTrack.title}</strong>
               <small className="mt-1 block truncate text-sm font-medium text-neutral-500">
-                {accentTrack.artist} · {formatDuration(accentTrack.durationInFrames, accentTrack.fps)}
+                {accentTrack.artist}
               </small>
             </span>
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-neutral-950 text-white">
-              <Play size={16} fill="currentColor" strokeWidth={0} />
+            <span className="mr-2 rounded-full bg-neutral-950 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
+              View
             </span>
-            <Volume2 size={19} strokeWidth={2} className="text-neutral-500" />
           </button>
         </div>
       </footer>

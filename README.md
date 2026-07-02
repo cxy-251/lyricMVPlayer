@@ -94,6 +94,12 @@
   该命令会下载并准备每个歌曲包资源、解析歌词、对齐音频与歌词时间轴、生成用于后续背景步骤的提示词/工作流资产、生成 `audio-features.json`，同时写入或更新 `artifacts/common/production-queue.csv`。
   运行前必须保证本地 LLM 服务（`http://127.0.0.1:1234/v1`）可用，否则命令会中止。该命令不生成背景图片，也不渲染最终的 MP4。
 
+- `pnpm run prepare:album "<playlist-url>"`
+  *(底层执行: `conda run -n kwai python backend/album-pipeline/batch_album_pipeline.py`)*
+  运行轻量级的纯音乐专辑下载流水线（专供 Album Gallery 使用）。
+  该命令仅下载音频文件与缩略图封面，自动存入 `artifacts/album/歌手-专辑名/`，跳过大模型和背景图片生成等重度计算环节。
+  下载完成后，会自动记录在 `artifacts/album/downloaded_tracks.csv` 中，并更新画廊的全局索引库。
+
 - `pnpm run refresh:cookies`
   *(底层执行: `conda run -n kwai python backend/audio-download/refresh_youtube_cookies.py`)*
   尝试导出可复用的 YouTube 浏览器 Cookies 到 `artifacts/common/youtube-cookies.txt`，供后续下载步骤自动复用。

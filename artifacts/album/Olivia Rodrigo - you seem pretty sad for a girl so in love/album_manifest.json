@@ -1,0 +1,85 @@
+{
+  "artist": "Olivia Rodrigo",
+  "album": "you seem pretty sad for a girl so in love",
+  "representativeCover": "cover.jpg",
+  "tracks": [
+    {
+      "filename": "01 - drop dead.mp3",
+      "title": "drop dead",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "02 - stupid song.mp3",
+      "title": "stupid song",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "03 - honeybee.mp3",
+      "title": "honeybee",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "04 - maggots for brains.mp3",
+      "title": "maggots for brains",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "05 - u + me = ᐸ3.mp3",
+      "title": "u + me = ᐸ3",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "06 - my way.mp3",
+      "title": "my way",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "07 - purple.mp3",
+      "title": "purple",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "08 - the cure.mp3",
+      "title": "the cure",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "09 - begged.mp3",
+      "title": "begged",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "10 - what’s wrong with me.mp3",
+      "title": "what’s wrong with me",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "11 - less.mp3",
+      "title": "less",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "12 - expectations.mp3",
+      "title": "expectations",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "13 - cigarette smoke.mp3",
+      "title": "cigarette smoke",
+      "duration": 0,
+      "cover": null
+    }
+  ]
+}

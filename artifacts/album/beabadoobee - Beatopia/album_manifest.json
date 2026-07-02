@@ -1,0 +1,91 @@
+{
+  "artist": "beabadoobee",
+  "album": "Beatopia",
+  "representativeCover": "cover.jpg",
+  "tracks": [
+    {
+      "filename": "01 - Beatopia Cultsong.mp3",
+      "title": "Beatopia Cultsong",
+      "duration": 152,
+      "cover": null
+    },
+    {
+      "filename": "02 - 10_36.mp3",
+      "title": "10_36",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "03 - Sunny day.mp3",
+      "title": "Sunny day",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "04 - See you Soon.mp3",
+      "title": "See you Soon",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "05 - Ripples.mp3",
+      "title": "Ripples",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "06 - the perfect pair.mp3",
+      "title": "the perfect pair",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "07 - broken cd.mp3",
+      "title": "broken cd",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "08 - Talk.mp3",
+      "title": "Talk",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "09 - Lovesong.mp3",
+      "title": "Lovesong",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "10 - Pictures of Us.mp3",
+      "title": "Pictures of Us",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "11 - fairy song.mp3",
+      "title": "fairy song",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "12 - Don’t get the deal.mp3",
+      "title": "Don’t get the deal",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "13 - tinkerbell is overrated feat. PinkPantheress.mp3",
+      "title": "tinkerbell is overrated feat. PinkPantheress",
+      "duration": 0,
+      "cover": null
+    },
+    {
+      "filename": "14 - You’re here that’s the thing.mp3",
+      "title": "You’re here that’s the thing",
+      "duration": 0,
+      "cover": null
+    }
+  ]
+}

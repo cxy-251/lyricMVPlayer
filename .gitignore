@@ -83,3 +83,12 @@ artifacts/paper-video/output/runs/*/*/manifests/*
 # Generated Source Files
 # ==============================================================================
 src/web/tailwind.compiled.css
+
+# ==============================================================================
+# Album Gallery
+# ==============================================================================
+!artifacts/album/
+artifacts/album/*
+!artifacts/album/library_index.demo.json
+!artifacts/album/Olivia Rodrigo - you seem pretty sad for a girl so in love/
+!artifacts/album/beabadoobee - Beatopia/

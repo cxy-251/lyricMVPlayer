@@ -11,6 +11,7 @@
     "clean:media": "node tools/clean-media.mjs",
     "refresh:cookies": "conda run -n kwai python backend/audio-download/refresh_youtube_cookies.py /Users/cxy251/Code/04AIMedia/lyricMVPlayer",
     "prepare:playlist": "conda run -n kwai python backend/playlist-pipeline/playlist_pipeline.py",
+    "prepare:album": "conda run -n kwai python backend/album-pipeline/batch_album_pipeline.py",
     "generate:background:current": "conda run -n kwai python backend/background-generation/run_background_generation.py current .",
     "generate:backgrounds": "conda run -n kwai python backend/background-generation/run_background_generation.py queue .",
     "regenerate:lyrics-llm-workflow-text": "conda run -n kwai python backend/background-generation/run_background_generation.py lyrics-llm-workflow-text .",

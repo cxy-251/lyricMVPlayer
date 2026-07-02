@@ -1,0 +1,18 @@
+{
+  "albums": [
+    {
+      "id": "Olivia Rodrigo - you seem pretty sad for a girl so in love",
+      "artist": "Olivia Rodrigo",
+      "album": "you seem pretty sad for a girl so in love",
+      "representativeCover": "cover.jpg",
+      "trackCount": 13
+    },
+    {
+      "id": "beabadoobee - Beatopia",
+      "artist": "beabadoobee",
+      "album": "Beatopia",
+      "representativeCover": "cover.jpg",
+      "trackCount": 14
+    }
+  ]
+}
