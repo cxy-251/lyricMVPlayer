@@ -1,22 +1,22 @@
 {
-  "selectedSongDirName": "White Flag - Claire Cottrill - aR-HiYvqS_A",
+  "selectedSongDirName": "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I",
   "songs": [
     {
-      "id": "White Flag - Claire Cottrill - aR-HiYvqS_A",
-      "title": "White Flag",
-      "artist": "Claire Cottrill",
+      "id": "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I",
+      "title": "Never Goes Away",
+      "artist": "Claire Rosinkranz",
       "lyricOffsetMs": 0,
-      "renderTrimStartMs": 16320,
-      "renderDurationInFrames": 3927,
-      "durationInFrames": 5437,
+      "renderTrimStartMs": 0,
+      "renderDurationInFrames": 4393,
+      "durationInFrames": 4393,
       "fps": 30
     }
   ],
   "queue": [
     {
-      "id": "White Flag - Claire Cottrill - aR-HiYvqS_A",
-      "title": "White Flag",
-      "artist": "Claire Cottrill",
+      "id": "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I",
+      "title": "Never Goes Away",
+      "artist": "Claire Rosinkranz",
       "accent": "rgba(163, 206, 255, 0.7)"
     }
   ],

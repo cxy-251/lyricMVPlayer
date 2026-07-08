@@ -1,7 +1,7 @@
-import type {AudioFeatureTrack} from "@lyric-mv/lyric-video";
+import type {AudioFeatureTrack} from "../../modules/render-core/src";
 import type {PreviewAssetMap, RawRenderInput, SelectedPreviewSongData} from "./preview-library/types";
-import selectedAudioFeatures from "../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/audio-features.json";
-import selectedRenderInput from "../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/render-input.json";
+import selectedAudioFeatures from "../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/audio-features.json";
+import selectedRenderInput from "../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/render-input.json";
 
 const loadJson = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
@@ -12,16 +12,16 @@ const loadJson = async <T>(url: string): Promise<T> => {
 };
 
 export const selectedSongData: SelectedPreviewSongData = {
-  id: "White Flag - Claire Cottrill - aR-HiYvqS_A",
+  id: "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I",
   renderInput: selectedRenderInput as RawRenderInput,
   audioFeatures: selectedAudioFeatures as AudioFeatureTrack,
 };
 
 export const previewAssetMap: PreviewAssetMap = {
-  "White Flag - Claire Cottrill - aR-HiYvqS_A": {
-    audioSrc: new URL("../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/audio.mp3", import.meta.url).href,
-    backgroundSrc: new URL("../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/background.png", import.meta.url).href,
-    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/render-input.json", import.meta.url).href),
-    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/White Flag - Claire Cottrill - aR-HiYvqS_A/audio-features.json", import.meta.url).href)
+  "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I": {
+    audioSrc: new URL("../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/audio.mp3", import.meta.url).href,
+    backgroundSrc: new URL("../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/background.png", import.meta.url).href,
+    loadRenderInput: () => loadJson<RawRenderInput>(new URL("../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/render-input.json", import.meta.url).href),
+    loadAudioFeatures: () => loadJson<AudioFeatureTrack>(new URL("../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/audio-features.json", import.meta.url).href)
   }
 };

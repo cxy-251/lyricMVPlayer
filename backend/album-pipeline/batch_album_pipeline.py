@@ -1,10 +1,12 @@
 import argparse
 import csv
+import importlib.util
 import json
 import logging
 import os
 import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -16,18 +18,24 @@ def get_project_root() -> Path:
     # So root is two levels up
     return Path(__file__).parent.parent.parent.resolve()
 
+
+def _yt_dlp_command(args: list[str]) -> list[str]:
+    if importlib.util.find_spec("yt_dlp") is None:
+        raise RuntimeError("yt-dlp module is not installed in the current Python environment")
+    return [sys.executable, "-m", "yt_dlp", *args]
+
+
 def get_playlist_info(url: str):
     project_root = get_project_root()
     cookies_path = project_root / "artifacts" / "common" / "youtube-cookies.txt"
     
-    cmd = [
-        "yt-dlp",
+    cmd = _yt_dlp_command([
         "--cookies", str(cookies_path),
         "--dump-json",
         "--flat-playlist",
         "--playlist-items", "1",
         url
-    ]
+    ])
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         info = json.loads(result.stdout)
@@ -42,13 +50,12 @@ def get_playlist_info(url: str):
         # If playlist_uploader is null (common on YTM), fetch the first track's uploader
         if not artist and info.get("url"):
             first_track_url = info.get("url")
-            track_cmd = [
-                "yt-dlp",
+            track_cmd = _yt_dlp_command([
                 "--cookies", str(cookies_path),
                 "--dump-json",
                 "--no-playlist",
                 first_track_url
-            ]
+            ])
             track_result = subprocess.run(track_cmd, capture_output=True, text=True, check=True)
             track_info = json.loads(track_result.stdout)
             artist = track_info.get("artist") or track_info.get("uploader") or track_info.get("channel")
@@ -74,8 +81,7 @@ def download_album(url: str) -> bool:
     archive_path = album_base / "yt-dlp-archive.txt"
     cookies_path = project_root / "artifacts" / "common" / "youtube-cookies.txt"
     
-    cmd = [
-        "yt-dlp",
+    cmd = _yt_dlp_command([
         "--cookies", str(cookies_path),
         "--extract-audio",
         "--audio-format", "mp3",
@@ -86,7 +92,7 @@ def download_album(url: str) -> bool:
         "--download-archive", str(archive_path),
         "-o", f"{album_dir}/%(playlist_index)s - %(title)s.%(ext)s",
         url
-    ]
+    ])
     
     logging.info(f"Processing album '{album}' by '{artist}' from {url}")
     

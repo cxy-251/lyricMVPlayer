@@ -1,7 +1,8 @@
+import importlib.util
 import json
 import re
-import shutil
 import subprocess
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
@@ -104,10 +105,19 @@ def has_downloaded_audio(record, archive_path: Path) -> bool:
     return _archive_line(record) in lines
 
 
+def _yt_dlp_module(binary_or_module: str) -> str:
+    return binary_or_module.replace("-", "_")
+
+
+def _has_yt_dlp_module(binary_or_module: str) -> bool:
+    return importlib.util.find_spec(_yt_dlp_module(binary_or_module)) is not None
+
+
 def _run_yt_dlp(binary: str, args: list[str]) -> str:
+    module_name = _yt_dlp_module(binary)
     try:
         completed = subprocess.run(
-            [binary, *args],
+            [sys.executable, "-m", module_name, *args],
             check=True,
             capture_output=True,
             text=True,
@@ -151,9 +161,9 @@ def _export_browser_cookies(binary: str, browser_name: str, cookies_file_path: P
 
 
 def refresh_youtube_cookies_file(config: AudioDownloadConfig) -> tuple[Path | None, str | None, str | None]:
-    binary_path = shutil.which(config.yt_dlp_binary)
-    if not binary_path:
-        return None, f"yt-dlp binary not found: {config.yt_dlp_binary}", None
+    if not _has_yt_dlp_module(config.yt_dlp_binary):
+        return None, f"yt-dlp module not found in current Python environment: {_yt_dlp_module(config.yt_dlp_binary)}", None
+    binary_path = config.yt_dlp_binary
 
     _ensure_dirs(config)
     temp_cookies_path = config.cookies_file_path.with_name(f"{config.cookies_file_path.name}.tmp")
@@ -182,9 +192,9 @@ def refresh_youtube_cookies_file(config: AudioDownloadConfig) -> tuple[Path | No
 
 
 def ensure_youtube_cookies(config: AudioDownloadConfig) -> tuple[Path | None, str | None]:
-    binary_path = shutil.which(config.yt_dlp_binary)
-    if not binary_path:
-        return None, f"yt-dlp binary not found: {config.yt_dlp_binary}"
+    if not _has_yt_dlp_module(config.yt_dlp_binary):
+        return None, f"yt-dlp module not found in current Python environment: {_yt_dlp_module(config.yt_dlp_binary)}"
+    binary_path = config.yt_dlp_binary
 
     _ensure_dirs(config)
     if config.cookies_file_path.exists() and config.cookies_file_path.stat().st_size > 0:
@@ -260,12 +270,12 @@ def record_downloaded_audio(config: AudioDownloadConfig, metadata: DownloadedAud
 
 
 def download_audio(record, config: AudioDownloadConfig) -> tuple[DownloadedAudioRecord | None, DownloadAudioError | None]:
-    binary_path = shutil.which(config.yt_dlp_binary)
-    if not binary_path:
+    if not _has_yt_dlp_module(config.yt_dlp_binary):
         return None, DownloadAudioError(
             reason="missing-yt-dlp",
-            message=f"yt-dlp binary not found: {config.yt_dlp_binary}",
+            message=f"yt-dlp module not found in current Python environment: {_yt_dlp_module(config.yt_dlp_binary)}",
         )
+    binary_path = config.yt_dlp_binary
 
     _ensure_dirs(config)
     source_identity_key = _get_source_identity(record)

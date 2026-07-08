@@ -54,6 +54,7 @@
   - `http://127.0.0.1:3212/studio/effects` (特效实验室)
   - `http://127.0.0.1:3212/studio/papers` (论文视频工作室)
   - `http://127.0.0.1:3212/studio/album-gallery` (专辑 Gallery / 黑胶播放器视频模板)
+  - `http://127.0.0.1:3212/studio/gradient-atlas` (Gradient Atlas / 设计师渐变配色工具)
 
 - `pnpm run dev:web`
   仅启动 Vite 本地 Web 应用，不开启歌单状态同步 API。
@@ -89,19 +90,19 @@
   - `Alignment Error`: 歌词源正确，但实际听感对齐仍有问题的歌曲会被归入此列。
 
 - `pnpm run prepare:playlist "<playlist-url>" . [default-render-batch]`
-  *(底层执行: `conda run -n kwai python backend/playlist-pipeline/playlist_pipeline.py`)*
+  *(底层执行: `uv run python backend/playlist-pipeline/playlist_pipeline.py`)*
   运行歌单处理流水线。
   该命令会下载并准备每个歌曲包资源、解析歌词、对齐音频与歌词时间轴、生成用于后续背景步骤的提示词/工作流资产、生成 `audio-features.json`，同时写入或更新 `artifacts/common/production-queue.csv`。
   运行前必须保证本地 LLM 服务（`http://127.0.0.1:1234/v1`）可用，否则命令会中止。该命令不生成背景图片，也不渲染最终的 MP4。
 
 - `pnpm run prepare:album "<playlist-url>"`
-  *(底层执行: `conda run -n kwai python backend/album-pipeline/batch_album_pipeline.py`)*
+  *(底层执行: `uv run python backend/album-pipeline/batch_album_pipeline.py`)*
   运行轻量级的纯音乐专辑下载流水线（专供 Album Gallery 使用）。
   该命令仅下载音频文件与缩略图封面，自动存入 `artifacts/album/歌手-专辑名/`，跳过大模型和背景图片生成等重度计算环节。
   下载完成后，会自动记录在 `artifacts/album/downloaded_tracks.csv` 中，并更新画廊的全局索引库。
 
 - `pnpm run refresh:cookies`
-  *(底层执行: `conda run -n kwai python backend/audio-download/refresh_youtube_cookies.py`)*
+  *(底层执行: `uv run python backend/audio-download/refresh_youtube_cookies.py`)*
   尝试导出可复用的 YouTube 浏览器 Cookies 到 `artifacts/common/youtube-cookies.txt`，供后续下载步骤自动复用。
 
 - `pnpm run generate:background:current`
@@ -109,7 +110,9 @@
 
 - `pnpm run generate:backgrounds`
   读取 `artifacts/common/production-queue.csv`，并向 ComfyUI 批量提交生成任务（仅针对未就绪且在批次 0 的歌曲）。
-  调用本地 ComfyUI 接口 (`http://127.0.0.1:8000`)。
+  调用本地 ComfyUI 接口 (`http://127.0.0.1:8000`)，通过 去comfyui源码目录
+  cd /Users/cxy251/Code/08githubReps/cxyFork-ComfyUI
+  执行 uv run python main.py --listen 127.0.0.1 --port 8000
   可指定特定批次：`pnpm run generate:backgrounds 22`
 
 - `pnpm run regenerate:lyrics-llm-workflow-text`
@@ -160,9 +163,11 @@
 
 使用本地的 `kwai` conda 虚拟环境进行 Python 侧的媒体预处理工作：
 
+现在 使用uv 替换 conda 管理 python；本地已经不包含conda相关内容。
+
 - 为单首歌曲生成确定性的运动特征 (motion features)：
   ```bash
-  conda run -n kwai python -c "import importlib.util, sys; p='/Users/cxy251/Code/04AIMedia/lyricMVPlayer/modules/audio-features/extract_audio_features.py'; spec=importlib.util.spec_from_file_location('audio_features_module', p); m=importlib.util.module_from_spec(spec); sys.modules['audio_features_module']=m; spec.loader.exec_module(m); print(m.extract_audio_features_for_song('/absolute/path/to/song-folder', frame_rate=60))"
+  uv run python -c "import importlib.util, sys; p='/Users/cxy251/Code/04AIMedia/lyricMVPlayer/modules/audio-features/extract_audio_features.py'; spec=importlib.util.spec_from_file_location('audio_features_module', p); m=importlib.util.module_from_spec(spec); sys.modules['audio_features_module']=m; spec.loader.exec_module(m); print(m.extract_audio_features_for_song('/absolute/path/to/song-folder', frame_rate=60))"
   ```
   生成的文件将保存为该歌曲目录下的 `audio-features.json`。
 

@@ -1,255 +1,237 @@
 {
   "playlist_url": "https://music.youtube.com/playlist?list=PLYGBfUx8aPvdIBp1Zvtx6qvfA1kgh5FyQ",
-  "generated_at": "2026-06-28T10:47:55.431849Z",
-  "count": 34,
-  "lyrics_review_count": 1,
+  "generated_at": "2026-07-08T08:14:09.869482Z",
+  "count": 25,
+  "lyrics_review_count": 6,
   "items": [
     {
-      "video_id": "RzktOzUTZR4",
-      "source_url": "https://www.youtube.com/watch?v=RzktOzUTZR4",
-      "song_dir": "You You You - Maisie Peters - RzktOzUTZR4",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "q5sVys7jk2I",
-      "source_url": "https://www.youtube.com/watch?v=q5sVys7jk2I",
-      "song_dir": "Somewhere Only We Know - Keane - q5sVys7jk2I",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "DPpthIjUVBE",
-      "source_url": "https://www.youtube.com/watch?v=DPpthIjUVBE",
-      "song_dir": "Everybody's Changing - Keane - DPpthIjUVBE",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "APe922QQTN0",
-      "source_url": "https://www.youtube.com/watch?v=APe922QQTN0",
-      "song_dir": "My Happy Ending - Avril Lavigne - APe922QQTN0",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "vbjYtwN9bPU",
-      "source_url": "https://www.youtube.com/watch?v=vbjYtwN9bPU",
-      "song_dir": "Van Gogh - Em Beihold - vbjYtwN9bPU",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "HCwUQRECknw",
-      "source_url": "https://www.youtube.com/watch?v=HCwUQRECknw",
-      "song_dir": "ceilings - Lizzy McAlpine - HCwUQRECknw",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "92jy750yv00",
-      "source_url": "https://www.youtube.com/watch?v=92jy750yv00",
-      "song_dir": "august - Taylor Swift - 92jy750yv00",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "9qnqYL0eNNI",
-      "source_url": "https://www.youtube.com/watch?v=9qnqYL0eNNI",
-      "song_dir": "Yellow - Coldplay - 9qnqYL0eNNI",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "Kf5pXDhx5Vc",
-      "source_url": "https://www.youtube.com/watch?v=Kf5pXDhx5Vc",
-      "song_dir": "End of Beginning - Djo Music - Kf5pXDhx5Vc",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "DTtb9rt1tnk",
-      "source_url": "https://www.youtube.com/watch?v=DTtb9rt1tnk",
-      "song_dir": "Complicated - Avril Lavigne - DTtb9rt1tnk",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "uziIDxPrjJc",
-      "source_url": "https://www.youtube.com/watch?v=uziIDxPrjJc",
-      "song_dir": "SNAP - Rosa Linn - uziIDxPrjJc",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "lbaVbgbeKaI",
-      "source_url": "https://www.youtube.com/watch?v=lbaVbgbeKaI",
-      "song_dir": "The One That Got Away - Katy Perry - lbaVbgbeKaI",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "V1Pl8CzNzCw",
-      "source_url": "https://www.youtube.com/watch?v=V1Pl8CzNzCw",
-      "song_dir": "Billie Eilish- Khalid - lovely - Billie Eilish - V1Pl8CzNzCw",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "GqQIhi86k7M",
-      "source_url": "https://www.youtube.com/watch?v=GqQIhi86k7M",
-      "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
+      "video_id": "Heuxm7pZ-Fs",
+      "source_url": "https://www.youtube.com/watch?v=Heuxm7pZ-Fs",
+      "song_dir": "Pretty Girl - Claire Cottrill - Heuxm7pZ-Fs",
       "ok": false,
       "lyrics_review": {
-        "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
+        "song_dir": "Pretty Girl - Claire Cottrill - Heuxm7pZ-Fs",
         "reason": "lyrics_resolution_failed",
         "detail": "No acceptable timed lyric source was found."
       }
     },
     {
-      "video_id": "ge6hWtFgiHM",
-      "source_url": "https://www.youtube.com/watch?v=ge6hWtFgiHM",
-      "song_dir": "21 - Gracie Abrams - ge6hWtFgiHM",
+      "video_id": "c0bM0dR197s",
+      "source_url": "https://www.youtube.com/watch?v=c0bM0dR197s",
+      "song_dir": "Calling After Me - Wallows - c0bM0dR197s",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "hmkJMYt-VSg",
-      "source_url": "https://www.youtube.com/watch?v=hmkJMYt-VSg",
-      "song_dir": "Goodbye - Sabrina Carpenter - hmkJMYt-VSg",
+      "video_id": "oodQMZLjoBU",
+      "source_url": "https://www.youtube.com/watch?v=oodQMZLjoBU",
+      "song_dir": "No One Noticed - The Mar\u00edas - oodQMZLjoBU",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "ka_-p5RY1MA",
-      "source_url": "https://www.youtube.com/watch?v=ka_-p5RY1MA",
-      "song_dir": "Mess It Up - Gracie Abrams - ka_-p5RY1MA",
+      "video_id": "ipkaSc30uXw",
+      "source_url": "https://www.youtube.com/watch?v=ipkaSc30uXw",
+      "song_dir": "Maniac - Conan Gray - ipkaSc30uXw",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "0X1agIHq7mQ",
-      "source_url": "https://www.youtube.com/watch?v=0X1agIHq7mQ",
-      "song_dir": "123 - Claire Rosinkranz - 0X1agIHq7mQ",
+      "video_id": "P7VgXIZSN_w",
+      "source_url": "https://www.youtube.com/watch?v=P7VgXIZSN_w",
+      "song_dir": "stupid song - Olivia Rodrigo - P7VgXIZSN_w",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "erNoYnBvQpw",
-      "source_url": "https://www.youtube.com/watch?v=erNoYnBvQpw",
-      "song_dir": "We Almost Broke Up Again Last Night - Sabrina Carpenter - erNoYnBvQpw",
+      "video_id": "9QrG7SUdbzs",
+      "source_url": "https://www.youtube.com/watch?v=9QrG7SUdbzs",
+      "song_dir": "back from the dead - lyn lapid - 9QrG7SUdbzs",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Xegz8KFs2XY",
-      "source_url": "https://www.youtube.com/watch?v=Xegz8KFs2XY",
-      "song_dir": "Swinging at the Stars - Claire Rosinkranz - Xegz8KFs2XY",
+      "video_id": "PKiPaWH2O9Q",
+      "source_url": "https://www.youtube.com/watch?v=PKiPaWH2O9Q",
+      "song_dir": "kiss goodbye - The Two Lips - PKiPaWH2O9Q",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "kej2LYSoYRY",
-      "source_url": "https://www.youtube.com/watch?v=kej2LYSoYRY",
-      "song_dir": "Blonde - Maisie Peters - kej2LYSoYRY",
+      "video_id": "KBrwxTuy7do",
+      "source_url": "https://www.youtube.com/watch?v=KBrwxTuy7do",
+      "song_dir": "Sad and Beautiful - Gigi Moss - KBrwxTuy7do",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Sad and Beautiful - Gigi Moss - KBrwxTuy7do",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "FJX0JPXD2nM",
+      "source_url": "https://www.youtube.com/watch?v=FJX0JPXD2nM",
+      "song_dir": "we fell in love in october - girl in red - FJX0JPXD2nM",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "_ScxHNanGrM",
-      "source_url": "https://www.youtube.com/watch?v=_ScxHNanGrM",
-      "song_dir": "Dare To Love Me - Avril Lavigne - _ScxHNanGrM",
+      "video_id": "VjS8SdF1Usg",
+      "source_url": "https://www.youtube.com/watch?v=VjS8SdF1Usg",
+      "song_dir": "4EVER - Claire Cottrill - VjS8SdF1Usg",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "4EVER - Claire Cottrill - VjS8SdF1Usg",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "AdEKgwUqPKI",
+      "source_url": "https://www.youtube.com/watch?v=AdEKgwUqPKI",
+      "song_dir": "Kill Bill - SZA - AdEKgwUqPKI",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "WWqX8gxF33E",
-      "source_url": "https://www.youtube.com/watch?v=WWqX8gxF33E",
-      "song_dir": "Dancer - Claire Rosinkranz - WWqX8gxF33E",
+      "video_id": "3K5ieiCva3M",
+      "source_url": "https://www.youtube.com/watch?v=3K5ieiCva3M",
+      "song_dir": "You- From The Honeymoon - Hilary Duff - 3K5ieiCva3M",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "4BpkETs_18E",
-      "source_url": "https://www.youtube.com/watch?v=4BpkETs_18E",
-      "song_dir": "My World - Conan Gray - 4BpkETs_18E",
+      "video_id": "Q9YM1zzXeN4",
+      "source_url": "https://www.youtube.com/watch?v=Q9YM1zzXeN4",
+      "song_dir": "Sunset Tower - Conan Gray - Q9YM1zzXeN4",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "U33SqsU39R4",
-      "source_url": "https://www.youtube.com/watch?v=U33SqsU39R4",
-      "song_dir": "Sad in Hawaii - Claire Rosinkranz - U33SqsU39R4",
+      "video_id": "7WXXaIz3uds",
+      "source_url": "https://www.youtube.com/watch?v=7WXXaIz3uds",
+      "song_dir": "Amoeba - Claire Cottrill - 7WXXaIz3uds",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Amoeba - Claire Cottrill - 7WXXaIz3uds",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "cmzCwz4NkOA",
+      "source_url": "https://www.youtube.com/watch?v=cmzCwz4NkOA",
+      "song_dir": "the cure - Olivia Rodrigo - cmzCwz4NkOA",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "Bc9ijogGmtU",
-      "source_url": "https://www.youtube.com/watch?v=Bc9ijogGmtU",
-      "song_dir": "good 4 u - Olivia Rodrigo - Bc9ijogGmtU",
+      "video_id": "2cPlI6qH20k",
+      "source_url": "https://www.youtube.com/watch?v=2cPlI6qH20k",
+      "song_dir": "Tangled Keys - Forrest Rose - 2cPlI6qH20k",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Tangled Keys - Forrest Rose - 2cPlI6qH20k",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "-h1ZefBxAek",
+      "source_url": "https://www.youtube.com/watch?v=-h1ZefBxAek",
+      "song_dir": "maggots for brains - Olivia Rodrigo - -h1ZefBxAek",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "fxXEOWcQwzo",
-      "source_url": "https://www.youtube.com/watch?v=fxXEOWcQwzo",
-      "song_dir": "Pedestal - Em Beihold - fxXEOWcQwzo",
+      "video_id": "XsfQKTBMGcM",
+      "source_url": "https://www.youtube.com/watch?v=XsfQKTBMGcM",
+      "song_dir": "This Is The World (I Made It For You) - Magdalena Bay - XsfQKTBMGcM",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "oR4VhXjIlf4",
-      "source_url": "https://www.youtube.com/watch?v=oR4VhXjIlf4",
-      "song_dir": "Almost- So Close- Maybe - Mercer Henderson - oR4VhXjIlf4",
+      "video_id": "L5jOM1WaG6A",
+      "source_url": "https://www.youtube.com/watch?v=L5jOM1WaG6A",
+      "song_dir": "Gravedigger - Josie Edwards - L5jOM1WaG6A",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "tDaFv67fRfw",
-      "source_url": "https://www.youtube.com/watch?v=tDaFv67fRfw",
-      "song_dir": "Close To You - Gracie Abrams - tDaFv67fRfw",
+      "video_id": "XaZNYHkCbYI",
+      "source_url": "https://www.youtube.com/watch?v=XaZNYHkCbYI",
+      "song_dir": "Electric Love - B\u00d8RNS - XaZNYHkCbYI",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "3vMQzdeF05g",
-      "source_url": "https://www.youtube.com/watch?v=3vMQzdeF05g",
-      "song_dir": "stuck on us - Claire Rosinkranz - 3vMQzdeF05g",
+      "video_id": "WWa28QJEjnQ",
+      "source_url": "https://www.youtube.com/watch?v=WWa28QJEjnQ",
+      "song_dir": "the perfect pair - Beabadoobee - WWa28QJEjnQ",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "WxQf2tv07p8",
-      "source_url": "https://www.youtube.com/watch?v=WxQf2tv07p8",
-      "song_dir": "death wish - lyn lapid - WxQf2tv07p8",
+      "video_id": "Uyzn4MUsQkg",
+      "source_url": "https://www.youtube.com/watch?v=Uyzn4MUsQkg",
+      "song_dir": "pity dirty - pami - Uyzn4MUsQkg",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "T7ZgB7EGjzg",
-      "source_url": "https://www.youtube.com/watch?v=T7ZgB7EGjzg",
-      "song_dir": "death wish - L\u00d8L\u00d8 - T7ZgB7EGjzg",
+      "video_id": "IJsZfp9IChQ",
+      "source_url": "https://www.youtube.com/watch?v=IJsZfp9IChQ",
+      "song_dir": "Beabadoobee - The Adults Are Talking (Antidote Live Session) [The Strokes Cover] - David Dean Burkhart Archives - IJsZfp9IChQ",
+      "ok": false,
+      "lyrics_review": {
+        "song_dir": "Beabadoobee - The Adults Are Talking (Antidote Live Session) [The Strokes Cover] - David Dean Burkhart Archives - IJsZfp9IChQ",
+        "reason": "lyrics_resolution_failed",
+        "detail": "No acceptable timed lyric source was found."
+      }
+    },
+    {
+      "video_id": "JTngrzDcdUM",
+      "source_url": "https://www.youtube.com/watch?v=JTngrzDcdUM",
+      "song_dir": "Hot Goblin - Em Beihold - JTngrzDcdUM",
       "ok": true,
       "lyrics_review": null
     },
     {
-      "video_id": "xF1Yu-amFfk",
-      "source_url": "https://www.youtube.com/watch?v=xF1Yu-amFfk",
-      "song_dir": "Sofia - Claire Cottrill - xF1Yu-amFfk",
-      "ok": true,
-      "lyrics_review": null
-    },
-    {
-      "video_id": "aR-HiYvqS_A",
-      "source_url": "https://www.youtube.com/watch?v=aR-HiYvqS_A",
-      "song_dir": "White Flag - Claire Cottrill - aR-HiYvqS_A",
+      "video_id": "LPSPUFeNQ0I",
+      "source_url": "https://www.youtube.com/watch?v=LPSPUFeNQ0I",
+      "song_dir": "Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I",
       "ok": true,
       "lyrics_review": null
     }
   ],
   "lyrics_review_items": [
     {
-      "song_dir": "Look at My Life - Gracie Abrams - GqQIhi86k7M",
+      "song_dir": "Pretty Girl - Claire Cottrill - Heuxm7pZ-Fs",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Sad and Beautiful - Gigi Moss - KBrwxTuy7do",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "4EVER - Claire Cottrill - VjS8SdF1Usg",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Amoeba - Claire Cottrill - 7WXXaIz3uds",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Tangled Keys - Forrest Rose - 2cPlI6qH20k",
+      "reason": "lyrics_resolution_failed",
+      "detail": "No acceptable timed lyric source was found."
+    },
+    {
+      "song_dir": "Beabadoobee - The Adults Are Talking (Antidote Live Session) [The Strokes Cover] - David Dean Burkhart Archives - IJsZfp9IChQ",
       "reason": "lyrics_resolution_failed",
       "detail": "No acceptable timed lyric source was found."
     }

@@ -7,8 +7,8 @@ const batchValue = process.argv[2] ?? "0";
 const renderQueueScript = path.join(projectRoot, "backend", "render-queue", "render_queue.py");
 const selectSongScript = path.join(projectRoot, "tools", "select-song-for-preview.mjs");
 const listResult = spawnSync(
-  "conda",
-  ["run", "-n", "kwai", "python", renderQueueScript, "list-runnable", projectRoot, batchValue],
+  "uv",
+  ["run", "python", renderQueueScript, "list-runnable", projectRoot, batchValue],
   {
     cwd: projectRoot,
     encoding: "utf-8",
@@ -52,8 +52,8 @@ for (const row of rows) {
   }
 
   const markResult = spawnSync(
-    "conda",
-    ["run", "-n", "kwai", "python", renderQueueScript, "mark", projectRoot, songDirName, "rendered"],
+    "uv",
+    ["run", "python", renderQueueScript, "mark", projectRoot, songDirName, "rendered"],
     {
       cwd: projectRoot,
       stdio: "inherit",

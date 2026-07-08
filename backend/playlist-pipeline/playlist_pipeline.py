@@ -3,7 +3,6 @@ from __future__ import annotations
 import importlib.util
 import json
 import re
-import shutil
 import subprocess
 import sys
 from dataclasses import asdict, is_dataclass
@@ -126,9 +125,15 @@ def _classify_render_batch(pipeline_result: dict, default_render_batch: str) -> 
     return default_render_batch
 
 
-def _run_yt_dlp(binary: str, args: list[str]) -> str:
+def _ensure_yt_dlp_module() -> None:
+    if importlib.util.find_spec("yt_dlp") is None:
+        raise RuntimeError("yt-dlp module is not installed in the current Python environment")
+
+
+def _run_yt_dlp(args: list[str]) -> str:
+    _ensure_yt_dlp_module()
     completed = subprocess.run(
-        [binary, *args],
+        [sys.executable, "-m", "yt_dlp", *args],
         check=True,
         capture_output=True,
         text=True,
@@ -137,12 +142,7 @@ def _run_yt_dlp(binary: str, args: list[str]) -> str:
 
 
 def _extract_playlist_entries(playlist_url: str) -> list[dict]:
-    yt_dlp_binary = shutil.which("yt-dlp")
-    if not yt_dlp_binary:
-        raise RuntimeError("yt-dlp is not available in PATH")
-
     payload = _run_yt_dlp(
-        yt_dlp_binary,
         ["--flat-playlist", "--dump-single-json", "--no-warnings", playlist_url],
     )
     data = json.loads(payload)

@@ -21,6 +21,10 @@ const AlbumGalleryStudioPage = lazy(() =>
   import("../../packages/album-gallery/studio").then((m) => ({default: m.AlbumGalleryStudioPage})),
 );
 
+const GradientAtlasPage = lazy(() =>
+  import("../../packages/gradient-atlas/studio").then((m) => ({default: m.GradientAtlasPage})),
+);
+
 // ─── Route wrapper components ─────────────────────────────────────────────────
 
 const EffectLabRoute: React.FC = () => {
@@ -83,6 +87,7 @@ const EffectLabRoute: React.FC = () => {
 
 const paperFallback = <div className="web-route-status">Loading paper player...</div>;
 const albumGalleryFallback = <div className="web-route-status">Loading album gallery...</div>;
+const gradientAtlasFallback = <div className="web-route-status">Loading gradient atlas...</div>;
 
 // ─── Route table ──────────────────────────────────────────────────────────────
 //
@@ -102,6 +107,7 @@ const albumGalleryFallback = <div className="web-route-status">Loading album gal
 //   /studio/papers      → PaperStudioPage  (current)
 //   /studio/papers/*                       (sub-paths)
 //   /studio/album-gallery → AlbumGalleryStudioPage
+//   /studio/gradient-atlas → GradientAtlasPage
 //   /paper              → PaperStudioPage  (legacy)
 //   /paper/*            → PaperStudioPage  (legacy; /paper/effects/* is more
 //                                           specific and wins in the layout above)
@@ -137,6 +143,12 @@ export const router = createBrowserRouter([
   {
     path: "/studio/album-gallery",
     element: <Suspense fallback={albumGalleryFallback}><AlbumGalleryStudioPage /></Suspense>,
+  },
+
+  // Gradient Atlas — current path
+  {
+    path: "/studio/gradient-atlas",
+    element: <Suspense fallback={gradientAtlasFallback}><GradientAtlasPage /></Suspense>,
   },
 
   // Paper player — current paths

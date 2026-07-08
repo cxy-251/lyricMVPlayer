@@ -11,8 +11,8 @@ if (!songDirName) {
 
 const scriptPath = path.join(projectRoot, "backend", "audio-lyrics-alignment", "run_manual_lyrics.py");
 const result = spawnSync(
-  "conda",
-  ["run", "-n", "kwai", "python", scriptPath, projectRoot, songDirName],
+  "uv",
+  ["run", "python", scriptPath, projectRoot, songDirName],
   {
     cwd: projectRoot,
     stdio: "inherit",

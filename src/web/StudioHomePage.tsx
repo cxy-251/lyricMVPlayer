@@ -25,6 +25,10 @@ export const StudioHomePage: React.FC = () => {
             <span>Albums</span>
             <strong>Album Gallery</strong>
           </Link>
+          <Link className="studio-index__item" to="/studio/gradient-atlas">
+            <span>Colors</span>
+            <strong>Gradient Atlas</strong>
+          </Link>
         </div>
       </section>
     </main>
