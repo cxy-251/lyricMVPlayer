@@ -25,6 +25,10 @@ const GradientAtlasPage = lazy(() =>
   import("../../packages/gradient-atlas/studio").then((m) => ({default: m.GradientAtlasPage})),
 );
 
+const SpectrumAtlasPage = lazy(() =>
+  import("../../packages/spectrum-atlas/studio").then((m) => ({default: m.SpectrumAtlasPage})),
+);
+
 // ─── Route wrapper components ─────────────────────────────────────────────────
 
 const EffectLabRoute: React.FC = () => {
@@ -88,6 +92,7 @@ const EffectLabRoute: React.FC = () => {
 const paperFallback = <div className="web-route-status">Loading paper player...</div>;
 const albumGalleryFallback = <div className="web-route-status">Loading album gallery...</div>;
 const gradientAtlasFallback = <div className="web-route-status">Loading gradient atlas...</div>;
+const spectrumAtlasFallback = <div className="web-route-status">Loading spectrum atlas...</div>;
 
 // ─── Route table ──────────────────────────────────────────────────────────────
 //
@@ -108,6 +113,8 @@ const gradientAtlasFallback = <div className="web-route-status">Loading gradient
 //   /studio/papers/*                       (sub-paths)
 //   /studio/album-gallery → AlbumGalleryStudioPage
 //   /studio/gradient-atlas → GradientAtlasPage
+//   /studio/spectrum-atlas → SpectrumAtlasPage
+//   /spectrum-atlas        → SpectrumAtlasPage
 //   /paper              → PaperStudioPage  (legacy)
 //   /paper/*            → PaperStudioPage  (legacy; /paper/effects/* is more
 //                                           specific and wins in the layout above)
@@ -149,6 +156,16 @@ export const router = createBrowserRouter([
   {
     path: "/studio/gradient-atlas",
     element: <Suspense fallback={gradientAtlasFallback}><GradientAtlasPage /></Suspense>,
+  },
+
+  // Spectrum Atlas — current paths
+  {
+    path: "/studio/spectrum-atlas",
+    element: <Suspense fallback={spectrumAtlasFallback}><SpectrumAtlasPage /></Suspense>,
+  },
+  {
+    path: "/spectrum-atlas",
+    element: <Suspense fallback={spectrumAtlasFallback}><SpectrumAtlasPage /></Suspense>,
   },
 
   // Paper player — current paths

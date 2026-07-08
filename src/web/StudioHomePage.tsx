@@ -29,6 +29,10 @@ export const StudioHomePage: React.FC = () => {
             <span>Colors</span>
             <strong>Gradient Atlas</strong>
           </Link>
+          <Link className="studio-index__item" to="/studio/spectrum-atlas">
+            <span>Atlas</span>
+            <strong>Spectrum Atlas</strong>
+          </Link>
         </div>
       </section>
     </main>
