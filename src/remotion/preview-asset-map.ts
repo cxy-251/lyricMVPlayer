@@ -1,4 +1,4 @@
-import type {AudioFeatureTrack} from "../../modules/render-core/src";
+import type {AudioFeatureTrack} from "@lyric-mv/lyric-video";
 import type {PreviewAssetMap, RawRenderInput, SelectedPreviewSongData} from "./preview-library/types";
 import selectedAudioFeatures from "../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/audio-features.json";
 import selectedRenderInput from "../../artifacts/songs/Never Goes Away - Claire Rosinkranz - LPSPUFeNQ0I/render-input.json";
