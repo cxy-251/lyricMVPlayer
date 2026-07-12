@@ -5,7 +5,6 @@ import {Web3DEngine, Web3DEngineConfig} from './Web3DEngine';
 interface DemoSceneProps {
   children: ReactNode;
   controls?: any; // Leva controls (if needed for global stuff)
-  debug?: boolean;
   engineConfig?: Partial<Web3DEngineConfig>;
   orbitControls?: boolean;
   orbitConfig?: {
@@ -28,7 +27,6 @@ const DEFAULT_ENGINE_CONFIG: Web3DEngineConfig = {
  */
 export function DemoScene({
   children,
-  debug = false,
   engineConfig = {},
   orbitControls = true,
   orbitConfig = {},
@@ -36,7 +34,6 @@ export function DemoScene({
   const finalConfig: Web3DEngineConfig = {
     ...DEFAULT_ENGINE_CONFIG,
     ...engineConfig,
-    debug,
   };
 
   return (

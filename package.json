@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node tools/dev-with-sync.mjs",
     "dev:web": "node tools/build-web-public.mjs && tailwindcss -i src/styles/tailwind.css -o src/web/tailwind.compiled.css && vite --host 127.0.0.1 --port 3212",
+    "dev:rubiks-solver": "uv run python backend/web3dlab-rubiks-solver/server.py",
     "build:web": "node tools/build-web-public.mjs --demo && tailwindcss -i src/styles/tailwind.css -o src/web/tailwind.compiled.css && vite build",
     "build:web:local": "node tools/build-web-public.mjs && tailwindcss -i src/styles/tailwind.css -o src/web/tailwind.compiled.css && vite build",
     "clean:media": "node tools/clean-media.mjs",
@@ -32,6 +33,7 @@
     "@remotion/tailwind-v4": "^4.0.461",
     "@tailwindcss/postcss": "^4.3.0",
     "clsx": "^2.1.1",
+    "cubing": "^0.63.3",
     "framer-motion": "^12.42.2",
     "leva": "^0.10.1",
     "lucide-react": "^1.16.0",

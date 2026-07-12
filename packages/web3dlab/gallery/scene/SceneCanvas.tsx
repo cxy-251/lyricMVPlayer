@@ -4,18 +4,14 @@ import type {CanvasProps} from '@react-three/fiber';
 import type {ReactNode} from 'react';
 import * as THREE from 'three';
 
-import {PerformanceStats} from '../debug/PerformanceStats';
-
 export function SceneCanvas({
   background = '#03040b',
   camera,
   children,
-  debug = false,
 }: {
   background?: THREE.ColorRepresentation;
   camera?: CanvasProps['camera'];
   children: ReactNode;
-  debug?: boolean;
 }) {
   return (
     <Canvas
@@ -30,7 +26,6 @@ export function SceneCanvas({
       {children}
       <AdaptiveDpr pixelated />
       <Preload all />
-      <PerformanceStats enabled={debug} />
     </Canvas>
   );
 }

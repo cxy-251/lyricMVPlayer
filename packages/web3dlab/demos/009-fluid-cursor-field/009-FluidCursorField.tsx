@@ -147,7 +147,7 @@ function FluidField({
   );
 }
 
-function FluidCursorScene({debug}: {debug: boolean}) {
+function FluidCursorScene() {
   const {interaction, pointerHandlers} = usePointerInteraction();
   const zoomTarget = useRef(1);
   const controls = useControls('Iridescent Liquid Metal', {
@@ -177,7 +177,6 @@ function FluidCursorScene({debug}: {debug: boolean}) {
       config={{
         background: '#03040b',
         camera: {fov: 50, far: 10, near: 0.01, position: [0, 0, 1.75]},
-        debug,
         vignette: {darkness: 0.55, offset: 0.18},
       }}
     >
@@ -187,6 +186,5 @@ function FluidCursorScene({debug}: {debug: boolean}) {
 }
 
 export default function Demo009FluidCursorField() {
-  const {showStats} = useControls('Debug', { showStats: false });
-  return <FluidCursorScene debug={showStats} />;
+  return <FluidCursorScene />;
 }

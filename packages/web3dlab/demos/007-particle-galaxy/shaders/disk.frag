@@ -13,6 +13,6 @@ void main() {
   // 高斯衰减：中心锐利，边缘柔和消失
   float softAlpha  = exp(-dist * dist * 14.0);
 
-  // vBrightness 补偿近景截断损失的发光面积
-  gl_FragColor = vec4(vColor, vAlpha * softAlpha * vBrightness);
+  vec3 color = min(vColor, vec3(2.0, 1.15, 0.72));
+  gl_FragColor = vec4(color, vAlpha * softAlpha * vBrightness);
 }

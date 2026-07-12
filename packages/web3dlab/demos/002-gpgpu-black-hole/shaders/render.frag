@@ -1,6 +1,7 @@
 varying vec3 vColor;
 varying float vAlpha;
 varying float vDistToSingularity;
+varying float vHorizonGlow;
 
 void main() {
   vec2 uv = gl_PointCoord - vec2(0.5);
@@ -15,11 +16,14 @@ void main() {
   // We fade them out smoothly between distance 1.0 and 1.5.
   float horizonFade = smoothstep(1.0, 1.5, vDistToSingularity);
 
-  if (horizonFade <= 0.0) discard; // Inside the black hole, no light escapes
-
-  // Soft particle edge (Gaussian falloff), extremely soft to force blending into fluids
-  float intensity = exp(-dist * dist * 1.5);
+  // ==========================================
+  // SOFT PARTICLES (Fluid-like additive blending)
+  // ==========================================
+  // Extreme soft edges using smoothstep for volumetric plasma look
+  // 1.0 at center, fading out completely by 0.5 radius
+  float intensity = 1.0 - smoothstep(0.0, 0.5, dist);
+  float photonBoost = 1.0 + vHorizonGlow * 0.85;
   
   // Multiply alpha by horizonFade so they smoothly vanish as they get sucked in
-  gl_FragColor = vec4(vColor * intensity, vAlpha * intensity * horizonFade);
+  gl_FragColor = vec4(vColor * intensity * photonBoost, vAlpha * intensity * horizonFade * 0.2);
 }

@@ -303,7 +303,7 @@ function SpaceBackdrop() {
   );
 }
 
-function ClothScene({debug}: {debug: boolean}) {
+function ClothScene() {
   const {interaction, pointerHandlers} = usePointerInteraction();
   const cameraDistance = useRef(6.4);
   const clickImpulse = useRef(0);
@@ -373,7 +373,6 @@ function ClothScene({debug}: {debug: boolean}) {
       config={{
         background: '#03040b',
         camera: {fov: 48, far: 30, near: 0.05, position: [0, 0.22, 6.4]},
-        debug,
         fog: {color: '#03040b', far: 19, near: 8},
         vignette: {darkness: 0.6, offset: 0.18},
       }}
@@ -408,9 +407,5 @@ function ClothScene({debug}: {debug: boolean}) {
  * - <usePointerInteraction> for mouse raycasting and physics impulse triggering.
  */
 export default function Demo010PhysicsClothBanner() {
-  const {showStats} = useControls('Debug', {
-    showStats: false,
-  });
-
-  return <ClothScene debug={showStats} />;
+  return <ClothScene />;
 }

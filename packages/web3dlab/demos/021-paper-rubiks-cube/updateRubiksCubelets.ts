@@ -1,4 +1,4 @@
-import type {RubiksCubieState, ThreeRubiksCubeletBundle} from "../rubiks-cube.types";
+import type {RubiksCubieState, ThreeRubiksCubeletBundle} from "./rubiks-cube.types";
 
 export const updateRubiksCubelets = ({
   cubieGap,
@@ -15,6 +15,6 @@ export const updateRubiksCubelets = ({
     const state = states[index];
     cubie.object.position.copy(state.coord).multiplyScalar(spacing);
     cubie.object.quaternion.copy(state.orientation);
-    cubie.object.scale.setScalar(0.96);
+    cubie.object.scale.setScalar(0.985);
   });
 };

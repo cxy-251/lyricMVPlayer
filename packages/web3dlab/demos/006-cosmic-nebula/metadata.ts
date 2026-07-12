@@ -2,8 +2,9 @@ import type {DemoMetadata} from '../../types';
 
 export const cosmicNebulaMetadata: DemoMetadata = {
   id: 'cosmic-nebula',
-  title: 'Cosmic Nebula',
-  description: 'Volumetric fluid simulation using 3D Curl Noise to render millions of ethereal cosmic ribbons.',
+  title: 'Ethereal Cosmic Fluid',
+  description:
+    'A structured particle nebula uses curl-noise motion, readable point cores, and additive glow to weave magenta/cyan filaments into an ethereal cosmic fluid.',
   route: '/demos/cosmic-nebula',
-  tags: ['Volumetric', 'Fluid', 'Noise', 'Post-Processing'],
+  tags: ['Particle Filaments', 'Volumetric', 'Curl Noise', 'Additive Blending'],
 };

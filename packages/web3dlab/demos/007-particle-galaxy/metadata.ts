@@ -2,14 +2,14 @@ import type {DemoMetadata} from '../../types';
 
 export const particleGalaxyMetadata: DemoMetadata = {
   id: 'particle-galaxy',
-  title: 'Particle Galaxy',
+  title: 'Relativistic Black Hole',
   description:
-    'A shader-driven field of luminous particles that swirls, bends, and blooms around pointer motion.',
-  tags: ['particles', 'shader', 'interactive', 'bloom'],
+    'A physical-based simulation of a supermassive black hole (like Sagittarius A*), rendering an accretion disk influenced by Einsteinian relativistic Doppler beaming and high-energy volumetric polar jets.',
+  tags: ['Astrophysics', 'GPGPU Particles', 'Relativistic Beaming', 'Volumetric Jets'],
   route: '/demos/particle-galaxy',
   instructions: [
-    'Move the pointer to bend the spiral arms.',
-    'Drag to push visible turbulence through the field.',
-    'Use the wheel to breathe through camera distance.',
+    'Move the pointer to interact with the environment.',
+    'Observe the relativistic Doppler beaming (blue-shifted vs red-shifted).',
+    'Use the wheel to zoom in on the event horizon.',
   ],
 };

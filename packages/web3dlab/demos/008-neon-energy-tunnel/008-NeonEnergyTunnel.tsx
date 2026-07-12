@@ -306,7 +306,7 @@ function SolidStreaks({
   );
 }
 
-function NeonTunnelScene({debug}: {debug: boolean}) {
+function NeonTunnelScene() {
   const {interaction, pointerHandlers} = usePointerInteraction();
   const speedBias = useRef(0);
   const motion = useRef<TunnelMotionState>({
@@ -370,7 +370,6 @@ function NeonTunnelScene({debug}: {debug: boolean}) {
       config={{
         background: '#04020a',
         camera: {fov: 76, far: 90, near: 0.05, position: [0, 0, 0]},
-        debug,
         fog: {color: '#04020a', far: 50, near: 10},
       }}
     >
@@ -391,9 +390,5 @@ function NeonTunnelScene({debug}: {debug: boolean}) {
 }
 
 export default function Demo008NeonEnergyTunnel() {
-  const {showStats} = useControls('Debug', {
-    showStats: false,
-  });
-
-  return <NeonTunnelScene debug={showStats} />;
+  return <NeonTunnelScene />;
 }

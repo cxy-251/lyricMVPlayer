@@ -5,6 +5,8 @@ uniform float uTime;
 uniform vec3 uPointer;
 uniform float uGravity;
 uniform float uFriction;
+uniform float uTurbulence;
+uniform float uFeedRate;
 
 varying vec2 vUv;
 
@@ -12,7 +14,7 @@ varying vec2 vUv;
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 
-float snoise(vec3 v){ 
+float snoise(vec3 v){
   const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
   const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
 
@@ -26,16 +28,16 @@ float snoise(vec3 v){
   vec3 i1 = min( g.xyz, l.zxy );
   vec3 i2 = max( g.xyz, l.zxy );
 
-  //  x0 = x0 - 0.0 + 0.0 * C 
+  //  x0 = x0 - 0.0 + 0.0 * C
   vec3 x1 = x0 - i1 + 1.0 * C.xxx;
   vec3 x2 = x0 - i2 + 2.0 * C.xxx;
   vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
 
   // Permutations
-  i = mod(i, 289.0 ); 
-  vec4 p = permute( permute( permute( 
+  i = mod(i, 289.0 );
+  vec4 p = permute( permute( permute(
              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
 
   // Gradients
@@ -77,7 +79,7 @@ float snoise(vec3 v){
   // Mix final noise value
   vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
   m = m * m;
-  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
+  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
                                 dot(p2,x2), dot(p3,x3) ) );
 }
 
@@ -107,7 +109,9 @@ vec3 curlNoise( vec3 p ){
   float z = p_x1.y - p_x0.y - p_y1.x + p_y0.x;
 
   const float divisor = 1.0 / ( 2.0 * e );
-  return normalize( vec3( x , y , z ) * divisor );
+  vec3 curlVec = vec3( x , y , z ) * divisor;
+  float curlLen = length(curlVec);
+  return curlLen > 0.0001 ? (curlVec / curlLen) : vec3(0.0);
 }
 
 void main() {
@@ -116,53 +120,99 @@ void main() {
 
   vec3 pos = posData.xyz;
   vec3 vel = velData.xyz;
+  float seed = posData.w; // Used as a random seed
 
-  // Mass or random seed stored in alpha
-  float mass = posData.w;
-
-  // vec3 dir = uPointer - pos;
+  // The black hole is at the center (0,0,0)
   vec3 dir = vec3(0.0, 0.0, 0.0) - pos;
   float dist = length(dir);
-  
-  // ==========================================
-  // EVENT HORIZON & SINGULARITY PHYSICS
-  // ==========================================
-  // If a particle crosses the event horizon (dist < 1.0), it is "swallowed".
-  // We simulate this by drastically increasing friction so it stays stuck in the hole.
-  if (dist < 1.0) {
-    vel *= 0.1; // Total lock-in
+
+  // Prevent normalize(vec3(0)) NaN explosion which poisons the FBO
+  if (dist < 0.0001) {
+    dir = vec3(0.0001, 0.0, 0.0);
+    dist = 0.0001;
+  }
+  vec3 normDir = dir / dist;
+  vec3 predictedPos = pos + vel * uDelta;
+  float predictedDist = length(predictedPos);
+  float respawnRand = fract(sin(dot(vec2(seed, uTime * 0.17), vec2(12.9898, 78.233))) * 43758.5453);
+
+  if (predictedDist > 36.0 || predictedDist < 1.08 || pos.x != pos.x || predictedPos.x != predictedPos.x || respawnRand < uFeedRate) {
+    float angle = fract(seed * 17.137 + uTime * 0.018) * 6.28318530718;
+    float radiusJitter = fract(seed * 123.456 + uTime * 0.071);
+    float laneJitter = fract(seed * 41.771 + uTime * 0.037);
+    float innerRadius = 1.65 + pow(radiusJitter, 1.7) * 4.35;
+    float outerRadius = 10.5 + radiusJitter * 8.0;
+    float useInnerDisk = max(step(laneJitter, 0.48), step(predictedDist, 1.08));
+    float radius = mix(outerRadius, innerRadius, useInnerDisk);
+    vec3 spawnDir = normalize(vec3(cos(angle), 0.0, sin(angle)));
+    vec3 spawnTangent = normalize(cross(-spawnDir, vec3(0.0, 1.0, 0.0)));
+    float spawnSpeed = sqrt(max(uGravity / max(radius, 1.0), 0.0)) * mix(1.28, 1.42, useInnerDisk);
+    float verticalSeed = fract(seed * 761.31 + uTime * 0.053) - 0.5;
+    vel = spawnTangent * spawnSpeed + vec3(0.0, verticalSeed * 0.18, 0.0);
     gl_FragColor = vec4(vel, 1.0);
     return;
   }
 
-  // Inverse square gravity outside the horizon
-  // Clamp dist to avoid extreme infinity blasts
-  float safeDist = max(dist, 1.5);
-  float gravityForce = uGravity / (safeDist * safeDist);
-  vec3 force = normalize(dir) * gravityForce;
-  
-  // Tangential orbital force (makes them swirl instead of just falling straight in)
-  vec3 tangent = cross(normalize(dir), vec3(0.0, 1.0, 0.0));
-  // Limit tangent force so they don't get flung out like wind!
-  force += tangent * min((uGravity / safeDist) * 0.8, 15.0);
+  // ==========================================
+  // ACCRETION DISK GRAVITY & ORBIT
+  // ==========================================
+  float safeDist = max(dist, 1.25);
+
+  float gravityForce = uGravity / (safeDist * safeDist + 6.0) + exp(-safeDist * 0.45) * uGravity * 0.08;
+
+  vec3 force = normDir * gravityForce;
+
+  // Tangential orbital direction (Accretion disk rotation swirl)
+  vec3 tangent = normalize(cross(normDir, vec3(0.0, 1.0, 0.0)));
+  if (length(tangent) < 0.0001) tangent = vec3(1.0, 0.0, 0.0);
 
   // ==========================================
-  // CURL NOISE TURBULENCE
+  // 3D CURL NOISE TURBULENCE
   // ==========================================
-  // Gentle turbulence
-  vec3 curl = curlNoise(pos * 0.5 + uTime * 0.2);
-  force += curl * 2.0;
+  vec3 curl = curlNoise(pos * 0.18 + uTime * 0.08 + seed * 5.0);
+  float curlMagnitude = (0.16 + exp(-safeDist * 0.22) * 0.9) * uTurbulence;
+  force += curl * curlMagnitude;
 
   vel += force * uDelta;
-  
-  // Heavy non-linear friction to stabilize the fluid and prevent jumping dots
+
+  // ==========================================
+  // KEPLERIAN ORBIT STEERING & FRICTION
+  // ==========================================
+  float idealSpeed = sqrt(gravityForce * safeDist) * 1.12;
+  vec3 idealTangentVel = tangent * idealSpeed;
+
+  // Split current velocity
+  float radialSpeed = dot(vel, normDir);
+  vec3 radialVel = radialSpeed * normDir;
+  vec3 tangentVel = vel - radialVel;
+  float horizonHold = 1.0 - smoothstep(1.35, 3.25, safeDist);
+  float photonBand = smoothstep(1.28, 1.65, safeDist) * (1.0 - smoothstep(3.4, 5.8, safeDist));
+
+  float frictionAmount = smoothstep(0.94, 0.998, uFriction);
+  radialVel *= mix(0.84, 0.995, frictionAmount);
+  radialVel -= normDir * max(radialSpeed, 0.0) * horizonHold * 0.42;
+  tangentVel *= mix(0.9, 1.002, frictionAmount);
+  tangentVel.y *= mix(0.94, 0.84, photonBand);
+
+  // Steer tangential velocity towards ideal Keplerian orbit
+  tangentVel = mix(tangentVel, idealTangentVel, uDelta * (1.25 + photonBand * 1.55));
+
+  vel = radialVel + tangentVel;
+
+  float outerInjection = smoothstep(14.0, 18.5, dist);
+  vec3 injectedVel = tangent * sqrt(max(uGravity / max(dist, 1.0), 0.0)) * 1.35 + curl * uTurbulence * 0.16;
+  vel = mix(vel, injectedVel, outerInjection * 0.08);
+  float ringInjection = smoothstep(1.4, 2.0, dist) * (1.0 - smoothstep(4.8, 6.0, dist));
+  vec3 ringVel = tangent * sqrt(max(uGravity / max(dist, 1.0), 0.0)) * 1.34 + curl * uTurbulence * 0.12;
+  vel = mix(vel, ringVel, ringInjection * 0.055);
+
   float currentSpeed = length(vel);
-  float dynamicFriction = max(uFriction - currentSpeed * 0.005, 0.85);
-  vel *= dynamicFriction;
-  
-  // Hard clamp velocity to prevent temporal aliasing (dashed lines)
-  if (length(vel) > 15.0) {
-    vel = normalize(vel) * 15.0;
+
+  // Robust NaN check and Speed Clamp
+  if (!(currentSpeed >= 0.0)) {
+    vel = tangent * sqrt(max(uGravity / max(dist, 1.0), 0.0));
+  } else if (currentSpeed > 12.0) {
+    vel = (vel / currentSpeed) * 12.0;
   }
 
   gl_FragColor = vec4(vel, 1.0);

@@ -8,6 +8,8 @@ import "../styles.css";
 import type {AudioFeatureTrack} from "@lyric-mv/lyric-video";
 import type {DemoDefinition} from "../types";
 
+const getDemoNumberLabel = (index: number) => String(index + 1).padStart(3, "0");
+
 export function Gallery({
   demos,
   onNavigate,
@@ -30,7 +32,7 @@ export function Gallery({
         </header>
 
         <div className="gallery-grid">
-          {demos.map((demo) => (
+          {demos.map((demo, index) => (
             <article className="demo-card" key={demo.id}>
               <a
                 className="demo-card-link"
@@ -40,21 +42,16 @@ export function Gallery({
                   onNavigate(demo.route);
                 }}
               >
-                <div className={`demo-preview demo-preview--${demo.id}`} aria-hidden="true">
-                  <span className="preview-core" />
-                  <span className="preview-ring preview-ring-a" />
-                  <span className="preview-ring preview-ring-b" />
-                  <span className="preview-spark preview-spark-a" />
-                  <span className="preview-spark preview-spark-b" />
-                  <span className="preview-spark preview-spark-c" />
-                </div>
                 <div className="demo-card-body">
                   <div className="tag-row">
                     {demo.tags.map((tag) => (
                       <span key={tag}>{tag}</span>
                     ))}
                   </div>
-                  <h2>{demo.title}</h2>
+                  <h2>
+                    <span className="demo-number">{getDemoNumberLabel(index)}</span>
+                    <span>{demo.title}</span>
+                  </h2>
                   <p>{demo.description}</p>
                   <span className="open-label">Open demo</span>
                 </div>
@@ -113,7 +110,7 @@ export const EffectLabPage: React.FC<{song: LabSong}> = () => {
   const ActiveDemo = activeDemo.Component;
 
   return (
-    <DemoLayout controlsCollapsed={false} metadata={activeDemo} onBack={openGallery}>
+    <DemoLayout metadata={activeDemo} onBack={openGallery}>
       <ActiveDemo />
     </DemoLayout>
   );

@@ -2,12 +2,12 @@ import React from "react";
 import type { EffectAtomRuntimeProps } from "../simulations/types";
 import { baseLayerStyle, launchButtonBaseStyle, getLaunchButtonState, getLaunchButtonBackground } from "./styles";
 
-import { renderDonutLayer } from "../../demos/019-paper-donut-spin/atom";
-import { renderLifeLayer } from "../../demos/023-paper-three-life/atom";
-import { renderLightsLayer } from "../../demos/020-paper-lights-beams/atom";
-import { renderRubiksLayer } from "../../demos/021-paper-rubiks-cube/atom";
-import { renderSnakeLayer } from "../../demos/022-paper-snake-grid/atom";
-import { renderParticleLayer } from "../../demos/024-paper-three-particle/atom";
+import { renderDonutLayer } from "./donut-spin";
+import { renderLifeLayer } from "./cellular-life";
+import { renderLightsLayer } from "./lights-beams";
+import { renderRubiksLayer } from "./rubiks-cube";
+import { renderSnakeLayer } from "./snake-grid";
+import { renderParticleLayer } from "./elastic-collision";
 
 const CellularLaunchAtom: React.FC<EffectAtomRuntimeProps> = ({
   absoluteFrame,

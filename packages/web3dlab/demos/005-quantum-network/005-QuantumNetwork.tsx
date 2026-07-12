@@ -17,7 +17,7 @@ const PACKET_COUNT = 25000;
 function CyberNetwork({controls}: {controls: any}) {
   const networkData = useMemo(() => {
     const nodes: THREE.Vector3[] = [];
-    
+
     // 1. Generate Nodes in a Sphere
     for (let i = 0; i < NODE_COUNT; i++) {
       const u = Math.random();
@@ -38,7 +38,7 @@ function CyberNetwork({controls}: {controls: any}) {
     // 2. Generate Line Segments (Synapses)
     const linePos = [];
     const lineDist = [];
-    
+
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         const d = nodes[i].distanceTo(nodes[j]);
@@ -49,19 +49,19 @@ function CyberNetwork({controls}: {controls: any}) {
         }
       }
     }
-    
+
     // 3. Generate Data Packets
     const packetSources = [];
     const packetTargets = [];
     const packetDists = [];
     const packetOffsets = [];
-    
+
     const validLinesCount = lineDist.length / 2;
-    
+
     for (let i = 0; i < PACKET_COUNT; i++) {
       const randLine = Math.floor(Math.random() * validLinesCount);
       const startIdx = randLine * 6;
-      
+
       packetSources.push(linePos[startIdx], linePos[startIdx+1], linePos[startIdx+2]);
       packetTargets.push(linePos[startIdx+3], linePos[startIdx+4], linePos[startIdx+5]);
       packetDists.push(lineDist[randLine * 2]);
@@ -89,7 +89,8 @@ function CyberNetwork({controls}: {controls: any}) {
   }, [networkData]);
 
   const packetsGeometry = useMemo(() => {
-    const geo = new THREE.TetrahedronGeometry(0.04, 0);
+    // Use an elongated BoxGeometry to create the trail/shuttle shape natively
+    const geo = new THREE.BoxGeometry(0.015, 0.015, 1.0);
     const instancedGeo = new THREE.InstancedBufferGeometry();
     instancedGeo.copy(geo as unknown as THREE.InstancedBufferGeometry);
     instancedGeo.instanceCount = PACKET_COUNT;
@@ -100,37 +101,35 @@ function CyberNetwork({controls}: {controls: any}) {
     return instancedGeo;
   }, [networkData]);
 
-  // 完美修复：在组件顶层构建持久化的 Uniforms 字典，彻底消灭基于 Ref 的竞态条件
   const nodeUniforms = useMemo(() => ({
     uTime: { value: 0 },
-    uPulseSpeed: { value: 2.0 },
+    uDriftChaos: { value: 0.2 },
   }), []);
 
   const packetUniforms = useMemo(() => ({
     uTime: { value: 0 },
-    uDataSpeed: { value: 2.0 },
-    uConnectionRadius: { value: 2.2 },
+    uDataSpeed: { value: 1.5 },
+    uConnectionRadius: { value: MAX_CONNECTION_DIST },
+    uDriftChaos: { value: 0.2 },
   }), []);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    // 直接更新内存字典中的值，无视材质是否已完成编译
     nodeUniforms.uTime.value = t;
-    nodeUniforms.uPulseSpeed.value = controls.pulseSpeed;
-    
+    nodeUniforms.uDriftChaos.value = controls.driftChaos;
+
     packetUniforms.uTime.value = t;
-    packetUniforms.uDataSpeed.value = controls.dataSpeed;
-    packetUniforms.uConnectionRadius.value = controls.connectionRadius;
+    packetUniforms.uDataSpeed.value = controls.packetSpeed;
+    packetUniforms.uDriftChaos.value = controls.driftChaos;
   });
 
   const onNodesBeforeCompile = (shader: any) => {
-    // 渲染器编译时，直接将指针挂载到持久化的内存字典上
     shader.uniforms.uTime = nodeUniforms.uTime;
-    shader.uniforms.uPulseSpeed = nodeUniforms.uPulseSpeed;
+    shader.uniforms.uDriftChaos = nodeUniforms.uDriftChaos;
 
     shader.vertexShader = `
       uniform float uTime;
-      uniform float uPulseSpeed;
+      uniform float uDriftChaos;
       attribute vec3 aNodePos;
       varying float vAlpha;
     ` + shader.vertexShader;
@@ -139,16 +138,23 @@ function CyberNetwork({controls}: {controls: any}) {
       '#include <begin_vertex>',
       `
       vec3 transformed = position;
-      
+
       float distFromCenter = length(aNodePos);
-      float breath = sin(uTime * uPulseSpeed - distFromCenter * 0.5) * 0.5 + 0.5;
+      float breath = sin(uTime * 1.5 - distFromCenter * 0.5) * 0.5 + 0.5;
       float scale = 1.0 + breath * 0.3;
       transformed *= scale;
-      
-      transformed += aNodePos;
-      
+
+      // Organic Drift
+      vec3 drift = vec3(
+        sin(uTime * 0.3 + aNodePos.z * 1.5),
+        cos(uTime * 0.2 + aNodePos.x * 1.5),
+        sin(uTime * 0.4 + aNodePos.y * 1.5)
+      ) * uDriftChaos;
+
+      transformed += aNodePos + drift;
+
       float edgeFade = smoothstep(12.0, 8.0, distFromCenter);
-      vAlpha = edgeFade * (0.2 + breath * 0.8);
+      vAlpha = edgeFade * (0.3 + breath * 0.7);
       `
     );
 
@@ -168,17 +174,19 @@ function CyberNetwork({controls}: {controls: any}) {
     shader.uniforms.uTime = packetUniforms.uTime;
     shader.uniforms.uDataSpeed = packetUniforms.uDataSpeed;
     shader.uniforms.uConnectionRadius = packetUniforms.uConnectionRadius;
+    shader.uniforms.uDriftChaos = packetUniforms.uDriftChaos;
 
     shader.vertexShader = `
       uniform float uTime;
       uniform float uDataSpeed;
       uniform float uConnectionRadius;
-      
+      uniform float uDriftChaos;
+
       attribute vec3 aSource;
       attribute vec3 aTarget;
       attribute float aDistance;
       attribute float aOffset;
-      
+
       varying float vAlpha;
     ` + shader.vertexShader;
 
@@ -186,28 +194,39 @@ function CyberNetwork({controls}: {controls: any}) {
       '#include <begin_vertex>',
       `
       vec3 transformed = position;
-      
+
       if (aDistance > uConnectionRadius) {
          transformed = vec3(9999.0); // Hide if line is too long
          vAlpha = 0.0;
       } else {
          float progress = fract(uTime * uDataSpeed * (1.0 / max(aDistance, 0.5)) + aOffset);
-         vec3 p = mix(aSource, aTarget, progress);
-         
-         // Orient packet along the line
-         vec3 dir = normalize(aTarget - aSource);
+
+         // Apply same organic drift to source and target so packets ride the moving lines accurately
+         vec3 sDrift = vec3(sin(uTime * 0.3 + aSource.z * 1.5), cos(uTime * 0.2 + aSource.x * 1.5), sin(uTime * 0.4 + aSource.y * 1.5)) * uDriftChaos;
+         vec3 tDrift = vec3(sin(uTime * 0.3 + aTarget.z * 1.5), cos(uTime * 0.2 + aTarget.x * 1.5), sin(uTime * 0.4 + aTarget.y * 1.5)) * uDriftChaos;
+         vec3 sPos = aSource + sDrift;
+         vec3 tPos = aTarget + tDrift;
+
+         vec3 p = mix(sPos, tPos, progress);
+
+         // Orient packet along the moved line
+         vec3 dir = normalize(tPos - sPos);
          vec3 up = vec3(0.0, 1.0, 0.0);
          if (abs(dir.y) > 0.999) up = vec3(1.0, 0.0, 0.0);
          vec3 right = normalize(cross(up, dir));
          up = cross(dir, right);
          mat3 rot = mat3(right, up, dir);
-         
-         transformed.z *= 2.0; // stretch along direction
+
+         // Stretch based on speed and add attenuation shape logic
+         // position.z natively ranges from -0.5 to 0.5 for a length 1.0 BoxGeometry
+         float shapeFade = smoothstep(0.5, 0.0, abs(position.z));
+
+         transformed.z *= max(uDataSpeed * 1.5, 1.0); // Dynamic length
          transformed = rot * transformed + p;
-         
+
          float edgeFade = smoothstep(0.0, 0.1, progress) * smoothstep(1.0, 0.9, progress);
          float distFade = smoothstep(uConnectionRadius, uConnectionRadius * 0.5, aDistance);
-         vAlpha = edgeFade * distFade;
+         vAlpha = edgeFade * distFade * shapeFade;
       }
       `
     );
@@ -219,6 +238,7 @@ function CyberNetwork({controls}: {controls: any}) {
     shader.fragmentShader = shader.fragmentShader.replace(
       'vec4 diffuseColor = vec4( diffuse, opacity );',
       `
+      // Make packets hyper emissive core with faded edges
       vec4 diffuseColor = vec4( diffuse, opacity * vAlpha );
       `
     );
@@ -234,31 +254,34 @@ function CyberNetwork({controls}: {controls: any}) {
         </bufferGeometry>
         <AutoShaderMaterial
           controls={controls}
+          extraUniforms={{
+            uConnectionRadius: { value: MAX_CONNECTION_DIST }
+          }}
           vertexShader={linesVert}
           fragmentShader={linesFrag}
+          transparent={true}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </lineSegments>
 
-      {/* Data Packets (Physical Crystals) */}
+      {/* Data Packets (Light Shuttles) */}
       <instancedMesh args={[packetsGeometry, undefined, PACKET_COUNT]} frustumCulled={false}>
-        <meshPhysicalMaterial
+        <meshBasicMaterial
           color={controls.packetColor}
-          emissive={controls.packetColor}
-          emissiveIntensity={0.5}
-          roughness={0.1}
-          metalness={0.8}
-          transmission={0.9}
-          ior={1.5}
           transparent
+          blending={THREE.AdditiveBlending}
           depthWrite={false}
           onBeforeCompile={onPacketsBeforeCompile}
         />
       </instancedMesh>
 
-      {/* Static Nodes (Physical Glass Spheres) */}
+      {/* Organic Nodes (Glowing Core) */}
       <instancedMesh args={[nodesGeometry, undefined, NODE_COUNT]} frustumCulled={false}>
         <meshPhysicalMaterial
           color={controls.networkColor}
+          emissive={controls.networkColor}
+          emissiveIntensity={2.5}
           roughness={0.1}
           metalness={0.8}
           transmission={0.9}
@@ -273,13 +296,14 @@ function CyberNetwork({controls}: {controls: any}) {
   );
 }
 
-function HolographicScene({debug, controls}: {debug: boolean; controls: any}) {
+function HolographicScene({controls}: {controls: any}) {
   return (
     <DemoScene
-      debug={debug}
       engineConfig={{
-        background: '#010308', 
-        camera: {fov: 45, far: 80, near: 0.1, position: [0, 0, 20]}, 
+        background: '#010308',
+        camera: {fov: 45, far: 80, near: 0.1, position: [0, 0, 20]},
+        // Targeted Bloom: High threshold ensures only emissive nodes and additive packets glow, while lines remain dim
+        bloom: { intensity: 2.5, luminanceThreshold: controls.bloomThreshold, luminanceSmoothing: 0.2 }
       }}
       orbitConfig={{
         enablePan: true,
@@ -288,23 +312,23 @@ function HolographicScene({debug, controls}: {debug: boolean; controls: any}) {
       }}
     >
       <Environment preset="studio" />
-      <ambientLight intensity={1.0} />
-      <directionalLight position={[10, 10, 10]} intensity={3.0} />
-      
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 10]} intensity={1.5} />
+
       <CyberNetwork controls={controls} />
     </DemoScene>
   );
 }
 
 export default function Demo005QuantumNetwork() {
-  const {showStats} = useControls('Debug', {showStats: false});
   const networkControls = useControls('Physical Quantum Network', {
-    connectionRadius: { value: 2.2, min: 0.5, max: 4.0, step: 0.1 },
-    dataSpeed: { value: 2.0, min: 0.1, max: 10.0, step: 0.1 },
-    pulseSpeed: { value: 2.0, min: 0.1, max: 5.0, step: 0.1 },
+    synapseGlow: { value: 0.4, min: 0.0, max: 2.0, step: 0.05 },
+    packetSpeed: { value: 1.5, min: 0.1, max: 10.0, step: 0.1 },
+    driftChaos: { value: 0.2, min: 0.0, max: 2.0, step: 0.05 },
+    bloomThreshold: { value: 0.85, min: 0.0, max: 1.0, step: 0.01 },
     networkColor: '#0055ff', // Deep cyber blue
     packetColor: '#00ffff',  // Cyan packets
   });
 
-  return <HolographicScene debug={showStats} controls={networkControls} />;
+  return <HolographicScene controls={networkControls} />;
 }

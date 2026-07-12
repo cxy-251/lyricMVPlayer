@@ -4,13 +4,13 @@ import type { EffectControlDefinition } from "../simulations/types";
 import { baseLayerStyle, launchButtonBaseStyle, getLaunchButtonState, getLaunchButtonBackground, getAuroraBackground, getGridDriftBackground, getNoiseBloomBackground } from "./styles";
 import type { EffectAtomDefinition, EffectAtomId } from "../simulations/types";
 import { AuroraAtom, GridDriftAtom, NoiseBloomAtom } from "./backgrounds";
-import { CellularLifeAtom, LIFE_EFFECT_CONTROLS } from "../../demos/023-paper-three-life/atom";
+import { CellularLifeAtom, LIFE_EFFECT_CONTROLS } from "./cellular-life";
 import { CellularLaunchAtom } from "./cellular-launch";
-import { SnakeGridAtom, SNAKE_EFFECT_CONTROLS } from "../../demos/022-paper-snake-grid/atom";
-import { ParticleOrbitAtom, PARTICLE_EFFECT_CONTROLS } from "../../demos/024-paper-three-particle/atom";
-import { DonutSpinAtom, DONUT_EFFECT_CONTROLS } from "../../demos/019-paper-donut-spin/atom";
-import { LightsLaunchAtom, LightsBeamsAtom, LIGHTS_EFFECT_CONTROLS } from "../../demos/020-paper-lights-beams/atom";
-import { RubiksLaunchAtom, RubiksAutoSolveAtom, RUBIKS_EFFECT_CONTROLS } from "../../demos/021-paper-rubiks-cube/atom";
+import { SnakeGridAtom, SNAKE_EFFECT_CONTROLS } from "./snake-grid";
+import { ParticleOrbitAtom, PARTICLE_EFFECT_CONTROLS } from "./elastic-collision";
+import { DonutSpinAtom, DONUT_EFFECT_CONTROLS } from "./donut-spin";
+import { LightsLaunchAtom, LightsBeamsAtom, LIGHTS_EFFECT_CONTROLS } from "./lights-beams";
+import { RubiksLaunchAtom, RubiksAutoSolveAtom, RUBIKS_EFFECT_CONTROLS } from "./rubiks-cube";
 import type { VisualModuleConfig } from "@paper-to-video/shared-types";
 
 
@@ -21,7 +21,7 @@ export const EFFECT_ATOMS: Record<EffectAtomId, EffectAtomDefinition> = {
   "cellular-launch": { id: "cellular-launch", title: "Cellular Launch", description: "...", Component: CellularLaunchAtom, controls: LIFE_EFFECT_CONTROLS },
   "cellular-life": { id: "cellular-life", title: "Cellular Life", description: "...", Component: CellularLifeAtom, controls: LIFE_EFFECT_CONTROLS },
   "snake-grid": { id: "snake-grid", title: "Snake Grid", description: "...", Component: SnakeGridAtom, controls: SNAKE_EFFECT_CONTROLS },
-  "particle-orbit": { id: "particle-orbit", title: "Particle Orbit", description: "...", Component: ParticleOrbitAtom, controls: PARTICLE_EFFECT_CONTROLS },
+  "particle-orbit": { id: "particle-orbit", title: "Elastic Collision", description: "Energy-preserving sphere collisions in a closed chamber.", Component: ParticleOrbitAtom, controls: PARTICLE_EFFECT_CONTROLS },
   "donut-spin": { id: "donut-spin", title: "Donut Spin", description: "...", Component: DonutSpinAtom, controls: DONUT_EFFECT_CONTROLS },
   "lights-launch": { id: "lights-launch", title: "Lights Launch", description: "...", Component: LightsLaunchAtom, controls: LIGHTS_EFFECT_CONTROLS },
   "lights-beams": { id: "lights-beams", title: "Lights Beams", description: "...", Component: LightsBeamsAtom, controls: LIGHTS_EFFECT_CONTROLS },

@@ -3,13 +3,16 @@ import react from "@vitejs/plugin-react";
 import glsl from "vite-plugin-glsl";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {demo21RubiksSolverDevPlugin} from "./packages/web3dlab/demos/021-paper-rubiks-cube/rubiksSolverDevPlugin";
 
 const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const paperWorkspaceRoot = path.join(repoRoot, "packages", "paper-video");
 const paperArtifactRoot = path.join(repoRoot, "artifacts", "paper-video", "output");
-
 export default defineConfig({
-  plugins: [react(), glsl()],
+  plugins: [react(), glsl(), demo21RubiksSolverDevPlugin(repoRoot)],
+  optimizeDeps: {
+    exclude: ["cubing"],
+  },
   publicDir: "public-web",
   resolve: {
     dedupe: ["react", "react-dom", "react-router"],
@@ -45,6 +48,9 @@ export default defineConfig({
     },
     fs: {
       allow: [repoRoot],
+    },
+    proxy: {
+      "/api/web3dlab/rubiks": "http://127.0.0.1:3213",
     },
   },
   preview: {

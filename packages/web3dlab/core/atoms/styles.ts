@@ -1,5 +1,3 @@
-import {getCellularLaunchOrigin} from "../../demos/023-paper-three-life/core/cellular-life-simulation";
-
 export const baseLayerStyle = {
   position: "absolute",
   inset: 0,
@@ -27,7 +25,7 @@ export const launchButtonBaseStyle = {
 } as const;
 
 export const getLaunchButtonState = (frame: number) => {
-  const buttonOrigin = getCellularLaunchOrigin();
+  const buttonOrigin = {x: 0.5, y: 0.62};
   const pulse = 1 + Math.sin(frame / 7) * 0.04;
   return { buttonOrigin, pulse };
 };

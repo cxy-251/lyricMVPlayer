@@ -2,13 +2,14 @@ import type { DemoDefinition } from '../../types';
 
 export const perfectSphereMetadata: Omit<DemoDefinition, 'Component'> = {
   id: '059-perfect-sphere',
-  title: 'Math Lab: The Perfect Sphere',
-  description: 'A pure WebGL (InstancedMesh) 3D Fibonacci Sphere. Demonstrates mathematical perfection without baked assets. The energy core breathes and expands using a dynamic time-based golden ratio multiplier.',
+  title: 'Fibonacci Parastichy Sphere',
+  description: 'A golden-angle sphere that exposes the two adjacent Fibonacci offset families responsible for visible parastichy spirals.',
   route: '/perfect-sphere',
-  tags: ['WebGL', 'Math', 'InstancedMesh', 'Procedural', 'Energy'],
+  tags: ['WebGL', 'Fibonacci Sphere', 'Golden Angle', 'Parastichy', 'Procedural Geometry', 'Shader Material'],
   instructions: [
-    'Drag to orbit around the energy core',
-    'Scroll to zoom in/out',
-    'Use the Leva Control Panel to adjust particle count, chaos factor, and colors.',
+    'The sample count uses Fibonacci numbers and distributes points with the 137.508 degree golden angle.',
+    'Spiral Pair selects adjacent Fibonacci index offsets rather than arbitrary arm counts.',
+    'Use the layer button to compare both spiral families or isolate either offset.',
+    'Drag to orbit, scroll to zoom, and use Leva to control density, visibility, pulse speed, and rotation.',
   ],
 };

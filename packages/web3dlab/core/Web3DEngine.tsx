@@ -16,7 +16,6 @@ export interface Web3DEngineConfig {
   };
   camera?: CanvasProps['camera'];
   chromaticAberration?: {offset: [number, number]};
-  debug?: boolean;
   fog?: {color: THREE.ColorRepresentation; far: number; near: number};
   vignette?: {
     darkness: number;
@@ -34,11 +33,10 @@ export function Web3DEngine({
 } & HTMLAttributes<HTMLDivElement>) {
   const cameraProps = config?.camera ?? {position: [0, 0, 8], fov: 50, near: 0.1, far: 50};
   const background = config?.background ?? '#010105';
-  const debug = config?.debug ?? false;
 
   return (
     <div className="demo-viewport" style={{touchAction: 'none'}} {...containerProps}>
-      <SceneCanvas background={background} camera={cameraProps} debug={debug}>
+      <SceneCanvas background={background} camera={cameraProps}>
         <color attach="background" args={[background as any]} />
         {config?.fog ? <fog attach="fog" args={[config.fog.color, config.fog.near, config.fog.far]} /> : null}
 

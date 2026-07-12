@@ -3,15 +3,21 @@ import { EffectScene, EffectFrame } from '../../core/EffectContract';
 import { PRNG } from '../../core/math/PRNG';
 import computePositionFrag from './shaders/computePosition.frag?raw';
 import computeVelocityFrag from './shaders/computeVelocity.frag?raw';
+import renderVert from './shaders/render.vert?raw';
+import renderFrag from './shaders/render.frag?raw';
 
 export type BlackHoleConfig = {
   gravity: number;
   friction: number;
+  turbulence: number;
+  feedRate: number;
+  particleSize: number;
+  horizonGlow: number;
   colorCore: string;
   colorOuter: string;
 };
 
-const TEX_SIZE = 512;
+const TEX_SIZE = 1024;
 const PARTICLE_COUNT = TEX_SIZE * TEX_SIZE;
 
 const fullscreenVertexShader = `
@@ -24,10 +30,14 @@ const fullscreenVertexShader = `
 
 export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
   private config: BlackHoleConfig = {
-    gravity: 85.0,
-    friction: 0.99,
-    colorCore: '#ff8822',
-    colorOuter: '#2255ff'
+    gravity: 18.0,
+    friction: 0.985,
+    turbulence: 0.7,
+    feedRate: 0.0014,
+    particleSize: 2.1,
+    horizonGlow: 0.95,
+    colorCore: '#ffbc66',
+    colorOuter: '#3d7dff'
   };
 
   private renderer: THREE.WebGLRenderer | null = null;
@@ -45,9 +55,9 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
   private step = 0;
 
   // Main Render Resources
-  private particlesMesh: THREE.Mesh;
-  private particlesGeo: THREE.InstancedBufferGeometry;
-  private particlesMat: THREE.MeshBasicMaterial;
+  private particlesMesh: THREE.Points;
+  private particlesGeo: THREE.BufferGeometry;
+  private particlesMat: THREE.ShaderMaterial;
   private coreMesh: THREE.Mesh;
 
   private pointerWorld = new THREE.Vector3(0, 0, 0);
@@ -96,6 +106,8 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
         uPointer: { value: new THREE.Vector3() },
         uGravity: { value: this.config.gravity },
         uFriction: { value: this.config.friction },
+        uTurbulence: { value: this.config.turbulence },
+        uFeedRate: { value: this.config.feedRate },
       }
     });
 
@@ -107,106 +119,58 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
         uPosition: { value: null },
         uVelocity: { value: null },
         uDelta: { value: 0.016 },
+        uTime: { value: 0 },
+        uFeedRate: { value: this.config.feedRate },
       }
     });
 
     // ----------------------------------------
-    // Initialize Main Render Mesh
+    // Initialize Main Render Mesh (1M Soft Particles)
     // ----------------------------------------
-    const geo = new THREE.TetrahedronGeometry(0.006, 0);
+    const pointsGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(PARTICLE_COUNT * 3);
     const uvs = new Float32Array(PARTICLE_COUNT * 2);
     for (let i = 0; i < PARTICLE_COUNT; i++) {
+      // initial dummy positions
+      positions[i * 3] = 0;
+      positions[i * 3 + 1] = 0;
+      positions[i * 3 + 2] = 0;
       uvs[i * 2] = (i % TEX_SIZE) / TEX_SIZE;
       uvs[i * 2 + 1] = Math.floor(i / TEX_SIZE) / TEX_SIZE;
     }
-    this.particlesGeo = new THREE.InstancedBufferGeometry();
-    this.particlesGeo.copy(geo as unknown as THREE.InstancedBufferGeometry);
-    this.particlesGeo.instanceCount = PARTICLE_COUNT;
-    this.particlesGeo.setAttribute('aUv', new THREE.InstancedBufferAttribute(uvs, 2));
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    pointsGeo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    this.particlesGeo = pointsGeo;
 
-    this.particlesMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+    this.particlesMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uPosition: { value: null },
+        uVelocity: { value: null },
+        uColorCore: { value: new THREE.Color(this.config.colorCore) },
+        uColorOuter: { value: new THREE.Color(this.config.colorOuter) },
+        uParticleSize: { value: this.config.particleSize },
+        uHorizonGlow: { value: this.config.horizonGlow },
+      },
+      vertexShader: renderVert,
+      fragmentShader: renderFrag,
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-    });
+    }) as any; // Cast as any because we overwrite particlesMat type
 
-    this.particlesMat.onBeforeCompile = (shader) => {
-      shader.uniforms.uPosition = { value: null };
-      shader.uniforms.uVelocity = { value: null };
-      shader.uniforms.uColorCore = { value: new THREE.Color(this.config.colorCore) };
-      shader.uniforms.uColorOuter = { value: new THREE.Color(this.config.colorOuter) };
-      this.particlesMat.userData.shader = shader;
-
-      shader.vertexShader = `
-        uniform sampler2D uPosition;
-        uniform sampler2D uVelocity;
-        uniform vec3 uColorCore;
-        uniform vec3 uColorOuter;
-        attribute vec2 aUv;
-        varying vec3 vInstColor;
-      ` + shader.vertexShader;
-
-      shader.vertexShader = shader.vertexShader.replace(
-        '#include <begin_vertex>',
-        `
-        vec4 posData = texture2D(uPosition, aUv);
-        vec4 velData = texture2D(uVelocity, aUv);
-        
-        float dist = length(posData.xz);
-        vec3 color = mix(uColorCore, uColorOuter, smoothstep(1.5, 12.0, dist));
-        
-        vec3 vel = velData.xyz;
-        float speed = length(vel);
-        vec3 viewDir = normalize(cameraPosition - posData.xyz);
-        float doppler = speed > 0.0001 ? dot(vel / speed, viewDir) : 0.0;
-        
-        color = mix(color, vec3(1.0, 0.1, 0.0), clamp(-doppler * 0.4, 0.0, 1.0)); 
-        color = mix(color, vec3(0.5, 0.8, 1.0), clamp(doppler * 0.4, 0.0, 1.0)); 
-        
-        float eventHorizonGlow = smoothstep(4.0, 1.5, dist);
-        color += vec3(1.0, 0.8, 0.4) * eventHorizonGlow * 3.0; 
-        
-        vInstColor = color;
-        
-        vec3 forward = speed > 0.001 ? normalize(vel) : vec3(0.0, 0.0, 1.0);
-        vec3 up = vec3(0.0, 1.0, 0.0);
-        if (abs(forward.y) > 0.999) { up = vec3(1.0, 0.0, 0.0); }
-        vec3 right = normalize(cross(up, forward));
-        up = cross(forward, right);
-        mat3 rot = mat3(right, up, forward);
-        
-        vec3 scaledPos = position;
-        scaledPos.z *= max(1.0, speed * 0.05); 
-        
-        float distToCamera = length(cameraPosition - posData.xyz);
-        float cameraFadeScale = smoothstep(10.0, 18.0, distToCamera);
-        scaledPos *= cameraFadeScale;
-        
-        vec3 transformed = rot * scaledPos + posData.xyz;
-        `
-      );
-
-      shader.fragmentShader = `
-        varying vec3 vInstColor;
-      ` + shader.fragmentShader;
-
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'vec4 diffuseColor = vec4( diffuse, opacity );',
-        `vec4 diffuseColor = vec4( vInstColor, opacity );`
-      );
-    };
-
-    this.particlesMesh = new THREE.Mesh(this.particlesGeo, this.particlesMat);
+    this.particlesMesh = new THREE.Points(pointsGeo, this.particlesMat) as any;
     this.particlesMesh.frustumCulled = false;
     this.particlesMesh.renderOrder = 2;
     this.scene.add(this.particlesMesh);
 
-    // Vantablack Core
-    const coreGeo = new THREE.SphereGeometry(1.5, 64, 64);
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    // ==========================================
+    // Vantablack Core (Event Horizon Mask)
+    // ==========================================
+    // Must write to depth buffer so particles behind it are occluded!
+    const coreGeo = new THREE.SphereGeometry(1.0, 64, 64);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0x000000, depthWrite: true });
     this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    this.coreMesh.renderOrder = 1;
+    this.coreMesh.renderOrder = 1; // Renders first to write depth!
     this.scene.add(this.coreMesh);
   }
 
@@ -218,15 +182,20 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
     const vel = new Float32Array(PARTICLE_COUNT * 4);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const radius = Math.pow(prng.next(), 3.0) * 30.0 + 1.0; 
+      const innerLane = prng.next() < 0.42;
+      const radiusSample = prng.next();
+      const radius = innerLane
+        ? 1.65 + Math.pow(radiusSample, 1.7) * 4.35
+        : 7.5 + Math.sqrt(radiusSample) * 10.5;
       const angle = prng.next() * Math.PI * 2;
+      const diskHeight = innerLane ? 0.22 + radius * 0.05 : 0.32 + radius * 0.04;
       
       pos[i * 4] = Math.cos(angle) * radius;
-      pos[i * 4 + 1] = (prng.next() - 0.5) * 0.5 * (radius * 0.1); 
+      pos[i * 4 + 1] = (prng.next() - 0.5) * diskHeight;
       pos[i * 4 + 2] = Math.sin(angle) * radius;
       pos[i * 4 + 3] = prng.next(); 
 
-      const speed = 4.0 / Math.sqrt(radius);
+      const speed = Math.sqrt(this.config.gravity / radius) * (innerLane ? 1.55 : 1.35);
       vel[i * 4] = -Math.sin(angle) * speed;
       vel[i * 4 + 1] = 0;
       vel[i * 4 + 2] = Math.cos(angle) * speed;
@@ -273,13 +242,8 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
 
   public mount(target: HTMLElement | null): void {
     if (!target) return;
-    // In this architecture, the external adapter/engine usually provides the renderer.
-    // If the core needs to render itself fully standalone, it would create the renderer.
-    // Since web3dlab relies on React Three Fiber for the canvas context, 
-    // we'll extract the renderer from R3F in the adapter and pass it via an extended mount or setter.
   }
 
-  // We add a specific setter for R3F integration
   public setRenderer(renderer: THREE.WebGLRenderer, seed: number) {
     if (!this.renderer) {
       this.renderer = renderer;
@@ -296,9 +260,11 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
 
   public setConfig(config: BlackHoleConfig): void {
     this.config = config;
-    if (this.particlesMat.userData.shader) {
-      this.particlesMat.userData.shader.uniforms.uColorCore.value.set(this.config.colorCore);
-      this.particlesMat.userData.shader.uniforms.uColorOuter.value.set(this.config.colorOuter);
+    if (this.particlesMat.uniforms) {
+      this.particlesMat.uniforms.uColorCore.value.set(this.config.colorCore);
+      this.particlesMat.uniforms.uColorOuter.value.set(this.config.colorOuter);
+      this.particlesMat.uniforms.uParticleSize.value = this.config.particleSize;
+      this.particlesMat.uniforms.uHorizonGlow.value = this.config.horizonGlow;
     }
   }
 
@@ -310,7 +276,7 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
   public renderFrame(frame: EffectFrame): void {
     if (!this.renderer) return;
 
-    const clampedDelta = Math.min(frame.delta, 0.05);
+    const clampedDelta = Math.min(frame.delta, 0.032); // Max ~30fps delta logic step to prevent explosion
     const current = this.step % 2;
     const next = (this.step + 1) % 2;
 
@@ -327,6 +293,10 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
     this.matVelocity.uniforms.uPointer.value.copy(this.pointerWorld);
     this.matVelocity.uniforms.uGravity.value = this.config.gravity;
     this.matVelocity.uniforms.uFriction.value = this.config.friction;
+    this.matVelocity.uniforms.uFeedRate.value = this.config.feedRate;
+    if(this.matVelocity.uniforms.uTurbulence) {
+       this.matVelocity.uniforms.uTurbulence.value = this.config.turbulence;
+    }
     this.matVelocity.uniforms.uPosition.value = this.rtPosition[current].texture;
     this.matVelocity.uniforms.uVelocity.value = this.rtVelocity[current].texture;
 
@@ -336,6 +306,8 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
 
     // 2. Compute Position
     this.matPosition.uniforms.uDelta.value = clampedDelta;
+    this.matPosition.uniforms.uTime.value = frame.time;
+    this.matPosition.uniforms.uFeedRate.value = this.config.feedRate;
     this.matPosition.uniforms.uPosition.value = this.rtPosition[current].texture;
     this.matPosition.uniforms.uVelocity.value = this.rtVelocity[next].texture;
 
@@ -346,9 +318,9 @@ export class BlackHoleCore implements EffectScene<BlackHoleConfig> {
     this.renderer.setRenderTarget(null);
 
     // 3. Update Render Material
-    if (this.particlesMat.userData.shader) {
-      this.particlesMat.userData.shader.uniforms.uPosition.value = this.rtPosition[next].texture;
-      this.particlesMat.userData.shader.uniforms.uVelocity.value = this.rtVelocity[next].texture;
+    if (this.particlesMat.uniforms) {
+      this.particlesMat.uniforms.uPosition.value = this.rtPosition[next].texture;
+      this.particlesMat.uniforms.uVelocity.value = this.rtVelocity[next].texture;
     }
 
     this.step++;

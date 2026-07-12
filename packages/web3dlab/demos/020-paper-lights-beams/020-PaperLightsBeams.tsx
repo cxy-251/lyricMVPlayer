@@ -1,245 +1,279 @@
-import React, {useMemo, useRef} from 'react';
-import { resolveLightsEffectConfig } from '@paper-to-video/content-pipeline';
-import * as THREE from 'three';
 import {useFrame, useThree} from '@react-three/fiber';
 import {useControls} from 'leva';
+import {useEffect, useMemo, useRef} from 'react';
+import * as THREE from 'three';
+
 import {DemoScene} from '../../core/DemoScene';
-import {createLightsMeshes} from './core/createLightsMeshes';
-import {updateLightsInstances} from './core/updateLightsInstances';
 
-import {applyForwardDollyRig} from '../../core/updateCameraRigs';
-import type {LightsBeamSeed} from './lights-beams.types';
+const WATER_WIDTH = 14;
+const WATER_DEPTH = 10;
+const WATER_SEGMENTS_X = 72;
+const WATER_SEGMENTS_Z = 48;
 
-const hashNoise = (value: number) => {
-  const resolved = Math.sin(value * 12.9898) * 43758.5453;
-  return resolved - Math.floor(resolved);
+type WaterWaveControls = {
+  amplitude: number;
+  ballScale: number;
+  frequency: number;
+  surfaceDetail: number;
+  waveSpeed: number;
 };
 
-const buildBeamSeeds = (count: number, seed: number): LightsBeamSeed[] =>
-  Array.from({length: count}, (_, index) => ({
-    baseAngle: hashNoise(seed * 101 + index * 5.17) * Math.PI * 2,
-    depth: hashNoise(seed * 211 + index * 11.37),
-    drift: hashNoise(seed * 307 + index * 3.91) * 2 - 1,
-    lane: hashNoise(seed * 401 + index * 7.53),
-    orbit: hashNoise(seed * 503 + index * 13.29),
-    phase: hashNoise(seed * 601 + index * 9.11) * Math.PI * 2,
-    pulse: 10 + hashNoise(seed * 701 + index * 15.83) * 24,
-    speed: 0.018 + hashNoise(seed * 809 + index * 17.47) * 0.04,
-  }));
-
-const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
-
-const smoothPulse = (value: number, start: number, peak: number, end: number) => {
-  if (value <= start || value >= end) {
-    return 0;
-  }
-  if (value < peak) {
-    return clamp01((value - start) / Math.max(0.0001, peak - start));
-  }
-  return clamp01((end - value) / Math.max(0.0001, end - peak));
+type WaterWaveEffectProps = {
+  absoluteFrame?: number;
+  autoCamera?: boolean;
+  controls?: Partial<WaterWaveControls>;
+  seed?: number;
+  simulationFrame?: number;
 };
 
-export function LightsBeamsEffect({ seed = 1, absoluteFrame, simulationFrame }: { seed?: number; absoluteFrame?: number; simulationFrame?: number }) {
-  const { camera, scene } = useThree();
-  const helper = useMemo(() => new THREE.Object3D(), []);
-  const lookAtTarget = useMemo(() => new THREE.Vector3(), []);
-  
-  const config = useMemo(() => resolveLightsEffectConfig(undefined), []);
-  const seeds = useMemo(() => buildBeamSeeds(config.beamCount, seed), [config.beamCount, seed]);
+const DEFAULT_CONTROLS: WaterWaveControls = {
+  amplitude: 0.48,
+  ballScale: 1,
+  frequency: 1.08,
+  surfaceDetail: 0.48,
+  waveSpeed: 0.42,
+};
 
-  const bundle = useMemo(() => {
-    const root = new THREE.Group();
-    return { bundle: createLightsMeshes({
-      accentColor: config.accentColor,
-      beamCount: config.beamCount,
-      coreColor: config.primaryColor,
-      glowColor: config.secondaryColor,
-      root,
-    }), root };
-  }, [config]);
+const FLOATS = [
+  {color: '#ffb65c', phase: 0.2, position: [-1.45, -0.52] as const},
+  {color: '#8ee9ff', phase: 1.4, position: [1.55, 0.64] as const},
+];
 
-  React.useEffect(() => {
-    scene.fog = new THREE.FogExp2(0x071320, 0.03);
+function clampNumber(value: number | undefined, fallback: number, min: number, max: number) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return THREE.MathUtils.clamp(value, min, max);
+}
+
+function sampleWaveHeight(x: number, z: number, time: number, controls: WaterWaveControls) {
+  const primary = Math.sin(x * controls.frequency * 1.42 + time * 1.38) * 0.46;
+  const longSwell = Math.sin((x * 0.5 + z * 1.14) * controls.frequency - time * 1.08) * 0.36;
+  const cross = Math.sin((x * -0.86 + z * 0.72) * controls.frequency + time * 0.82) * 0.22;
+  const radial =
+    Math.sin(Math.hypot(x - 0.45, z + 0.18) * controls.frequency * 1.46 - time * 1.72) * 0.18;
+  const detail =
+    Math.sin((x * 3.4 - z * 2.2) * controls.frequency + time * 2.1) * 0.07 * controls.surfaceDetail;
+
+  return (primary + longSwell + cross + radial + detail) * controls.amplitude;
+}
+
+function createWaterGeometry() {
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+
+  for (let zIndex = 0; zIndex <= WATER_SEGMENTS_Z; zIndex += 1) {
+    const zRatio = zIndex / WATER_SEGMENTS_Z;
+    const z = (zRatio - 0.5) * WATER_DEPTH;
+
+    for (let xIndex = 0; xIndex <= WATER_SEGMENTS_X; xIndex += 1) {
+      const xRatio = xIndex / WATER_SEGMENTS_X;
+      const x = (xRatio - 0.5) * WATER_WIDTH;
+      positions.push(x, 0, z);
+      uvs.push(xRatio, zRatio);
+    }
+  }
+
+  const rowSize = WATER_SEGMENTS_X + 1;
+  for (let zIndex = 0; zIndex < WATER_SEGMENTS_Z; zIndex += 1) {
+    for (let xIndex = 0; xIndex < WATER_SEGMENTS_X; xIndex += 1) {
+      const a = zIndex * rowSize + xIndex;
+      const b = a + 1;
+      const c = a + rowSize;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setIndex(indices);
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  (geometry.attributes.position as THREE.BufferAttribute).setUsage(THREE.DynamicDrawUsage);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function updateWaterGeometry(
+  geometry: THREE.BufferGeometry,
+  time: number,
+  controls: WaterWaveControls,
+  updateNormals: boolean,
+) {
+  const position = geometry.attributes.position as THREE.BufferAttribute;
+  const positions = position.array as Float32Array;
+
+  for (let cursor = 0; cursor < positions.length; cursor += 3) {
+    const x = positions[cursor];
+    const z = positions[cursor + 2];
+    positions[cursor + 1] = sampleWaveHeight(x, z, time, controls);
+  }
+
+  position.needsUpdate = true;
+  if (updateNormals) {
+    geometry.computeVertexNormals();
+  }
+}
+
+export function WaterWaveEffect({
+  absoluteFrame,
+  autoCamera = false,
+  controls,
+  simulationFrame,
+}: WaterWaveEffectProps) {
+  const {camera, scene} = useThree();
+  const floatRefs = useRef<Array<THREE.Group | null>>([]);
+  const surfaceMaterialRef = useRef<THREE.MeshStandardMaterial>(null);
+  const wireMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const normalFrameRef = useRef(0);
+  const waterGeometry = useMemo(() => createWaterGeometry(), []);
+
+  const safeControls = useMemo<WaterWaveControls>(() => ({
+    amplitude: clampNumber(controls?.amplitude, DEFAULT_CONTROLS.amplitude, 0.08, 0.72),
+    ballScale: clampNumber(controls?.ballScale, DEFAULT_CONTROLS.ballScale, 0.65, 1.35),
+    frequency: clampNumber(controls?.frequency, DEFAULT_CONTROLS.frequency, 0.45, 1.75),
+    surfaceDetail: clampNumber(controls?.surfaceDetail, DEFAULT_CONTROLS.surfaceDetail, 0, 0.9),
+    waveSpeed: clampNumber(controls?.waveSpeed, DEFAULT_CONTROLS.waveSpeed, 0, 0.9),
+  }), [
+    controls?.amplitude,
+    controls?.ballScale,
+    controls?.frequency,
+    controls?.surfaceDetail,
+    controls?.waveSpeed,
+  ]);
+
+  useEffect(() => {
+    scene.fog = new THREE.Fog('#020713', 6.0, 14.5);
     return () => {
       scene.fog = null;
     };
   }, [scene]);
 
-  React.useEffect(() => {
-    return () => {
-      bundle.bundle.orbGeometry.dispose();
-      bundle.bundle.dotGeometry.dispose();
-      bundle.bundle.groundDiscGeometry.dispose();
-      bundle.bundle.groundRingGeometry.dispose();
-      bundle.bundle.floorTiles.forEach((tile) => {
-        tile.geometry.dispose();
-        tile.fillMaterial.dispose();
-        tile.wireMaterial.dispose();
-        tile.guideRails.forEach((p) => { p.geometry.dispose(); p.material.dispose(); });
-        tile.guideDashes.forEach((p) => { p.geometry.dispose(); p.material.dispose(); });
-      });
-      bundle.bundle.horizonGeometry.dispose();
-      bundle.bundle.horizonMaterial.dispose();
-      bundle.bundle.glow.mesh.dispose();
-      bundle.bundle.core.mesh.dispose();
-      bundle.bundle.accent.mesh.dispose();
-      bundle.bundle.groundAura.mesh.dispose();
-      bundle.bundle.groundGlow.mesh.dispose();
-      bundle.bundle.groundRim.mesh.dispose();
-      bundle.bundle.surfaceDots.mesh.dispose();
-      bundle.bundle.surfaceAccent.mesh.dispose();
-      bundle.bundle.stars.geometry.dispose();
-      bundle.bundle.stars.material.dispose();
-      bundle.bundle.glow.material.dispose();
-      bundle.bundle.core.material.dispose();
-      bundle.bundle.accent.material.dispose();
-      bundle.bundle.groundAura.material.dispose();
-      bundle.bundle.groundGlow.material.dispose();
-      bundle.bundle.groundRim.material.dispose();
-      bundle.bundle.surfaceDots.material.dispose();
-      bundle.bundle.surfaceAccent.material.dispose();
-    };
-  }, [bundle]);
-
   useFrame((state) => {
-    const isPulse = config.variant === "pulse";
-    const resolvedFrame = simulationFrame ?? absoluteFrame;
-    const timeInSeconds = resolvedFrame !== undefined ? resolvedFrame / 60 : state.clock.elapsedTime;
-    const frame = timeInSeconds * 60;
-    const time = frame * config.motionSpeed * 6.9;
+    const frame = simulationFrame ?? absoluteFrame;
+    const rawTime = frame === undefined ? state.clock.elapsedTime : frame / 60;
+    const time = rawTime * (0.32 + safeControls.waveSpeed * 1.72);
+    normalFrameRef.current = (normalFrameRef.current + 1) % 6;
 
-    if (isPulse) {
-      bundle.bundle.core.material.color.set(config.primaryColor);
-      bundle.bundle.glow.material.color.set(config.secondaryColor);
-      bundle.bundle.accent.material.color.set(config.accentColor);
-    } else {
-      bundle.bundle.core.material.color.set("#ffffff");
-      bundle.bundle.glow.material.color.set("#ffffff");
-      bundle.bundle.accent.material.color.set("#ffffff");
+    updateWaterGeometry(waterGeometry, time, safeControls, normalFrameRef.current === 0);
+
+    FLOATS.forEach((floatingBall, index) => {
+      const group = floatRefs.current[index];
+      const [x, z] = floatingBall.position;
+      const height = sampleWaveHeight(x, z, time + floatingBall.phase * 0.08, safeControls);
+      const radius = 0.27 * safeControls.ballScale;
+
+      if (group) {
+        group.position.set(x, height + radius * 0.58, z);
+        group.rotation.x = Math.sin(time * 0.92 + floatingBall.phase) * 0.1;
+        group.rotation.z = Math.cos(time * 0.76 + floatingBall.phase) * 0.08;
+        group.scale.setScalar(safeControls.ballScale);
+      }
+    });
+
+    if (surfaceMaterialRef.current) {
+      surfaceMaterialRef.current.roughness = 0.42 - safeControls.surfaceDetail * 0.08;
+      surfaceMaterialRef.current.emissiveIntensity = 0.08 + safeControls.amplitude * 0.08;
     }
 
-    const atmosphereFill = new THREE.Color("#102233");
-    const atmosphereLines = new THREE.Color("#3e7aa4");
-    const atmosphereAccent = new THREE.Color("#6aa7d9");
-    bundle.bundle.groundAura.material.color.copy(atmosphereFill);
-    bundle.bundle.groundGlow.material.color.copy(atmosphereLines);
-    bundle.bundle.groundRim.material.color.copy(atmosphereAccent);
-    bundle.bundle.surfaceDots.material.color.copy(atmosphereLines);
-    bundle.bundle.surfaceAccent.material.color.copy(atmosphereAccent);
-    bundle.bundle.floorTiles.forEach((tile) => {
-      tile.fillMaterial.color.copy(atmosphereFill);
-      tile.wireMaterial.color.copy(atmosphereLines);
-    });
-    bundle.bundle.horizonMaterial.color.copy(atmosphereFill);
-
-    const choreographyPhase = (time * 0.055) % 1;
-    const pulseSection = smoothPulse(choreographyPhase, 0.08, 0.24, 0.42);
-    const surgeSection = smoothPulse(choreographyPhase, 0.38, 0.58, 0.8);
-    const settleSection = smoothPulse(choreographyPhase, 0.72, 0.88, 1);
-    const choreography = {
-      auraGain: 0.9 + (0.24 + config.beatIntensity * 0.34) * pulseSection + (0.12 + config.beatIntensity * 0.2) * surgeSection,
-      fieldGain: 0.82 + (0.18 + config.beatIntensity * 0.18) * pulseSection + (0.08 + config.beatIntensity * 0.08) * surgeSection,
-      nearBias: pulseSection * (0.08 + config.beatIntensity * 0.16) + surgeSection * (0.16 + config.beatIntensity * 0.24),
-      orbGain: 0.84 + (0.14 + config.beatIntensity * 0.14) * pulseSection + (0.12 + config.beatIntensity * 0.16) * surgeSection,
-      rimGain: 0.9 + settleSection * (0.06 + config.beatIntensity * 0.1) + surgeSection * (0.06 + config.beatIntensity * 0.08),
-    };
-
-    const forwardPhase = (time * 0.11) % 1;
-    const cameraBoost = 1 + surgeSection * 0.22 + pulseSection * 0.08;
-    const cameraDolly = isPulse ? 0.28 + (Math.sin(time * 0.16) + 1) * 0.12 : forwardPhase * 12.6 * cameraBoost;
-    
-    applyForwardDollyRig({
-      camera: camera as THREE.PerspectiveCamera,
-      target: lookAtTarget,
-      time,
-      baseX: 0,
-      baseY: 1.34,
-      baseZ: 8.3,
-      dollyOffset: cameraDolly,
-      dollyMultiplier: 1.48,
-      xDrift: 0.22,
-      yDrift: 0.05,
-      zDrift: 0.06,
-      targetY: -0.68,
-      targetZ: -18.6,
-      targetXDrift: 0.28,
-      targetYDrift: 0.08,
-      targetZDrift: 0.8,
-    });
-
-    if (scene.fog instanceof THREE.FogExp2) {
-      scene.fog.density = 0.028 + surgeSection * 0.007 - pulseSection * 0.001;
+    if (wireMaterialRef.current) {
+      wireMaterialRef.current.opacity = 0.13 + safeControls.amplitude * 0.12;
     }
 
-    bundle.bundle.glow.material.opacity = 0.0005 * choreography.orbGain;
-    bundle.bundle.core.material.opacity = 0.94;
-    bundle.bundle.accent.material.opacity = 0.24 * choreography.rimGain;
-    bundle.bundle.groundAura.material.opacity = 0.014 * choreography.auraGain;
-    bundle.bundle.groundGlow.material.opacity = 0.052 * choreography.orbGain;
-    bundle.bundle.groundRim.material.opacity = 0.12 * choreography.rimGain;
-    bundle.bundle.surfaceDots.material.opacity = 0.08 * choreography.fieldGain;
-    bundle.bundle.surfaceAccent.material.opacity = 0.12 * choreography.fieldGain;
-    bundle.bundle.stars.material.opacity = 0.04 + choreography.fieldGain * 0.03 + surgeSection * 0.02;
-    bundle.bundle.stars.material.size = 0.1 + config.density * 0.026 + pulseSection * 0.016 + surgeSection * 0.03;
-    bundle.bundle.horizonMaterial.opacity = 0.07 + pulseSection * 0.03 + surgeSection * 0.02;
-    bundle.bundle.floorTiles.forEach((tile) => {
-      tile.fillMaterial.opacity = 0.03 + pulseSection * 0.02;
-      tile.wireMaterial.opacity = 0.14 + surgeSection * 0.08 + settleSection * 0.04;
-      tile.guideRails.forEach((plane) => { plane.material.opacity = 0.12 + surgeSection * 0.08; });
-      tile.guideDashes.forEach((plane) => { plane.material.opacity = 0.1 + pulseSection * 0.08 + surgeSection * 0.04; });
-    });
-    bundle.bundle.horizonMesh.position.set(
-      Math.sin(time * 0.08) * 0.24,
-      4.8 + Math.cos(time * 0.11) * 0.12,
-      -28 - cameraDolly * 0.92,
-    );
-
-    updateLightsInstances({
-      choreography,
-      config,
-      floorTiles: bundle.bundle.floorTiles,
-      frame,
-      helper,
-      meshes: {
-        accent: bundle.bundle.accent,
-        core: bundle.bundle.core,
-        glow: bundle.bundle.glow,
-        groundAura: bundle.bundle.groundAura,
-        groundGlow: bundle.bundle.groundGlow,
-        groundRim: bundle.bundle.groundRim,
-        surfaceAccent: bundle.bundle.surfaceAccent,
-        surfaceDots: bundle.bundle.surfaceDots,
-      },
-      pulseHeroes: bundle.bundle.pulseHeroes,
-      stars: bundle.bundle.stars,
-      seeds,
-    });
+    if (autoCamera) {
+      camera.position.x = Math.sin(time * 0.07) * 0.18;
+      camera.position.y = 3.1 + Math.sin(time * 0.06) * 0.06;
+      camera.position.z = 8.4 + Math.cos(time * 0.05) * 0.08;
+      camera.lookAt(0, 0.02, -0.1);
+    }
   });
 
   return (
     <>
-      <primitive object={bundle.root} />
-      <ambientLight intensity={0.95} color="#7fbaff" />
-      <directionalLight position={[-4.5, 7.5, 5.2]} intensity={1.7} color="#dff6ff" />
-      <directionalLight position={[4.8, 2.1, 3.6]} intensity={0.9} color="#ff9fe6" />
+      <ambientLight intensity={0.32} color="#9deaff" />
+      <directionalLight color="#d9fbff" intensity={1.45} position={[-2.4, 4.8, 3.1]} />
+      <pointLight color="#46d7ff" intensity={1.05} position={[2.8, 1.8, 2.3]} />
+
+      <mesh geometry={waterGeometry}>
+        <meshStandardMaterial
+          ref={surfaceMaterialRef}
+          color="#087b9d"
+          emissive="#05354d"
+          emissiveIntensity={0.12}
+          metalness={0.02}
+          roughness={0.38}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      <mesh geometry={waterGeometry} position={[0, 0.012, 0]}>
+        <meshBasicMaterial
+          ref={wireMaterialRef}
+          color="#91f2ff"
+          transparent
+          opacity={0.18}
+          depthWrite={false}
+          wireframe
+        />
+      </mesh>
+
+      {FLOATS.map((floatingBall, index) => (
+        <group key={floatingBall.color}>
+          <group
+            ref={(node) => {
+              floatRefs.current[index] = node;
+            }}
+          >
+            <mesh>
+              <sphereGeometry args={[0.27, 42, 32]} />
+              <meshStandardMaterial
+                color={floatingBall.color}
+                emissive={floatingBall.color}
+                emissiveIntensity={0.08}
+                metalness={0.1}
+                roughness={0.32}
+              />
+            </mesh>
+            <mesh position={[0, 0.055, 0.045]}>
+              <sphereGeometry args={[0.095, 24, 18]} />
+              <meshStandardMaterial color="#ffffff" roughness={0.18} metalness={0.05} />
+            </mesh>
+          </group>
+        </group>
+      ))}
     </>
   );
 }
 
+export const LightsBeamsEffect = WaterWaveEffect;
+
 export default function Demo020PaperLightsBeams() {
-  const { showStats } = useControls('Debug', { showStats: false });
-  
+  const controls = useControls('Water Wave Floats', {
+    amplitude: {value: DEFAULT_CONTROLS.amplitude, min: 0.08, max: 0.72, step: 0.01},
+    waveSpeed: {value: DEFAULT_CONTROLS.waveSpeed, min: 0, max: 0.9, step: 0.01},
+    frequency: {value: DEFAULT_CONTROLS.frequency, min: 0.45, max: 1.75, step: 0.01},
+    surfaceDetail: {value: DEFAULT_CONTROLS.surfaceDetail, min: 0, max: 0.9, step: 0.01},
+    ballScale: {value: DEFAULT_CONTROLS.ballScale, min: 0.65, max: 1.35, step: 0.01},
+  });
+
   return (
     <DemoScene
-      debug={showStats}
       engineConfig={{
-        background: '#000000',
-        camera: { fov: 34, far: 100, near: 0.1, position: [0, 1.38, 7.6] },
-        bloom: { intensity: 0.5, luminanceThreshold: 0.78, luminanceSmoothing: 0.22 },
+        background: '#020713',
+        bloom: {intensity: 0.16, luminanceThreshold: 0.38, luminanceSmoothing: 0.46},
+        camera: {fov: 42, far: 80, near: 0.1, position: [0, 3.1, 8.4]},
+        vignette: {darkness: 0.42, offset: 0.36},
       }}
-      orbitControls={false}
+      orbitConfig={{
+        enablePan: true,
+        enableZoom: true,
+        maxDistance: 15,
+        minDistance: 3.4,
+      }}
     >
-      <LightsBeamsEffect seed={1} />
+      <WaterWaveEffect controls={controls} />
     </DemoScene>
   );
 }
