@@ -44,6 +44,7 @@ import {
 import {applyRubiksAppearance, createRubiksCubelets} from './createRubiksCubelets';
 import {
   createRubiksStateSolver,
+  isRubiksSmartSolveAvailable,
   releaseRubiksSolverBackend,
   RubiksBackendError,
   type RubiksMoveFamily,
@@ -1165,6 +1166,7 @@ export default function Demo021PaperRubiksCube() {
   const timerRunningRef = useRef(false);
   const timerStartedAtRef = useRef<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [onlineSolverNotice, setOnlineSolverNotice] = useState<string | null>(null);
   const [solveSpeed, setSolveSpeed] = useState(1.2);
   const [status, setStatus] = useState<RubiksStatus>(INITIAL_STATUS);
   const [timerRunning, setTimerRunning] = useState(false);
@@ -1205,6 +1207,7 @@ export default function Demo021PaperRubiksCube() {
 
   useEffect(() => {
     resetTimer();
+    setOnlineSolverNotice(null);
     setStatus(INITIAL_STATUS);
   }, [cubeDimension, resetTimer]);
 
@@ -1213,6 +1216,10 @@ export default function Demo021PaperRubiksCube() {
       pauseTimer();
     }
   }, [pauseTimer, status.notice, status.phase]);
+
+  useEffect(() => {
+    setOnlineSolverNotice(null);
+  }, [status.moveCount]);
 
   useEffect(() => {
     if (!timerRunning) {
@@ -1229,9 +1236,14 @@ export default function Demo021PaperRubiksCube() {
   }, [timerRunning]);
 
   const handleSmartSolve = useCallback(() => {
+    if (!isRubiksSmartSolveAvailable(cubeDimension)) {
+      setOnlineSolverNotice(`${cubeDimension} 阶线上版本仅支持手动挑战`);
+      return;
+    }
+    setOnlineSolverNotice(null);
     startTimer('solver', true);
     controllerRef.current?.solve();
-  }, [startTimer]);
+  }, [cubeDimension, startTimer]);
 
   const handleSolvePause = useCallback(() => {
     if (status.phase === 'solving') {
@@ -1244,10 +1256,11 @@ export default function Demo021PaperRubiksCube() {
 
   const handleReset = useCallback(() => {
     controllerRef.current?.reset();
+    setOnlineSolverNotice(null);
     resetTimer();
   }, [resetTimer]);
 
-  const progressLabel = status.notice ?? (
+  const progressLabel = onlineSolverNotice ?? status.notice ?? (
     status.phase === 'paused' && status.solutionLength === 0
       ? '局面已变化'
       : status.phase === 'solving' || status.phase === 'paused'

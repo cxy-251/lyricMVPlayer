@@ -46,6 +46,9 @@ const EXPECTED_BACKEND_SOLVERS: Record<HighOrderDimension, string> = {
 const solverCache = new Map<RubiksDimension, RubiksPuzzleSolver<RubiksSolverState>>();
 let backendStartup: Promise<void> | null = null;
 
+export const isRubiksSmartSolveAvailable = (dimension: RubiksDimension) =>
+  dimension <= 3 || import.meta.env.DEV;
+
 const prepareRubiksSolverBackend = () => {
   if (backendStartup) return backendStartup;
   backendStartup = fetch('/api/web3dlab/rubiks/start', {method: 'POST'})
@@ -63,6 +66,7 @@ const prepareRubiksSolverBackend = () => {
 };
 
 export const releaseRubiksSolverBackend = () => {
+  if (!import.meta.env.DEV || !backendStartup) return;
   backendStartup = null;
   void fetch('/api/web3dlab/rubiks/stop', {
     keepalive: true,
@@ -83,6 +87,9 @@ const solveHighOrderState = async (
   facelets?: string,
   moveFamilies?: RubiksMoveFamily[],
 ) => {
+  if (!isRubiksSmartSolveAvailable(dimension)) {
+    throw new RubiksBackendError(`${dimension} 阶线上版本仅支持手动挑战`);
+  }
   if (!facelets) {
     throw new RubiksBackendError(`缺少 ${dimension} 阶魔方贴纸状态`);
   }

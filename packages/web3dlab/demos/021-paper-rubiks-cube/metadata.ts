@@ -13,7 +13,7 @@ export const paperRubiksCubeMetadata: DemoMetadata = {
     'Scramble adds new moves to the current position. Higher dimensions use more moves and include inner layers, so their scramble takes longer. Undo or reset remain available as separate actions.',
     'Start the timer explicitly for manual play; smart solve starts its own timer automatically.',
     'Smart solve reads the current cube state directly; it does not reverse or compare your move history.',
-    '2×2 uses its dedicated browser solver and 3×3 uses browser min2phase. The 4×4, 5×5, and 6×6 states are sent to their matching local Python reduction solvers.',
+    '2×2 uses its dedicated browser solver and 3×3 uses browser min2phase. During local development, 4×4–6×6 use the matching Python reduction solver; the deployed gallery keeps those dimensions as manual challenges.',
     'Pause smart solve, scramble or turn stickers from that state, then continue to calculate a new solution and step count.',
     'While a valid solution is paused, continue it or advance exactly one move.',
   ],
