@@ -3,7 +3,7 @@ import {DemoMetadata} from '../../types';
 export const boidsFlockingMetadata: DemoMetadata = {
   id: 'boids-flocking',
   title: 'GPGPU Boids Flocking',
-  description: '100,000 birds simulating separation, alignment, and cohesion AI exclusively on the GPU.',
+  description: 'A GPU flock of 1,024 luminous birds balancing separation, alignment, and cohesion. Move the pointer through the flock as a local predator; drag to orbit the camera.',
   route: '/demos/boids-flocking',
-  tags: ['GPGPU', 'AI', 'Particles'],
+  tags: ['GPGPU', 'Boids', 'Emergent Behavior', 'Instancing'],
 };

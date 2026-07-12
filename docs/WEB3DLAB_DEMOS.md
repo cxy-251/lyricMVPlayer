@@ -71,3 +71,5 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 056 Collective Trajectories | 复刻 Collective Trajectories 的轨迹累积生成艺术。 | Canvas2D 多 agent 轨迹、历史残影、对称复制、透明光迹叠加。 | 应看到轨迹逐渐累积成几何纹理；symmetry/trailFade 改变结构。 |
 | 057 Sum Of Squares Proof | 复刻平方和公式视觉证明。 | Canvas2D 彩色等距方块、n^2 分组、phase 驱动从平方堆到矩形体的重组。 | 应能看到公式、彩色方块分组和几何重组过程；n/phase 控制证明步骤。 |
 | 058 Cinematic Style Sequence | 复刻 Midjourney style reference 多图动画思路。 | Canvas2D 五格电影关键帧、燃烧摩天轮、火光、light trails、film grain。 | 应像 AIGC 电影风格序列板；speed/grain/lightTrails 改变动画质感。 |
+| 059 Fibonacci Parastichy Sphere | 展示黄金角点阵中相邻 Fibonacci 螺旋族。 | 程序化球面点阵、parastichy 曲线 shader、图层切换和脉冲流动。 | 球面点阵与螺旋方向清晰；背面曲线被球体正确遮挡；参数切换不释放材质。 |
+| 060 WebGL Fluid Simulation | 鼠标和触控驱动的彩色不可压缩流体。 | 原生 WebGL framebuffer ping-pong、速度/染料平流、旋度增强、压力投影、bloom 和 sunrays。 | 初始即有彩色流体；拖动产生连续旋涡和拖尾；重置、暂停、质量和 preset 控制可用。 |

@@ -1,105 +1,112 @@
 uniform float uTime;
 uniform float uDelta;
-uniform float uSeparationDistance;
-uniform float uAlignmentDistance;
-uniform float uCohesionDistance;
 uniform float uSeparationForce;
 uniform float uAlignmentForce;
 uniform float uCohesionForce;
 uniform float uMaxSpeed;
+uniform float uPointerForce;
 uniform vec3 uPointer;
 uniform sampler2D uPosition;
 uniform sampler2D uVelocity;
 uniform vec2 uResolution;
 
+const float SEPARATION_DISTANCE = 0.62;
+const float ALIGNMENT_DISTANCE = 1.65;
+const float COHESION_DISTANCE = 2.35;
+const float BOUNDARY_RADIUS = 5.6;
+
 void main() {
-  vec2 uv = gl_FragCoord.xy / uResolution.xy;
-  vec4 posData = texture2D(uPosition, uv);
-  vec4 velData = texture2D(uVelocity, uv);
-  
-  vec3 position = posData.xyz;
-  vec3 velocity = velData.xyz;
-  
+  vec2 uv = gl_FragCoord.xy / uResolution;
+  vec3 position = texture2D(uPosition, uv).xyz;
+  vec3 velocity = texture2D(uVelocity, uv).xyz;
   vec3 separation = vec3(0.0);
   vec3 alignment = vec3(0.0);
   vec3 cohesion = vec3(0.0);
-  
-  int sepCount = 0;
-  int aliCount = 0;
-  int cohCount = 0;
-  
-  // O(N^2) loop to calculate boids forces
-  for (float y = 0.0; y < uResolution.y; y++) {
-    for (float x = 0.0; x < uResolution.x; x++) {
-      if (x == gl_FragCoord.x && y == gl_FragCoord.y) continue;
-      
-      // Sample exactly at pixel centers
-      vec2 otherUv = (vec2(x, y) + 0.5) / uResolution.xy;
-      vec3 otherPos = texture2D(uPosition, otherUv).xyz;
-      vec3 otherVel = texture2D(uVelocity, otherUv).xyz;
-      
-      vec3 diff = position - otherPos;
-      float dist = length(diff);
-      
-      if (dist > 0.0) {
-        // Separation
-        if (dist < uSeparationDistance) {
-          separation += normalize(diff) * (1.0 - dist / uSeparationDistance); // Closer = stronger force!
-          sepCount++;
+  float separationWeight = 0.0;
+  float alignmentWeight = 0.0;
+  float cohesionWeight = 0.0;
+
+  for (float y = 0.0; y < 32.0; y += 1.0) {
+    for (float x = 0.0; x < 32.0; x += 1.0) {
+      vec2 otherUv = (vec2(x, y) + 0.5) / uResolution;
+      vec3 otherPosition = texture2D(uPosition, otherUv).xyz;
+      vec3 difference = position - otherPosition;
+      float distanceToOther = length(difference);
+
+      if (distanceToOther > 0.001) {
+        if (distanceToOther < SEPARATION_DISTANCE) {
+          float weight = 1.0 - smoothstep(0.0, SEPARATION_DISTANCE, distanceToOther);
+          separation += difference / max(distanceToOther * distanceToOther, 0.01) * weight;
+          separationWeight += weight;
         }
-        
-        // Alignment
-        if (dist < uAlignmentDistance) {
-          alignment += otherVel;
-          aliCount++;
+
+        if (distanceToOther < ALIGNMENT_DISTANCE) {
+          float weight = 1.0 - smoothstep(0.0, ALIGNMENT_DISTANCE, distanceToOther);
+          alignment += texture2D(uVelocity, otherUv).xyz * weight;
+          alignmentWeight += weight;
         }
-        
-        // Cohesion
-        if (dist < uCohesionDistance) {
-          cohesion += otherPos;
-          cohCount++;
+
+        if (distanceToOther < COHESION_DISTANCE) {
+          float weight = 1.0 - smoothstep(0.0, COHESION_DISTANCE, distanceToOther);
+          cohesion += otherPosition * weight;
+          cohesionWeight += weight;
         }
       }
     }
   }
-  
-  if (sepCount > 0) {
-    separation = (separation / float(sepCount)) * uSeparationForce * 10.0; // scale up to match user's slider expectation
-    velocity += separation;
+
+  vec3 acceleration = vec3(0.0);
+
+  if (separationWeight > 0.0) {
+    acceleration += normalize(separation / separationWeight) * uSeparationForce;
   }
-  
-  if (aliCount > 0) {
-    alignment = (alignment / float(aliCount));
-    vec3 steer = alignment - velocity;
-    velocity += steer * uAlignmentForce * 2.0;
+
+  if (alignmentWeight > 0.0) {
+    vec3 averageVelocity = alignment / alignmentWeight;
+    acceleration += (averageVelocity - velocity) * uAlignmentForce;
   }
-  
-  if (cohCount > 0) {
-    cohesion = (cohesion / float(cohCount));
-    vec3 steer = cohesion - position;
-    velocity += steer * uCohesionForce * 2.0;
+
+  if (cohesionWeight > 0.0) {
+    vec3 neighborhoodCenter = cohesion / cohesionWeight;
+    acceleration += (neighborhoodCenter - position) * uCohesionForce;
   }
-  
-  // Predator Avoidance (Mouse)
-  vec3 pointerDiff = position - uPointer;
-  float pointerDist = length(pointerDiff);
-  if (pointerDist < 4.0) {
-    velocity += normalize(pointerDiff) * (4.0 - pointerDist) * 0.5;
+
+  vec3 pointerOffset = position - uPointer;
+  float pointerDistance = length(pointerOffset);
+  if (pointerDistance > 0.001 && pointerDistance < 3.1) {
+    float avoidance = 1.0 - pointerDistance / 3.1;
+    acceleration += normalize(pointerOffset) * avoidance * avoidance * uPointerForce;
   }
-  
-  // Center Attraction (Keep them on screen)
-  velocity -= position * 0.005;
-  
-  // Limit speed
+
+  float distanceFromCenter = length(position);
+  if (distanceFromCenter > BOUNDARY_RADIUS) {
+    acceleration -= normalize(position) * (distanceFromCenter - BOUNDARY_RADIUS) * 3.2;
+  } else {
+    acceleration -= position * 0.012;
+  }
+
+  float boidSeed = dot(uv, vec2(127.1, 311.7));
+  vec3 wander = vec3(
+    sin(uTime * 0.91 + boidSeed),
+    cos(uTime * 0.73 + boidSeed * 1.37),
+    sin(uTime * 0.81 + boidSeed * 2.11)
+  );
+  acceleration += wander * 0.16;
+
+  velocity += acceleration * min(uDelta, 0.04);
   float speed = length(velocity);
+  float minimumSpeed = uMaxSpeed * 0.52;
+
+  if (speed > 0.001) {
+    velocity += normalize(velocity) * (uMaxSpeed * 0.76 - speed) * uDelta * 0.7;
+  }
+
+  speed = length(velocity);
   if (speed > uMaxSpeed) {
     velocity = normalize(velocity) * uMaxSpeed;
+  } else if (speed < minimumSpeed && speed > 0.001) {
+    velocity = normalize(velocity) * minimumSpeed;
   }
-  
-  // Basic wander for natural noise
-  velocity.x += sin(uTime * 2.0 + position.y) * 0.01;
-  velocity.y += cos(uTime * 1.5 + position.z) * 0.01;
-  velocity.z += sin(uTime * 3.0 + position.x) * 0.01;
-  
+
   gl_FragColor = vec4(velocity, 1.0);
 }

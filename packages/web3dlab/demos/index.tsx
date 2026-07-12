@@ -178,6 +178,9 @@ import {cinematicStyleSequenceMetadata} from './058-cinematic-style-sequence/met
 import Demo059PerfectSphere from './059-perfect-sphere/059-PerfectSphere';
 import {perfectSphereMetadata} from './059-perfect-sphere/metadata';
 
+import Demo060WebGLFluidSimulation from './060-webgl-fluid-simulation/060-WebGLFluidSimulation';
+import {webglFluidSimulationMetadata} from './060-webgl-fluid-simulation/metadata';
+
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -281,4 +284,5 @@ export const demos: DemoDefinition[] = [
   { ...sumOfSquaresProofMetadata, Component: Demo057SumOfSquaresProof },
   { ...cinematicStyleSequenceMetadata, Component: Demo058CinematicStyleSequence },
   { ...perfectSphereMetadata, Component: Demo059PerfectSphere },
+  { ...webglFluidSimulationMetadata, Component: Demo060WebGLFluidSimulation },
 ];
