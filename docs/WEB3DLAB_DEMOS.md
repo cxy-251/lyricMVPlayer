@@ -49,7 +49,7 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 034 Recursive Juggler | 复刻递归杂耍视觉悖论。 | Canvas2D stick figure、局部坐标系、抛物相位、递归绘制。 | 每个被抛出的球里应包含更小一层 juggler；循环运动稳定。 |
 | 035 Trajectory Data Cinema | 复刻 Three.js AIS 船舶轨迹数据电影的发光路径感。 | Canvas2D 程序化航线、深色海图、coastline、时间窗 reveal、青色 glow。 | 应看到海岸线、地名、时间标签和大量发光轨迹。 |
 | 036 Simulation Universe Visualizer | 把暗物质/模拟宇宙传播图转成 cosmic web + debugging HUD。 | Canvas2D 节点网络、扫描相位、网格 HUD、深色密度场。 | 应同时有宇宙网络和模拟界面感；scan phase 会扫亮节点。 |
-| 037 POM Bubbles Material | 把 Blender POM Bubbles 的“平面假体积泡泡”转成 WebGL shader。 | R3F fullscreen plane、Voronoi、伪 parallax offset、rim/highlight 合成。 | 看起来应像平面里有深度泡泡；depth 提高时假体积增强。 |
+| 037 Molten Relief | 用统一高度场生成持续生长与侵蚀的火热矿物浮雕。 | WebGL 高度场、Voronoi 细胞、岩层与晶体、差分法线、冷蓝窄边、阈值 Bloom。 | 红橙金色浮雕具有明确深度，蓝光只勾勒局部凸起边缘，三个预设均保持连续动画。 |
 | 038 Marble Music Machine | 复刻 Three.js marble machine / Animusic 思路的机械节奏小样。 | R3F 金属板、轨道、bell、确定性时间轴驱动 marble 和发光撞击。 | 小球应沿轨道循环，bell 应按节奏发光；tempo 和 balls 有明显变化。 |
 | 039 Air Surface Mouse | 把 WebGL + MediaPipe 手势空气表面改成鼠标/触控扰动版。 | R3F fullscreen shader、pointer uniform、折射网格、局部 ripple、空气膜高光。 | 鼠标移动处应产生可见折射和波纹；不需要摄像头授权。 |
 | 040 Soft Botanical Compositor | 把 Blender Compositor 植物果实视觉转成浏览器可运行的柔和 CGI 小样。 | Blender Python 生成 GLB，R3F 加载资产，浏览器端控制 reveal、果实辉光、慢速摆动和 bloom。 | 应有白色枝条、粉色果实、柔和后期和慢速摆动。 |
@@ -75,3 +75,4 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 060 WebGL Fluid Simulation | 鼠标和触控驱动的彩色不可压缩流体。 | 原生 WebGL framebuffer ping-pong、速度/染料平流、旋度增强、压力投影、bloom 和 sunrays。 | 初始即有彩色流体；拖动产生连续旋涡和拖尾；重置、暂停、质量和 preset 控制可用。 |
 | 061 Fourier Epicycle Curves | 以自动章节模式用周转圆链重建十种等弧长采样的星形、多边形和参数曲线。 | Canvas 2D、复数离散傅里叶变换、带符号频率旋转向量、可跳转离屏轨迹缓存和章节时间轴。 | 底部图例可手动切换或自动播放；拖动时间轴会重建对应轨迹，增加分量后尖角逐渐清晰。 |
 | 062 Every Curve Hiding Inside a Circle | 在深色数学展厅中串联单向量圆、反向向量、内外滚圆、trochoid 和 Fourier 轮廓。 | Canvas 2D、无滑动滚圆参数方程、有理半径比闭合周期、复数 Fourier 系数和可拖动时间轴。 | 11 个不重复章节可自动或手动切换；R/r/d、辅助圆、完整轨迹和 Fourier 分量调整均实时生效。 |
+| 063 Double Pendulum Wave | 让真实双摆的运动历史逐渐展开为彩虹波浪、编织丝带和碗状生成艺术。 | 固定步长 RK4、TypedArray Ring Buffer、自定义 Ribbon BufferGeometry、GLSL HSV 映射、白色路径粒子和 Bloom。 | 两段白色摆杆运动连续；轨迹长期运行不增长内存；参数、暂停、重置、随机化、清轨迹和全屏均可用。 |

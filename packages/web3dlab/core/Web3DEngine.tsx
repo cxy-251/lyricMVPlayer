@@ -13,6 +13,7 @@ export interface Web3DEngineConfig {
     intensity: number;
     luminanceSmoothing: number;
     luminanceThreshold: number;
+    radius?: number;
   };
   camera?: CanvasProps['camera'];
   chromaticAberration?: {offset: [number, number]};
@@ -52,6 +53,7 @@ export function Web3DEngine({
                 luminanceSmoothing={config.bloom.luminanceSmoothing}
                 luminanceThreshold={config.bloom.luminanceThreshold}
                 mipmapBlur
+                radius={config.bloom.radius}
               />
             ) : (<></> as any)}
             {config.chromaticAberration ? <ChromaticAberration offset={new THREE.Vector2(config.chromaticAberration.offset[0], config.chromaticAberration.offset[1])} /> : (<></> as any)}

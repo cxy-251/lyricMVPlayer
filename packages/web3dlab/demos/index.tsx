@@ -109,8 +109,8 @@ import {trajectoryDataCinemaMetadata} from './035-trajectory-data-cinema/metadat
 import Demo036SimulationUniverse from './036-simulation-universe/036-SimulationUniverse';
 import {simulationUniverseMetadata} from './036-simulation-universe/metadata';
 
-import Demo037POMBubbles from './037-pom-bubbles/037-POMBubbles';
-import {pomBubblesMetadata} from './037-pom-bubbles/metadata';
+import Demo037MoltenRelief from './037-molten-relief/037-MoltenRelief';
+import {moltenReliefMetadata} from './037-molten-relief/metadata';
 
 import Demo038MarbleMusicMachine from './038-marble-music-machine/038-MarbleMusicMachine';
 import {marbleMusicMachineMetadata} from './038-marble-music-machine/metadata';
@@ -186,6 +186,9 @@ import {fourierEpicycleStarMetadata} from './061-fourier-epicycle-star/metadata'
 
 import Demo062EveryCurveCircle from './062-every-curve-circle/062-EveryCurveCircle';
 import {everyCurveCircleMetadata} from './062-every-curve-circle/metadata';
+
+import Demo063DoublePendulumWave from './063-double-pendulum-wave/063-DoublePendulumWave';
+import {doublePendulumWaveMetadata} from './063-double-pendulum-wave/metadata';
 
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
@@ -267,7 +270,7 @@ export const demos: DemoDefinition[] = [
   { ...recursiveJugglerMetadata, Component: Demo034RecursiveJuggler },
   { ...trajectoryDataCinemaMetadata, Component: Demo035TrajectoryDataCinema },
   { ...simulationUniverseMetadata, Component: Demo036SimulationUniverse },
-  { ...pomBubblesMetadata, Component: Demo037POMBubbles },
+  { ...moltenReliefMetadata, Component: Demo037MoltenRelief },
   { ...marbleMusicMachineMetadata, Component: Demo038MarbleMusicMachine },
   { ...airSurfaceMouseMetadata, Component: Demo039AirSurfaceMouse },
   { ...softBotanicalCompositorMetadata, Component: Demo040SoftBotanicalCompositor },
@@ -293,4 +296,5 @@ export const demos: DemoDefinition[] = [
   { ...webglFluidSimulationMetadata, Component: Demo060WebGLFluidSimulation },
   { ...fourierEpicycleStarMetadata, Component: Demo061FourierEpicycleStar },
   { ...everyCurveCircleMetadata, Component: Demo062EveryCurveCircle },
+  { ...doublePendulumWaveMetadata, Component: Demo063DoublePendulumWave },
 ];
