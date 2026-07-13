@@ -21,8 +21,8 @@ const DEMO_STYLES = `
     height: 100%;
     min-height: 100dvh;
     overflow: hidden;
-    background: #eee9df;
-    color: #39322f;
+    background: #111412;
+    color: #f0ece3;
   }
 
   .curve-museum-canvas {
@@ -35,25 +35,25 @@ const DEMO_STYLES = `
   .demo-page:has(.curve-museum-demo) .demo-back-link,
   .demo-page:has(.curve-museum-demo) .demo-info-toggle,
   .demo-page:has(.curve-museum-demo) .demo-sequence-button {
-    border-color: rgba(63, 54, 50, 0.18);
-    background: rgba(255, 253, 248, 0.92);
-    color: #413936;
+    border-color: rgba(240, 236, 227, 0.16);
+    background: rgba(22, 26, 23, 0.92);
+    color: #f4efe5;
   }
 
   .demo-page:has(.curve-museum-demo) .demo-sequence-button:disabled {
-    color: rgba(65, 57, 54, 0.45);
+    color: rgba(244, 239, 229, 0.4);
   }
 
   .demo-page:has(.curve-museum-demo) .demo-hud {
-    border-color: rgba(63, 54, 50, 0.16);
-    background: rgba(255, 253, 248, 0.94);
-    color: #413936;
+    border-color: rgba(240, 236, 227, 0.15);
+    background: rgba(18, 21, 19, 0.96);
+    color: #f4efe5;
   }
 
   .demo-page:has(.curve-museum-demo) .demo-kicker,
   .demo-page:has(.curve-museum-demo) .demo-description,
   .demo-page:has(.curve-museum-demo) .demo-instructions li {
-    color: rgba(65, 57, 54, 0.68);
+    color: rgba(244, 239, 229, 0.68);
   }
 
   .curve-museum-heading {
@@ -74,7 +74,7 @@ const DEMO_STYLES = `
   }
 
   .curve-museum-heading p:first-child {
-    color: rgba(60, 52, 49, 0.52);
+    color: rgba(240, 236, 227, 0.5);
     font-size: 0.62rem;
     font-weight: 780;
     text-transform: uppercase;
@@ -82,7 +82,7 @@ const DEMO_STYLES = `
 
   .curve-museum-heading h2 {
     margin-top: 4px;
-    color: #352e2c;
+    color: #f7f2e8;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.55rem;
     font-weight: 500;
@@ -90,14 +90,14 @@ const DEMO_STYLES = `
 
   .curve-museum-equation {
     margin-top: 5px !important;
-    color: rgba(60, 52, 49, 0.68);
+    color: rgba(240, 236, 227, 0.7);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.68rem;
   }
 
   .curve-museum-category {
     margin-top: 4px !important;
-    color: rgba(60, 52, 49, 0.45);
+    color: rgba(240, 236, 227, 0.42);
     font-size: 0.58rem;
     font-weight: 740;
     text-transform: uppercase;
@@ -114,9 +114,9 @@ const DEMO_STYLES = `
     transform: translateX(-50%);
     width: min(680px, calc(100vw - 32px));
     padding: 6px;
-    border: 1px solid rgba(63, 54, 50, 0.17);
+    border: 1px solid rgba(240, 236, 227, 0.16);
     border-radius: 7px;
-    background: #faf7f0;
+    background: #191d1a;
   }
 
   .curve-museum-action {
@@ -127,10 +127,10 @@ const DEMO_STYLES = `
     gap: 6px;
     min-height: 34px;
     padding: 0 10px;
-    border: 1px solid rgba(63, 54, 50, 0.14);
+    border: 1px solid rgba(240, 236, 227, 0.14);
     border-radius: 5px;
     background: transparent;
-    color: #4b413e;
+    color: #eee9df;
     font: inherit;
     font-size: 0.67rem;
     font-weight: 730;
@@ -139,9 +139,9 @@ const DEMO_STYLES = `
 
   .curve-museum-action:hover,
   .curve-museum-action[aria-pressed='true'] {
-    border-color: #403735;
-    background: #403735;
-    color: #fffaf2;
+    border-color: #eee9df;
+    background: #eee9df;
+    color: #171a18;
   }
 
   .curve-museum-action:focus-visible,
@@ -159,7 +159,7 @@ const DEMO_STYLES = `
 
   .curve-museum-progress-value {
     flex: 0 0 34px;
-    color: rgba(60, 52, 49, 0.6);
+    color: rgba(240, 236, 227, 0.6);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.62rem;
     text-align: right;
@@ -168,16 +168,27 @@ const DEMO_STYLES = `
   .curve-museum-legend {
     position: fixed;
     z-index: 12;
-    left: 12px;
-    right: 12px;
+    left: 50%;
     bottom: 10px;
     display: flex;
     gap: 4px;
+    width: min(466px, calc(100vw - 24px));
+    box-sizing: border-box;
     overflow-x: auto;
     padding: 5px;
-    border-top: 1px solid rgba(63, 54, 50, 0.16);
-    background: rgba(238, 233, 223, 0.96);
+    border-top: 1px solid rgba(240, 236, 227, 0.16);
+    background: rgba(17, 20, 18, 0.97);
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    transform: translateX(-50%);
+  }
+
+  .curve-museum-legend::before,
+  .curve-museum-legend::after {
+    content: '';
+    flex: 0 0 calc(40% - 6px);
   }
 
   .curve-museum-legend::-webkit-scrollbar {
@@ -186,29 +197,29 @@ const DEMO_STYLES = `
 
   .curve-museum-legend-item {
     display: grid;
-    flex: 1 0 76px;
+    flex: 0 0 calc(20% - 3.2px);
     grid-template-columns: 16px 1fr;
     grid-template-rows: 40px 16px;
-    min-width: 76px;
-    max-width: 112px;
+    min-width: 0;
     padding: 3px 5px 2px;
     border: 0;
     border-bottom: 2px solid transparent;
     border-radius: 3px;
     background: transparent;
-    color: rgba(65, 57, 54, 0.24);
+    color: rgba(240, 236, 227, 0.2);
     text-align: left;
     cursor: pointer;
+    scroll-snap-align: center;
   }
 
   .curve-museum-legend-item[data-visited='true'] {
-    color: rgba(65, 57, 54, 0.66);
+    color: rgba(240, 236, 227, 0.64);
   }
 
   .curve-museum-legend-item[aria-pressed='true'] {
     border-bottom-color: currentColor;
-    color: #352e2c;
-    background: rgba(255, 253, 248, 0.62);
+    color: #fffaf0;
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .curve-museum-legend-item svg {
@@ -223,7 +234,7 @@ const DEMO_STYLES = `
   }
 
   .curve-museum-legend-item span {
-    color: rgba(65, 57, 54, 0.38);
+    color: rgba(240, 236, 227, 0.38);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.56rem;
   }
@@ -263,9 +274,8 @@ const DEMO_STYLES = `
     }
 
     .curve-museum-legend {
-      left: 6px;
-      right: 6px;
       bottom: 6px;
+      width: calc(100vw - 12px);
     }
   }
 `;

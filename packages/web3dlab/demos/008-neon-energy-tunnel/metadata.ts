@@ -2,14 +2,15 @@ import type {DemoMetadata} from '../../types';
 
 export const neonEnergyTunnelMetadata: DemoMetadata = {
   id: 'neon-energy-tunnel',
-  title: 'Neon Energy Tunnel',
+  number: '008',
+  title: 'Rails in Space',
   description:
-    'A procedural sci-fi corridor of glowing rings, electric guide lines, and speed streaks that loops forever.',
-  tags: ['tunnel', 'neon', 'motion', 'procedural'],
+    'Fly through a closed procedural ribbon tunnel built from Frenet frames, flowing GLSL energy pulses, layered space particles, and restrained bloom.',
+  tags: ['Shader', 'Ribbon Geometry', 'Camera Path', 'Generative Art', 'Bloom'],
   route: '/demos/neon-energy-tunnel',
   instructions: [
-    'Move the pointer to steer the camera and bend the tunnel.',
-    'Drag to inject turbulence and a temporary speed surge.',
-    'Use the wheel to nudge the travel speed.',
+    'Drag in the viewport to look around inside the rail tunnel; double-click to recenter the view.',
+    'Use the wheel for a temporary speed change.',
+    'Flight controls change navigation; Rails controls rebuild the static tunnel; Rendering presets trade density for performance.',
   ],
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DonutSpinEffect} from '../../demos/019-paper-donut-spin/019-PaperDonutSpin';
+import {TorusDynamicsEffect} from '../../demos/019-paper-donut-spin/019-PaperDonutSpin';
 import {Web3DEngine} from '../Web3DEngine';
 import {DONUT_EFFECT_CONTROLS} from '../simulations/controls';
 import type {EffectAtomRuntimeProps} from '../simulations/types';
@@ -28,7 +28,7 @@ const renderDonutLayer = ({
         bloom: {intensity: 0.12, luminanceThreshold: 0.48, luminanceSmoothing: 0.32},
       }}
     >
-      <DonutSpinEffect seed={seed} absoluteFrame={absoluteFrame} simulationFrame={simulationFrame} />
+      <TorusDynamicsEffect seed={seed} absoluteFrame={absoluteFrame} simulationFrame={simulationFrame} />
     </Web3DEngine>
   );
 };

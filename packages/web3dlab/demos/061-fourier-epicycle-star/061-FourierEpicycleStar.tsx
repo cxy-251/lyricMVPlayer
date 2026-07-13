@@ -154,16 +154,27 @@ const DEMO_STYLES = `
   .fourier-star-legend {
     position: fixed;
     z-index: 12;
-    left: 10px;
-    right: 10px;
+    left: 50%;
     bottom: 8px;
     display: flex;
     gap: 4px;
+    width: min(486px, calc(100vw - 20px));
+    box-sizing: border-box;
     overflow-x: auto;
     padding: 5px;
     border-top: 1px solid rgba(250, 247, 241, 0.18);
     background: rgba(78, 90, 86, 0.96);
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    transform: translateX(-50%);
+  }
+
+  .fourier-star-legend::before,
+  .fourier-star-legend::after {
+    content: '';
+    flex: 0 0 calc(40% - 6px);
   }
 
   .fourier-star-legend::-webkit-scrollbar {
@@ -172,11 +183,10 @@ const DEMO_STYLES = `
 
   .fourier-star-legend-item {
     display: grid;
-    flex: 1 0 82px;
+    flex: 0 0 calc(20% - 3.2px);
     grid-template-columns: 17px 1fr;
     grid-template-rows: 42px 16px;
-    min-width: 82px;
-    max-width: 116px;
+    min-width: 0;
     padding: 3px 5px 2px;
     border: 0;
     border-bottom: 2px solid transparent;
@@ -185,6 +195,7 @@ const DEMO_STYLES = `
     color: rgba(250, 247, 241, 0.24);
     text-align: left;
     cursor: pointer;
+    scroll-snap-align: center;
   }
 
   .fourier-star-legend-item[data-visited='true'] {
@@ -275,9 +286,8 @@ const DEMO_STYLES = `
     }
 
     .fourier-star-legend {
-      left: 6px;
-      right: 6px;
       bottom: 6px;
+      width: calc(100vw - 12px);
     }
 
     .fourier-star-inspector {

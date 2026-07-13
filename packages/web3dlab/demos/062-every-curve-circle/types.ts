@@ -44,7 +44,6 @@ export type CurveDefinition = {
   duration: number;
   equation: string;
   accent: string;
-  traceCurve?: boolean;
   defaultParameters: CurveParameters;
   samplesPerTurn: number;
   period: (parameters: CurveParameters) => number;

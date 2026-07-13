@@ -22,7 +22,7 @@ export const EFFECT_ATOMS: Record<EffectAtomId, EffectAtomDefinition> = {
   "cellular-life": { id: "cellular-life", title: "Cellular Life", description: "...", Component: CellularLifeAtom, controls: LIFE_EFFECT_CONTROLS },
   "snake-grid": { id: "snake-grid", title: "Snake Grid", description: "...", Component: SnakeGridAtom, controls: SNAKE_EFFECT_CONTROLS },
   "particle-orbit": { id: "particle-orbit", title: "Elastic Collision", description: "Energy-preserving sphere collisions in a closed chamber.", Component: ParticleOrbitAtom, controls: PARTICLE_EFFECT_CONTROLS },
-  "donut-spin": { id: "donut-spin", title: "Donut Spin", description: "...", Component: DonutSpinAtom, controls: DONUT_EFFECT_CONTROLS },
+  "donut-spin": { id: "donut-spin", title: "Torus Dynamics", description: "Numerically integrated flow inside a toroidal volume.", Component: DonutSpinAtom, controls: DONUT_EFFECT_CONTROLS },
   "lights-launch": { id: "lights-launch", title: "Lights Launch", description: "...", Component: LightsLaunchAtom, controls: LIGHTS_EFFECT_CONTROLS },
   "lights-beams": { id: "lights-beams", title: "Lights Beams", description: "...", Component: LightsBeamsAtom, controls: LIGHTS_EFFECT_CONTROLS },
   "rubiks-launch": { id: "rubiks-launch", title: "Rubiks Launch", description: "...", Component: RubiksLaunchAtom, controls: RUBIKS_EFFECT_CONTROLS },

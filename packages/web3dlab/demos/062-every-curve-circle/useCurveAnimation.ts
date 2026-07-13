@@ -125,7 +125,6 @@ export function useCurveAnimation(
       renderCurveFrame(context, {
         accent: currentInput.definition.accent,
         construction: currentSample.construction,
-        drawTrajectory: currentInput.definition.traceCurve !== false,
         fullTrajectory: currentInput.fullTrajectory,
         motionProgress,
         scene: currentInput.scene,

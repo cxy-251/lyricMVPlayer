@@ -4,7 +4,7 @@ export const everyCurveCircleMetadata: DemoMetadata = {
   number: '062',
   id: 'every-curve-circle',
   title: 'Every Curve Hiding Inside a Circle',
-  description: 'An interactive mathematical film connecting rotating vectors, no-slip rolling circles, trochoids, and a true Fourier coefficient chain across twelve sequential curve chapters.',
+  description: 'A dark mathematical film connecting one-vector circles, counter-rotating sums, no-slip rolling circles, trochoids, and a true Fourier coefficient chain across eleven curve chapters.',
   route: '/demos/every-curve-circle',
   tags: ['Canvas 2D', 'Cycloids', 'Epicycles', 'Fourier', 'Parametric Curves', 'Math'],
   instructions: [

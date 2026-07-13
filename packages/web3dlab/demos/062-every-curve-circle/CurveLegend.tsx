@@ -1,4 +1,5 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
+import type {WheelEvent} from 'react';
 
 import {sampleCurveScene} from './curveSampling';
 import type {CurveDefinition} from './types';
@@ -43,8 +44,31 @@ export function CurveLegend({
   onSelect: (definition: CurveDefinition) => void;
   visitedIds: Set<string>;
 }) {
+  const railRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    const activeItem = rail?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!rail || !activeItem) return;
+    rail.scrollTo({
+      behavior: 'smooth',
+      left: activeItem.offsetLeft - (rail.clientWidth - activeItem.clientWidth) / 2,
+    });
+  }, [activeId]);
+
+  const handleWheel = (event: WheelEvent<HTMLElement>) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    event.currentTarget.scrollLeft += event.deltaY;
+  };
+
   return (
-    <nav className="curve-museum-legend" aria-label="Curve chapters">
+    <nav
+      className="curve-museum-legend"
+      aria-label="Curve chapters"
+      onWheel={handleWheel}
+      ref={railRef}
+    >
       {definitions.map((definition, index) => {
         const active = definition.id === activeId;
         const visited = visitedIds.has(definition.id);

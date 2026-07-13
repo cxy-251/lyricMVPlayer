@@ -1,14 +1,8 @@
 import type { EffectControlDefinition } from "./types";
 
-export const DONUT_EFFECT_CONTROLS: EffectControlDefinition[] = [
-  { id: "donut-variant", kind: "select", label: "Variant", description: "Switch between graphite, luminous, and slow orbital ring moods.", section: "donutEffect", field: "variant", options: [ {label: "Graphite", value: "classic"}, {label: "Luminous", value: "arcade"}, {label: "Orbital", value: "cosmic"} ] },
-  { id: "donut-ring-radius", kind: "range", label: "Ring Radius", description: "Controls the overall torus diameter.", section: "donutEffect", field: "ringRadius", min: 0.9, max: 2.4, step: 0.02 },
-  { id: "donut-tube-radius", kind: "range", label: "Tube Radius", description: "Controls the thickness of the abstract ring body.", section: "donutEffect", field: "tubeRadius", min: 0.18, max: 0.8, step: 0.01 },
-  { id: "donut-spin-speed", kind: "range", label: "Spin Speed", description: "Changes how fast the main ring spins.", section: "donutEffect", field: "spinSpeed", min: 0.3, max: 2.4, step: 0.02 },
-  { id: "donut-orbit-speed", kind: "range", label: "Dust Orbit", description: "Controls how fast the surrounding light dust travels.", section: "donutEffect", field: "orbitSpeed", min: 0.2, max: 2.4, step: 0.02 },
-  { id: "donut-wobble", kind: "range", label: "Surface Drift", description: "Adds subtle camera-friendly drift.", section: "donutEffect", field: "wobbleAmount", min: 0, max: 1, step: 0.01 },
-  { id: "donut-glow", kind: "range", label: "Rim Glow", description: "Adjusts restrained bloom support.", section: "donutEffect", field: "glowIntensity", min: 0, max: 1.4, step: 0.02 }
-];
+// The former Donut Spin controls targeted a removed surface/particle implementation.
+// Torus Dynamics is configured inside Demo 019, so the legacy Paper atom exposes no inert controls.
+export const DONUT_EFFECT_CONTROLS: EffectControlDefinition[] = [];
 
 export const LIGHTS_EFFECT_CONTROLS: EffectControlDefinition[] = [
   { id: "lights-variant", kind: "select", label: "Wave Style", description: "Switch between calm, swell, and crossed-wave reference moods.", section: "lightsEffect", field: "variant", options: [ {label: "Calm", value: "pulse"}, {label: "Swell", value: "fan"}, {label: "Cross Wave", value: "bloom"} ] },

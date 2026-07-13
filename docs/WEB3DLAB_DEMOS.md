@@ -20,7 +20,7 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 005 Quantum Network | 发光节点与数据包在网络中流动。 | LineSegments、instanced packet/node geometry、自定义透明 shader。 | 节点、连线、数据包三层都可见，数据包沿连线运动。 |
 | 006 Cosmic Nebula | 宇宙丝带状星云体积感。 | Curl noise 风格粒子/线条、后处理 bloom 和雾化。 | 有连续流动的体积丝带，画面不应退化成散点噪声。 |
 | 007 Particle Galaxy | 指针扰动的发光粒子星系。 | Shader 粒子场、pointer force、bloom。 | 指针移动能弯曲旋臂或扰动粒子；星系有中心和旋臂结构。 |
-| 008 Neon Energy Tunnel | 无限循环的霓虹能量隧道。 | Instanced rings/panels/streaks、程序化路径、速度和湍流状态。 | 隧道有前进感，拖拽或 wheel 能改变速度/扰动。 |
+| 008 Rails in Space | 沿闭合三维路径持续穿行的彩色 Ribbon 能量隧道。 | Catmull-Rom + Frenet 标架、单个合并 Ribbon Mesh、GLSL 流光、路径相机、星空/火花和 Bloom。 | 闭环飞行无跳变；Leva 可调整速度、轨道密度/形态、氛围和质量档位，暂停与重置有效。 |
 | 009 Fluid Cursor Field | 指针搅动的液态光场。 | Fragment shader、指针速度场、trail 与 distortion。 | 快速移动 pointer 会产生更强波纹和拖尾。 |
 | 010 Physics Cloth Banner | 全息布料横幅被风和指针影响。 | Verlet cloth simulation、固定点约束、程序化风场。 | 布面有柔体波动；点击或拖拽能产生局部波纹。 |
 | 011 Particle Morphing Field | 粒子雕塑在多个几何形态间变形。 | 粒子 target shape、shader animation、pointer force。 | 点击后形态切换明显，粒子从旧形态过渡到新形态。 |
@@ -31,7 +31,7 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 016 GPGPU Boids Flocking | GPU 上运行的群体行为模拟。 | Separation/alignment/cohesion 规则、GPGPU 粒子更新。 | 粒子呈群体游动，不应随机抖动或全部聚成一点。 |
 | 017 Ferrofluid Core | 音频反应式铁磁流体核心。 | Raymarching、液态金属 shader、音频强度调制。 | 核心边缘有尖刺/流体形变，音频能量应影响强度。 |
 | 018 Ultimate Convergence | 综合 Audio、GPGPU、Fluid、SDF 的压力测试。 | 多种渲染技术叠加，作为性能和组合能力样品。 | 画面层次清楚，性能可接受，不应因为叠加而全屏过曝。 |
-| 019 Donut Spin | Paper 系列甜甜圈旋转效果。 | Paper atom 包装为 interactive demo，Three.js 旋转体。 | resize 后仍居中，interactive 模式持续旋转。 |
+| 019 Torus Dynamics Lab | 用可解释速度场研究环面体积中的闭合、准周期、编织和径向汇聚运动。 | 环面坐标、固定步长 RK4、Worker 重算、合并 LineSegments、流动 Shader、Fresnel 外壳和实验 HUD。 | 六种预设拓扑清晰不同；固定种子可复现；参数、暂停、URL 状态分享与相机交互有效。 |
 | 020 Lights Beams | Paper 系列光束效果。 | Paper atom、实例化光束/辉光层。 | 光束有发射和扫动感，不是静态平面。 |
 | 021 Rubiks Cube | Paper 系列魔方效果。 | Paper atom、3D 方块结构和旋转。 | 魔方立体结构清楚，旋转或状态变化可见。 |
 | 022 Snake Grid | Paper 系列贪吃蛇网格效果。 | Paper atom、2D 网格和实例化状态更新。 | 蛇身、食物、网格状态可区分，动画不跳帧到空白。 |
@@ -74,4 +74,4 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 059 Fibonacci Parastichy Sphere | 展示黄金角点阵中相邻 Fibonacci 螺旋族。 | 程序化球面点阵、parastichy 曲线 shader、图层切换和脉冲流动。 | 球面点阵与螺旋方向清晰；背面曲线被球体正确遮挡；参数切换不释放材质。 |
 | 060 WebGL Fluid Simulation | 鼠标和触控驱动的彩色不可压缩流体。 | 原生 WebGL framebuffer ping-pong、速度/染料平流、旋度增强、压力投影、bloom 和 sunrays。 | 初始即有彩色流体；拖动产生连续旋涡和拖尾；重置、暂停、质量和 preset 控制可用。 |
 | 061 Fourier Epicycle Curves | 以自动章节模式用周转圆链重建十种等弧长采样的星形、多边形和参数曲线。 | Canvas 2D、复数离散傅里叶变换、带符号频率旋转向量、可跳转离屏轨迹缓存和章节时间轴。 | 底部图例可手动切换或自动播放；拖动时间轴会重建对应轨迹，增加分量后尖角逐渐清晰。 |
-| 062 Every Curve Hiding Inside a Circle | 以数学短片节奏串联单圆、反向向量、内外滚圆、trochoid 和 Fourier 轮廓。 | Canvas 2D、无滑动滚圆参数方程、有理半径比闭合周期、复数 Fourier 系数和可拖动时间轴。 | 12 个章节可自动或手动切换；R/r/d、辅助圆、完整轨迹和 Fourier 分量调整均实时生效。 |
+| 062 Every Curve Hiding Inside a Circle | 在深色数学展厅中串联单向量圆、反向向量、内外滚圆、trochoid 和 Fourier 轮廓。 | Canvas 2D、无滑动滚圆参数方程、有理半径比闭合周期、复数 Fourier 系数和可拖动时间轴。 | 11 个不重复章节可自动或手动切换；R/r/d、辅助圆、完整轨迹和 Fourier 分量调整均实时生效。 |

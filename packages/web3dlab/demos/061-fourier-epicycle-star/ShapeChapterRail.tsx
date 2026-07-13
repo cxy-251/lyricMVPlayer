@@ -1,4 +1,5 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
+import type {WheelEvent} from 'react';
 
 import {
   CLOSED_PATHS,
@@ -43,8 +44,31 @@ export function ShapeChapterRail({
   onSelect: (choice: ShapeChoice) => void;
   visitedIds: Set<ClosedPathId>;
 }) {
+  const railRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    const activeItem = rail?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!rail || !activeItem) return;
+    rail.scrollTo({
+      behavior: 'smooth',
+      left: activeItem.offsetLeft - (rail.clientWidth - activeItem.clientWidth) / 2,
+    });
+  }, [activeId]);
+
+  const handleWheel = (event: WheelEvent<HTMLElement>) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    event.currentTarget.scrollLeft += event.deltaY;
+  };
+
   return (
-    <nav className="fourier-star-legend" aria-label="Fourier curve chapters">
+    <nav
+      className="fourier-star-legend"
+      aria-label="Fourier curve chapters"
+      onWheel={handleWheel}
+      ref={railRef}
+    >
       {choices.map((choice, index) => (
         <button
           aria-label={`Chapter ${index + 1}: ${choice.label}`}

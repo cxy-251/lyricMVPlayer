@@ -13,7 +13,6 @@ export type CurveViewport = {
 type RenderCurveFrameInput = {
   accent: string;
   construction: CurveConstruction;
-  drawTrajectory: boolean;
   fullTrajectory: boolean;
   motionProgress: number;
   scene: SampledCurveScene;
@@ -27,7 +26,7 @@ type SceneTransform = {
   scale: number;
 };
 
-const PAPER = '#eee9df';
+const PAPER = '#111412';
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const smoothstep = (start: number, end: number, value: number) => {
@@ -87,7 +86,7 @@ function drawBackground(context: CanvasRenderingContext2D, viewport: CurveViewpo
     context.moveTo(0, y + 0.5);
     context.lineTo(viewport.width, y + 0.5);
   }
-  context.strokeStyle = 'rgba(78, 70, 64, 0.04)';
+  context.strokeStyle = 'rgba(240, 236, 224, 0.045)';
   context.lineWidth = 1;
   context.stroke();
 }
@@ -143,7 +142,7 @@ function drawDirectionArrow(
   context.beginPath();
   context.moveTo(start.x, start.y);
   context.lineTo(end.x, end.y);
-  context.strokeStyle = `rgba(70, 63, 59, ${0.62 * alpha})`;
+  context.strokeStyle = `rgba(230, 225, 214, ${0.62 * alpha})`;
   context.lineWidth = 1.2;
   context.stroke();
 
@@ -168,7 +167,7 @@ function drawConstruction(
       construction.fixedCircle.center,
       construction.fixedCircle.radius,
       transform,
-      `rgba(78, 72, 68, ${0.22 * alpha})`,
+      `rgba(226, 222, 211, ${0.2 * alpha})`,
     );
   }
   if (construction.rollingCircle) {
@@ -177,7 +176,7 @@ function drawConstruction(
       construction.rollingCircle.center,
       construction.rollingCircle.radius,
       transform,
-      `rgba(63, 57, 54, ${0.58 * alpha})`,
+      `rgba(238, 233, 222, ${0.56 * alpha})`,
       1.2,
     );
   }
@@ -187,7 +186,7 @@ function drawConstruction(
       construction.radiusLine.start,
       construction.radiusLine.end,
       transform,
-      `rgba(63, 57, 54, ${0.58 * alpha})`,
+      `rgba(238, 233, 222, ${0.56 * alpha})`,
     );
   }
   for (const arm of construction.arms ?? []) {
@@ -197,7 +196,7 @@ function drawConstruction(
         arm.start,
         arm.radius,
         transform,
-        `rgba(78, 72, 68, ${0.24 * alpha})`,
+        `rgba(226, 222, 211, ${0.22 * alpha})`,
       );
     }
     drawLine(
@@ -205,7 +204,7 @@ function drawConstruction(
       arm.start,
       arm.end,
       transform,
-      `rgba(63, 57, 54, ${0.62 * alpha})`,
+      `rgba(238, 233, 222, ${0.62 * alpha})`,
     );
   }
   drawDirectionArrow(context, construction, transform, alpha);
@@ -239,7 +238,6 @@ export function renderCurveFrame(
   const {
     accent,
     construction,
-    drawTrajectory,
     fullTrajectory,
     motionProgress,
     scene,
@@ -254,13 +252,13 @@ export function renderCurveFrame(
 
   const transform = createSceneTransform(scene, viewport, timelineProgress);
   const tracedEnd = Math.max(2, Math.ceil(motionProgress * (scene.points.length - 1)) + 1);
-  if (drawTrajectory && fullTrajectory) {
+  if (fullTrajectory) {
     strokeCurve(
       context,
       scene.points,
       scene.points.length,
       transform,
-      'rgba(68, 59, 62, 0.16)',
+      'rgba(236, 231, 221, 0.14)',
       1.1,
     );
   }
@@ -270,9 +268,7 @@ export function renderCurveFrame(
     drawConstruction(context, construction, transform, guideAlpha);
   }
 
-  if (drawTrajectory) {
-    strokeCurve(context, scene.points, tracedEnd, transform, accent, 2.15);
-  }
+  strokeCurve(context, scene.points, tracedEnd, transform, accent, 2.15);
 
   const tracingPoint = toScreen(construction.tracingPoint, transform);
   context.beginPath();
