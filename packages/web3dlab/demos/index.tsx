@@ -181,6 +181,9 @@ import {perfectSphereMetadata} from './059-perfect-sphere/metadata';
 import Demo060WebGLFluidSimulation from './060-webgl-fluid-simulation/060-WebGLFluidSimulation';
 import {webglFluidSimulationMetadata} from './060-webgl-fluid-simulation/metadata';
 
+import Demo061FourierEpicycleStar from './061-fourier-epicycle-star/061-FourierEpicycleStar';
+import {fourierEpicycleStarMetadata} from './061-fourier-epicycle-star/metadata';
+
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -285,4 +288,5 @@ export const demos: DemoDefinition[] = [
   { ...cinematicStyleSequenceMetadata, Component: Demo058CinematicStyleSequence },
   { ...perfectSphereMetadata, Component: Demo059PerfectSphere },
   { ...webglFluidSimulationMetadata, Component: Demo060WebGLFluidSimulation },
+  { ...fourierEpicycleStarMetadata, Component: Demo061FourierEpicycleStar },
 ];
