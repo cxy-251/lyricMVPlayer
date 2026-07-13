@@ -184,6 +184,9 @@ import {webglFluidSimulationMetadata} from './060-webgl-fluid-simulation/metadat
 import Demo061FourierEpicycleStar from './061-fourier-epicycle-star/061-FourierEpicycleStar';
 import {fourierEpicycleStarMetadata} from './061-fourier-epicycle-star/metadata';
 
+import Demo062EveryCurveCircle from './062-every-curve-circle/062-EveryCurveCircle';
+import {everyCurveCircleMetadata} from './062-every-curve-circle/metadata';
+
 function createPaperDemo(Component: any) {
   return function PaperEffectDemoScene() {
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -289,4 +292,5 @@ export const demos: DemoDefinition[] = [
   { ...perfectSphereMetadata, Component: Demo059PerfectSphere },
   { ...webglFluidSimulationMetadata, Component: Demo060WebGLFluidSimulation },
   { ...fourierEpicycleStarMetadata, Component: Demo061FourierEpicycleStar },
+  { ...everyCurveCircleMetadata, Component: Demo062EveryCurveCircle },
 ];

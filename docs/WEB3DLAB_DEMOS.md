@@ -73,4 +73,5 @@ pnpm run render -- --target web3dlab --demo fluid-cursor-field --duration-frames
 | 058 Cinematic Style Sequence | 复刻 Midjourney style reference 多图动画思路。 | Canvas2D 五格电影关键帧、燃烧摩天轮、火光、light trails、film grain。 | 应像 AIGC 电影风格序列板；speed/grain/lightTrails 改变动画质感。 |
 | 059 Fibonacci Parastichy Sphere | 展示黄金角点阵中相邻 Fibonacci 螺旋族。 | 程序化球面点阵、parastichy 曲线 shader、图层切换和脉冲流动。 | 球面点阵与螺旋方向清晰；背面曲线被球体正确遮挡；参数切换不释放材质。 |
 | 060 WebGL Fluid Simulation | 鼠标和触控驱动的彩色不可压缩流体。 | 原生 WebGL framebuffer ping-pong、速度/染料平流、旋度增强、压力投影、bloom 和 sunrays。 | 初始即有彩色流体；拖动产生连续旋涡和拖尾；重置、暂停、质量和 preset 控制可用。 |
-| 061 Fourier Epicycle Curves | 用周转圆链逐步重建十种等弧长采样的星形、多边形和参数曲线。 | Canvas 2D、复数离散傅里叶变换、带符号频率旋转向量和离屏轨迹缓存。 | 页面按钮切换形状后会重新执行采样与 DFT；少量分量呈粗略逼近，增加分量后尖角逐渐清晰。 |
+| 061 Fourier Epicycle Curves | 以自动章节模式用周转圆链重建十种等弧长采样的星形、多边形和参数曲线。 | Canvas 2D、复数离散傅里叶变换、带符号频率旋转向量、可跳转离屏轨迹缓存和章节时间轴。 | 底部图例可手动切换或自动播放；拖动时间轴会重建对应轨迹，增加分量后尖角逐渐清晰。 |
+| 062 Every Curve Hiding Inside a Circle | 以数学短片节奏串联单圆、反向向量、内外滚圆、trochoid 和 Fourier 轮廓。 | Canvas 2D、无滑动滚圆参数方程、有理半径比闭合周期、复数 Fourier 系数和可拖动时间轴。 | 12 个章节可自动或手动切换；R/r/d、辅助圆、完整轨迹和 Fourier 分量调整均实时生效。 |
