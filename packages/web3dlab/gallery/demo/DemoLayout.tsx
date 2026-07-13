@@ -9,11 +9,19 @@ export function DemoLayout({
   controlsCollapsed = true,
   metadata,
   onBack,
+  onNext,
+  onPrevious,
+  nextTitle,
+  previousTitle,
 }: {
   children: ReactNode;
   controlsCollapsed?: boolean;
   metadata: DemoMetadata;
   onBack: () => void;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  nextTitle?: string;
+  previousTitle?: string;
 }) {
   const [infoCollapsed, setInfoCollapsed] = useState(true);
 
@@ -41,10 +49,32 @@ export function DemoLayout({
         >
           {infoCollapsed ? 'Info' : 'Hide info'}
         </button>
+        <button
+          aria-label={previousTitle ? `Previous demo: ${previousTitle}` : 'No previous demo'}
+          className="demo-sequence-button"
+          disabled={!onPrevious}
+          onClick={onPrevious}
+          title={previousTitle}
+          type="button"
+        >
+          Previous
+        </button>
+        <button
+          aria-label={nextTitle ? `Next demo: ${nextTitle}` : 'No next demo'}
+          className="demo-sequence-button"
+          disabled={!onNext}
+          onClick={onNext}
+          title={nextTitle}
+          type="button"
+        >
+          Next
+        </button>
       </div>
       {!infoCollapsed ? (
         <aside className="demo-hud" id="demo-info-panel" aria-label={`${metadata.title} information`}>
-          <p className="demo-kicker">{metadata.id}</p>
+          <p className="demo-kicker">
+            {metadata.number ? `${metadata.number} · ${metadata.id}` : metadata.id}
+          </p>
           <h1>{metadata.title}</h1>
           <p className="demo-description">{metadata.description}</p>
           <div className="demo-tag-row" aria-label="Demo tags">

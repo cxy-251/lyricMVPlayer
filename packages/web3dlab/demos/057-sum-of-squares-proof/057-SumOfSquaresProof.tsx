@@ -1,181 +1,171 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import * as THREE from 'three';
+
+import {DemoScene} from '../../core/DemoScene';
 
 type ProofControls = {
   n: number;
-  phase: number;
-  cubeSize: number;
-  spacing: number;
+  examinedK: number;
+  explodeShell: number;
+  cubeGap: number;
+  rotationSpeed: number;
 };
 
-const COLORS = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#06b6d4', '#6366f1', '#a855f7'];
+type CubeDatum = {color: string; position: THREE.Vector3};
 
-const roundRect = (context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + w, y, x + w, y + h, r);
-  context.arcTo(x + w, y + h, x, y + h, r);
-  context.arcTo(x, y + h, x, y, r);
-  context.arcTo(x, y, x + w, y, r);
-  context.closePath();
-};
+const LAYER_COLORS = ['#5eead4', '#38bdf8', '#818cf8', '#c084fc', '#f472b6', '#fb7185', '#f59e0b', '#eab308', '#84cc16'];
+
+function createSquarePyramid(n: number): CubeDatum[] {
+  const cell = 0.25;
+  const cubes: CubeDatum[] = [];
+  for (let k = 1; k <= n; k++) {
+    for (let x = 0; x < k; x++) {
+      for (let z = 0; z < k; z++) {
+        cubes.push({
+          color: LAYER_COLORS[(k - 1) % LAYER_COLORS.length],
+          position: new THREE.Vector3(
+            (x - (k - 1) / 2) * cell,
+            (n - k) * cell - (n - 1) * cell * 0.45,
+            (z - (k - 1) / 2) * cell,
+          ),
+        });
+      }
+    }
+  }
+  return cubes;
+}
+
+function createCubeShell(k: number, explode: number): CubeDatum[] {
+  const cell = 0.25;
+  const center = k / 2;
+  const cubes: CubeDatum[] = [];
+  for (let x = 0; x <= k; x++) {
+    for (let y = 0; y <= k; y++) {
+      for (let z = 0; z <= k; z++) {
+        const boundaryCount = Number(x === k) + Number(y === k) + Number(z === k);
+        if (boundaryCount === 0) continue;
+        const direction = new THREE.Vector3(Number(x === k), Number(y === k), Number(z === k)).normalize();
+        const color = boundaryCount === 1 ? '#49d9ff' : boundaryCount === 2 ? '#ffad42' : '#ffffff';
+        cubes.push({
+          color,
+          position: new THREE.Vector3((x - center) * cell, (y - center) * cell, (z - center) * cell)
+            .addScaledVector(direction, explode * 0.34),
+        });
+      }
+    }
+  }
+  return cubes;
+}
+
+function CubeInstances({cubes, cubeGap}: {cubes: CubeDatum[]; cubeGap: number}) {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  useEffect(() => {
+    if (!meshRef.current) return;
+    const matrix = new THREE.Matrix4();
+    const color = new THREE.Color();
+    cubes.forEach((cube, index) => {
+      matrix.compose(cube.position, new THREE.Quaternion(), new THREE.Vector3().setScalar(cubeGap));
+      meshRef.current?.setMatrixAt(index, matrix);
+      meshRef.current?.setColorAt(index, color.set(cube.color));
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+  }, [cubeGap, cubes]);
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, cubes.length]} frustumCulled={false}>
+      <boxGeometry args={[0.225, 0.225, 0.225]} />
+      <meshStandardMaterial metalness={0.24} roughness={0.34} vertexColors />
+    </instancedMesh>
+  );
+}
+
+function ProofGeometry({controls, proofStep}: {controls: ProofControls; proofStep: number}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const k = Math.min(controls.n, Math.max(1, Math.round(controls.examinedK)));
+  const pyramid = useMemo(() => createSquarePyramid(Math.round(controls.n)), [controls.n]);
+  const shell = useMemo(() => createCubeShell(k, controls.explodeShell), [controls.explodeShell, k]);
+
+  useFrame((_, delta) => {
+    if (groupRef.current) groupRef.current.rotation.y += delta * controls.rotationSpeed * 0.2;
+  });
+
+  const sideBySide = proofStep > 0;
+  return (
+    <group ref={groupRef} rotation={[-0.2, -0.35, 0]}>
+      <group position={[sideBySide ? -1.65 : 0, -0.2, 0]}>
+        <CubeInstances cubeGap={controls.cubeGap} cubes={pyramid} />
+      </group>
+      {sideBySide && (
+        <group position={[1.65, 0, 0]}>
+          <CubeInstances cubeGap={controls.cubeGap} cubes={shell} />
+        </group>
+      )}
+    </group>
+  );
+}
+
+const PROOF_STEPS = [
+  {equation: 'S₂(n) = 1² + 2² + ··· + n²', note: 'The stepped solid contains exactly k² cubes in layer k.'},
+  {equation: '(k+1)³ − k³ = 3k² + 3k + 1', note: 'Cyan: three faces · Amber: three edges · White: one corner.'},
+  {equation: '(n+1)³ − 1 = 3S₂(n) + 3Σk + n', note: 'Summing the shells telescopes every cubic difference.'},
+  {equation: 'S₂(n) = n(n+1)(2n+1) / 6', note: 'Substitute Σk = n(n+1)/2 and isolate S₂(n).'},
+];
 
 export default function Demo057SumOfSquaresProof() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Sum Of Squares Proof', {
-    n: {value: 6, min: 2, max: 9, step: 1},
-    phase: {value: 0.42, min: 0, max: 1, step: 0.01},
-    cubeSize: {value: 1, min: 0.55, max: 1.35, step: 0.01},
-    spacing: {value: 0.78, min: 0.3, max: 1.4, step: 0.01},
+  const [proofStep, setProofStep] = useState(0);
+  const controls = useControls('Sum of Squares Proof', {
+    n: {value: 6, min: 2, max: 9, step: 1, label: 'Upper bound n'},
+    examinedK: {value: 5, min: 1, max: 9, step: 1, label: 'Shell index k'},
+    explodeShell: {value: 0.22, min: 0, max: 0.9, step: 0.01, label: 'Shell separation'},
+    cubeGap: {value: 0.9, min: 0.62, max: 1, step: 0.01, label: 'Cube packing'},
+    rotationSpeed: {value: 0.14, min: 0, max: 0.55, step: 0.01, label: 'Proof rotation'},
   }) as ProofControls;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const drawIsoCube = (x: number, y: number, size: number, color: string, alpha: number) => {
-      context.save();
-      context.globalAlpha = alpha;
-      context.strokeStyle = 'rgba(0,0,0,0.34)';
-      context.lineWidth = Math.max(0.6, size * 0.045);
-      context.beginPath();
-      context.moveTo(x, y);
-      context.lineTo(x + size, y + size * 0.5);
-      context.lineTo(x, y + size);
-      context.lineTo(x - size, y + size * 0.5);
-      context.closePath();
-      context.fillStyle = color;
-      context.fill();
-      context.stroke();
-      context.fillStyle = 'rgba(0,0,0,0.2)';
-      context.beginPath();
-      context.moveTo(x + size, y + size * 0.5);
-      context.lineTo(x + size, y + size * 1.22);
-      context.lineTo(x, y + size * 1.72);
-      context.lineTo(x, y + size);
-      context.closePath();
-      context.fill();
-      context.fillStyle = 'rgba(255,255,255,0.16)';
-      context.beginPath();
-      context.moveTo(x - size, y + size * 0.5);
-      context.lineTo(x - size, y + size * 1.22);
-      context.lineTo(x, y + size * 1.72);
-      context.lineTo(x, y + size);
-      context.closePath();
-      context.fill();
-      context.restore();
-    };
-
-    const drawProofCard = (x: number, y: number, w: number, h: number, title: string, active: boolean) => {
-      roundRect(context, x, y, w, h, 12);
-      context.fillStyle = active ? '#fffdf8' : 'rgba(255,255,255,0.56)';
-      context.fill();
-      context.strokeStyle = active ? 'rgba(20,20,20,0.22)' : 'rgba(20,20,20,0.08)';
-      context.stroke();
-      context.fillStyle = active ? '#141414' : 'rgba(20,20,20,0.48)';
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText(title, x + 16, y + 24);
-    };
-
-    const draw = (now: number) => {
-      const auto = (Math.sin(now * 0.00045) * 0.5 + 0.5) * 0.22;
-      const phase = Math.min(1, controls.phase + auto);
-      const bg = context.createLinearGradient(0, 0, width, height);
-      bg.addColorStop(0, '#fbf7f0');
-      bg.addColorStop(1, '#ece2d4');
-      context.fillStyle = bg;
-      context.fillRect(0, 0, width, height);
-      context.fillStyle = 'rgba(48,36,24,0.035)';
-      for (let i = 0; i < 420; i += 1) context.fillRect((i * 67) % width, (i * 149) % height, 1, 1);
-
-      context.fillStyle = '#141414';
-      context.font = `700 ${Math.min(32, width * 0.032)}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'center';
-      context.fillText('6(1^2 + 2^2 + ... + n^2) = n(n+1)(2n+1)', width / 2, height * 0.09);
-      context.textAlign = 'left';
-
-      const cardW = width * 0.24;
-      const cardH = height * 0.72;
-      drawProofCard(width * 0.05, height * 0.17, cardW, cardH, 'square layers', phase < 0.55);
-      drawProofCard(width * 0.38, height * 0.17, width * 0.55, cardH, 'six rotated copies form one prism', phase >= 0.55);
-
-      const baseSize = Math.min(width, height) * 0.0158 * controls.cubeSize;
-      const sourceX = width * 0.13;
-      const sourceY = height * 0.27;
-      for (let k = 1; k <= controls.n; k += 1) {
-        const color = COLORS[(k - 1) % COLORS.length];
-        for (let x = 0; x < k; x += 1) {
-          for (let y = 0; y < k; y += 1) {
-            const px = sourceX + x * baseSize * 1.18 + (k - 1) * baseSize * 0.48;
-            const py = sourceY + k * baseSize * 2.12 + y * baseSize * 0.7;
-            drawIsoCube(px, py, baseSize * controls.spacing, color, 0.95);
-          }
-        }
-        context.fillStyle = 'rgba(20,20,20,0.72)';
-        context.font = `${Math.max(10, baseSize * 0.68)}px "SFMono-Regular", Menlo, Consolas, monospace`;
-        context.fillText(`${k}^2`, sourceX + (k - 1) * baseSize * 1.86, sourceY + k * baseSize * 2.12 + k * baseSize * 0.82);
-      }
-
-      const prismX = width * 0.55;
-      const prismY = height * 0.31;
-      const copyLift = Math.sin(now * 0.001) * 0.5 + 0.5;
-      for (let copy = 0; copy < 6; copy += 1) {
-        const copyAngle = (copy / 6) * Math.PI * 2;
-        const offsetX = Math.cos(copyAngle) * baseSize * 10 * (1 - phase);
-        const offsetY = Math.sin(copyAngle) * baseSize * 6 * (1 - phase);
-        context.save();
-        context.translate(prismX + offsetX, prismY + offsetY);
-        context.rotate((copy - 2.5) * 0.04 * (1 - phase));
-        for (let k = 1; k <= controls.n; k += 1) {
-          const color = COLORS[(k - 1) % COLORS.length];
-          for (let x = 0; x < k; x += 1) {
-            for (let y = 0; y < k; y += 1) {
-              const tx = (x + (k - 1) * 0.62 + copy * 0.72) * baseSize * 1.03;
-              const ty = ((controls.n - k) * 0.76 + y * 0.44 - copy * 0.36) * baseSize + copyLift * copy * 0.08;
-              const alpha = 0.18 + phase * 0.72;
-              drawIsoCube(tx, ty, baseSize * controls.spacing, color, alpha);
-            }
-          }
-        }
-        context.restore();
-      }
-
-      context.fillStyle = 'rgba(20,20,20,0.78)';
-      context.font = `${Math.max(12, width * 0.014)}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'center';
-      context.fillText(`n=${controls.n}  phase=${phase.toFixed(2)}  colored square numbers become one rectangular volume`, width / 2, height * 0.92);
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.cubeSize, controls.n, controls.phase, controls.spacing]);
+  const k = Math.min(controls.n, Math.max(1, Math.round(controls.examinedK)));
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <div className="demo-viewport" style={{position: 'relative', background: '#05070b'}}>
+      <DemoScene
+        engineConfig={{
+          background: '#05070b', bloom: {intensity: 0.28, luminanceSmoothing: 0.65, luminanceThreshold: 0.62},
+          camera: {position: [0, 1.4, 7.4], fov: 42, near: 0.1, far: 30}, fog: {color: '#05070b', near: 10, far: 18},
+        }}
+        orbitConfig={{autoRotate: false, enablePan: false, minDistance: 5, maxDistance: 11}}
+      >
+        <ambientLight intensity={0.52} />
+        <directionalLight color="#e6f4ff" intensity={2.2} position={[4, 6, 5]} />
+        <pointLight color="#6ddcff" intensity={0.7} position={[-3, 1, 2]} />
+        <ProofGeometry controls={controls} proofStep={proofStep} />
+      </DemoScene>
+      <div style={proofEquationStyle}>
+        <strong>{PROOF_STEPS[proofStep].equation}</strong>
+        <span>{PROOF_STEPS[proofStep].note}</span>
+        {proofStep === 1 && <span>k={k}: {3 * k * k} + {3 * k} + 1 = {(k + 1) ** 3 - k ** 3} cubes</span>}
+      </div>
+      <div style={proofTransportStyle}>
+        <button disabled={proofStep === 0} onClick={() => setProofStep(step => Math.max(0, step - 1))} style={proofButtonStyle} type="button">Previous</button>
+        <span>STEP {proofStep + 1} / {PROOF_STEPS.length}</span>
+        <button disabled={proofStep === PROOF_STEPS.length - 1} onClick={() => setProofStep(step => Math.min(PROOF_STEPS.length - 1, step + 1))} style={proofButtonStyle} type="button">Next</button>
+      </div>
     </div>
   );
 }
+
+const proofEquationStyle = {
+  position: 'absolute', top: 18, left: '50%', display: 'grid', gap: 4, width: 'min(680px, calc(100vw - 36px))',
+  transform: 'translateX(-50%)', padding: '10px 13px', border: '1px solid rgba(146,201,235,0.18)',
+  borderRadius: 6, background: 'rgba(5,8,13,0.78)', color: '#8fa6b5', textAlign: 'center', pointerEvents: 'none',
+  fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 11,
+} as const;
+
+const proofTransportStyle = {
+  position: 'absolute', left: '50%', bottom: 18, display: 'flex', alignItems: 'center', gap: 10,
+  transform: 'translateX(-50%)', padding: 7, border: '1px solid rgba(146,201,235,0.18)', borderRadius: 6,
+  background: 'rgba(5,8,13,0.82)', color: '#8299a8', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;
+
+const proofButtonStyle = {
+  border: '1px solid rgba(99,205,247,0.26)', borderRadius: 5, background: 'rgba(99,205,247,0.07)',
+  color: '#dbf4ff', cursor: 'pointer', padding: '7px 10px', font: 'inherit', fontWeight: 700,
+} as const;

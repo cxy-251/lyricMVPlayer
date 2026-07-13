@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const metaballLiquidUIMetadata: DemoMetadata = {
+  number: '043',
   id: 'metaball-liquid-ui',
   title: 'Metaball Liquid UI',
-  description: 'A Liko Day9 inspired sticky liquid blob chain with merged metaball edges, phone-frame composition, glow, and pointer pull.',
+  description: 'A WebGL implicit-field liquid chain inside a procedural phone display, with shader-computed merging, surface normals, cyan-magenta edge glow, and press-drag deformation.',
   route: '/demos/metaball-liquid-ui',
-  tags: ['Canvas2D', 'Metaball', 'UI Motion', 'Liko'],
-  instructions: ['Move the pointer across the phone frame, then tune viscosity, blob count, and glow to review the sticky merge behavior.'],
+  tags: ['WebGL', 'Metaball', 'Shader', 'UI Motion'],
+  instructions: ['Press and drag inside the phone to pull the liquid chain, then tune cohesion and merge softness to change how neighboring fields reconnect.'],
 };

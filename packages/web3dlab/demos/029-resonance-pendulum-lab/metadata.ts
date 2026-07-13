@@ -1,10 +1,14 @@
 import type {DemoMetadata} from '../../types';
 
 export const resonancePendulumLabMetadata: DemoMetadata = {
+  number: '029',
   id: 'resonance-pendulum-lab',
   title: 'Resonance Pendulum Lab',
-  description: 'A driven oscillator study where pendulums with different natural frequencies reveal resonance through swing amplitude and glow.',
+  description: 'A numerically integrated driven-pendulum array where length sets natural frequency and resonance emerges through amplitude, glow, and live response bars.',
   route: '/demos/resonance-pendulum-lab',
-  tags: ['Physics', 'Oscillation', 'R3F', 'Interactive Controls'],
-  instructions: ['Move drive frequency to find resonance peaks.', 'Use damping and gain to compare stable and explosive response.'],
+  tags: ['Physics', 'Numerical Integration', 'Resonance', 'Interactive Controls'],
+  instructions: [
+    'Move drive frequency to find the pendulum whose natural frequency matches it.',
+    'Enable frequency sweep to scan the full range and compare the live response bars.',
+  ],
 };

@@ -149,11 +149,11 @@ export default function Demo049WebGPUPhysicsInstanceLab() {
     const drawChrome = () => {
       const margin = Math.min(22, width * 0.022);
       roundRect(context, margin, margin, width - margin * 2, height - margin * 2, 18);
-      context.fillStyle = '#f5f5f6';
+      context.fillStyle = '#090d14';
       context.fill();
-      context.strokeStyle = 'rgba(75,80,90,0.16)';
+      context.strokeStyle = 'rgba(150,178,210,0.18)';
       context.stroke();
-      context.fillStyle = '#e7e8ea';
+      context.fillStyle = '#141a24';
       context.fillRect(margin, margin, width - margin * 2, 44);
       ['#ff5f57', '#febc2e', '#28c840'].forEach((color, index) => {
         context.fillStyle = color;
@@ -162,9 +162,9 @@ export default function Demo049WebGPUPhysicsInstanceLab() {
         context.fill();
       });
       roundRect(context, margin + 92, margin + 12, Math.min(330, width * 0.36), 20, 10);
-      context.fillStyle = '#fff';
+      context.fillStyle = '#222b38';
       context.fill();
-      context.fillStyle = '#8f96a3';
+      context.fillStyle = '#8f9eaf';
       context.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
       context.fillText('threejs.org/examples/webgpu_physics', margin + 106, margin + 26);
     };
@@ -213,14 +213,14 @@ export default function Demo049WebGPUPhysicsInstanceLab() {
     const draw = (now: number) => {
       step(now);
       const gradient = context.createRadialGradient(width * 0.42, height * 0.44, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.72);
-      gradient.addColorStop(0, '#ffffff');
-      gradient.addColorStop(0.62, '#e7e8ea');
-      gradient.addColorStop(1, '#bfc2c8');
+      gradient.addColorStop(0, '#111a29');
+      gradient.addColorStop(0.62, '#080d16');
+      gradient.addColorStop(1, '#020409');
       context.fillStyle = gradient;
       context.fillRect(0, 0, width, height);
       drawChrome();
 
-      context.fillStyle = 'rgba(80,86,98,0.16)';
+      context.fillStyle = 'rgba(0,0,0,0.42)';
       context.beginPath();
       context.ellipse(width * 0.43, height * 0.74, Math.min(width, height) * 0.3, Math.min(width, height) * 0.07, -0.08, 0, Math.PI * 2);
       context.fill();

@@ -1,287 +1,242 @@
+import {useFBO} from '@react-three/drei';
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import * as THREE from 'three';
 
-type SnowControls = {
-  flakes: number;
-  wind: number;
-  accumulation: number;
-  sparkle: number;
-  exposure: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type ReactionControls = {
+  feed: number;
+  kill: number;
+  diffusionU: number;
+  diffusionV: number;
+  stepsPerFrame: number;
+  brushRadius: number;
+  contrast: number;
 };
 
-type Flake = {
-  x: number;
-  y: number;
-  z: number;
-  speed: number;
-  drift: number;
-  size: number;
-};
+const SIMULATION_SIZE = 512;
 
-const noise = (value: number) => {
-  const x = Math.sin(value * 12.9898) * 43758.5453;
-  return x - Math.floor(x);
-};
+const vertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
 
-const roundedRect = (context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + w, y, x + w, y + h, r);
-  context.arcTo(x + w, y + h, x, y + h, r);
-  context.arcTo(x, y + h, x, y, r);
-  context.arcTo(x, y, x + w, y, r);
-  context.closePath();
-};
+const simulationFragmentShader = `
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D uState;
+uniform vec2 uTexel;
+uniform float uFeed;
+uniform float uKill;
+uniform float uDiffusionU;
+uniform float uDiffusionV;
+uniform vec2 uBrush;
+uniform float uBrushRadius;
+uniform float uBrushActive;
 
-const makeFlakes = (count: number, width: number, height: number): Flake[] => (
-  Array.from({length: count}, (_, index) => ({
-    x: noise(index) * width,
-    y: noise(index + 40) * height,
-    z: noise(index + 70),
-    speed: 0.3 + noise(index + 100) * 1.8,
-    drift: -0.5 + noise(index + 130),
-    size: 1 + noise(index + 170) * 3,
-  }))
-);
+vec2 sampleState(vec2 offset) {
+  return texture2D(uState, fract(vUv + offset * uTexel)).rg;
+}
 
-export default function Demo050WeatherSnowScene() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Weather Snow Scene', {
-    flakes: {value: 820, min: 160, max: 1800, step: 20},
-    wind: {value: 0.28, min: -1.2, max: 1.2, step: 0.01},
-    accumulation: {value: 0.76, min: 0, max: 1.5, step: 0.01},
-    sparkle: {value: 0.7, min: 0, max: 1.8, step: 0.01},
-    exposure: {value: 0.8, min: 0.25, max: 1.4, step: 0.01},
-  }) as SnowControls;
+void main() {
+  vec2 center = sampleState(vec2(0.0));
+  vec2 laplacian = sampleState(vec2(1.0, 0.0)) * 0.2
+    + sampleState(vec2(-1.0, 0.0)) * 0.2
+    + sampleState(vec2(0.0, 1.0)) * 0.2
+    + sampleState(vec2(0.0, -1.0)) * 0.2
+    + sampleState(vec2(1.0, 1.0)) * 0.05
+    + sampleState(vec2(-1.0, 1.0)) * 0.05
+    + sampleState(vec2(1.0, -1.0)) * 0.05
+    + sampleState(vec2(-1.0, -1.0)) * 0.05
+    - center;
+  float u = center.r;
+  float v = center.g;
+  float reaction = u * v * v;
+  u += uDiffusionU * laplacian.r - reaction + uFeed * (1.0 - u);
+  v += uDiffusionV * laplacian.g + reaction - (uFeed + uKill) * v;
+  float brush = 1.0 - smoothstep(uBrushRadius * 0.55, uBrushRadius, distance(vUv, uBrush));
+  v = mix(v, 0.96, brush * uBrushActive);
+  u = mix(u, 0.08, brush * uBrushActive);
+  gl_FragColor = vec4(clamp(u, 0.0, 1.0), clamp(v, 0.0, 1.0), 0.0, 1.0);
+}
+`;
+
+const displayFragmentShader = `
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D uState;
+uniform vec2 uTexel;
+uniform float uContrast;
+
+void main() {
+  vec2 state = texture2D(uState, vUv).rg;
+  float concentration = clamp((state.g - state.r * 0.24) * uContrast, 0.0, 1.0);
+  float edge = abs(texture2D(uState, vUv + vec2(uTexel.x, 0.0)).g - texture2D(uState, vUv - vec2(uTexel.x, 0.0)).g)
+    + abs(texture2D(uState, vUv + vec2(0.0, uTexel.y)).g - texture2D(uState, vUv - vec2(0.0, uTexel.y)).g);
+  vec3 deep = vec3(0.008, 0.018, 0.028);
+  vec3 cyan = vec3(0.02, 0.58, 0.68);
+  vec3 coral = vec3(0.94, 0.24, 0.32);
+  vec3 cream = vec3(1.0, 0.86, 0.62);
+  vec3 color = mix(deep, cyan, smoothstep(0.02, 0.42, concentration));
+  color = mix(color, coral, smoothstep(0.42, 0.75, concentration));
+  color = mix(color, cream, smoothstep(0.74, 1.0, concentration));
+  color += vec3(0.32, 0.9, 1.0) * edge * 2.4;
+  float vignette = 1.0 - smoothstep(0.48, 1.15, length(vUv * 2.0 - 1.0));
+  gl_FragColor = vec4(color * (0.62 + vignette * 0.38), 1.0);
+}
+`;
+
+function createSeedTexture(seed: number) {
+  const data = new Uint8Array(SIMULATION_SIZE * SIMULATION_SIZE * 4);
+  for (let y = 0; y < SIMULATION_SIZE; y++) {
+    for (let x = 0; x < SIMULATION_SIZE; x++) {
+      const index = (y * SIMULATION_SIZE + x) * 4;
+      let u = 255;
+      let v = 0;
+      for (let spot = 0; spot < 14; spot++) {
+        const cx = ((spot * 83 + seed * 37) % 431) + 40;
+        const cy = ((spot * 137 + seed * 61) % 431) + 40;
+        const dx = x - cx;
+        const dy = y - cy;
+        if (dx * dx + dy * dy < 90 + (spot % 4) * 42) {
+          u = 18;
+          v = 242;
+        }
+      }
+      data[index] = u;
+      data[index + 1] = v;
+      data[index + 2] = 0;
+      data[index + 3] = 255;
+    }
+  }
+  const texture = new THREE.DataTexture(data, SIMULATION_SIZE, SIMULATION_SIZE, THREE.RGBAFormat);
+  texture.minFilter = THREE.NearestFilter;
+  texture.magFilter = THREE.NearestFilter;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function ReactionField({controls, resetSeed}: {controls: ReactionControls; resetSeed: number}) {
+  const targetA = useFBO(SIMULATION_SIZE, SIMULATION_SIZE, {depthBuffer: false, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, type: THREE.HalfFloatType});
+  const targetB = useFBO(SIMULATION_SIZE, SIMULATION_SIZE, {depthBuffer: false, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, type: THREE.HalfFloatType});
+  const displayMaterialRef = useRef<THREE.ShaderMaterial>(null);
+  const draggingRef = useRef(false);
+  const seedTexture = useMemo(() => createSeedTexture(resetSeed), [resetSeed]);
+  const sourceRef = useRef<THREE.Texture>(seedTexture);
+  const nextTargetRef = useRef(targetA);
+  const simulationScene = useMemo(() => new THREE.Scene(), []);
+  const simulationCamera = useMemo(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), []);
+  const simulationMaterial = useMemo(() => new THREE.ShaderMaterial({
+    depthTest: false,
+    depthWrite: false,
+    vertexShader,
+    fragmentShader: simulationFragmentShader,
+    uniforms: {
+      uState: {value: seedTexture}, uTexel: {value: new THREE.Vector2(1 / SIMULATION_SIZE, 1 / SIMULATION_SIZE)},
+      uFeed: {value: 0.0367}, uKill: {value: 0.0649}, uDiffusionU: {value: 0.2}, uDiffusionV: {value: 0.1},
+      uBrush: {value: new THREE.Vector2(0.5, 0.5)}, uBrushRadius: {value: 0.025}, uBrushActive: {value: 0},
+    },
+  }), [seedTexture]);
+  const displayUniforms = useMemo(() => ({
+    uState: {value: seedTexture}, uTexel: {value: new THREE.Vector2(1 / SIMULATION_SIZE, 1 / SIMULATION_SIZE)}, uContrast: {value: 1.45},
+  }), [seedTexture]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    let width = 0;
-    let height = 0;
-    let flakes: Flake[] = [];
-    let animationFrame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      flakes = makeFlakes(controls.flakes, width, height);
-    };
-
-    const drawBrowser = () => {
-      context.fillStyle = '#05080b';
-      context.fillRect(0, 0, width, height);
-      const margin = Math.min(20, width * 0.02);
-      roundedRect(context, margin, margin, width - margin * 2, height - margin * 2, 14);
-      context.fillStyle = '#0b1016';
-      context.fill();
-      context.strokeStyle = 'rgba(128,174,205,0.12)';
-      context.stroke();
-      context.fillStyle = '#111923';
-      context.fillRect(margin, margin, width - margin * 2, 42);
-      ['#ff605c', '#ffbd44', '#00ca4e'].forEach((color, index) => {
-        context.fillStyle = color;
-        context.beginPath();
-        context.arc(margin + 20 + index * 18, margin + 21, 5.5, 0, Math.PI * 2);
-        context.fill();
-      });
-      roundedRect(context, margin + 92, margin + 11, Math.min(330, width * 0.34), 20, 10);
-      context.fillStyle = '#0a0f16';
-      context.fill();
-      context.fillStyle = '#6f8da4';
-      context.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('weather-snow-system.local', margin + 106, margin + 25);
-    };
-
-    const drawCar = (x: number, baseY: number, scale: number) => {
-      context.save();
-      context.translate(x, baseY);
-      context.scale(scale, scale);
-      context.rotate(-0.04);
-      context.fillStyle = 'rgba(0,0,0,0.28)';
-      context.beginPath();
-      context.ellipse(0, 10, 320, 52, 0, 0, Math.PI * 2);
-      context.fill();
-      context.fillStyle = '#8f4b3f';
-      context.strokeStyle = '#2d2528';
-      context.lineWidth = 2;
-      context.beginPath();
-      context.moveTo(-230, -48);
-      context.lineTo(-120, -92);
-      context.lineTo(86, -92);
-      context.lineTo(225, -45);
-      context.lineTo(242, -8);
-      context.lineTo(-250, -2);
-      context.closePath();
-      context.fill();
-      context.stroke();
-      context.fillStyle = 'rgba(185,210,225,0.42)';
-      context.fillRect(-84, -82, 72, 36);
-      context.fillRect(2, -82, 78, 36);
-      context.fillStyle = '#3d2b28';
-      context.fillRect(-232, -20, 470, 18);
-      for (const wheelX of [-150, 142]) {
-        context.fillStyle = '#151414';
-        context.beginPath();
-        context.arc(wheelX, -7, 45, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = '#444';
-        context.beginPath();
-        context.arc(wheelX, -7, 18, 0, Math.PI * 2);
-        context.fill();
-      }
-      context.fillStyle = `rgba(245,248,250,${0.66 + controls.accumulation * 0.16})`;
-      context.beginPath();
-      context.moveTo(-202, -54);
-      context.quadraticCurveTo(-50, -126, 190, -48);
-      context.lineTo(210, -30);
-      context.quadraticCurveTo(-10, -78, -220, -25);
-      context.closePath();
-      context.fill();
-      context.fillStyle = `rgba(242,248,250,${0.5 + controls.accumulation * 0.2})`;
-      context.beginPath();
-      context.moveTo(-260, -10);
-      context.quadraticCurveTo(-80, -42, 250, -14);
-      context.lineTo(270, 16);
-      context.quadraticCurveTo(-60, 46, -280, 18);
-      context.closePath();
-      context.fill();
-      context.restore();
-    };
-
-    const drawPanel = () => {
-      const panelW = Math.min(230, width * 0.26);
-      const x = width - panelW - 26;
-      roundedRect(context, x, 76, panelW, 258, 8);
-      context.fillStyle = 'rgba(8,15,25,0.92)';
-      context.fill();
-      context.strokeStyle = 'rgba(113,191,255,0.18)';
-      context.stroke();
-      context.fillStyle = '#a7d6ff';
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('SNOW STUDIO', x + 16, 102);
-      const rows = [
-        ['snow', controls.flakes / 1800],
-        ['wind', (controls.wind + 1.2) / 2.4],
-        ['accum', controls.accumulation / 1.5],
-        ['sparkle', controls.sparkle / 1.8],
-        ['exposure', controls.exposure / 1.4],
-      ];
-      rows.forEach(([label, value], index) => {
-        const y = 138 + index * 32;
-        context.fillStyle = 'rgba(255,255,255,0.72)';
-        context.fillText(label as string, x + 16, y);
-        context.fillStyle = 'rgba(178,211,236,0.24)';
-        context.fillRect(x + 98, y - 11, panelW - 122, 8);
-        context.fillStyle = '#bce3ff';
-        context.fillRect(x + 98, y - 11, (panelW - 122) * Number(value), 8);
-      });
-      context.fillStyle = 'rgba(167,214,255,0.14)';
-      context.fillRect(x + 16, 304, panelW - 32, 1);
-    };
-
-    const drawScene = (now: number) => {
-      const stageX = width * 0.08;
-      const stageY = height * 0.15;
-      const stageW = width * 0.67;
-      const stageH = height * 0.7;
-      const groundY = stageY + stageH * 0.72;
-      roundedRect(context, stageX, stageY, stageW, stageH, 8);
-      const scene = context.createLinearGradient(stageX, stageY, stageX + stageW, stageY + stageH);
-      scene.addColorStop(0, '#182635');
-      scene.addColorStop(0.45, '#0e1720');
-      scene.addColorStop(1, '#111820');
-      context.fillStyle = scene;
-      context.fill();
-      context.save();
-      roundedRect(context, stageX, stageY, stageW, stageH, 8);
-      context.clip();
-
-      const moon = context.createRadialGradient(stageX + stageW * 0.32, stageY + stageH * 0.22, 0, stageX + stageW * 0.32, stageY + stageH * 0.22, stageW * 0.34);
-      moon.addColorStop(0, `rgba(180,220,255,${0.18 * controls.exposure})`);
-      moon.addColorStop(1, 'rgba(180,220,255,0)');
-      context.fillStyle = moon;
-      context.fillRect(stageX, stageY, stageW, stageH);
-
-      const terrain = context.createLinearGradient(stageX, groundY - 160, stageX + stageW, stageY + stageH);
-      terrain.addColorStop(0, '#f3f7f6');
-      terrain.addColorStop(0.62, '#d6dde1');
-      terrain.addColorStop(1, '#9fa9b0');
-      context.fillStyle = terrain;
-      context.beginPath();
-      context.moveTo(stageX, groundY - 16);
-      for (let i = 0; i <= 48; i += 1) {
-        const x = stageX + (i / 48) * stageW;
-        const y = groundY + Math.sin(i * 0.7 + now * 0.0004) * 12 * controls.accumulation + noise(i) * 38 * controls.accumulation;
-        context.lineTo(x, y);
-      }
-      context.lineTo(stageX + stageW, stageY + stageH);
-      context.lineTo(stageX, stageY + stageH);
-      context.closePath();
-      context.fill();
-
-      context.strokeStyle = 'rgba(255,255,255,0.25)';
-      context.lineWidth = 1;
-      for (let i = 0; i < 17; i += 1) {
-        const y = groundY + i * 12;
-        context.beginPath();
-        context.moveTo(stageX + 28, y + Math.sin(i) * 10);
-        context.quadraticCurveTo(stageX + stageW * 0.5, y - 34, stageX + stageW - 36, y + Math.cos(i) * 12);
-        context.stroke();
-      }
-      drawCar(stageX + stageW * 0.52, groundY - 18, Math.min(width, height) / 860);
-
-      context.globalCompositeOperation = 'screen';
-      for (const flake of flakes) {
-        flake.y += flake.speed * (0.45 + flake.z) * controls.exposure;
-        flake.x += (flake.drift + controls.wind * 1.7) * (0.45 + flake.z);
-        if (flake.y > height + 20) flake.y = -20;
-        if (flake.x < -20) flake.x = width + 20;
-        if (flake.x > width + 20) flake.x = -20;
-        if (flake.x < stageX || flake.x > stageX + stageW || flake.y < stageY || flake.y > stageY + stageH) continue;
-        const alpha = 0.22 + flake.z * 0.66;
-        context.fillStyle = `rgba(235,248,255,${alpha})`;
-        context.beginPath();
-        context.arc(flake.x, flake.y, flake.size * (0.45 + flake.z), 0, Math.PI * 2);
-        context.fill();
-      }
-      context.fillStyle = `rgba(180,220,255,${0.07 * controls.sparkle})`;
-      for (let i = 0; i < 90; i += 1) {
-        const x = stageX + ((i * 83 + now * 0.012) % stageW);
-        const y = stageY + stageH * (0.58 + noise(i) * 0.25);
-        context.fillRect(x, y, 2, 2);
-      }
-      context.restore();
-    };
-
-    const draw = (now: number) => {
-      drawBrowser();
-      drawScene(now);
-      drawPanel();
-      animationFrame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    animationFrame = requestAnimationFrame(draw);
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), simulationMaterial);
+    simulationScene.add(quad);
     return () => {
-      observer.disconnect();
-      cancelAnimationFrame(animationFrame);
+      simulationScene.remove(quad);
+      quad.geometry.dispose();
+      simulationMaterial.dispose();
     };
-  }, [controls.accumulation, controls.exposure, controls.flakes, controls.sparkle, controls.wind]);
+  }, [simulationMaterial, simulationScene]);
+
+  useEffect(() => {
+    sourceRef.current = seedTexture;
+    nextTargetRef.current = targetA;
+    return () => seedTexture.dispose();
+  }, [seedTexture, targetA]);
+
+  useEffect(() => {
+    const release = () => { draggingRef.current = false; };
+    window.addEventListener('pointerup', release);
+    return () => window.removeEventListener('pointerup', release);
+  }, []);
+
+  useFrame((state) => {
+    const renderer = state.gl;
+    const previousTarget = renderer.getRenderTarget();
+    simulationMaterial.uniforms.uFeed.value = controls.feed;
+    simulationMaterial.uniforms.uKill.value = controls.kill;
+    simulationMaterial.uniforms.uDiffusionU.value = controls.diffusionU;
+    simulationMaterial.uniforms.uDiffusionV.value = controls.diffusionV;
+    simulationMaterial.uniforms.uBrush.value.set(state.pointer.x * 0.5 + 0.5, state.pointer.y * 0.5 + 0.5);
+    simulationMaterial.uniforms.uBrushRadius.value = controls.brushRadius;
+    simulationMaterial.uniforms.uBrushActive.value = draggingRef.current ? 1 : 0;
+    for (let step = 0; step < Math.round(controls.stepsPerFrame); step++) {
+      simulationMaterial.uniforms.uState.value = sourceRef.current;
+      renderer.setRenderTarget(nextTargetRef.current);
+      renderer.render(simulationScene, simulationCamera);
+      sourceRef.current = nextTargetRef.current.texture;
+      nextTargetRef.current = nextTargetRef.current === targetA ? targetB : targetA;
+    }
+    renderer.setRenderTarget(previousTarget);
+    if (displayMaterialRef.current) {
+      displayMaterialRef.current.uniforms.uState.value = sourceRef.current;
+      displayMaterialRef.current.uniforms.uContrast.value = controls.contrast;
+    }
+  });
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <mesh
+      frustumCulled={false}
+      onPointerDown={(event) => { event.stopPropagation(); draggingRef.current = true; }}
+    >
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial ref={displayMaterialRef} depthTest={false} depthWrite={false} fragmentShader={displayFragmentShader} uniforms={displayUniforms} vertexShader={vertexShader} />
+    </mesh>
+  );
+}
+
+export default function Demo050WeatherSnowScene() {
+  const [resetSeed, setResetSeed] = useState(1);
+  const controls = useControls('Gray-Scott Reaction', {
+    feed: {value: 0.0367, min: 0.015, max: 0.07, step: 0.0001, label: 'Feed rate F'},
+    kill: {value: 0.0649, min: 0.035, max: 0.075, step: 0.0001, label: 'Kill rate K'},
+    diffusionU: {value: 0.2, min: 0.12, max: 0.28, step: 0.005, label: 'Diffusion U'},
+    diffusionV: {value: 0.1, min: 0.05, max: 0.16, step: 0.005, label: 'Diffusion V'},
+    stepsPerFrame: {value: 7, min: 1, max: 14, step: 1, label: 'Solver steps/frame'},
+    brushRadius: {value: 0.026, min: 0.008, max: 0.07, step: 0.002, label: 'Injection radius'},
+    contrast: {value: 1.45, min: 0.8, max: 2.2, step: 0.01, label: 'Chemical contrast'},
+  }) as ReactionControls;
+
+  return (
+    <div className="demo-viewport" style={{position: 'relative', background: '#02050a'}}>
+      <DemoScene engineConfig={{background: '#02050a', camera: {position: [0, 0, 1], fov: 50, near: 0.1, far: 10}}} orbitControls={false}>
+        <ReactionField controls={controls} resetSeed={resetSeed} />
+      </DemoScene>
+      <div style={reactionControlsStyle}>
+        <button onClick={() => setResetSeed(value => value + 1)} style={resetButtonStyle} type="button">Reset field</button>
+        <span>PRESS + DRAG TO INJECT V</span>
+      </div>
     </div>
   );
 }
+
+const reactionControlsStyle = {
+  position: 'absolute', left: '50%', bottom: 18, display: 'flex', alignItems: 'center', gap: 10,
+  transform: 'translateX(-50%)', padding: 7, border: '1px solid rgba(89,222,231,0.2)', borderRadius: 6,
+  background: 'rgba(3,8,13,0.8)', color: '#789ba3', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;
+
+const resetButtonStyle = {
+  border: '1px solid rgba(89,222,231,0.3)', borderRadius: 5, background: 'rgba(89,222,231,0.08)',
+  color: '#d8f5f4', cursor: 'pointer', padding: '7px 9px', font: 'inherit', fontWeight: 700,
+} as const;

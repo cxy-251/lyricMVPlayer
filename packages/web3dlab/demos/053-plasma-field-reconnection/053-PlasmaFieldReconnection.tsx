@@ -1,171 +1,144 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
+import * as THREE from 'three';
 
-type PlasmaControls = {
-  flowRate: number;
-  lines: number;
-  ledBloom: number;
-  rotation: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type AttractorSystem = 'lorenz' | 'rossler' | 'thomas';
+type AttractorControls = {
+  system: AttractorSystem;
+  trajectoryCount: number;
+  trailLength: number;
+  chaos: number;
+  integrationSpeed: number;
+  rotationSpeed: number;
 };
 
-const fieldPoint = (orientation: 'horizontal' | 'vertical', line: number, t: number, width: number, height: number) => {
-  const offset = (line - 0.5) * 0.7;
-  if (orientation === 'horizontal') {
-    const x = (t - 0.5) * width * 1.2;
-    const bend = Math.tanh((t - 0.5) * 7);
-    return {x, y: offset * height * 0.28 * (1 - Math.exp(-Math.abs(t - 0.5) * 6)) + bend * offset * -height * 0.09};
+type PathData = {geometry: THREE.BufferGeometry; line: THREE.Line; points: THREE.Vector3[]};
+
+function derivative(system: AttractorSystem, point: THREE.Vector3, parameter: number) {
+  if (system === 'rossler') {
+    return new THREE.Vector3(-point.y - point.z, point.x + 0.2 * point.y, 0.2 + point.z * (point.x - parameter));
   }
-  const y = (t - 0.5) * height * 1.25;
-  const bend = Math.tanh((t - 0.5) * 7);
-  return {x: offset * width * 0.24 * (1 - Math.exp(-Math.abs(t - 0.5) * 6)) + bend * offset * -width * 0.08, y};
-};
+  if (system === 'thomas') {
+    return new THREE.Vector3(
+      Math.sin(point.y) - parameter * point.x,
+      Math.sin(point.z) - parameter * point.y,
+      Math.sin(point.x) - parameter * point.z,
+    );
+  }
+  return new THREE.Vector3(
+    10 * (point.y - point.x),
+    point.x * (parameter - point.z) - point.y,
+    point.x * point.y - (8 / 3) * point.z,
+  );
+}
 
-export default function Demo053PlasmaFieldReconnection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Plasma Field Reconnection', {
-    flowRate: {value: 1.2, min: 0.1, max: 3, step: 0.01},
-    lines: {value: 1, min: 0.3, max: 1.8, step: 0.01},
-    ledBloom: {value: 0.6, min: 0, max: 1.6, step: 0.01},
-    rotation: {value: 0.3, min: -1, max: 1, step: 0.01},
-  }) as PlasmaControls;
+function mapPoint(system: AttractorSystem, point: THREE.Vector3) {
+  if (system === 'rossler') return new THREE.Vector3(point.x * 0.22, point.z * 0.22 - 1.5, point.y * 0.22);
+  if (system === 'thomas') return point.clone().multiplyScalar(0.72);
+  return new THREE.Vector3(point.x * 0.09, (point.z - 24) * 0.09, point.y * 0.09);
+}
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+function createPaths(controls: AttractorControls): PathData[] {
+  const dt = controls.system === 'rossler' ? 0.018 : controls.system === 'thomas' ? 0.055 : 0.006;
+  const warmup = controls.system === 'thomas' ? 420 : 700;
+  const parameter = controls.system === 'lorenz'
+    ? 20 + controls.chaos * 16
+    : controls.system === 'rossler'
+      ? 4.5 + controls.chaos * 2.5
+      : 0.16 + controls.chaos * 0.12;
+  return Array.from({length: controls.trajectoryCount}, (_, pathIndex) => {
+    const offset = (pathIndex - (controls.trajectoryCount - 1) / 2) * 0.0008;
+    let point = controls.system === 'rossler'
+      ? new THREE.Vector3(0.1 + offset, 0, 0)
+      : controls.system === 'thomas'
+        ? new THREE.Vector3(0.12 + offset, 0.08, -0.05)
+        : new THREE.Vector3(0.1 + offset, 0, 0);
+    const points: THREE.Vector3[] = [];
+    for (let step = 0; step < warmup + controls.trailLength; step++) {
+      const k1 = derivative(controls.system, point, parameter);
+      const k2 = derivative(controls.system, point.clone().addScaledVector(k1, dt * 0.5), parameter);
+      const k3 = derivative(controls.system, point.clone().addScaledVector(k2, dt * 0.5), parameter);
+      const k4 = derivative(controls.system, point.clone().addScaledVector(k3, dt), parameter);
+      point.addScaledVector(k1, dt / 6).addScaledVector(k2, dt / 3).addScaledVector(k3, dt / 3).addScaledVector(k4, dt / 6);
+      if (step >= warmup) points.push(mapPoint(controls.system, point));
+    }
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const hue = 0.5 + pathIndex / Math.max(1, controls.trajectoryCount - 1) * 0.32;
+    const material = new THREE.LineBasicMaterial({
+      blending: THREE.AdditiveBlending,
+      color: new THREE.Color().setHSL(hue, 0.82, 0.62),
+      depthWrite: false,
+      opacity: 0.16 + pathIndex / controls.trajectoryCount * 0.28,
+      transparent: true,
+    });
+    return {geometry, line: new THREE.Line(geometry, material), points};
+  });
+}
 
-    let width = 0;
-    let height = 0;
-    let frame = 0;
+function AttractorFlow({controls}: {controls: AttractorControls}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const headsRef = useRef<THREE.InstancedMesh>(null);
+  const paths = useMemo(() => createPaths(controls), [controls.chaos, controls.system, controls.trailLength, controls.trajectoryCount]);
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
+  useEffect(() => () => paths.forEach(path => {
+    path.geometry.dispose();
+    (path.line.material as THREE.Material).dispose();
+  }), [paths]);
 
-    const drawCurve = (orientation: 'horizontal' | 'vertical', line: number, color: string, alpha: number) => {
-      context.strokeStyle = color;
-      context.globalAlpha = alpha;
-      context.beginPath();
-      for (let i = 0; i <= 96; i += 1) {
-        const p = fieldPoint(orientation, line, i / 96, width, height);
-        if (i === 0) context.moveTo(p.x, p.y);
-        else context.lineTo(p.x, p.y);
-      }
-      context.stroke();
-    };
-
-    const drawPanel = () => {
-      const panelW = Math.min(230, width * 0.24);
-      const x = width - panelW - 24;
-      const y = 28;
-      context.fillStyle = 'rgba(12,20,28,0.82)';
-      context.fillRect(x, y, panelW, 210);
-      context.fillStyle = '#ff33d1';
-      context.font = '700 18px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('NEON', x + 22, y + 36);
-      context.fillText('RECONNECT', x + 22, y + 58);
-      const rows = [
-        ['FLOW RATE', controls.flowRate / 3],
-        ['LINES', controls.lines / 1.8],
-        ['LED BLOOM', controls.ledBloom / 1.6],
-        ['ROTATION', (controls.rotation + 1) / 2],
-      ];
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      rows.forEach(([label, value], index) => {
-        const yy = y + 92 + index * 32;
-        context.fillStyle = '#b7d8ff';
-        context.fillText(label as string, x + 22, yy);
-        context.fillStyle = 'rgba(0,0,0,0.45)';
-        context.fillRect(x + 104, yy - 7, panelW - 130, 4);
-        context.fillStyle = '#42f5ff';
-        context.fillRect(x + 104, yy - 7, (panelW - 130) * Number(value), 4);
-      });
-    };
-
-    const draw = (now: number) => {
-      const time = now * 0.001;
-      const background = context.createLinearGradient(0, 0, 0, height);
-      background.addColorStop(0, '#090610');
-      background.addColorStop(0.5, '#03161d');
-      background.addColorStop(1, '#050408');
-      context.fillStyle = background;
-      context.fillRect(0, 0, width, height);
-      context.fillStyle = 'rgba(255,255,255,0.035)';
-      for (let i = 0; i < 32; i += 1) {
-        const y = height * (0.08 + i * 0.026);
-        context.fillRect(width * 0.06, y, width * 0.64, 1);
-      }
-
-      context.save();
-      context.translate(width / 2, height / 2);
-      context.rotate(controls.rotation * 0.12);
-      context.globalCompositeOperation = 'lighter';
-      context.lineWidth = 1.2;
-      const count = Math.max(5, Math.floor(16 * controls.lines));
-      for (let i = 0; i < count; i += 1) {
-        const line = count === 1 ? 0.5 : i / (count - 1);
-        drawCurve('horizontal', line, '#21edff', 0.14 + controls.ledBloom * 0.12);
-        drawCurve('vertical', line, i % 2 ? '#ffb640' : '#fff7d6', 0.12 + controls.ledBloom * 0.16);
-      }
-      context.lineWidth = 4 + controls.ledBloom * 8;
-      drawCurve('horizontal', 0.5, '#16dfff', 0.42);
-      drawCurve('vertical', 0.5, '#ffb548', 0.36);
-      for (let i = 0; i < count * 4; i += 1) {
-        const orientation = i % 2 ? 'horizontal' : 'vertical';
-        const t = (time * 0.12 * controls.flowRate + i * 0.061) % 1;
-        const p = fieldPoint(orientation, (i % count) / Math.max(1, count - 1), t, width, height);
-        context.fillStyle = i % 2 ? '#dfffff' : '#fff2cb';
-        context.globalAlpha = 0.48 + controls.ledBloom * 0.34;
-        context.beginPath();
-        context.arc(p.x, p.y, 2.2 + controls.ledBloom * 2.4, 0, Math.PI * 2);
-        context.fill();
-      }
-      const core = context.createRadialGradient(0, 0, 0, 0, 0, Math.min(width, height) * 0.18);
-      core.addColorStop(0, `rgba(255,255,255,${0.4 * controls.ledBloom})`);
-      core.addColorStop(0.35, 'rgba(255,90,190,0.24)');
-      core.addColorStop(1, 'rgba(0,0,0,0)');
-      context.fillStyle = core;
-      context.globalAlpha = 1;
-      context.beginPath();
-      context.arc(0, 0, Math.min(width, height) * 0.2, 0, Math.PI * 2);
-      context.fill();
-      for (const angle of [0, Math.PI / 2, Math.PI, Math.PI * 1.5]) {
-        const jet = context.createLinearGradient(0, 0, Math.cos(angle) * width * 0.34, Math.sin(angle) * height * 0.34);
-        jet.addColorStop(0, `rgba(255,255,255,${0.22 * controls.ledBloom})`);
-        jet.addColorStop(0.45, angle % Math.PI === 0 ? 'rgba(41,238,255,0.16)' : 'rgba(255,183,64,0.16)');
-        jet.addColorStop(1, 'rgba(0,0,0,0)');
-        context.strokeStyle = jet;
-        context.lineWidth = 12 + controls.ledBloom * 10;
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(Math.cos(angle) * width * 0.34, Math.sin(angle) * height * 0.34);
-        context.stroke();
-      }
-      context.restore();
-      drawPanel();
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.flowRate, controls.ledBloom, controls.lines, controls.rotation]);
+  useFrame((state, delta) => {
+    if (groupRef.current) groupRef.current.rotation.y += delta * controls.rotationSpeed * 0.22;
+    if (!headsRef.current) return;
+    const matrix = new THREE.Matrix4();
+    paths.forEach((path, index) => {
+      const sample = Math.floor((state.clock.elapsedTime * controls.integrationSpeed * 90 + index * 31) % path.points.length);
+      matrix.makeTranslation(path.points[sample].x, path.points[sample].y, path.points[sample].z);
+      headsRef.current?.setMatrixAt(index, matrix);
+    });
+    headsRef.current.instanceMatrix.needsUpdate = true;
+  });
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <group ref={groupRef} rotation={[-0.12, 0.2, 0]}>
+      {paths.map((path, index) => <primitive key={index} object={path.line} />)}
+      <instancedMesh ref={headsRef} args={[undefined, undefined, paths.length]}>
+        <sphereGeometry args={[0.035, 10, 8]} />
+        <meshBasicMaterial color="#e7fbff" toneMapped={false} />
+      </instancedMesh>
+    </group>
+  );
+}
+
+export default function Demo053PlasmaFieldReconnection() {
+  const controls = useControls('Strange Attractor', {
+    system: {value: 'lorenz', options: {Lorenz: 'lorenz', Rössler: 'rossler', Thomas: 'thomas'}, label: 'Dynamical system'},
+    trajectoryCount: {value: 14, min: 4, max: 26, step: 1, label: 'Nearby trajectories'},
+    trailLength: {value: 1300, min: 500, max: 2200, step: 100, label: 'Integration samples'},
+    chaos: {value: 0.5, min: 0, max: 1, step: 0.01, label: 'System parameter'},
+    integrationSpeed: {value: 0.74, min: 0.15, max: 1.5, step: 0.01, label: 'Tracer speed'},
+    rotationSpeed: {value: 0.18, min: 0, max: 0.65, step: 0.01, label: 'Field rotation'},
+  }) as AttractorControls;
+
+  return (
+    <div className="demo-viewport" style={{position: 'relative', background: '#02040a'}}>
+      <DemoScene
+        engineConfig={{
+          background: '#02040a', bloom: {intensity: 0.58, luminanceSmoothing: 0.7, luminanceThreshold: 0.38},
+          camera: {position: [0, 0.2, 7], fov: 45, near: 0.1, far: 30}, fog: {color: '#02040a', near: 9, far: 18},
+        }}
+        orbitConfig={{autoRotate: false, enablePan: false, minDistance: 4.5, maxDistance: 11}}
+      >
+        <AttractorFlow controls={controls} />
+      </DemoScene>
+      <div style={attractorLegendStyle}><strong>{controls.system.toUpperCase()}</strong><span>RK4 · nearby initial conditions</span></div>
     </div>
   );
 }
+
+const attractorLegendStyle = {
+  position: 'absolute', left: 18, bottom: 18, display: 'flex', gap: 10, padding: '8px 10px',
+  border: '1px solid rgba(105,207,255,0.18)', borderRadius: 6, background: 'rgba(3,6,13,0.78)',
+  color: '#7892a3', pointerEvents: 'none', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;

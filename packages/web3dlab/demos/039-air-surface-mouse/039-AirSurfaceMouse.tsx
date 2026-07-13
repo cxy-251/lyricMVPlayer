@@ -29,6 +29,8 @@ uniform float uRefraction;
 uniform float uRippleStrength;
 uniform float uGridScale;
 uniform float uSpeed;
+uniform float uInteraction;
+uniform float uAspect;
 
 float grid(vec2 uv) {
   vec2 g = abs(fract(uv) - 0.5);
@@ -39,27 +41,32 @@ float grid(vec2 uv) {
 void main() {
   vec2 uv = vUv * 2.0 - 1.0;
   vec2 pointer = uPointer;
-  float d = length(uv - pointer);
+  vec2 delta = uv - pointer;
+  delta.x *= uAspect;
+  float d = length(delta);
   float t = uTime * uSpeed;
-  float ripple = sin(d * 32.0 - t * 6.0) * exp(-d * 3.2) * uRippleStrength;
+  float ripple = sin(d * 32.0 - t * 6.0) * exp(-d * 3.2) * uRippleStrength * uInteraction;
   vec2 normalLike = normalize(uv - pointer + 0.0001) * ripple;
   vec2 refracted = uv + normalLike * uRefraction + vec2(sin(uv.y * 8.0 + t), cos(uv.x * 7.0 - t)) * 0.012;
 
   float g1 = grid(refracted * uGridScale);
   float g2 = grid(refracted * uGridScale * 0.5 + 0.25);
-  float membrane = smoothstep(0.95, 0.08, d) * 0.45 + abs(ripple) * 1.4;
+  float membrane = (1.0 - smoothstep(0.08, 0.95, d)) * 0.45 * uInteraction + abs(ripple) * 1.4;
   float rim = pow(1.0 - abs(uv.x * 0.12 + uv.y * 0.08), 2.0);
   vec3 base = vec3(0.015, 0.022, 0.032);
   vec3 color = base + vec3(0.32, 0.86, 1.0) * (g1 * 0.28 + g2 * 0.12 + membrane * 0.42);
   color += vec3(1.0, 0.92, 0.72) * pow(max(0.0, ripple), 2.0) * 2.2;
   color += rim * vec3(0.02, 0.04, 0.055);
-  float vignette = smoothstep(1.45, 0.2, length(uv));
+  float vignette = 1.0 - smoothstep(0.2, 1.45, length(uv));
   gl_FragColor = vec4(color * vignette, 1.0);
 }
 `;
 
 function AirSurfacePlane({controls}: {controls: AirSurfaceControls}) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const previousPointerRef = useRef(new THREE.Vector2());
+  const currentPointerRef = useRef(new THREE.Vector2());
+  const interactionRef = useRef(0);
   const uniforms = useMemo(() => ({
     uTime: {value: 0},
     uPointer: {value: new THREE.Vector2(0, 0)},
@@ -67,10 +74,21 @@ function AirSurfacePlane({controls}: {controls: AirSurfaceControls}) {
     uRippleStrength: {value: controls.rippleStrength},
     uGridScale: {value: controls.gridScale},
     uSpeed: {value: controls.speed},
+    uInteraction: {value: 0},
+    uAspect: {value: 1},
   }), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!materialRef.current) return;
+    const pointer = currentPointerRef.current.set(state.pointer.x, state.pointer.y);
+    const velocity = pointer.distanceTo(previousPointerRef.current) / Math.max(delta, 0.001);
+    previousPointerRef.current.copy(pointer);
+    interactionRef.current = THREE.MathUtils.damp(
+      interactionRef.current,
+      Math.min(1, velocity * 0.08),
+      velocity > 0.08 ? 14 : 4.5,
+      delta,
+    );
     const u = materialRef.current.uniforms;
     u.uTime.value = state.clock.elapsedTime;
     u.uPointer.value.set(state.pointer.x, state.pointer.y);
@@ -78,6 +96,8 @@ function AirSurfacePlane({controls}: {controls: AirSurfaceControls}) {
     u.uRippleStrength.value = controls.rippleStrength;
     u.uGridScale.value = controls.gridScale;
     u.uSpeed.value = controls.speed;
+    u.uInteraction.value = interactionRef.current;
+    u.uAspect.value = state.size.width / Math.max(1, state.size.height);
   });
 
   return (
@@ -90,10 +110,10 @@ function AirSurfacePlane({controls}: {controls: AirSurfaceControls}) {
 
 export default function Demo039AirSurfaceMouse() {
   const controls = useControls('Air Surface Mouse', {
-    refraction: {value: 0.85, min: 0, max: 2, step: 0.01},
-    rippleStrength: {value: 0.42, min: 0, max: 1.2, step: 0.01},
-    gridScale: {value: 9.5, min: 3, max: 22, step: 0.1},
-    speed: {value: 0.7, min: 0, max: 2, step: 0.01},
+    refraction: {value: 0.72, min: 0.15, max: 1.2, step: 0.01, label: 'Refraction offset'},
+    rippleStrength: {value: 0.42, min: 0.12, max: 0.8, step: 0.01, label: 'Membrane force'},
+    gridScale: {value: 9.5, min: 5, max: 16, step: 0.1, label: 'Reference grid'},
+    speed: {value: 0.7, min: 0.2, max: 1.3, step: 0.01, label: 'Wave propagation'},
   }) as AirSurfaceControls;
 
   return (

@@ -7,87 +7,118 @@ import {DemoScene} from '../../core/DemoScene';
 
 type ResonanceControls = {
   driveFrequency: number;
-  damping: number;
-  gain: number;
-  slowMotion: number;
-  showSweep: boolean;
+  driveStrength: number;
+  dampingRatio: number;
+  timeScale: number;
+  frequencySweep: boolean;
+  sweepPeriod: number;
+  responseBars: boolean;
 };
 
 type PendulumDatum = {
   x: number;
   length: number;
   naturalFrequency: number;
-  phase: number;
   color: string;
 };
 
 const PENDULUM_COUNT = 17;
+const EFFECTIVE_GRAVITY = 64;
+const MIN_DRIVE_FREQUENCY = 0.55;
+const MAX_DRIVE_FREQUENCY = 1.45;
 
-const makePendulums = (): PendulumDatum[] => Array.from({length: PENDULUM_COUNT}, (_, index) => {
-  const ratio = index / (PENDULUM_COUNT - 1);
-  return {
-    x: (index - (PENDULUM_COUNT - 1) / 2) * 0.42,
-    length: 1.0 + ratio * 2.15,
-    naturalFrequency: 0.42 + ratio * 1.54,
-    phase: ratio * Math.PI * 0.35,
-    color: `hsl(${190 + ratio * 140}, 90%, ${54 + Math.sin(ratio * Math.PI) * 12}%)`,
-  };
-});
+const makePendulums = (): PendulumDatum[] =>
+  Array.from({length: PENDULUM_COUNT}, (_, index) => {
+    const ratio = index / (PENDULUM_COUNT - 1);
+    const length = THREE.MathUtils.lerp(3.05, 1.05, ratio);
+    const naturalFrequency = Math.sqrt(EFFECTIVE_GRAVITY / length) / (Math.PI * 2);
+    return {
+      x: (index - (PENDULUM_COUNT - 1) / 2) * 0.43,
+      length,
+      naturalFrequency,
+      color: `hsl(${188 + ratio * 145}, 88%, ${54 + Math.sin(ratio * Math.PI) * 9}%)`,
+    };
+  });
 
-const getAmplitude = (controls: ResonanceControls, naturalFrequency: number) => {
-  const drive = Math.max(0.05, controls.driveFrequency);
-  const damping = Math.max(0.015, controls.damping);
-  const stiffnessGap = naturalFrequency * naturalFrequency - drive * drive;
-  const denominator = Math.sqrt(stiffnessGap * stiffnessGap + Math.pow(2 * damping * drive, 2));
-  return Math.min(0.78, (controls.gain * 0.095) / Math.max(0.065, denominator));
+const getDriveFrequency = (controls: ResonanceControls, time: number) => {
+  if (!controls.frequencySweep) return controls.driveFrequency;
+  const phase = (Math.sin((time / controls.sweepPeriod) * Math.PI * 2 - Math.PI / 2) + 1) * 0.5;
+  return THREE.MathUtils.lerp(MIN_DRIVE_FREQUENCY, MAX_DRIVE_FREQUENCY, phase);
 };
 
 function Pendulum({datum, controls}: {datum: PendulumDatum; controls: ResonanceControls}) {
   const swingRef = useRef<THREE.Group>(null);
+  const responseRef = useRef<THREE.Mesh>(null);
   const bobMaterialRef = useRef<THREE.MeshStandardMaterial>(null);
-  const color = useMemo(() => new THREE.Color(datum.color), [datum.color]);
-  const hotColor = useMemo(() => new THREE.Color('#fff4b8'), []);
+  const physicsRef = useRef({angle: 0, angularVelocity: 0, response: 0});
+  const baseColor = useMemo(() => new THREE.Color(datum.color), [datum.color]);
+  const hotColor = useMemo(() => new THREE.Color('#fff1a8'), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const swing = swingRef.current;
     if (!swing) return;
+    const scaledDelta = Math.min(delta, 0.025) * controls.timeScale;
+    const time = state.clock.elapsedTime * controls.timeScale;
+    const driveFrequency = getDriveFrequency(controls, time);
+    const driveOmega = Math.PI * 2 * driveFrequency;
+    const naturalOmega = Math.PI * 2 * datum.naturalFrequency;
+    const physics = physicsRef.current;
+    const drive = Math.sin(time * driveOmega) * controls.driveStrength;
+    const acceleration = drive
+      - 2 * controls.dampingRatio * naturalOmega * physics.angularVelocity
+      - naturalOmega * naturalOmega * physics.angle;
 
-    const amplitude = getAmplitude(controls, datum.naturalFrequency);
-    const time = state.clock.elapsedTime * controls.slowMotion;
-    swing.rotation.z = amplitude * Math.sin(time * controls.driveFrequency * Math.PI * 2 + datum.phase);
+    physics.angularVelocity += acceleration * scaledDelta;
+    physics.angle += physics.angularVelocity * scaledDelta;
+    physics.angle = THREE.MathUtils.clamp(physics.angle, -0.9, 0.9);
+    physics.response = THREE.MathUtils.damp(
+      physics.response,
+      Math.min(1, Math.abs(physics.angle) / 0.72),
+      5,
+      scaledDelta,
+    );
+    swing.rotation.z = physics.angle;
+
+    if (responseRef.current) {
+      const height = 0.04 + physics.response * 0.9;
+      responseRef.current.scale.y = height;
+      responseRef.current.position.y = -3.36 + height * 0.5;
+      responseRef.current.visible = controls.responseBars;
+    }
 
     if (bobMaterialRef.current) {
-      const resonance = Math.min(1, amplitude / 0.72);
-      bobMaterialRef.current.color.copy(color).lerp(hotColor, resonance * 0.46);
-      bobMaterialRef.current.emissive.copy(color);
-      bobMaterialRef.current.emissiveIntensity = 0.08 + resonance * 0.86;
+      const frequencyDistance = Math.abs(driveFrequency - datum.naturalFrequency);
+      const resonanceMatch = Math.exp(-frequencyDistance * frequencyDistance * 70);
+      const heat = Math.min(1, physics.response * 0.72 + resonanceMatch * physics.response * 0.55);
+      bobMaterialRef.current.color.copy(baseColor).lerp(hotColor, heat * 0.58);
+      bobMaterialRef.current.emissive.copy(baseColor);
+      bobMaterialRef.current.emissiveIntensity = 0.06 + heat * 0.72;
     }
   });
 
-  const sweepHeight = Math.max(0.08, getAmplitude(controls, datum.naturalFrequency) * 2.4);
-
   return (
-    <group position={[datum.x, 1.45, 0]}>
+    <group position={[datum.x, 0, 0]}>
       <mesh>
-        <sphereGeometry args={[0.035, 12, 8]} />
+        <sphereGeometry args={[0.034, 12, 8]} />
         <meshBasicMaterial color="#d7e7ff" />
       </mesh>
-
-      {controls.showSweep ? (
-        <mesh position={[0, -3.45 + sweepHeight * 0.5, -0.28]}>
-          <boxGeometry args={[0.11, sweepHeight, 0.035]} />
-          <meshBasicMaterial color={datum.color} transparent opacity={0.42} />
-        </mesh>
-      ) : null}
-
+      <mesh ref={responseRef} position={[0, -3.34, -0.24]}>
+        <boxGeometry args={[0.13, 1, 0.035]} />
+        <meshBasicMaterial color={datum.color} opacity={0.46} transparent />
+      </mesh>
       <group ref={swingRef}>
         <mesh position={[0, -datum.length / 2, 0]}>
-          <cylinderGeometry args={[0.01, 0.01, datum.length, 8]} />
-          <meshStandardMaterial color="#d9e7ff" metalness={0.45} roughness={0.32} />
+          <cylinderGeometry args={[0.009, 0.009, datum.length, 7]} />
+          <meshStandardMaterial color="#b9c8dd" metalness={0.48} roughness={0.34} />
         </mesh>
         <mesh position={[0, -datum.length, 0]}>
-          <sphereGeometry args={[0.105, 24, 16]} />
-          <meshStandardMaterial ref={bobMaterialRef} color={datum.color} metalness={0.42} roughness={0.24} />
+          <sphereGeometry args={[0.105, 20, 14]} />
+          <meshStandardMaterial
+            ref={bobMaterialRef}
+            color={datum.color}
+            metalness={0.38}
+            roughness={0.26}
+          />
         </mesh>
       </group>
     </group>
@@ -97,59 +128,99 @@ function Pendulum({datum, controls}: {datum: PendulumDatum; controls: ResonanceC
 function PendulumLab({controls}: {controls: ResonanceControls}) {
   const pendulums = useMemo(makePendulums, []);
   const driveRef = useRef<THREE.Group>(null);
+  const indicatorRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!driveRef.current) return;
-    driveRef.current.position.x = Math.sin(state.clock.elapsedTime * controls.driveFrequency * Math.PI * 2) * 0.16;
+    const time = state.clock.elapsedTime * controls.timeScale;
+    const frequency = getDriveFrequency(controls, time);
+    const driveOmega = Math.PI * 2 * frequency;
+    const displacement = Math.sin(time * driveOmega) * controls.driveStrength * 0.013;
+    if (driveRef.current) driveRef.current.position.x = displacement;
+    if (indicatorRef.current) {
+      const ratio = (frequency - MIN_DRIVE_FREQUENCY)
+        / (MAX_DRIVE_FREQUENCY - MIN_DRIVE_FREQUENCY);
+      indicatorRef.current.position.x = THREE.MathUtils.lerp(-3.55, 3.55, ratio);
+    }
   });
 
   return (
     <group>
-      <group ref={driveRef}>
-        <mesh position={[0, 1.52, 0]}>
-          <boxGeometry args={[7.4, 0.07, 0.09]} />
-          <meshStandardMaterial color="#c6dcff" metalness={0.58} roughness={0.22} />
+      <group ref={driveRef} position={[0, 1.5, 0]}>
+        <mesh position={[0, 0.06, 0]}>
+          <boxGeometry args={[7.5, 0.075, 0.1]} />
+          <meshStandardMaterial color="#b9cde7" metalness={0.6} roughness={0.24} />
         </mesh>
-        <mesh position={[0, 1.65, -0.04]}>
-          <boxGeometry args={[7.72, 0.018, 0.035]} />
-          <meshBasicMaterial color="#7ef5ff" transparent opacity={0.72} />
-        </mesh>
+        {pendulums.map((datum) => (
+          <Pendulum key={datum.naturalFrequency} controls={controls} datum={datum} />
+        ))}
       </group>
 
-      <mesh position={[0, -2.16, -0.34]}>
-        <boxGeometry args={[7.8, 0.04, 0.08]} />
-        <meshBasicMaterial color="#243047" transparent opacity={0.7} />
+      <mesh position={[0, -1.94, -0.28]}>
+        <boxGeometry args={[7.5, 0.025, 0.05]} />
+        <meshBasicMaterial color="#20324c" opacity={0.78} transparent />
       </mesh>
-
-      {pendulums.map((datum) => (
-        <Pendulum key={datum.naturalFrequency} datum={datum} controls={controls} />
-      ))}
+      <mesh ref={indicatorRef} position={[0, -1.94, -0.22]}>
+        <sphereGeometry args={[0.07, 16, 10]} />
+        <meshBasicMaterial color="#fff0a8" />
+      </mesh>
     </group>
   );
 }
 
 export default function Demo029ResonancePendulumLab() {
   const controls = useControls('Resonance Pendulum Lab', {
-    driveFrequency: {value: 0.94, min: 0.25, max: 2.2, step: 0.01},
-    damping: {value: 0.12, min: 0.02, max: 0.7, step: 0.01},
-    gain: {value: 1.12, min: 0.2, max: 2.4, step: 0.01},
-    slowMotion: {value: 0.82, min: 0.2, max: 1.6, step: 0.01},
-    showSweep: true,
+    driveFrequency: {
+      value: 0.94,
+      min: MIN_DRIVE_FREQUENCY,
+      max: MAX_DRIVE_FREQUENCY,
+      step: 0.01,
+      label: 'Drive frequency',
+    },
+    driveStrength: {
+      value: 5.2,
+      min: 1.5,
+      max: 8,
+      step: 0.1,
+      label: 'Drive force',
+    },
+    dampingRatio: {
+      value: 0.075,
+      min: 0.025,
+      max: 0.22,
+      step: 0.005,
+      label: 'Damping ratio',
+    },
+    timeScale: {
+      value: 0.82,
+      min: 0.35,
+      max: 1.15,
+      step: 0.01,
+      label: 'Simulation speed',
+    },
+    frequencySweep: {value: false, label: 'Frequency sweep'},
+    sweepPeriod: {
+      value: 20,
+      min: 10,
+      max: 36,
+      step: 1,
+      label: 'Sweep duration',
+    },
+    responseBars: {value: true, label: 'Response bars'},
   }) as ResonanceControls;
 
   return (
     <DemoScene
       engineConfig={{
         background: '#03050b',
-        camera: {position: [0, 0.15, 8.4], fov: 42, near: 0.1, far: 35},
-        bloom: {intensity: 0.95, luminanceSmoothing: 0.48, luminanceThreshold: 0.18},
-        vignette: {darkness: 0.5, offset: 0.25},
+        bloom: {intensity: 0.48, luminanceSmoothing: 0.5, luminanceThreshold: 0.52},
+        camera: {position: [0, 0.1, 8.5], fov: 42, near: 0.1, far: 35},
+        vignette: {darkness: 0.42, offset: 0.3},
       }}
-      orbitConfig={{enableZoom: true, minDistance: 5, maxDistance: 12}}
+      orbitConfig={{enablePan: false, enableZoom: true, minDistance: 6.5, maxDistance: 12}}
     >
-      <ambientLight intensity={0.42} />
-      <pointLight position={[0, 3.5, 4.8]} intensity={2.4} color="#bfe9ff" />
-      <pointLight position={[-3.8, -1.2, 3.2]} intensity={1.6} color="#ff56c7" />
+      <ambientLight intensity={0.38} />
+      <pointLight color="#bfe9ff" intensity={2.1} position={[0, 3.5, 4.8]} />
+      <pointLight color="#ff73c9" intensity={1.1} position={[-3.8, -1.2, 3.2]} />
       <PendulumLab controls={controls} />
     </DemoScene>
   );

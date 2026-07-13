@@ -1,254 +1,231 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
+import * as THREE from 'three';
 
-type LenticularControls = {
-  parallax: number;
-  foilStrength: number;
-  cardTilt: number;
-  expressionBlend: number;
-  scanlines: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type ChladniControls = {
+  modeN: number;
+  modeM: number;
+  settling: number;
+  vibration: number;
+  frequency: number;
+  particleCount: number;
+  particleSize: number;
 };
 
-const roundRectPath = (context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
-  const r = Math.min(radius, width / 2, height / 2);
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + width, y, x + width, y + height, r);
-  context.arcTo(x + width, y + height, x, y + height, r);
-  context.arcTo(x, y + height, x, y, r);
-  context.arcTo(x, y, x + width, y, r);
-  context.closePath();
-};
+const modeFunction = `
+float chladni(vec2 point, float modeN, float modeM) {
+  float n = modeN;
+  float m = abs(modeM - modeN) < 0.25 ? modeM + 1.0 : modeM;
+  vec2 coordinate = (point + 1.0) * 1.5707963;
+  return cos(n * coordinate.x) * cos(m * coordinate.y)
+    - cos(m * coordinate.x) * cos(n * coordinate.y);
+}
+`;
 
-const drawFace = (context: CanvasRenderingContext2D, frame: number, size: number) => {
-  context.save();
-  context.lineCap = 'round';
-  context.lineJoin = 'round';
-  context.fillStyle = '#e7c3a6';
-  context.strokeStyle = '#1d1715';
-  context.lineWidth = size * 0.022;
-  context.beginPath();
-  context.ellipse(0, size * 0.02, size * 0.25, size * 0.31, 0, 0, Math.PI * 2);
-  context.fill();
-  context.stroke();
+const particleVertexShader = `
+precision highp float;
+attribute vec2 aOrigin;
+attribute float aSeed;
+uniform float uTime;
+uniform float uModeN;
+uniform float uModeM;
+uniform float uSettling;
+uniform float uVibration;
+uniform float uFrequency;
+uniform float uParticleSize;
+varying float vSeed;
+varying float vNode;
+${modeFunction}
 
-  context.strokeStyle = '#271b18';
-  context.lineWidth = size * 0.035;
-  for (let i = -4; i <= 4; i += 1) {
-    context.beginPath();
-    context.moveTo(i * size * 0.048, -size * 0.18);
-    context.quadraticCurveTo(i * size * 0.052 + Math.sin(i) * size * 0.04, -size * 0.34, i * size * 0.075, -size * 0.22);
-    context.stroke();
+vec2 projectToNode(vec2 initialPoint) {
+  vec2 point = initialPoint;
+  const float epsilon = 0.006;
+  for (int iteration = 0; iteration < 7; iteration++) {
+    float field = chladni(point, uModeN, uModeM);
+    vec2 gradient = vec2(
+      chladni(point + vec2(epsilon, 0.0), uModeN, uModeM) - chladni(point - vec2(epsilon, 0.0), uModeN, uModeM),
+      chladni(point + vec2(0.0, epsilon), uModeN, uModeM) - chladni(point - vec2(0.0, epsilon), uModeN, uModeM)
+    ) / (2.0 * epsilon);
+    vec2 correction = gradient * field / (dot(gradient, gradient) + 0.035);
+    correction = clamp(correction, vec2(-0.085), vec2(0.085));
+    point -= correction * 0.78;
+    point = clamp(point, vec2(-0.98), vec2(0.98));
   }
+  return point;
+}
 
-  const surprise = Math.max(0, 1 - Math.abs(frame - 1));
-  const smile = Math.max(0, 1 - Math.abs(frame - 2));
-  const wink = Math.max(0, 1 - Math.abs(frame - 0));
-  context.lineWidth = size * 0.012;
-  context.strokeStyle = '#191515';
-  context.fillStyle = '#191515';
+void main() {
+  vec2 nodePoint = projectToNode(aOrigin);
+  vec2 point = mix(aOrigin, nodePoint, uSettling);
+  float nodeDistance = abs(chladni(point, uModeN, uModeM));
+  float vibration = sin(uTime * uFrequency * 6.2831 + aSeed * 12.0) * uVibration;
+  float height = 0.035 + vibration * (0.025 + nodeDistance * 0.08);
+  vec3 position = vec3(point.x * 2.35, height, point.y * 2.35);
+  vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+  gl_PointSize = clamp(uParticleSize * (6.0 / max(2.0, -viewPosition.z)) * (0.75 + aSeed * 0.45), 1.0, 7.0);
+  gl_Position = projectionMatrix * viewPosition;
+  vSeed = aSeed;
+  vNode = 1.0 - smoothstep(0.0, 0.12, nodeDistance);
+}
+`;
 
-  context.beginPath();
-  context.arc(-size * 0.09, -size * 0.015, size * (0.025 + surprise * 0.012), 0, Math.PI * 2);
-  context.fill();
-  if (wink > 0.35) {
-    context.beginPath();
-    context.moveTo(size * 0.06, -size * 0.016);
-    context.quadraticCurveTo(size * 0.1, -size * 0.04, size * 0.15, -size * 0.012);
-    context.stroke();
-  } else {
-    context.beginPath();
-    context.arc(size * 0.1, -size * 0.015, size * (0.025 + surprise * 0.012), 0, Math.PI * 2);
-    context.fill();
-  }
+const particleFragmentShader = `
+precision highp float;
+varying float vSeed;
+varying float vNode;
+void main() {
+  float radius = length(gl_PointCoord - 0.5);
+  float alpha = 1.0 - smoothstep(0.24, 0.5, radius);
+  float core = 1.0 - smoothstep(0.05, 0.2, radius);
+  vec3 sand = mix(vec3(0.9, 0.46, 0.12), vec3(1.0, 0.84, 0.42), vSeed);
+  vec3 color = mix(sand, vec3(0.76, 0.96, 1.0), vNode * 0.24 + core * 0.15);
+  gl_FragColor = vec4(color, alpha * (0.72 + core * 0.28));
+}
+`;
 
-  context.strokeStyle = 'rgba(255,255,255,0.55)';
-  context.lineWidth = size * 0.01;
-  for (const x of [-size * 0.09, size * 0.1]) {
-    context.beginPath();
-    context.arc(x, -size * 0.015, size * 0.055, 0, Math.PI * 2);
-    context.stroke();
-  }
+const plateVertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
 
-  context.strokeStyle = '#211716';
-  context.lineWidth = size * 0.014;
-  context.beginPath();
-  if (surprise > 0.45) {
-    context.ellipse(0, size * 0.13, size * 0.035, size * 0.058, 0, 0, Math.PI * 2);
-  } else {
-    context.moveTo(-size * 0.06, size * 0.12);
-    context.quadraticCurveTo(0, size * (0.17 + smile * 0.055), size * 0.07, size * 0.12);
-  }
-  context.stroke();
-  context.restore();
-};
+const plateFragmentShader = `
+precision highp float;
+varying vec2 vUv;
+uniform float uTime;
+uniform float uModeN;
+uniform float uModeM;
+uniform float uVibration;
+uniform float uFrequency;
+${modeFunction}
+void main() {
+  vec2 point = vUv * 2.0 - 1.0;
+  float field = chladni(point, uModeN, uModeM);
+  float oscillation = sin(uTime * uFrequency * 6.2831);
+  float wave = field * oscillation;
+  float node = 1.0 - smoothstep(0.018, 0.08, abs(field));
+  vec3 negative = vec3(0.035, 0.08, 0.16);
+  vec3 positive = vec3(0.18, 0.035, 0.16);
+  vec3 color = mix(negative, positive, wave * 0.5 + 0.5);
+  color *= 0.34 + uVibration * 0.42;
+  color += vec3(0.18, 0.72, 0.82) * node * 0.18;
+  gl_FragColor = vec4(color, 1.0);
+}
+`;
 
-export default function Demo045LenticularHoloCard() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerRef = useRef({x: 0.5, active: false});
-  const controls = useControls('Lenticular Holo Card', {
-    parallax: {value: 0.95, min: 0, max: 1.8, step: 0.01},
-    foilStrength: {value: 1.12, min: 0.1, max: 2, step: 0.01},
-    cardTilt: {value: 0.78, min: 0, max: 1.6, step: 0.01},
-    expressionBlend: {value: 1, min: 0, max: 1, step: 0.01},
-    scanlines: {value: 0.76, min: 0, max: 1.4, step: 0.01},
-  }) as LenticularControls;
+function ChladniPlate({controls}: {controls: ChladniControls}) {
+  const particleMaterialRef = useRef<THREE.ShaderMaterial>(null);
+  const plateMaterialRef = useRef<THREE.ShaderMaterial>(null);
+  const smoothedModesRef = useRef(new THREE.Vector2(controls.modeN, controls.modeM));
+  const geometry = useMemo(() => {
+    const origins = new Float32Array(controls.particleCount * 2);
+    const seeds = new Float32Array(controls.particleCount);
+    for (let index = 0; index < controls.particleCount; index++) {
+      const seedA = ((index * 16807) % 2147483647) / 2147483647;
+      const seedB = ((index * 48271 + 17) % 2147483629) / 2147483629;
+      origins[index * 2] = seedA * 1.94 - 0.97;
+      origins[index * 2 + 1] = seedB * 1.94 - 0.97;
+      seeds[index] = ((index * 69621 + 31) % 104729) / 104729;
+    }
+    const next = new THREE.BufferGeometry();
+    next.setAttribute('position', new THREE.BufferAttribute(new Float32Array(controls.particleCount * 3), 3));
+    next.setAttribute('aOrigin', new THREE.BufferAttribute(origins, 2));
+    next.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    return next;
+  }, [controls.particleCount]);
+  const particleUniforms = useMemo(() => ({
+    uTime: {value: 0}, uModeN: {value: 3}, uModeM: {value: 5}, uSettling: {value: 0.92},
+    uVibration: {value: 0.18}, uFrequency: {value: 0.62}, uParticleSize: {value: 3.2},
+  }), []);
+  const plateUniforms = useMemo(() => ({
+    uTime: {value: 0}, uModeN: {value: 3}, uModeM: {value: 5}, uVibration: {value: 0.18}, uFrequency: {value: 0.62},
+  }), []);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+  useEffect(() => () => geometry.dispose(), [geometry]);
 
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    const onPointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      pointerRef.current.x = (event.clientX - rect.left) / Math.max(1, width);
-      pointerRef.current.active = true;
-    };
-    const onPointerLeave = () => {
-      pointerRef.current.active = false;
-    };
-
-    const draw = (now: number) => {
-      const t = now * 0.001;
-      const pointerX = pointerRef.current.active ? pointerRef.current.x : 0.5 + Math.sin(t * 0.45) * 0.28;
-      const angle = (pointerX - 0.5) * 2 * controls.parallax;
-      const bg = context.createRadialGradient(width * 0.5, height * 0.5, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.72);
-      bg.addColorStop(0, '#141016');
-      bg.addColorStop(0.58, '#050406');
-      bg.addColorStop(1, '#010102');
-      context.fillStyle = bg;
-      context.fillRect(0, 0, width, height);
-
-      context.fillStyle = 'rgba(255,255,255,0.7)';
-      context.textAlign = 'center';
-      context.font = `${Math.max(12, Math.min(18, width * 0.017))}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      ['foil', 'shadow', 'blush'].forEach((label, index) => {
-        const x = width / 2 - 86 + index * 86;
-        if (index === Math.round((angle + 1) * 1.1)) {
-          roundRectPath(context, x - 28, height * 0.11 - 13, 56, 26, 13);
-          context.fillStyle = 'rgba(255,232,238,0.92)';
-          context.fill();
-          context.fillStyle = '#1a1113';
-        } else {
-          context.fillStyle = 'rgba(255,255,255,0.68)';
-        }
-        context.fillText(label, x, height * 0.11 - 1);
-      });
-
-      const cardW = Math.min(width * 0.44, height * 0.44, 390);
-      const cardH = cardW * 1.42;
-      const cx = width / 2;
-      const cy = height / 2 + height * 0.04;
-      context.save();
-      context.translate(cx, cy);
-      context.rotate(angle * 0.16 * controls.cardTilt);
-      context.transform(1, angle * 0.07 * controls.cardTilt, -angle * 0.025 * controls.cardTilt, 1, 0, 0);
-      context.shadowColor = 'rgba(0,0,0,0.8)';
-      context.shadowBlur = 36;
-      roundRectPath(context, -cardW / 2, -cardH / 2, cardW, cardH, cardW * 0.075);
-      context.fillStyle = '#111';
-      context.fill();
-      context.shadowBlur = 0;
-      context.strokeStyle = 'rgba(255,255,255,0.24)';
-      context.lineWidth = 1.4;
-      context.stroke();
-      context.clip();
-
-      const foil = context.createLinearGradient(-cardW / 2, -cardH / 2, cardW / 2, cardH / 2);
-      foil.addColorStop(0, '#ff4b7d');
-      foil.addColorStop(0.18, '#ffbf3f');
-      foil.addColorStop(0.36, '#55ff89');
-      foil.addColorStop(0.56, '#43d8ff');
-      foil.addColorStop(0.74, '#7662ff');
-      foil.addColorStop(1, '#ff5fd2');
-      context.fillStyle = foil;
-      context.fillRect(-cardW / 2, -cardH / 2, cardW, cardH);
-
-      context.globalCompositeOperation = 'screen';
-      context.fillStyle = `rgba(255,255,255,${0.14 * controls.foilStrength})`;
-      for (let i = -20; i < 34; i += 1) {
-        context.save();
-        context.translate(i * cardW * 0.065 + angle * cardW * 0.14, 0);
-        context.rotate(-0.58);
-        context.fillRect(-cardW * 0.02, -cardH, cardW * 0.018, cardH * 2);
-        context.restore();
-      }
-      const rainbowShift = (angle + 1) * cardW * 0.18;
-      for (let band = 0; band < 8; band += 1) {
-        const bandGradient = context.createLinearGradient(-cardW / 2 + rainbowShift, -cardH / 2, cardW / 2 + rainbowShift, cardH / 2);
-        bandGradient.addColorStop(0, 'rgba(255,255,255,0)');
-        bandGradient.addColorStop(0.42, `hsla(${band * 45}, 100%, 70%, ${0.045 * controls.foilStrength})`);
-        bandGradient.addColorStop(0.7, 'rgba(255,255,255,0)');
-        context.fillStyle = bandGradient;
-        context.fillRect(-cardW / 2, -cardH / 2 + band * cardH * 0.11, cardW, cardH * 0.1);
-      }
-      context.globalCompositeOperation = 'source-over';
-
-      context.fillStyle = 'rgba(10,18,20,0.26)';
-      context.fillRect(-cardW * 0.38, cardH * 0.23, cardW * 0.76, cardH * 0.19);
-      context.fillStyle = 'rgba(255,255,255,0.88)';
-      context.font = `${cardW * 0.055}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'left';
-      context.fillText('LIKO STUDIO', -cardW * 0.38, -cardH * 0.41);
-      context.textAlign = 'right';
-      context.fillText('LS 90', cardW * 0.38, -cardH * 0.41);
-      context.textAlign = 'left';
-      context.font = `${cardW * 0.046}px Inter, ui-sans-serif, system-ui, sans-serif`;
-      context.fillText('Liko Lens', -cardW * 0.35, cardH * 0.29);
-      context.font = `${cardW * 0.034}px Inter, ui-sans-serif, system-ui, sans-serif`;
-      context.fillText('Move around the card', -cardW * 0.35, cardH * 0.35);
-
-      context.save();
-      context.translate(angle * cardW * 0.08, -cardH * 0.04);
-      drawFace(context, (angle + 1) * controls.expressionBlend + 0.55, cardW);
-      context.restore();
-
-      if (controls.scanlines > 0) {
-        context.strokeStyle = `rgba(255,255,255,${0.08 * controls.scanlines})`;
-        context.lineWidth = 1;
-        for (let x = -cardW / 2; x < cardW / 2; x += Math.max(4, cardW * 0.022)) {
-          context.beginPath();
-          context.moveTo(x + angle * 12, -cardH / 2);
-          context.lineTo(x - angle * 12, cardH / 2);
-          context.stroke();
-        }
-      }
-      context.restore();
-
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerleave', onPointerLeave);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerleave', onPointerLeave);
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.cardTilt, controls.expressionBlend, controls.foilStrength, controls.parallax, controls.scanlines]);
+  useFrame((state, delta) => {
+    smoothedModesRef.current.x = THREE.MathUtils.damp(smoothedModesRef.current.x, controls.modeN, 4.5, delta);
+    smoothedModesRef.current.y = THREE.MathUtils.damp(smoothedModesRef.current.y, controls.modeM, 4.5, delta);
+    const materials = [particleMaterialRef.current, plateMaterialRef.current];
+    materials.forEach(material => {
+      if (!material) return;
+      material.uniforms.uTime.value = state.clock.elapsedTime;
+      material.uniforms.uModeN.value = smoothedModesRef.current.x;
+      material.uniforms.uModeM.value = smoothedModesRef.current.y;
+      material.uniforms.uVibration.value = controls.vibration;
+      material.uniforms.uFrequency.value = controls.frequency;
+    });
+    if (particleMaterialRef.current) {
+      particleMaterialRef.current.uniforms.uSettling.value = controls.settling;
+      particleMaterialRef.current.uniforms.uParticleSize.value = controls.particleSize;
+    }
+  });
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%', touchAction: 'none'}} />
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[4.9, 4.9]} />
+        <shaderMaterial ref={plateMaterialRef} fragmentShader={plateFragmentShader} uniforms={plateUniforms} vertexShader={plateVertexShader} />
+      </mesh>
+      <points geometry={geometry} frustumCulled={false}>
+        <shaderMaterial ref={particleMaterialRef} blending={THREE.AdditiveBlending} depthWrite={false} fragmentShader={particleFragmentShader} transparent uniforms={particleUniforms} vertexShader={particleVertexShader} />
+      </points>
+      <mesh position={[0, -0.055, 0]}>
+        <boxGeometry args={[5.06, 0.1, 5.06]} />
+        <meshStandardMaterial color="#12171e" metalness={0.78} roughness={0.25} />
+      </mesh>
+      {[[-2.2, -2.2], [2.2, -2.2], [-2.2, 2.2], [2.2, 2.2]].map(([x, z], index) => (
+        <mesh key={index} position={[x, -0.24, z]}>
+          <cylinderGeometry args={[0.08, 0.1, 0.38, 16]} />
+          <meshStandardMaterial color="#26313b" metalness={0.82} roughness={0.25} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+export default function Demo045LenticularHoloCard() {
+  const controls = useControls('Chladni Plate', {
+    modeN: {value: 3, min: 1, max: 8, step: 1, label: 'Mode n'},
+    modeM: {value: 5, min: 1, max: 8, step: 1, label: 'Mode m'},
+    settling: {value: 0.94, min: 0, max: 1, step: 0.01, label: 'Node settling'},
+    vibration: {value: 0.18, min: 0, max: 0.48, step: 0.01, label: 'Plate amplitude'},
+    frequency: {value: 0.62, min: 0.15, max: 1.25, step: 0.01, label: 'Oscillation rate'},
+    particleCount: {value: 26000, min: 8000, max: 42000, step: 2000, label: 'Sand grains'},
+    particleSize: {value: 3.2, min: 1.8, max: 5.2, step: 0.1, label: 'Grain size'},
+  }) as ChladniControls;
+
+  return (
+    <div className="demo-viewport" style={{position: 'relative', background: '#05070b'}}>
+      <DemoScene
+        engineConfig={{
+          background: '#05070b',
+          bloom: {intensity: 0.42, luminanceSmoothing: 0.62, luminanceThreshold: 0.54},
+          camera: {position: [4.4, 4.1, 5.2], fov: 43, near: 0.1, far: 30},
+          fog: {color: '#05070b', near: 10, far: 18},
+        }}
+        orbitConfig={{autoRotate: false, enablePan: false, minDistance: 5.5, maxDistance: 11}}
+      >
+        <ambientLight intensity={0.38} />
+        <directionalLight color="#d9efff" intensity={1.7} position={[3, 6, 4]} />
+        <ChladniPlate controls={controls} />
+      </DemoScene>
+      <div style={chladniLegendStyle}>
+        <strong>CHLADNI MODE ({controls.modeN}, {controls.modeM})</strong>
+        <span>sand converges where f(x,y) = 0</span>
+      </div>
     </div>
   );
 }
+
+const chladniLegendStyle = {
+  position: 'absolute', left: 18, bottom: 18, display: 'grid', gap: 3,
+  padding: '8px 10px', border: '1px solid rgba(242,180,73,0.2)', borderRadius: 6,
+  background: 'rgba(7,8,11,0.8)', color: '#a49373', pointerEvents: 'none',
+  fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;

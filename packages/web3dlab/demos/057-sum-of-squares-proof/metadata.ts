@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const sumOfSquaresProofMetadata: DemoMetadata = {
+  number: '057',
   id: 'sum-of-squares-proof',
   title: 'Sum Of Squares Proof',
-  description: 'A visual proof study for 6*(1^2+...+n^2)=n(n+1)(2n+1), using colored square stacks that duplicate, rotate, and assemble into a block.',
+  description: 'A rigorous discrete-difference proof where each cubic shell is partitioned into exactly 3k² face cubes, 3k edge cubes, and one corner before the shell identities telescope.',
   route: '/demos/sum-of-squares-proof',
-  tags: ['Canvas2D', 'Math Proof', 'Geometry', 'Education'],
-  instructions: ['Tune n and phase to inspect the geometric construction steps behind the sum-of-squares formula.'],
+  tags: ['R3F', 'Math Proof', 'Discrete Difference', 'Geometry', 'Education'],
+  instructions: ['Advance through the four proof steps, inspect shell k with separation enabled, and verify each displayed cube count before the final algebraic isolation.'],
 };

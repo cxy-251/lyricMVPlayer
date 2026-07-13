@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const prismAlbumMotionMetadata: DemoMetadata = {
+  number: '044',
   id: 'prism-album-motion',
-  title: 'Prism Album Motion',
-  description: 'A Liko Day7 inspired dark album-cover motion study with a prism, white beam, rainbow dispersion, chromatic text, and control-strip UI.',
+  title: 'Thin-Film Interference',
+  description: 'A flowing nanometer-scale membrane whose RGB reflection is calculated from optical path phase, film thickness, refractive index, surface normal, and viewing angle.',
   route: '/demos/prism-album-motion',
-  tags: ['Canvas2D', 'Prism', 'Album Motion', 'Dispersion'],
-  instructions: ['Move the pointer or tune dispersion, beam width, and text split to inspect how the static prism cover becomes a dynamic optical system.'],
+  tags: ['WebGL', 'Shader', 'Thin Film', 'Interference', 'Physical Optics'],
+  instructions: ['Move the pointer to change viewing angle, then vary nanometer thickness and refractive index to reorganize the interference colors.'],
 };

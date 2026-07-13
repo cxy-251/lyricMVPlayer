@@ -12,11 +12,11 @@ type JellyControls = {
 export default function Demo032ParametricJellyfish() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const controls = useControls('Parametric Jellyfish', {
-    points: {value: 12000, min: 3000, max: 24000, step: 500},
-    scale: {value: 1, min: 0.55, max: 1.6, step: 0.01},
-    speed: {value: 1, min: 0.2, max: 2.4, step: 0.01},
-    brightness: {value: 0.78, min: 0.2, max: 1, step: 0.01},
-    trail: {value: 0.28, min: 0.05, max: 0.8, step: 0.01},
+    points: {value: 12000, min: 3000, max: 24000, step: 500, label: 'Point density'},
+    scale: {value: 1, min: 0.55, max: 1.35, step: 0.01, label: 'Form scale'},
+    speed: {value: 1, min: 0.2, max: 1.6, step: 0.01, label: 'Flow speed'},
+    brightness: {value: 0.78, min: 0.2, max: 1, step: 0.01, label: 'Point brightness'},
+    trail: {value: 0.28, min: 0.08, max: 0.55, step: 0.01, label: 'Trail fade'},
   }) as JellyControls;
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Demo032ParametricJellyfish() {
     const draw = (now: number) => {
       const t = now * 0.0009 * controls.speed;
       const centerX = width * 0.5;
-      const centerY = height * 0.52;
+      const centerY = height * 0.5;
       const s = Math.min(width, height) * 0.68 * controls.scale;
 
       context.fillStyle = `rgba(0, 0, 0, ${controls.trail})`;
@@ -62,8 +62,9 @@ export default function Demo032ParametricJellyfish() {
         const q = 3 * Math.sin(k * 2) + 0.3 / Math.max(0.08, Math.abs(k)) + Math.sin(y / 19) * k * (9 + 2 * Math.sin(e * 14 - d * 3 + t * 2));
         const px = (q + 50 * Math.cos(c)) / 400;
         const py = (q * Math.sin(c) + d * 39 - 475) / 400;
-        const screenX = centerX + (px - 0.5) * s;
-        const screenY = centerY + (py - 0.5) * s;
+        // The formula is centered around x=0 and y≈0.469, not around (0.5, 0.5).
+        const screenX = centerX + px * s;
+        const screenY = centerY + (py - 0.469) * s;
         const radius = k * k > 15 ? 1.35 : 0.7;
         context.globalAlpha = 0.26 + Math.min(0.7, Math.abs(k) / 8);
         context.beginPath();

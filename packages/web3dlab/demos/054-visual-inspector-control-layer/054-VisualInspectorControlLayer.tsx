@@ -1,160 +1,161 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useMemo, useRef} from 'react';
+import * as THREE from 'three';
 
-type InspectorControls = {
-  spin: boolean;
-  speed: number;
-  roughness: number;
-  thickness: number;
-  textGlow: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type AuroraControls = {
+  solarWind: number;
+  curtainCount: number;
+  fieldCurvature: number;
+  altitude: number;
+  curtainThickness: number;
+  colorMix: number;
+  exposure: number;
 };
 
-const drawRounded = (context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + w, y, x + w, y + h, r);
-  context.arcTo(x + w, y + h, x, y + h, r);
-  context.arcTo(x, y + h, x, y, r);
-  context.arcTo(x, y, x + w, y, r);
-  context.closePath();
-};
+const vertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
+
+const fragmentShader = `
+precision highp float;
+varying vec2 vUv;
+uniform float uTime;
+uniform float uAspect;
+uniform float uSolarWind;
+uniform float uCurtainCount;
+uniform float uFieldCurvature;
+uniform float uAltitude;
+uniform float uCurtainThickness;
+uniform float uColorMix;
+uniform float uExposure;
+uniform vec2 uPointer;
+
+float hash31(vec3 point) {
+  point = fract(point * 0.1031);
+  point += dot(point, point.yzx + 33.33);
+  return fract((point.x + point.y) * point.z);
+}
+
+float noise3(vec3 point) {
+  vec3 cell = floor(point);
+  vec3 local = fract(point);
+  local = local * local * (3.0 - 2.0 * local);
+  return mix(
+    mix(mix(hash31(cell), hash31(cell + vec3(1,0,0)), local.x), mix(hash31(cell + vec3(0,1,0)), hash31(cell + vec3(1,1,0)), local.x), local.y),
+    mix(mix(hash31(cell + vec3(0,0,1)), hash31(cell + vec3(1,0,1)), local.x), mix(hash31(cell + vec3(0,1,1)), hash31(cell + vec3(1,1,1)), local.x), local.y),
+    local.z
+  );
+}
+
+float starField(vec2 point) {
+  vec2 grid = point * 150.0;
+  vec2 cell = floor(grid);
+  vec2 local = fract(grid) - 0.5;
+  float seed = hash31(vec3(cell, 4.2));
+  vec2 position = vec2(hash31(vec3(cell, 7.1)), hash31(vec3(cell, 12.7))) - 0.5;
+  float star = pow(max(0.0, 1.0 - length(local - position * 0.76) * 18.0), 5.0);
+  return star * step(0.975, seed) * (0.6 + seed);
+}
+
+void main() {
+  vec2 uv = (vUv - 0.5) * 2.0;
+  uv.x *= uAspect;
+  vec3 background = mix(vec3(0.002, 0.006, 0.018), vec3(0.008, 0.018, 0.052), smoothstep(-1.0, 0.8, uv.y));
+  background += vec3(0.52, 0.68, 0.92) * starField(uv + uPointer * 0.025);
+  float horizon = exp(-abs(uv.y + 0.72) * 16.0);
+  background += vec3(0.03, 0.14, 0.2) * horizon * 0.34;
+
+  vec3 accumulated = vec3(0.0);
+  float transmittance = 1.0;
+  for (int step = 0; step < 48; step++) {
+    float depth = (float(step) + 0.5) / 48.0;
+    float z = depth * 4.2;
+    vec3 point = vec3(
+      uv.x * (0.72 + z * 0.12) + uPointer.x * z * 0.035,
+      uv.y * (0.82 + z * 0.08) + uAltitude + uPointer.y * 0.05,
+      z
+    );
+    float wind = uTime * uSolarWind * 0.18;
+    float distortion = noise3(vec3(point.x * 0.7, point.y * 1.2, point.z * 0.32 + wind)) - 0.5;
+    distortion += (noise3(vec3(point.x * 1.8 - wind, point.y * 2.2, point.z * 0.55)) - 0.5) * 0.35;
+    float magneticCurve = point.y * point.y * uFieldCurvature * 0.42;
+    float phase = point.x * uCurtainCount + distortion * 4.2 + magneticCurve + wind * 2.0;
+    float sheet = exp(-abs(sin(phase)) / max(0.025, uCurtainThickness));
+    float vertical = smoothstep(-0.78, -0.12, point.y) * smoothstep(1.08, 0.18, point.y);
+    float folds = 0.58 + noise3(vec3(point.x * 0.8, point.y * 3.0 - wind, point.z * 0.24)) * 0.62;
+    float density = sheet * vertical * folds * 0.085;
+    vec3 green = vec3(0.08, 1.0, 0.48);
+    vec3 violet = vec3(0.48, 0.22, 1.0);
+    float spectralHeight = smoothstep(-0.15, 0.85, point.y) * uColorMix;
+    vec3 emission = mix(green, violet, spectralHeight);
+    emission += vec3(0.08, 0.34, 1.0) * depth * uColorMix * 0.3;
+    accumulated += transmittance * emission * density;
+    transmittance *= 1.0 - density * 0.72;
+  }
+  vec3 color = background + accumulated * uExposure;
+  float vignette = 1.0 - smoothstep(0.55, 1.48, length(uv / vec2(max(1.0, uAspect), 1.0)));
+  gl_FragColor = vec4(color * (0.62 + vignette * 0.38), 1.0);
+}
+`;
+
+function AuroraVolume({controls}: {controls: AuroraControls}) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(() => ({
+    uTime: {value: 0}, uAspect: {value: 1}, uSolarWind: {value: 0.32}, uCurtainCount: {value: 7},
+    uFieldCurvature: {value: 0.65}, uAltitude: {value: 0.15}, uCurtainThickness: {value: 0.14},
+    uColorMix: {value: 0.62}, uExposure: {value: 1.1}, uPointer: {value: new THREE.Vector2()},
+  }), []);
+  useFrame((state) => {
+    const material = materialRef.current;
+    if (!material) return;
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uAspect.value = state.size.width / Math.max(1, state.size.height);
+    material.uniforms.uSolarWind.value = controls.solarWind;
+    material.uniforms.uCurtainCount.value = controls.curtainCount;
+    material.uniforms.uFieldCurvature.value = controls.fieldCurvature;
+    material.uniforms.uAltitude.value = controls.altitude;
+    material.uniforms.uCurtainThickness.value = controls.curtainThickness;
+    material.uniforms.uColorMix.value = controls.colorMix;
+    material.uniforms.uExposure.value = controls.exposure;
+    material.uniforms.uPointer.value.set(state.pointer.x, state.pointer.y);
+  });
+  return (
+    <mesh frustumCulled={false}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial ref={materialRef} depthTest={false} depthWrite={false} fragmentShader={fragmentShader} toneMapped={false} uniforms={uniforms} vertexShader={vertexShader} />
+    </mesh>
+  );
+}
 
 export default function Demo054VisualInspectorControlLayer() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Visual Inspector Control Layer', {
-    spin: true,
-    speed: {value: 0.62, min: 0, max: 2, step: 0.01},
-    roughness: {value: 0.5, min: 0, max: 1, step: 0.01},
-    thickness: {value: 0.34, min: 0.06, max: 0.8, step: 0.01},
-    textGlow: {value: 0.92, min: 0.1, max: 1.8, step: 0.01},
-  }) as InspectorControls;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const drawBlob = (time: number) => {
-      const cx = width * 0.5;
-      const cy = height * 0.54;
-      const r = Math.min(width, height) * 0.22;
-      context.save();
-      context.translate(cx, cy);
-      context.rotate((controls.spin ? time * controls.speed * 0.55 : 0) + 0.2);
-      context.globalCompositeOperation = 'lighter';
-      for (let lobe = 0; lobe < 4; lobe += 1) {
-        context.save();
-        context.rotate((Math.PI / 2) * lobe + Math.sin(time * 0.8 + lobe) * 0.1);
-        const gradient = context.createRadialGradient(-r * 0.18, -r * 0.1, r * 0.02, 0, 0, r * 0.86);
-        gradient.addColorStop(0, 'rgba(255,240,165,0.82)');
-        gradient.addColorStop(0.36, `rgba(255,57,57,${0.82 - controls.roughness * 0.25})`);
-        gradient.addColorStop(1, 'rgba(155,0,20,0.08)');
-        context.fillStyle = gradient;
-        context.beginPath();
-        context.ellipse(0, 0, r * (1.2 + controls.thickness), r * (0.34 + controls.thickness * 0.45), 0, 0, Math.PI * 2);
-        context.fill();
-        context.restore();
-      }
-      context.restore();
-    };
-
-    const drawPanel = () => {
-      const w = Math.min(320, width * 0.28);
-      const x = width - w - 26;
-      const y = 88;
-      drawRounded(context, x, y, w, 250, 10);
-      context.fillStyle = 'rgba(18,18,25,0.9)';
-      context.fill();
-      context.fillStyle = '#10455c';
-      context.fillRect(x + 8, y + 12, w - 16, 28);
-      context.fillStyle = '#bfeaff';
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('- Demo', x + 20, y + 31);
-      const rows = [
-        ['text', 'Hello, world!'],
-        ['spin', controls.spin ? 'on' : 'off'],
-        ['speed', controls.speed.toFixed(3)],
-        ['roughness', controls.roughness.toFixed(2)],
-        ['thickness', controls.thickness.toFixed(2)],
-        ['shape', 'Torus Knot'],
-      ];
-      rows.forEach(([label, value], index) => {
-        const yy = y + 66 + index * 28;
-        context.fillStyle = '#ddd';
-        context.fillText(label, x + 18, yy);
-        context.fillStyle = 'rgba(255,255,255,0.1)';
-        context.fillRect(x + 105, yy - 14, w - 126, 20);
-        context.fillStyle = '#dbeafe';
-        context.fillText(value, x + 112, yy);
-      });
-      drawRounded(context, width - 180, 30, 126, 38, 12);
-      context.fillStyle = 'rgba(12,76,98,0.9)';
-      context.fill();
-      context.fillStyle = '#fff';
-      context.fillText('122 FPS', width - 135, 54);
-    };
-
-    const draw = (now: number) => {
-      const time = now * 0.001;
-      const bg = context.createRadialGradient(width * 0.5, height * 0.48, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.75);
-      bg.addColorStop(0, '#301014');
-      bg.addColorStop(1, '#13090b');
-      context.fillStyle = bg;
-      context.fillRect(0, 0, width, height);
-      context.strokeStyle = 'rgba(255,120,120,0.08)';
-      context.lineWidth = 1;
-      for (let x = 0; x < width; x += 42) {
-        context.beginPath();
-        context.moveTo(x, 0);
-        context.lineTo(x + Math.sin(time + x) * 10, height);
-        context.stroke();
-      }
-      context.save();
-      context.font = `800 ${Math.min(width * 0.12, 128)}px Inter, ui-sans-serif, system-ui`;
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      context.shadowColor = '#ff312e';
-      context.shadowBlur = 34 * controls.textGlow;
-      context.fillStyle = '#fff0bb';
-      context.fillText('Hello, world!', width * 0.5, height * 0.55);
-      context.shadowBlur = 0;
-      context.strokeStyle = 'rgba(255,255,255,0.16)';
-      context.lineWidth = 1;
-      context.strokeText('Hello, world!', width * 0.5, height * 0.55);
-      context.restore();
-      drawBlob(time);
-      drawPanel();
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.roughness, controls.speed, controls.spin, controls.textGlow, controls.thickness]);
-
+  const controls = useControls('Aurora Volume', {
+    solarWind: {value: 0.32, min: 0.05, max: 0.85, step: 0.01, label: 'Solar wind speed'},
+    curtainCount: {value: 7, min: 3, max: 13, step: 1, label: 'Magnetic curtains'},
+    fieldCurvature: {value: 0.65, min: 0, max: 1.4, step: 0.01, label: 'Field-line curvature'},
+    altitude: {value: 0.15, min: -0.25, max: 0.42, step: 0.01, label: 'Emission altitude'},
+    curtainThickness: {value: 0.14, min: 0.06, max: 0.28, step: 0.01, label: 'Curtain thickness'},
+    colorMix: {value: 0.62, min: 0, max: 1, step: 0.01, label: 'Violet altitude mix'},
+    exposure: {value: 1.1, min: 0.5, max: 1.7, step: 0.01, label: 'Volume exposure'},
+  }) as AuroraControls;
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <div className="demo-viewport" style={{position: 'relative', background: '#01030a'}}>
+      <DemoScene engineConfig={{background: '#01030a', camera: {position: [0, 0, 1], fov: 50, near: 0.1, far: 10}}} orbitControls={false}>
+        <AuroraVolume controls={controls} />
+      </DemoScene>
+      <div style={auroraLegendStyle}><strong>48-LAYER EMISSION</strong><span>move pointer to shift the volume view</span></div>
     </div>
   );
 }
+
+const auroraLegendStyle = {
+  position: 'absolute', left: 18, bottom: 18, display: 'flex', gap: 10, padding: '8px 10px',
+  border: '1px solid rgba(91,238,177,0.18)', borderRadius: 6, background: 'rgba(2,6,13,0.76)',
+  color: '#799991', pointerEvents: 'none', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;

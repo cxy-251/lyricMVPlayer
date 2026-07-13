@@ -1,7 +1,7 @@
 import {useGLTF} from '@react-three/drei';
 import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import * as THREE from 'three';
 
 import {DemoScene} from '../../core/DemoScene';
@@ -13,6 +13,8 @@ type LightningControls = {
   intensity: number;
   shake: number;
   branches: number;
+  strikeInterval: number;
+  rainAmount: number;
 };
 
 type BoltTube = {
@@ -61,8 +63,8 @@ const makeBoltTubes = (controls: LightningControls, tick: number): BoltTube[] =>
       color: '#3f8cff',
       curve: new THREE.CatmullRomCurve3(points),
       id: `bolt-${tick}-${boltIndex}-glow`,
-      opacity: 0.22 + controls.intensity * 0.08,
-      radius: 0.048,
+      opacity: 0.16 + controls.intensity * 0.07,
+      radius: 0.036,
     });
     tubes.push({
       color: '#f8fbff',
@@ -111,6 +113,15 @@ function BlenderCityAsset() {
     return clonedScene;
   }, [scene]);
 
+  useEffect(() => () => {
+    model.traverse(object => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      materials.forEach(material => material.dispose());
+    });
+  }, [model]);
+
   useFrame((state) => {
     if (!groupRef.current) return;
     groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.18) * 0.018;
@@ -120,6 +131,48 @@ function BlenderCityAsset() {
     <group ref={groupRef} position={[0, -1.42, -0.35]} scale={0.92}>
       <primitive object={model} />
     </group>
+  );
+}
+
+function RainField({amount}: {amount: number}) {
+  const geometryRef = useRef<THREE.BufferGeometry>(null);
+  const basePositions = useMemo(() => {
+    const positions = new Float32Array(420 * 6);
+    for (let index = 0; index < 420; index++) {
+      const x = -4.4 + ((index * 71) % 421) / 421 * 8.8;
+      const y = -2.2 + ((index * 137) % 419) / 419 * 5.4;
+      const z = -0.9 + ((index * 193) % 409) / 409 * 3.2;
+      positions[index * 6] = x;
+      positions[index * 6 + 1] = y;
+      positions[index * 6 + 2] = z;
+      positions[index * 6 + 3] = x - 0.035;
+      positions[index * 6 + 4] = y - 0.19;
+      positions[index * 6 + 5] = z;
+    }
+    return positions;
+  }, []);
+
+  useFrame((state) => {
+    const geometry = geometryRef.current;
+    if (!geometry) return;
+    const position = geometry.getAttribute('position') as THREE.BufferAttribute;
+    const timeOffset = state.clock.elapsedTime * 2.4;
+    for (let index = 0; index < 420; index++) {
+      const sourceY = basePositions[index * 6 + 1];
+      const y = THREE.MathUtils.euclideanModulo(sourceY - timeOffset + 2.4, 5.4) - 2.4;
+      position.setY(index * 2, y);
+      position.setY(index * 2 + 1, y - 0.19);
+    }
+    position.needsUpdate = true;
+  });
+
+  return (
+    <lineSegments frustumCulled={false}>
+      <bufferGeometry ref={geometryRef}>
+        <bufferAttribute attach="attributes-position" args={[basePositions.slice(), 3]} />
+      </bufferGeometry>
+      <lineBasicMaterial color="#7ba9d8" depthWrite={false} opacity={0.04 + amount * 0.18} transparent />
+    </lineSegments>
   );
 }
 
@@ -146,23 +199,27 @@ function LightningRig({controls}: {controls: LightningControls}) {
   const [tick, setTick] = useState(0);
   const lastTickRef = useRef(-1);
   const groupRef = useRef<THREE.Group>(null);
+  const boltGroupRef = useRef<THREE.Group>(null);
   const flashRef = useRef<THREE.Mesh>(null);
   const stormLightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
     const elapsed = state.clock.elapsedTime;
-    const nextTick = Math.floor(elapsed * (6.5 + controls.intensity * 4.2));
+    const nextTick = Math.floor(elapsed / controls.strikeInterval);
     if (nextTick !== lastTickRef.current) {
       lastTickRef.current = nextTick;
       setTick(nextTick);
     }
 
-    const flash = Math.max(0, Math.sin(elapsed * 10.8) - 0.42) * controls.intensity;
+    const strikeAge = elapsed - nextTick * controls.strikeInterval;
+    const flashEnvelope = Math.exp(-strikeAge * 14) * (0.72 + Math.max(0, Math.sin(strikeAge * 92)) * 0.28);
+    const flash = flashEnvelope * controls.intensity;
     const shake = controls.shake * flash * 0.035;
     if (groupRef.current) {
       groupRef.current.position.x = Math.sin(elapsed * 73) * shake;
       groupRef.current.position.y = Math.cos(elapsed * 61) * shake * 0.65;
     }
+    if (boltGroupRef.current) boltGroupRef.current.visible = strikeAge < 0.3;
     if (flashRef.current) {
       const material = flashRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = Math.min(0.3, flash * 0.14);
@@ -182,8 +239,9 @@ function LightningRig({controls}: {controls: LightningControls}) {
       <StormBackdrop />
       <ambientLight intensity={0.18} />
       <pointLight ref={stormLightRef} position={[0, 1.9, 2.8]} intensity={3.2} color="#74a8ff" distance={8} />
+      <RainField amount={controls.rainAmount} />
       <BlenderCityAsset />
-      <group>
+      <group ref={boltGroupRef}>
         {tubes.map(tube => (
           <mesh key={tube.id}>
             <tubeGeometry args={[tube.curve, 18, tube.radius, 5, false]} />
@@ -201,10 +259,12 @@ function LightningRig({controls}: {controls: LightningControls}) {
 
 export default function Demo041AnimeLightningCity() {
   const controls = useControls('Anime Lightning City', {
-    boltCount: {value: 5, min: 1, max: 12, step: 1},
-    intensity: {value: 0.86, min: 0.2, max: 1.6, step: 0.01},
-    shake: {value: 0.6, min: 0, max: 1.4, step: 0.01},
-    branches: {value: 4, min: 0, max: 10, step: 1},
+    boltCount: {value: 2, min: 1, max: 4, step: 1, label: 'Main strikes'},
+    branches: {value: 4, min: 1, max: 7, step: 1, label: 'Bolt branching'},
+    strikeInterval: {value: 2.2, min: 1.1, max: 4, step: 0.05, label: 'Storm interval'},
+    intensity: {value: 0.78, min: 0.35, max: 1.1, step: 0.01, label: 'Strike energy'},
+    shake: {value: 0.32, min: 0, max: 0.65, step: 0.01, label: 'Impact shake'},
+    rainAmount: {value: 0.52, min: 0, max: 1, step: 0.01, label: 'Rain presence'},
   }) as LightningControls;
 
   return (

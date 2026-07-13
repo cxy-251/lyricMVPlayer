@@ -1,6 +1,7 @@
 import type {DemoMetadata} from '../../types';
 
 export const collectiveTrajectoriesMetadata: DemoMetadata = {
+  number: '056',
   id: 'collective-trajectories',
   title: 'Collective Trajectories',
   description: 'A JeongHo Park inspired trajectory accumulation field where many agents orbit, leave fading curves, and build emergent geometry.',

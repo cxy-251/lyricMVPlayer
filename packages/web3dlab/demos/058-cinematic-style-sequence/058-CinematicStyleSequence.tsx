@@ -1,175 +1,198 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useRef, useState} from 'react';
+import type {MutableRefObject, RefObject} from 'react';
+import * as THREE from 'three';
+
+import {DemoScene} from '../../core/DemoScene';
 
 type SequenceControls = {
-  speed: number;
-  grain: number;
-  lightTrails: number;
-  fire: number;
-  panels: number;
+  duration: number;
+  transition: number;
+  focalScale: number;
+  cameraShake: number;
+  sculptureSpeed: number;
+  lightPulse: number;
+  bloom: number;
 };
 
-const roundRect = (context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + w, y, x + w, y + h, r);
-  context.arcTo(x + w, y + h, x, y + h, r);
-  context.arcTo(x, y + h, x, y, r);
-  context.arcTo(x, y, x + w, y, r);
-  context.closePath();
+type Shot = {
+  fov: number;
+  name: string;
+  position: THREE.Vector3;
+  start: number;
+  target: THREE.Vector3;
 };
+
+const SHOTS: Shot[] = [
+  {fov: 44, name: 'ESTABLISH', position: new THREE.Vector3(6.2, 2.4, 7.3), start: 0, target: new THREE.Vector3(0, 0.45, 0)},
+  {fov: 39, name: 'ORBIT LEFT', position: new THREE.Vector3(-4.8, 1.35, 4.5), start: 0.21, target: new THREE.Vector3(0, 0.3, 0)},
+  {fov: 27, name: 'MACRO CORE', position: new THREE.Vector3(0.9, 0.45, 2.75), start: 0.43, target: new THREE.Vector3(0, 0.42, 0)},
+  {fov: 48, name: 'OVERHEAD', position: new THREE.Vector3(0.12, 6.7, 0.18), start: 0.64, target: new THREE.Vector3(0, 0, 0)},
+  {fov: 52, name: 'PULL BACK', position: new THREE.Vector3(-6.3, 2.8, 7.4), start: 0.82, target: new THREE.Vector3(0, 0.55, 0)},
+];
+
+function shotAt(progress: number) {
+  let index = SHOTS.length - 1;
+  for (let shotIndex = 0; shotIndex < SHOTS.length; shotIndex++) {
+    const nextStart = SHOTS[shotIndex + 1]?.start ?? 1;
+    if (progress >= SHOTS[shotIndex].start && progress < nextStart) {
+      index = shotIndex;
+      break;
+    }
+  }
+  const current = SHOTS[index];
+  const next = SHOTS[(index + 1) % SHOTS.length];
+  const end = index === SHOTS.length - 1 ? 1 : next.start;
+  return {current, end, index, next, local: (progress - current.start) / Math.max(0.001, end - current.start)};
+}
+
+function CameraSequence({
+  controls,
+  inputRef,
+  labelRef,
+  playing,
+  progressRef,
+}: {
+  controls: SequenceControls;
+  inputRef: RefObject<HTMLInputElement | null>;
+  labelRef: RefObject<HTMLSpanElement | null>;
+  playing: boolean;
+  progressRef: MutableRefObject<number>;
+}) {
+  useFrame((state, delta) => {
+    if (playing) progressRef.current = (progressRef.current + delta / controls.duration) % 1;
+    const progress = progressRef.current;
+    const shot = shotAt(progress);
+    const hold = 1 - controls.transition * 0.72;
+    const transitionT = THREE.MathUtils.smoothstep(shot.local, hold, 1);
+    const position = shot.current.position.clone().lerp(shot.next.position, transitionT);
+    const target = shot.current.target.clone().lerp(shot.next.target, transitionT);
+    const shakeEnvelope = Math.sin(shot.local * Math.PI) * controls.cameraShake;
+    position.x += Math.sin(state.clock.elapsedTime * 17.3) * shakeEnvelope;
+    position.y += Math.sin(state.clock.elapsedTime * 13.7) * shakeEnvelope * 0.55;
+    target.x += Math.sin(state.clock.elapsedTime * 9.1) * shakeEnvelope * 0.16;
+    state.camera.position.copy(position);
+    state.camera.lookAt(target);
+    const perspective = state.camera as THREE.PerspectiveCamera;
+    const fov = THREE.MathUtils.lerp(shot.current.fov, shot.next.fov, transitionT) * controls.focalScale;
+    if (Math.abs(perspective.fov - fov) > 0.01) {
+      perspective.fov = fov;
+      perspective.updateProjectionMatrix();
+    }
+    if (inputRef.current) inputRef.current.value = String(Math.round(progress * 1000));
+    if (labelRef.current) labelRef.current.textContent = shot.current.name;
+  });
+  return null;
+}
+
+function KineticMonument({controls}: {controls: SequenceControls}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const ringARef = useRef<THREE.Mesh>(null);
+  const ringBRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.MeshStandardMaterial>(null);
+  useFrame((state, delta) => {
+    const speed = controls.sculptureSpeed;
+    if (groupRef.current) groupRef.current.rotation.y += delta * speed * 0.18;
+    if (ringARef.current) ringARef.current.rotation.x += delta * speed * 0.42;
+    if (ringBRef.current) ringBRef.current.rotation.z -= delta * speed * 0.34;
+    if (coreRef.current) coreRef.current.emissiveIntensity = 0.38 + (0.5 + 0.5 * Math.sin(state.clock.elapsedTime * 1.7)) * controls.lightPulse * 0.8;
+  });
+  return (
+    <group ref={groupRef} position={[0, 0.45, 0]}>
+      <mesh>
+        <icosahedronGeometry args={[0.78, 5]} />
+        <meshStandardMaterial ref={coreRef} color="#263746" emissive="#56d8ff" emissiveIntensity={0.5} metalness={0.86} roughness={0.2} />
+      </mesh>
+      <mesh ref={ringARef} rotation={[0.9, 0.1, 0.3]}>
+        <torusGeometry args={[1.28, 0.045, 12, 128]} />
+        <meshStandardMaterial color="#70e2ff" emissive="#2ccfff" emissiveIntensity={1.2} metalness={0.7} roughness={0.18} />
+      </mesh>
+      <mesh ref={ringBRef} rotation={[0.2, 1.1, -0.4]}>
+        <torusGeometry args={[1.62, 0.032, 10, 128]} />
+        <meshStandardMaterial color="#ff6cae" emissive="#ff3f91" emissiveIntensity={1.05} metalness={0.72} roughness={0.18} />
+      </mesh>
+      {Array.from({length: 8}, (_, index) => {
+        const angle = index / 8 * Math.PI * 2;
+        return (
+          <mesh key={index} position={[Math.cos(angle) * 2.05, -0.12 + (index % 2) * 0.22, Math.sin(angle) * 2.05]}>
+            <boxGeometry args={[0.14, 0.9 + (index % 3) * 0.28, 0.14]} />
+            <meshStandardMaterial color={index % 2 ? '#33233c' : '#183747'} emissive={index % 2 ? '#b33f91' : '#2bacc8'} emissiveIntensity={0.35} metalness={0.6} roughness={0.34} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
 
 export default function Demo058CinematicStyleSequence() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Cinematic Style Sequence', {
-    speed: {value: 0.54, min: 0.05, max: 2, step: 0.01},
-    grain: {value: 0.56, min: 0, max: 1.4, step: 0.01},
-    lightTrails: {value: 0.84, min: 0, max: 1.8, step: 0.01},
-    fire: {value: 0.86, min: 0.1, max: 1.6, step: 0.01},
-    panels: {value: 5, min: 3, max: 7, step: 1},
+  const progressRef = useRef(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [playing, setPlaying] = useState(true);
+  const controls = useControls('Camera Sequence', {
+    duration: {value: 18, min: 8, max: 32, step: 1, label: 'Sequence duration'},
+    transition: {value: 0.58, min: 0.15, max: 1, step: 0.01, label: 'Shot transition'},
+    focalScale: {value: 1, min: 0.72, max: 1.28, step: 0.01, label: 'Focal-length scale'},
+    cameraShake: {value: 0.012, min: 0, max: 0.055, step: 0.001, label: 'Camera vibration'},
+    sculptureSpeed: {value: 0.72, min: 0.1, max: 1.4, step: 0.01, label: 'Monument motion'},
+    lightPulse: {value: 0.62, min: 0, max: 1.2, step: 0.01, label: 'Core light pulse'},
+    bloom: {value: 0.62, min: 0.2, max: 1.1, step: 0.01, label: 'Lens bloom'},
   }) as SequenceControls;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const drawFerris = (cx: number, cy: number, radius: number, phase: number, alpha: number) => {
-      context.save();
-      context.globalAlpha = alpha;
-      context.translate(cx, cy);
-      context.rotate(phase * Math.PI * 2);
-      context.strokeStyle = `rgba(250,224,178,${0.48 + controls.fire * 0.22})`;
-      context.lineWidth = Math.max(1, radius * 0.017);
-      context.beginPath();
-      context.arc(0, 0, radius, 0, Math.PI * 2);
-      context.stroke();
-      context.beginPath();
-      context.arc(0, 0, radius * 0.24, 0, Math.PI * 2);
-      context.stroke();
-      for (let i = 0; i < 16; i += 1) {
-        const a = (i / 16) * Math.PI * 2;
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(Math.cos(a) * radius, Math.sin(a) * radius);
-        context.stroke();
-        const gx = Math.cos(a) * radius;
-        const gy = Math.sin(a) * radius;
-        context.fillStyle = '#151515';
-        context.fillRect(gx - radius * 0.035, gy - radius * 0.025, radius * 0.07, radius * 0.05);
-      }
-      context.restore();
-    };
-
-    const drawShot = (x: number, y: number, w: number, h: number, time: number, index: number, featured: boolean) => {
-      roundRect(context, x, y, w, h, featured ? 18 : 8);
-      const g = context.createLinearGradient(x, y, x, y + h);
-      g.addColorStop(0, index % 2 ? '#141626' : '#101722');
-      g.addColorStop(0.56, '#28120d');
-      g.addColorStop(1, '#050405');
-      context.fillStyle = g;
-      context.fill();
-      context.save();
-      roundRect(context, x, y, w, h, featured ? 18 : 8);
-      context.clip();
-      const phase = (time + index * 0.17) % 1;
-      const cx = x + w * (0.5 + Math.sin(phase * Math.PI * 2) * 0.05);
-      const cy = y + h * (featured ? 0.48 : 0.5);
-      const radius = Math.min(w, h) * (featured ? 0.31 : 0.28);
-      const haze = context.createRadialGradient(cx, cy + radius * 0.18, 0, cx, cy, radius * 1.65);
-      haze.addColorStop(0, `rgba(255,210,92,${0.28 * controls.fire})`);
-      haze.addColorStop(0.32, `rgba(255,74,30,${0.23 * controls.fire})`);
-      haze.addColorStop(1, 'rgba(0,0,0,0)');
-      context.fillStyle = haze;
-      context.fillRect(x, y, w, h);
-      drawFerris(cx, cy, radius, phase * 0.23, 0.96);
-      context.globalCompositeOperation = 'lighter';
-      for (let trail = 0; trail < 12; trail += 1) {
-        const a = phase * Math.PI * 2 + trail * 0.55;
-        context.strokeStyle = `rgba(255,${88 + trail * 12},28,${0.05 + controls.lightTrails * 0.038})`;
-        context.lineWidth = (featured ? 2.4 : 1.3) + trail * 0.18;
-        context.beginPath();
-        context.arc(cx, cy, radius * (1.02 + trail * 0.012), a, a + (featured ? 1.1 : 0.82));
-        context.stroke();
-      }
-      context.globalCompositeOperation = 'source-over';
-      context.fillStyle = 'rgba(0,0,0,0.48)';
-      context.fillRect(x, y + h * 0.74, w, h * 0.26);
-      context.fillStyle = 'rgba(255,240,220,0.78)';
-      context.font = `${featured ? 13 : 10}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.fillText(`sref keyframe ${index + 1}`, x + 14, y + h - 18);
-      context.restore();
-    };
-
-    const draw = (now: number) => {
-      const time = now * 0.001 * controls.speed;
-      const bg = context.createRadialGradient(width * 0.48, height * 0.5, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.72);
-      bg.addColorStop(0, '#211014');
-      bg.addColorStop(0.54, '#0c0809');
-      bg.addColorStop(1, '#030203');
-      context.fillStyle = bg;
-      context.fillRect(0, 0, width, height);
-
-      const mainW = width * 0.66;
-      const mainH = height * 0.66;
-      drawShot(width * 0.06, height * 0.13, mainW, mainH, time, Math.floor(time * 3) % controls.panels, true);
-
-      const stripX = width * 0.76;
-      const stripY = height * 0.13;
-      const stripW = width * 0.18;
-      const count = controls.panels;
-      const gap = height * 0.018;
-      const shotH = (mainH - gap * (count - 1)) / count;
-      for (let i = 0; i < count; i += 1) {
-        drawShot(stripX, stripY + i * (shotH + gap), stripW, shotH, time * 0.74, i, false);
-      }
-
-      context.fillStyle = 'rgba(255,255,255,0.08)';
-      for (let i = 0; i < 22; i += 1) {
-        const y = height * 0.1 + i * height * 0.035;
-        context.fillRect(width * 0.04, y, width * 0.91, 1);
-      }
-      if (controls.grain > 0) {
-        context.fillStyle = `rgba(255,255,255,${0.03 * controls.grain})`;
-        for (let i = 0; i < 900; i += 1) {
-          context.fillRect((i * 61) % width, (i * 113) % height, 1, 1);
-        }
-      }
-      context.fillStyle = '#f1e8d9';
-      context.font = `${Math.max(12, width * 0.014)}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'center';
-      context.fillText('style reference -> keyframes -> animated cinematic sequence', width / 2, height * 0.9);
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.fire, controls.grain, controls.lightTrails, controls.panels, controls.speed]);
-
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <div className="demo-viewport" style={{position: 'relative', background: '#03050a'}}>
+      <DemoScene
+        engineConfig={{
+          background: '#03050a', bloom: {intensity: controls.bloom, luminanceSmoothing: 0.68, luminanceThreshold: 0.42},
+          camera: {position: [6.2, 2.4, 7.3], fov: 44, near: 0.1, far: 40}, fog: {color: '#03050a', near: 11, far: 22},
+          vignette: {darkness: 0.5, offset: 0.28},
+        }}
+        orbitControls={false}
+      >
+        <ambientLight intensity={0.3} />
+        <pointLight color="#a9eaff" intensity={2.4} position={[3, 4, 4]} />
+        <pointLight color="#ff559e" intensity={1.3} position={[-4, 1, 2]} />
+        <gridHelper args={[18, 36, '#183447', '#0d1923']} position={[0, -0.58, 0]} />
+        <KineticMonument controls={controls} />
+        <CameraSequence controls={controls} inputRef={inputRef} labelRef={labelRef} playing={playing} progressRef={progressRef} />
+      </DemoScene>
+      <div style={sequenceTransportStyle}>
+        <button onClick={() => setPlaying(value => !value)} style={sequenceButtonStyle} type="button">{playing ? 'Pause' : 'Play'}</button>
+        <button onClick={() => { progressRef.current = 0; setPlaying(true); }} style={sequenceButtonStyle} type="button">Restart</button>
+        <input
+          ref={inputRef}
+          aria-label="Sequence timeline"
+          defaultValue={0}
+          max={1000}
+          min={0}
+          onInput={(event) => {
+            progressRef.current = Number(event.currentTarget.value) / 1000;
+            setPlaying(false);
+          }}
+          style={{width: 'min(36vw, 360px)'}}
+          type="range"
+        />
+        <span ref={labelRef} style={{minWidth: 76, color: '#d7f3ff'}}>ESTABLISH</span>
+      </div>
+      <div style={shotMarksStyle}>{SHOTS.map(shot => <span key={shot.name}>{shot.name}</span>)}</div>
     </div>
   );
 }
+
+const sequenceTransportStyle = {
+  position: 'absolute', left: '50%', bottom: 24, display: 'flex', alignItems: 'center', gap: 9,
+  transform: 'translateX(-50%)', padding: 7, border: '1px solid rgba(109,216,255,0.18)', borderRadius: 6,
+  background: 'rgba(3,7,13,0.84)', color: '#7f99a8', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;
+
+const sequenceButtonStyle = {
+  border: '1px solid rgba(109,216,255,0.26)', borderRadius: 5, background: 'rgba(109,216,255,0.07)',
+  color: '#d8f5ff', cursor: 'pointer', padding: '7px 9px', font: 'inherit', fontWeight: 700,
+} as const;
+
+const shotMarksStyle = {
+  position: 'absolute', left: '50%', bottom: 8, display: 'flex', justifyContent: 'space-between',
+  width: 'min(52vw, 520px)', transform: 'translateX(-50%)', color: 'rgba(126,153,169,0.55)',
+  pointerEvents: 'none', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 8,
+} as const;

@@ -1,14 +1,14 @@
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 type SortMode = 'attract' | 'stack' | 'poles' | 'rings';
 
 type SortingControls = {
-  particleCount: number;
-  settleSpeed: number;
+  samplesPerMethod: number;
+  settleTime: number;
   pointSize: number;
-  trails: number;
-  labelScale: number;
+  trailPersistence: number;
+  motionNoise: number;
 };
 
 type ColorParticle = {
@@ -24,6 +24,12 @@ type ColorParticle = {
 };
 
 const MODES: SortMode[] = ['attract', 'stack', 'poles', 'rings'];
+const MODE_LABELS: Record<SortMode, string> = {
+  attract: 'HUE ATTRACTORS',
+  stack: 'SATURATION STACK',
+  poles: 'HUE POLES',
+  rings: 'CHROMA RINGS',
+};
 
 const fract = (value: number) => value - Math.floor(value);
 
@@ -33,19 +39,20 @@ const makeParticles = (perMode: number, width: number, height: number, seed: num
   const particles: ColorParticle[] = [];
   for (const mode of MODES) {
     for (let index = 0; index < perMode; index += 1) {
-      const absoluteIndex = particles.length;
-      const a = randomFromIndex(absoluteIndex, seed);
-      const b = randomFromIndex(absoluteIndex + 97, seed);
-      const c = randomFromIndex(absoluteIndex + 211, seed);
+      // Each method receives the same color sample at the same local index.
+      const a = randomFromIndex(index, seed);
+      const b = randomFromIndex(index + 97, seed);
+      const c = randomFromIndex(index + 211, seed);
+      const box = columnBounds(mode, width, height);
       particles.push({
-        x: width * (0.1 + a * 0.8),
-        y: height * (0.2 + b * 0.7),
+        x: box.left + randomFromIndex(index + 701, seed) * (box.right - box.left),
+        y: box.top + randomFromIndex(index + 907, seed) * (box.bottom - box.top),
         vx: 0,
         vy: 0,
         hue: (a * 360 + seed * 23) % 360,
         saturation: 62 + b * 38,
         lightness: 42 + c * 38,
-        seed: randomFromIndex(absoluteIndex + 509, seed),
+        seed: randomFromIndex(index + 509, seed),
         mode,
       });
     }
@@ -114,13 +121,19 @@ export default function Demo030ColorSortingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const seedRef = useRef(1);
   const shuffleRef = useRef<(() => void) | null>(null);
+  const pausedRef = useRef(false);
+  const statusRef = useRef<HTMLSpanElement>(null);
+  const [paused, setPaused] = useState(false);
   const controls = useControls('Color Sorting Particles', {
-    particleCount: {value: 1200, min: 360, max: 2600, step: 40},
-    settleSpeed: {value: 0.82, min: 0.08, max: 1.8, step: 0.01},
-    pointSize: {value: 2.4, min: 1.1, max: 6, step: 0.1},
-    trails: {value: 0.18, min: 0, max: 0.7, step: 0.01},
-    labelScale: {value: 1, min: 0.7, max: 1.4, step: 0.01},
+    samplesPerMethod: {value: 320, min: 120, max: 720, step: 40, label: 'Samples per method'},
+    settleTime: {value: 1.8, min: 0.7, max: 4, step: 0.1, label: 'Sorting time'},
+    pointSize: {value: 2.4, min: 1.2, max: 4.8, step: 0.1, label: 'Sample size'},
+    trailPersistence: {value: 0.32, min: 0, max: 0.72, step: 0.01, label: 'Trail persistence'},
+    motionNoise: {value: 0.18, min: 0, max: 0.5, step: 0.01, label: 'Motion noise'},
   }) as SortingControls;
+  const controlsRef = useRef(controls);
+  controlsRef.current = controls;
+  pausedRef.current = paused;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -133,10 +146,13 @@ export default function Demo030ColorSortingParticles() {
     let dpr = 1;
     let animationFrame = 0;
     let particles: ColorParticle[] = [];
+    let previousTime = performance.now();
+    let statusFrame = 0;
 
     const resetParticles = () => {
-      const perMode = Math.max(50, Math.round(controls.particleCount / MODES.length));
+      const perMode = controlsRef.current.samplesPerMethod;
       particles = makeParticles(perMode, width, height, seedRef.current);
+      if (statusRef.current) statusRef.current.textContent = 'Sorting 0%';
     };
     shuffleRef.current = resetParticles;
 
@@ -156,18 +172,22 @@ export default function Demo030ColorSortingParticles() {
       context.fillStyle = '#f4f4f4';
       context.textAlign = 'center';
       context.textBaseline = 'top';
-      context.font = `${Math.max(28, Math.min(58, width * 0.046 * controls.labelScale))}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.fillText('How to sort colors?', width / 2, height * 0.055);
-      context.font = `${Math.max(15, Math.min(26, width * 0.022 * controls.labelScale))}px "SFMono-Regular", Menlo, Consolas, monospace`;
+      context.font = '700 11px "SFMono-Regular", Menlo, Consolas, monospace';
+      context.fillStyle = 'rgba(242, 247, 255, 0.66)';
+      context.fillText('SAME COLOR SET · FOUR SORTING RULES', width / 2, height * 0.055);
+      context.font = `${width < 720 ? 8 : 10}px "SFMono-Regular", Menlo, Consolas, monospace`;
       for (const mode of MODES) {
         const box = columnBounds(mode, width, height);
-        context.fillText(mode.toUpperCase(), box.centerX, height * 0.145);
+        context.fillText(width < 720 ? mode.toUpperCase() : MODE_LABELS[mode], box.centerX, height * 0.13);
       }
       context.restore();
     };
 
-    const draw = () => {
-      context.fillStyle = `rgba(1, 3, 10, ${0.22 + controls.trails * 0.58})`;
+    const draw = (now: number) => {
+      const delta = Math.min((now - previousTime) / 1000, 0.04);
+      previousTime = now;
+      const current = controlsRef.current;
+      context.fillStyle = `rgba(1, 3, 10, ${1 - current.trailPersistence * 0.82})`;
       context.fillRect(0, 0, width, height);
       context.fillStyle = 'rgba(255, 255, 255, 0.03)';
       for (const mode of MODES) {
@@ -175,24 +195,39 @@ export default function Demo030ColorSortingParticles() {
         context.fillRect(box.left, box.top, box.right - box.left, box.bottom - box.top);
       }
 
-      const ease = controls.settleSpeed * 0.017;
+      const omega = 5 / Math.max(0.2, current.settleTime);
+      const damping = Math.exp(-omega * 2 * delta);
+      let totalDistance = 0;
       for (let index = 0; index < particles.length; index += 1) {
         const particle = particles[index];
         const target = getTarget(particle, index, particles.length, width, height);
-        particle.vx = (particle.vx + (target.x - particle.x) * ease) * 0.83;
-        particle.vy = (particle.vy + (target.y - particle.y) * ease) * 0.83;
-        particle.x += particle.vx + Math.sin(performance.now() * 0.001 + particle.seed * 9) * 0.12;
-        particle.y += particle.vy;
+        if (!pausedRef.current) {
+          particle.vx += (target.x - particle.x) * omega * omega * delta;
+          particle.vy += (target.y - particle.y) * omega * omega * delta;
+          particle.vx += Math.sin(now * 0.0013 + particle.seed * 19) * current.motionNoise;
+          particle.vy += Math.cos(now * 0.0011 + particle.seed * 23) * current.motionNoise;
+          particle.vx *= damping;
+          particle.vy *= damping;
+          particle.x += particle.vx * delta;
+          particle.y += particle.vy * delta;
+        }
+        totalDistance += Math.hypot(target.x - particle.x, target.y - particle.y);
 
         context.beginPath();
         context.fillStyle = `hsl(${particle.hue} ${particle.saturation}% ${particle.lightness}%)`;
         context.globalAlpha = 0.72 + particle.seed * 0.28;
-        context.arc(particle.x, particle.y, controls.pointSize * (0.65 + particle.seed * 0.75), 0, Math.PI * 2);
+        context.arc(particle.x, particle.y, current.pointSize * (0.65 + particle.seed * 0.75), 0, Math.PI * 2);
         context.fill();
       }
 
       context.globalAlpha = 1;
       drawLabels();
+      statusFrame += 1;
+      if (statusFrame % 8 === 0 && statusRef.current && particles.length > 0) {
+        const averageDistance = totalDistance / particles.length;
+        const progress = Math.round((1 - Math.min(1, averageDistance / (width * 0.12))) * 100);
+        statusRef.current.textContent = pausedRef.current ? `Paused · ${progress}%` : `Sorting ${progress}%`;
+      }
       animationFrame = requestAnimationFrame(draw);
     };
 
@@ -205,18 +240,68 @@ export default function Demo030ColorSortingParticles() {
       observer.disconnect();
       cancelAnimationFrame(animationFrame);
     };
-  }, [controls]);
+  }, [controls.samplesPerMethod]);
 
   return (
-    <div className="demo-viewport">
-      <canvas
-        ref={canvasRef}
-        style={{display: 'block', width: '100%', height: '100%', touchAction: 'none'}}
-        onPointerDown={() => {
-          seedRef.current += 1;
-          shuffleRef.current?.();
+    <div className="demo-viewport" style={{position: 'relative', background: '#02050d'}}>
+      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          bottom: 22,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          transform: 'translateX(-50%)',
+          padding: '8px 10px',
+          border: '1px solid rgba(255,255,255,0.16)',
+          borderRadius: 7,
+          background: 'rgba(5,9,20,0.82)',
+          color: '#eef5ff',
+          fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace',
+          backdropFilter: 'blur(14px)',
         }}
-      />
+      >
+        <button
+          onClick={() => {
+            seedRef.current += 1;
+            shuffleRef.current?.();
+          }}
+          style={{
+            border: '1px solid rgba(101,242,213,0.46)',
+            borderRadius: 5,
+            background: 'rgba(101,242,213,0.14)',
+            color: '#d9fff7',
+            cursor: 'pointer',
+            padding: '7px 11px',
+            font: 'inherit',
+            fontWeight: 700,
+          }}
+          type="button"
+        >
+          Shuffle input
+        </button>
+        <button
+          onClick={() => setPaused((value) => !value)}
+          style={{
+            border: '1px solid rgba(255,255,255,0.18)',
+            borderRadius: 5,
+            background: 'rgba(255,255,255,0.08)',
+            color: '#f7f9ff',
+            cursor: 'pointer',
+            padding: '7px 11px',
+            font: 'inherit',
+            fontWeight: 700,
+          }}
+          type="button"
+        >
+          {paused ? 'Resume' : 'Pause'}
+        </button>
+        <span ref={statusRef} aria-live="polite" style={{minWidth: 88, fontSize: 11, opacity: 0.72}}>
+          Sorting 0%
+        </span>
+      </div>
     </div>
   );
 }

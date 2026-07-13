@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const probeDensityVisualControlMetadata: DemoMetadata = {
+  number: '042',
   id: 'probe-density-visual-control',
-  title: 'Probe Density Visual Control',
-  description: 'A UE5 Lightmass-inspired debug view showing how manual probe density can be raised around doorways and corners.',
+  title: 'SDF Morphology Sculpture',
+  description: 'A ray-marched signed-distance sculpture that continuously transforms from sphere to torus to rounded box, then joins orbiting bodies through smooth Boolean union.',
   route: '/demos/probe-density-visual-control',
-  tags: ['Canvas2D', 'Debug Viz', 'Lighting', 'Sampling'],
-  instructions: ['Adjust doorway and corner density to see how sampling budget moves to risk areas.'],
+  tags: ['WebGL', 'Ray Marching', 'SDF', 'Smooth Boolean', 'Procedural Geometry'],
+  instructions: ['Press and drag to rotate the field, then adjust shape morph, spatial twist, and smooth union to inspect the distance-field construction.'],
 };

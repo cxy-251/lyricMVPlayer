@@ -3,19 +3,36 @@ import {useEffect, useRef} from 'react';
 
 type BreathingControls = {
   nodes: number;
-  speed: number;
+  amplitude: number;
+  frequency: number;
+  phaseWinding: number;
+  chordStep: number;
   radius: number;
-  lineWidth: number;
 };
+
+type OscillatorPoint = {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  signal: number;
+};
+
+const TAU = Math.PI * 2;
 
 export default function Demo033GeometricBreathing() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const phaseRef = useRef<HTMLSpanElement>(null);
   const controls = useControls('Geometric Breathing', {
-    nodes: {value: 9, min: 4, max: 16, step: 1},
-    speed: {value: 0.42, min: 0.08, max: 1.4, step: 0.01},
-    radius: {value: 0.72, min: 0.3, max: 1.2, step: 0.01},
-    lineWidth: {value: 1.2, min: 0.4, max: 3, step: 0.1},
+    nodes: {value: 9, min: 5, max: 16, step: 1, label: 'Oscillators N'},
+    amplitude: {value: 0.24, min: 0.05, max: 0.42, step: 0.01, label: 'Amplitude A'},
+    frequency: {value: 0.18, min: 0.05, max: 0.5, step: 0.01, label: 'Frequency f'},
+    phaseWinding: {value: 1, min: 0, max: 4, step: 1, label: 'Phase winding m'},
+    chordStep: {value: 2, min: 1, max: 7, step: 1, label: 'Chord step k'},
+    radius: {value: 0.78, min: 0.48, max: 0.95, step: 0.01, label: 'Base radius R'},
   }) as BreathingControls;
+  const controlsRef = useRef(controls);
+  controlsRef.current = controls;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,14 +40,13 @@ export default function Demo033GeometricBreathing() {
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
+    let width = 1;
+    let height = 1;
     let animationFrame = 0;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = Math.max(1, rect.width);
       height = Math.max(1, rect.height);
       canvas.width = Math.floor(width * dpr);
@@ -39,45 +55,106 @@ export default function Demo033GeometricBreathing() {
     };
 
     const draw = (now: number) => {
-      const time = now * 0.001 * controls.speed;
-      const cx = width / 2;
-      const cy = height / 2;
-      const base = Math.min(width, height) * 0.24 * controls.radius;
+      const current = controlsRef.current;
+      const time = now / 1000;
+      const temporalPhase = TAU * current.frequency * time;
+      const centerX = width * 0.5;
+      const centerY = height * (width < 720 ? 0.39 : 0.44);
+      const baseRadius = Math.min(width, height) * 0.29 * current.radius;
+      const nodeCount = Math.round(current.nodes);
+      const phaseWinding = Math.round(current.phaseWinding);
+      const chordStep = Math.max(1, Math.min(Math.floor(nodeCount / 2), Math.round(current.chordStep)));
+      const points: OscillatorPoint[] = [];
 
-      context.fillStyle = 'rgba(0,0,0,0.18)';
+      context.fillStyle = '#03050a';
       context.fillRect(0, 0, width, height);
-      context.lineWidth = controls.lineWidth;
-      context.strokeStyle = 'rgba(255,255,255,0.66)';
-      context.fillStyle = '#ffffff';
 
-      const points: Array<{x: number; y: number}> = [];
-      for (let index = 0; index < controls.nodes; index += 1) {
-        const angle = (index / controls.nodes) * Math.PI * 2;
-        const breath = 0.72 + Math.sin(time * 2 + index * 0.62) * 0.18;
-        const x = cx + Math.cos(angle + Math.sin(time) * 0.15) * base * 1.65 * breath;
-        const y = cy + Math.sin(angle + Math.cos(time * 0.7) * 0.12) * base * 1.65 * breath;
-        points.push({x, y});
+      context.save();
+      context.setLineDash([4, 7]);
+      context.strokeStyle = 'rgba(218, 230, 248, 0.2)';
+      context.lineWidth = 1;
+      context.beginPath();
+      context.arc(centerX, centerY, baseRadius, 0, TAU);
+      context.stroke();
+      context.restore();
+
+      for (let index = 0; index < nodeCount; index++) {
+        const theta = (TAU * index) / nodeCount - Math.PI / 2;
+        const oscillatorPhase = temporalPhase + (TAU * phaseWinding * index) / nodeCount;
+        const signal = Math.sin(oscillatorPhase);
+        const radialScale = 1 + current.amplitude * signal;
+        const radius = baseRadius * radialScale;
+        const baseX = centerX + Math.cos(theta) * baseRadius;
+        const baseY = centerY + Math.sin(theta) * baseRadius;
+        points.push({
+          x: centerX + Math.cos(theta) * radius,
+          y: centerY + Math.sin(theta) * radius,
+          baseX,
+          baseY,
+          signal,
+        });
+
+        context.strokeStyle = 'rgba(218, 230, 248, 0.1)';
+        context.beginPath();
+        context.moveTo(
+          centerX + Math.cos(theta) * baseRadius * (1 - current.amplitude),
+          centerY + Math.sin(theta) * baseRadius * (1 - current.amplitude),
+        );
+        context.lineTo(
+          centerX + Math.cos(theta) * baseRadius * (1 + current.amplitude),
+          centerY + Math.sin(theta) * baseRadius * (1 + current.amplitude),
+        );
+        context.stroke();
       }
 
-      for (let index = 0; index < points.length; index += 1) {
-        const a = points[index];
-        const b = points[(index + 2) % points.length];
-        context.globalAlpha = 0.22;
+      context.lineWidth = 1.2;
+      for (let index = 0; index < points.length; index++) {
+        const point = points[index];
+        const target = points[(index + chordStep) % points.length];
+        const energy = (Math.abs(point.signal) + Math.abs(target.signal)) * 0.5;
+        context.strokeStyle = `rgba(130, 205, 255, ${0.12 + energy * 0.3})`;
         context.beginPath();
-        context.arc(a.x, a.y, base * (0.72 + Math.sin(time * 1.4 + index) * 0.16), 0, Math.PI * 2);
+        context.moveTo(point.x, point.y);
+        context.lineTo(target.x, target.y);
         context.stroke();
-        context.globalAlpha = 0.42;
+      }
+
+      context.strokeStyle = 'rgba(241, 246, 255, 0.58)';
+      context.lineWidth = 1.3;
+      context.beginPath();
+      points.forEach((point, index) => {
+        if (index === 0) context.moveTo(point.x, point.y);
+        else context.lineTo(point.x, point.y);
+      });
+      context.closePath();
+      context.stroke();
+
+      points.forEach((point, index) => {
+        const positive = point.signal >= 0;
+        context.strokeStyle = positive ? 'rgba(91, 220, 255, 0.72)' : 'rgba(255, 112, 190, 0.72)';
+        context.lineWidth = 1.6;
         context.beginPath();
-        context.moveTo(a.x, a.y);
-        context.lineTo(b.x, b.y);
+        context.moveTo(point.baseX, point.baseY);
+        context.lineTo(point.x, point.y);
         context.stroke();
-        context.globalAlpha = 1;
+
+        context.fillStyle = positive ? '#5bdcff' : '#ff70be';
         context.beginPath();
-        context.arc(a.x, a.y, 3.5, 0, Math.PI * 2);
+        context.arc(point.x, point.y, 3.6 + Math.abs(point.signal) * 1.6, 0, TAU);
         context.fill();
-      }
 
-      context.globalAlpha = 1;
+        if (nodeCount <= 12) {
+          context.fillStyle = 'rgba(230, 237, 249, 0.62)';
+          context.font = '10px "SFMono-Regular", Menlo, Consolas, monospace';
+          context.textAlign = 'center';
+          context.fillText(`i${index}`, point.x, point.y - 10);
+        }
+      });
+
+      if (phaseRef.current) {
+        const wrappedPhase = ((temporalPhase % TAU) + TAU) % TAU;
+        phaseRef.current.textContent = `2πft = ${wrappedPhase.toFixed(2)} rad · k = ${chordStep}`;
+      }
       animationFrame = requestAnimationFrame(draw);
     };
 
@@ -89,11 +166,40 @@ export default function Demo033GeometricBreathing() {
       observer.disconnect();
       cancelAnimationFrame(animationFrame);
     };
-  }, [controls]);
+  }, []);
 
   return (
-    <div className="demo-viewport">
+    <div className="demo-viewport" style={{position: 'relative', background: '#03050a'}}>
       <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+      <aside
+        aria-label="Radial oscillator equations"
+        style={{
+          position: 'absolute',
+          right: 18,
+          bottom: 18,
+          width: 'min(430px, calc(100vw - 36px))',
+          padding: '13px 15px',
+          border: '1px solid rgba(205,220,244,0.18)',
+          borderRadius: 7,
+          background: 'rgba(7,11,20,0.84)',
+          color: '#dce8fa',
+          fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace',
+          fontSize: 11,
+          lineHeight: 1.65,
+          backdropFilter: 'blur(14px)',
+        }}
+      >
+        <strong style={{display: 'block', marginBottom: 5, color: '#ffffff', fontSize: 10, letterSpacing: '0.08em'}}>
+          RADIAL HARMONIC SYSTEM
+        </strong>
+        <code style={{display: 'block'}}>θᵢ = 2πi / N</code>
+        <code style={{display: 'block'}}>rᵢ(t) = R[1 + A sin(2πft + 2πmi/N)]</code>
+        <code style={{display: 'block'}}>pᵢ(t) = rᵢ(t)[cos θᵢ, sin θᵢ]</code>
+        <code style={{display: 'block'}}>edge: i → (i + k) mod N</code>
+        <span ref={phaseRef} style={{display: 'block', marginTop: 5, color: '#87dfff'}}>
+          2πft = 0.00 rad
+        </span>
+      </aside>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const visualInspectorControlLayerMetadata: DemoMetadata = {
+  number: '054',
   id: 'visual-inspector-control-layer',
-  title: 'Visual Inspector Control Layer',
-  description: 'A Faraz R3F/WebGPU inspector inspired playground: red glass torus/blob, glowing text, FPS chip, and an in-scene control panel.',
+  title: 'Volumetric Aurora Curtains',
+  description: 'A 48-layer emission integrator builds curved aurora curtains from magnetic folds, altitude-dependent color, procedural turbulence, solar-wind advection, and view parallax.',
   route: '/demos/visual-inspector-control-layer',
-  tags: ['Canvas2D', 'Inspector', 'Control Panel', 'R3F-Inspired'],
-  instructions: ['Tune spin, speed, roughness, thickness, and text glow to review the inspector-as-production-tool idea.'],
+  tags: ['WebGL', 'Volume Rendering', 'Aurora', 'Ray Marching', 'Atmosphere'],
+  instructions: ['Move the pointer through the volume, then tune solar wind, field curvature, curtain thickness, and altitude color mixing.'],
 };

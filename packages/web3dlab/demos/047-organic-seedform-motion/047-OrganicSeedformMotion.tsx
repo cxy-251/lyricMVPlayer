@@ -1,176 +1,126 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import * as THREE from 'three';
 
-type SeedformControls = {
-  fibers: number;
-  membraneInk: number;
-  breath: number;
-  seedDensity: number;
-  paperGrain: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type PhyllotaxisControls = {
+  seedCount: number;
+  divergenceAngle: number;
+  growthRate: number;
+  domeHeight: number;
+  kernelScale: number;
+  colorSpread: number;
 };
 
-const seedNoise = (value: number) => {
-  const x = Math.sin(value * 12.9898) * 43758.5453;
-  return x - Math.floor(x);
-};
-
-export default function Demo047OrganicSeedformMotion() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Organic Seedform Motion', {
-    fibers: {value: 150, min: 48, max: 260, step: 1},
-    membraneInk: {value: 0.92, min: 0.1, max: 1.8, step: 0.01},
-    breath: {value: 0.78, min: 0, max: 1.8, step: 0.01},
-    seedDensity: {value: 110, min: 30, max: 240, step: 1},
-    paperGrain: {value: 0.55, min: 0, max: 1.2, step: 0.01},
-  }) as SeedformControls;
+function PhyllotaxisHead({controls, paused, progressRef}: {
+  controls: PhyllotaxisControls;
+  paused: boolean;
+  progressRef: React.MutableRefObject<number>;
+}) {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+    if (!meshRef.current) return;
+    const color = new THREE.Color();
+    for (let index = 0; index < controls.seedCount; index++) {
+      const t = index / Math.max(1, controls.seedCount - 1);
+      color.setHSL(0.09 + t * controls.colorSpread * 0.22, 0.72, 0.48 + t * 0.16);
+      meshRef.current.setColorAt(index, color);
+    }
+    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+  }, [controls.colorSpread, controls.seedCount]);
 
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const boundaryPoint = (angle: number, time: number, cx: number, cy: number, rx: number, ry: number) => {
-      const wobble = 1 + Math.sin(angle * 5.0 + time * 0.8) * 0.08 * controls.breath + Math.sin(angle * 9.0 - time * 0.5) * 0.045;
-      const lobe = 1 + Math.max(0, Math.cos(angle - 0.15)) * 0.24;
-      return {
-        x: cx + Math.cos(angle) * rx * wobble * lobe,
-        y: cy + Math.sin(angle) * ry * wobble,
-      };
-    };
-
-    const draw = (now: number) => {
-      const time = now * 0.001;
-      const bg = context.createLinearGradient(0, 0, width, height);
-      bg.addColorStop(0, '#f7d5cd');
-      bg.addColorStop(0.55, '#f3c9c4');
-      bg.addColorStop(1, '#f7ddd2');
-      context.fillStyle = bg;
-      context.fillRect(0, 0, width, height);
-      const pageShade = context.createRadialGradient(width * 0.38, height * 0.52, 0, width * 0.38, height * 0.52, Math.max(width, height) * 0.58);
-      pageShade.addColorStop(0, 'rgba(255,255,255,0.18)');
-      pageShade.addColorStop(0.58, 'rgba(255,255,255,0)');
-      pageShade.addColorStop(1, 'rgba(80,32,48,0.12)');
-      context.fillStyle = pageShade;
-      context.fillRect(0, 0, width, height);
-
-      if (controls.paperGrain > 0) {
-        context.fillStyle = `rgba(64,31,24,${0.018 * controls.paperGrain})`;
-        for (let i = 0; i < 360; i += 1) {
-          context.fillRect((i * 73) % width, (i * 151) % height, 1, 1);
-        }
-      }
-
-      const cx = width * 0.39;
-      const cy = height * 0.53;
-      const rx = Math.min(width, height) * 0.34;
-      const ry = Math.min(width, height) * 0.43;
-      const start = -1.36;
-      const end = 1.34;
-      const points = Array.from({length: 90}, (_, index) => {
-        const a = start + (index / 89) * (end - start);
-        return boundaryPoint(a, time, cx, cy, rx, ry);
-      });
-
-      context.save();
-      context.beginPath();
-      context.moveTo(cx - rx * 0.12, cy - ry * 0.18);
-      for (const point of points) context.lineTo(point.x, point.y);
-      context.quadraticCurveTo(cx - rx * 0.22, cy + ry * 0.26, cx - rx * 0.12, cy - ry * 0.18);
-      context.closePath();
-      const membrane = context.createRadialGradient(cx, cy, rx * 0.08, cx + rx * 0.55, cy, rx * 1.08);
-      membrane.addColorStop(0, 'rgba(245,247,232,0.92)');
-      membrane.addColorStop(0.42, 'rgba(248,173,137,0.38)');
-      membrane.addColorStop(0.72, 'rgba(42,52,106,0.42)');
-      membrane.addColorStop(1, `rgba(0,10,40,${0.88 * controls.membraneInk})`);
-      context.fillStyle = membrane;
-      context.fill();
-      context.strokeStyle = `rgba(8,16,42,${0.42 * controls.membraneInk})`;
-      context.lineWidth = 2;
-      context.stroke();
-      context.clip();
-
-      context.globalCompositeOperation = 'multiply';
-      context.strokeStyle = `rgba(30,47,92,${0.18 * controls.membraneInk})`;
-      for (let i = 0; i < 7; i += 1) {
-        const p = boundaryPoint(0.35 + i * 0.26, time, cx, cy, rx, ry);
-        context.beginPath();
-        context.arc(p.x, p.y, rx * (0.18 + i * 0.006), 0, Math.PI * 2);
-        context.stroke();
-      }
-      context.globalCompositeOperation = 'source-over';
-
-      context.strokeStyle = 'rgba(64,87,128,0.42)';
-      context.lineWidth = 0.7;
-      for (let index = 0; index < controls.fibers; index += 1) {
-        const t = index / Math.max(1, controls.fibers - 1);
-        const angle = start + t * (end - start);
-        const target = boundaryPoint(angle, time, cx, cy, rx * 0.96, ry * 0.96);
-        const curve = Math.sin(t * Math.PI) * rx * 0.06;
-        context.beginPath();
-        context.moveTo(cx, cy);
-        context.quadraticCurveTo(cx + curve, cy + Math.sin(angle) * ry * 0.14, target.x, target.y);
-        context.stroke();
-      }
-
-      context.strokeStyle = 'rgba(218,82,33,0.62)';
-      context.lineWidth = 2;
-      for (const arc of [-0.38, 0.38]) {
-        context.beginPath();
-        context.arc(cx + rx * 0.16, cy, rx * 0.35, arc - 0.36 + Math.sin(time) * 0.04, arc + 0.36 + Math.sin(time) * 0.04);
-        context.stroke();
-      }
-      context.restore();
-
-      context.save();
-      context.globalCompositeOperation = 'screen';
-      context.fillStyle = 'rgba(246,255,248,0.7)';
-      for (let i = 0; i < controls.seedDensity; i += 1) {
-        const a = seedNoise(i) * Math.PI * 2;
-        const r = Math.sqrt(seedNoise(i + 90)) * Math.min(width, height) * 0.055;
-        context.beginPath();
-        context.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 1.2 + seedNoise(i + 12) * 2.4, 0, Math.PI * 2);
-        context.fill();
-      }
-      context.strokeStyle = 'rgba(255,255,255,0.42)';
-      context.lineWidth = 0.8;
-      for (let ring = 0; ring < 4; ring += 1) {
-        context.beginPath();
-        context.arc(cx, cy, Math.min(width, height) * (0.025 + ring * 0.015 + Math.sin(time + ring) * 0.002), 0, Math.PI * 2);
-        context.stroke();
-      }
-      context.restore();
-
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.breath, controls.fibers, controls.membraneInk, controls.paperGrain, controls.seedDensity]);
+  useFrame((state, delta) => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    if (!paused) progressRef.current = Math.min(1, progressRef.current + delta * controls.growthRate);
+    const matrix = new THREE.Matrix4();
+    const quaternion = new THREE.Quaternion();
+    const euler = new THREE.Euler();
+    const position = new THREE.Vector3();
+    const scale = new THREE.Vector3();
+    const angleStep = THREE.MathUtils.degToRad(controls.divergenceAngle);
+    for (let index = 0; index < controls.seedCount; index++) {
+      const t = index / Math.max(1, controls.seedCount - 1);
+      const angle = index * angleStep;
+      const radius = Math.sqrt(t) * 2.18;
+      const reveal = THREE.MathUtils.smoothstep(progressRef.current, t * 0.92, t * 0.92 + 0.08);
+      const dome = controls.domeHeight * (1 - t) * (1 - t);
+      position.set(Math.cos(angle) * radius, dome, Math.sin(angle) * radius);
+      euler.set(-0.32 - t * 0.5, -angle, Math.sin(angle * 0.5) * 0.08);
+      quaternion.setFromEuler(euler);
+      const size = controls.kernelScale * (0.68 + t * 0.48) * reveal;
+      scale.set(size * 0.72, size * 0.32, size * 1.35);
+      matrix.compose(position, quaternion, scale);
+      mesh.setMatrixAt(index, matrix);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    if (groupRef.current) groupRef.current.rotation.y += delta * 0.055;
+  });
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <group ref={groupRef} rotation={[0.16, 0, -0.08]}>
+      <instancedMesh ref={meshRef} args={[undefined, undefined, controls.seedCount]} frustumCulled={false}>
+        <sphereGeometry args={[0.12, 12, 8]} />
+        <meshStandardMaterial metalness={0.12} roughness={0.4} vertexColors />
+      </instancedMesh>
+      <mesh position={[0, -0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[2.24, 96]} />
+        <meshStandardMaterial color="#18251d" metalness={0.1} roughness={0.76} />
+      </mesh>
+    </group>
+  );
+}
+
+export default function Demo047OrganicSeedformMotion() {
+  const progressRef = useRef(0);
+  const [paused, setPaused] = useState(false);
+  const controls = useControls('Phyllotaxis Growth', {
+    seedCount: {value: 1400, min: 300, max: 2400, step: 100, label: 'Kernel count'},
+    divergenceAngle: {value: 137.508, min: 130, max: 145, step: 0.01, label: 'Divergence angle'},
+    growthRate: {value: 0.12, min: 0.035, max: 0.28, step: 0.005, label: 'Growth rate'},
+    domeHeight: {value: 0.86, min: 0, max: 1.4, step: 0.01, label: 'Head curvature'},
+    kernelScale: {value: 0.82, min: 0.45, max: 1.2, step: 0.01, label: 'Kernel scale'},
+    colorSpread: {value: 0.62, min: 0, max: 1, step: 0.01, label: 'Maturation color'},
+  }) as PhyllotaxisControls;
+
+  return (
+    <div className="demo-viewport" style={{position: 'relative', background: '#07100c'}}>
+      <DemoScene
+        engineConfig={{
+          background: '#07100c',
+          bloom: {intensity: 0.22, luminanceSmoothing: 0.68, luminanceThreshold: 0.7},
+          camera: {position: [3.8, 3.7, 5.2], fov: 42, near: 0.1, far: 30},
+          fog: {color: '#07100c', near: 9, far: 17},
+          vignette: {darkness: 0.5, offset: 0.28},
+        }}
+        orbitConfig={{autoRotate: false, enablePan: false, minDistance: 4.8, maxDistance: 10}}
+      >
+        <ambientLight intensity={0.42} />
+        <directionalLight color="#fff0c4" intensity={2.2} position={[3, 5, 4]} />
+        <pointLight color="#72d89a" intensity={0.7} position={[-3, 1, 2]} />
+        <PhyllotaxisHead controls={controls} paused={paused} progressRef={progressRef} />
+      </DemoScene>
+      <div style={growthControlsStyle}>
+        <button onClick={() => setPaused(value => !value)} style={buttonStyle} type="button">{paused ? 'Resume' : 'Pause'}</button>
+        <button onClick={() => { progressRef.current = 0; setPaused(false); }} style={buttonStyle} type="button">Replay growth</button>
+        <span>golden angle 137.508°</span>
+      </div>
     </div>
   );
 }
+
+const growthControlsStyle = {
+  position: 'absolute', left: '50%', bottom: 18, display: 'flex', alignItems: 'center', gap: 9,
+  transform: 'translateX(-50%)', padding: 7, border: '1px solid rgba(238,194,100,0.18)',
+  borderRadius: 7, background: 'rgba(7,16,12,0.82)', color: '#a89c79',
+  fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;
+
+const buttonStyle = {
+  border: '1px solid rgba(238,194,100,0.28)', borderRadius: 5, background: 'rgba(238,194,100,0.08)',
+  color: '#e8dcb9', cursor: 'pointer', padding: '7px 9px', font: 'inherit', fontWeight: 700,
+} as const;

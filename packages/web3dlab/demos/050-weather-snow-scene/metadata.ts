@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const weatherSnowSceneMetadata: DemoMetadata = {
+  number: '050',
   id: 'weather-snow-scene',
-  title: 'Weather Snow Scene',
-  description: 'A SnowSystemThreeJS inspired winter scene with instanced-looking flakes, sparkling ice, terrain accumulation, a buried car silhouette, and a studio panel.',
+  title: 'Gray-Scott Reaction Diffusion',
+  description: 'A genuine GPU ping-pong solver that evolves two Gray-Scott chemicals across half-float render targets, producing spots, stripes, splitting fronts, and interactive reagent injection.',
   route: '/demos/weather-snow-scene',
-  tags: ['Canvas2D', 'Weather', 'Snow', 'Scene Module'],
-  instructions: ['Tune snowfall, wind, sparkle, and accumulation to inspect the weather-field module behavior.'],
+  tags: ['WebGL', 'GPGPU', 'Reaction Diffusion', 'Render Target', 'Simulation'],
+  instructions: ['Press and drag to inject chemical V, then explore feed and kill rates to move between spots, worms, and unstable fronts.'],
 };

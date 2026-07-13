@@ -1,6 +1,6 @@
-import {useFrame} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useMemo, useRef} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import * as THREE from 'three';
 
 import {DemoScene} from '../../core/DemoScene';
@@ -18,6 +18,7 @@ precision highp float;
 varying vec2 vUv;
 uniform float uTime;
 uniform vec2 uPointer;
+uniform float uPointerInfluence;
 uniform float uWarp;
 uniform float uLineDensity;
 uniform float uSpeed;
@@ -59,15 +60,18 @@ void main() {
 
   vec2 q = uv;
   q += vec2(fbm(q * 1.7 + t * 0.18), fbm(q * 1.9 - t * 0.16)) * uWarp;
-  q += normalize(uv - pointer + 0.0001) * exp(-length(uv - pointer) * 2.4) * 0.22;
+  q += normalize(uv - pointer + 0.0001)
+    * exp(-length(uv - pointer) * 2.4)
+    * 0.22
+    * uPointerInfluence;
 
   float field = fbm(q * 2.4 + vec2(t * 0.2, -t * 0.12));
   field += 0.5 * sin((q.x + q.y) * uLineDensity + t * 2.0);
-  field += 0.35 * sin(length(q - pointer) * 16.0 - t * 3.0);
+  field += 0.35 * sin(length(q - pointer) * 16.0 - t * 3.0) * uPointerInfluence;
 
   float bands = smoothstep(0.46, 0.5, abs(sin(field * 4.4)));
   float glow = pow(1.0 - abs(fract(field * 2.0) - 0.5) * 2.0, 5.0);
-  float core = exp(-length(uv - pointer) * 3.0);
+  float core = exp(-length(uv - pointer) * 3.0) * uPointerInfluence;
 
   vec3 color = mix(uColorA, uColorB, smoothstep(-0.2, 1.0, field));
   color = mix(color, uColorC, bands * 0.62 + core * 0.35);
@@ -75,17 +79,21 @@ void main() {
   color *= 0.18 + bands * 0.85 + glow * 0.95;
   color += vec3(0.012, 0.016, 0.032);
 
-  float vignette = smoothstep(1.35, 0.25, length(uv));
+  float vignette = 1.0 - smoothstep(0.25, 1.35, length(uv));
   gl_FragColor = vec4(color * vignette, 1.0);
 }
 `;
 
 function FluidNeonPlane({controls}: {controls: any}) {
+  const {gl} = useThree();
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const draggingRef = useRef(false);
+  const pointerInfluenceRef = useRef(0);
   const uniforms = useMemo(
     () => ({
       uTime: {value: 0},
       uPointer: {value: new THREE.Vector2(0, 0)},
+      uPointerInfluence: {value: 0},
       uWarp: {value: controls.warp},
       uLineDensity: {value: controls.lineDensity},
       uSpeed: {value: controls.speed},
@@ -97,11 +105,39 @@ function FluidNeonPlane({controls}: {controls: any}) {
     [],
   );
 
-  useFrame((state) => {
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const startDragging = () => {
+      draggingRef.current = true;
+    };
+    const stopDragging = () => {
+      draggingRef.current = false;
+    };
+
+    canvas.addEventListener('pointerdown', startDragging);
+    canvas.addEventListener('pointerleave', stopDragging);
+    window.addEventListener('pointerup', stopDragging);
+    window.addEventListener('pointercancel', stopDragging);
+    return () => {
+      canvas.removeEventListener('pointerdown', startDragging);
+      canvas.removeEventListener('pointerleave', stopDragging);
+      window.removeEventListener('pointerup', stopDragging);
+      window.removeEventListener('pointercancel', stopDragging);
+    };
+  }, [gl]);
+
+  useFrame((state, delta) => {
     if (!materialRef.current) return;
+    pointerInfluenceRef.current = THREE.MathUtils.damp(
+      pointerInfluenceRef.current,
+      draggingRef.current ? 1 : 0,
+      12,
+      delta,
+    );
     const u = materialRef.current.uniforms;
     u.uTime.value = state.clock.elapsedTime;
     u.uPointer.value.set(state.pointer.x, state.pointer.y);
+    u.uPointerInfluence.value = pointerInfluenceRef.current;
     u.uWarp.value = controls.warp;
     u.uLineDensity.value = controls.lineDensity;
     u.uSpeed.value = controls.speed;
@@ -127,13 +163,13 @@ function FluidNeonPlane({controls}: {controls: any}) {
 
 export default function Demo027FluidNeonShader() {
   const controls = useControls('Fluid Neon Shader', {
-    speed: {value: 0.62, min: 0, max: 2, step: 0.01},
-    warp: {value: 0.38, min: 0, max: 1.4, step: 0.01},
-    lineDensity: {value: 7.4, min: 2, max: 18, step: 0.1},
-    neon: {value: 1.05, min: 0, max: 2.5, step: 0.01},
-    colorA: '#4217ff',
-    colorB: '#ff3bd5',
-    colorC: '#34f5ff',
+    speed: {value: 0.62, min: 0.1, max: 1.4, step: 0.01, label: 'Flow speed'},
+    warp: {value: 0.38, min: 0.08, max: 0.8, step: 0.01, label: 'Warp strength'},
+    lineDensity: {value: 7.4, min: 3, max: 12, step: 0.1, label: 'Contour density'},
+    neon: {value: 1.05, min: 0.35, max: 1.6, step: 0.01, label: 'Glow strength'},
+    colorA: {value: '#4217ff', label: 'Shadow color'},
+    colorB: {value: '#ff3bd5', label: 'Flow color'},
+    colorC: {value: '#34f5ff', label: 'Highlight color'},
   });
 
   return (

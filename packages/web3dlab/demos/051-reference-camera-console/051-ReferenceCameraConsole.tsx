@@ -1,262 +1,152 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useMemo, useRef} from 'react';
+import * as THREE from 'three';
 
-type CameraControls = {
-  referenceStrength: number;
-  maskStability: number;
-  latency: number;
-  gridCount: number;
-  liveBlend: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type LensingControls = {
+  einsteinRadius: number;
+  ellipticity: number;
+  sourceOffset: number;
+  starDensity: number;
+  clusterGlow: number;
+  drift: number;
 };
 
-const roundRect = (context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
-  const r = Math.min(radius, width / 2, height / 2);
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + width, y, x + width, y + height, r);
-  context.arcTo(x + width, y + height, x, y + height, r);
-  context.arcTo(x, y + height, x, y, r);
-  context.arcTo(x, y, x + width, y, r);
-  context.closePath();
-};
+const vertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
 
-const drawAvatar = (context: CanvasRenderingContext2D, x: number, y: number, scale: number, tint: string, alpha = 1) => {
-  context.save();
-  context.translate(x, y);
-  context.scale(scale, scale);
-  context.globalAlpha = alpha;
-  context.fillStyle = '#f0d4be';
-  context.beginPath();
-  context.arc(0, -82, 26, 0, Math.PI * 2);
-  context.fill();
-  context.fillStyle = '#241a18';
-  context.beginPath();
-  context.arc(-5, -91, 31, Math.PI * 0.94, Math.PI * 2.08);
-  context.fill();
-  context.fillStyle = tint;
-  context.beginPath();
-  context.moveTo(-50, -42);
-  context.quadraticCurveTo(0, -70, 55, -42);
-  context.lineTo(72, 80);
-  context.quadraticCurveTo(0, 112, -72, 80);
-  context.closePath();
-  context.fill();
-  context.fillStyle = 'rgba(0,0,0,0.34)';
-  context.fillRect(-48, -2, 96, 11);
-  context.restore();
-};
+const fragmentShader = `
+precision highp float;
+varying vec2 vUv;
+uniform float uTime;
+uniform float uAspect;
+uniform float uEinsteinRadius;
+uniform float uEllipticity;
+uniform float uSourceOffset;
+uniform float uStarDensity;
+uniform float uClusterGlow;
+uniform float uDrift;
+uniform vec2 uPointer;
 
-const drawBrowserBar = (context: CanvasRenderingContext2D, width: number) => {
-  context.fillStyle = '#17131d';
-  context.fillRect(0, 0, width, 46);
-  ['#ff5f57', '#febc2e', '#28c840'].forEach((color, index) => {
-    context.fillStyle = color;
-    context.beginPath();
-    context.arc(22 + index * 18, 23, 5.5, 0, Math.PI * 2);
-    context.fill();
+float hash21(vec2 point) {
+  point = fract(point * vec2(123.34, 456.21));
+  point += dot(point, point + 45.32);
+  return fract(point.x * point.y);
+}
+
+vec3 starField(vec2 point) {
+  vec2 grid = point * mix(85.0, 170.0, uStarDensity);
+  vec2 cell = floor(grid);
+  vec2 local = fract(grid) - 0.5;
+  float random = hash21(cell);
+  vec2 starPosition = vec2(hash21(cell + 2.7), hash21(cell + 8.1)) - 0.5;
+  float distanceToStar = length(local - starPosition * 0.72);
+  float star = pow(max(0.0, 1.0 - distanceToStar * 16.0), 5.0) * step(0.965, random);
+  vec3 tint = mix(vec3(0.46, 0.68, 1.0), vec3(1.0, 0.72, 0.48), hash21(cell + 19.0));
+  return tint * star * (0.7 + random * 1.4);
+}
+
+float galaxy(vec2 point, vec2 center, float angle, vec2 scale) {
+  vec2 delta = point - center;
+  float c = cos(angle);
+  float s = sin(angle);
+  delta = mat2(c, -s, s, c) * delta;
+  float radius = length(delta / scale);
+  float spiral = 0.5 + 0.5 * cos(atan(delta.y, delta.x) * 2.0 - radius * 5.0);
+  return exp(-radius * radius * 2.2) * (0.48 + spiral * 0.52);
+}
+
+void main() {
+  vec2 point = (vUv - 0.5) * 2.0;
+  point.x *= uAspect;
+  vec2 lensCenter = uPointer * vec2(uAspect, 1.0) * 0.12;
+  vec2 theta = point - lensCenter;
+  theta.x *= 1.0 + uEllipticity;
+  theta.y *= 1.0 - uEllipticity;
+  float radiusSquared = dot(theta, theta) + 0.0015;
+  vec2 deflection = theta * (uEinsteinRadius * uEinsteinRadius / radiusSquared);
+  deflection.x /= 1.0 + uEllipticity;
+  deflection.y /= 1.0 - uEllipticity;
+  vec2 source = point - deflection;
+  source += vec2(uSourceOffset, sin(uTime * uDrift * 0.12) * 0.025);
+
+  vec3 color = vec3(0.0025, 0.004, 0.011);
+  color += starField(source + vec2(uTime * uDrift * 0.002, 0.0));
+  float blueGalaxy = galaxy(source, vec2(0.22, 0.03), 0.34, vec2(0.18, 0.055));
+  float amberGalaxy = galaxy(source, vec2(-0.38, -0.24), -0.62, vec2(0.13, 0.045));
+  float violetGalaxy = galaxy(source, vec2(0.06, 0.42), 1.1, vec2(0.1, 0.035));
+  color += vec3(0.22, 0.62, 1.0) * blueGalaxy * 1.8;
+  color += vec3(1.0, 0.5, 0.18) * amberGalaxy * 1.35;
+  color += vec3(0.72, 0.28, 1.0) * violetGalaxy * 1.2;
+
+  float radius = sqrt(radiusSquared);
+  float cluster = exp(-radius * 4.2) * uClusterGlow;
+  float core = exp(-radius * radius * 34.0);
+  color += vec3(0.48, 0.72, 0.9) * cluster * 0.26;
+  color += vec3(0.95, 0.83, 0.68) * core * 0.14;
+  float criticalCurve = 1.0 - smoothstep(0.004, 0.016, abs(radius - uEinsteinRadius));
+  color += vec3(0.18, 0.42, 0.68) * criticalCurve * 0.1;
+  float vignette = 1.0 - smoothstep(0.45, 1.5, length(point));
+  gl_FragColor = vec4(color * (0.58 + vignette * 0.42), 1.0);
+}
+`;
+
+function LensingField({controls}: {controls: LensingControls}) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(() => ({
+    uTime: {value: 0}, uAspect: {value: 1}, uEinsteinRadius: {value: 0.32},
+    uEllipticity: {value: 0.1}, uSourceOffset: {value: 0.06}, uStarDensity: {value: 0.68},
+    uClusterGlow: {value: 0.72}, uDrift: {value: 0.2}, uPointer: {value: new THREE.Vector2()},
+  }), []);
+  useFrame((state) => {
+    const material = materialRef.current;
+    if (!material) return;
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uAspect.value = state.size.width / Math.max(1, state.size.height);
+    material.uniforms.uEinsteinRadius.value = controls.einsteinRadius;
+    material.uniforms.uEllipticity.value = controls.ellipticity;
+    material.uniforms.uSourceOffset.value = controls.sourceOffset;
+    material.uniforms.uStarDensity.value = controls.starDensity;
+    material.uniforms.uClusterGlow.value = controls.clusterGlow;
+    material.uniforms.uDrift.value = controls.drift;
+    material.uniforms.uPointer.value.set(state.pointer.x, state.pointer.y);
   });
-  roundRect(context, 92, 12, Math.min(330, width * 0.34), 22, 11);
-  context.fillStyle = '#231d2b';
-  context.fill();
-  context.fillStyle = '#9b91a7';
-  context.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
-  context.fillText('visual reference camera console', 108, 27);
-};
+  return (
+    <mesh frustumCulled={false}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial ref={materialRef} depthTest={false} depthWrite={false} fragmentShader={fragmentShader} toneMapped={false} uniforms={uniforms} vertexShader={vertexShader} />
+    </mesh>
+  );
+}
 
 export default function Demo051ReferenceCameraConsole() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controls = useControls('Reference Camera Console', {
-    referenceStrength: {value: 0.74, min: 0, max: 1.4, step: 0.01},
-    maskStability: {value: 0.82, min: 0.1, max: 1, step: 0.01},
-    latency: {value: 0.38, min: 0, max: 1, step: 0.01},
-    gridCount: {value: 14, min: 4, max: 24, step: 1},
-    liveBlend: {value: 0.62, min: 0, max: 1, step: 0.01},
-  }) as CameraControls;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const drawReferenceSearch = (x: number, y: number, w: number, h: number) => {
-      context.fillStyle = '#f4f4f8';
-      context.fillRect(x, y, w, h);
-      roundRect(context, x + 22, y + 22, w - 44, 38, 19);
-      context.fillStyle = '#fff';
-      context.fill();
-      context.fillStyle = '#343a40';
-      context.font = `${Math.max(12, w * 0.034)}px Inter, ui-sans-serif, system-ui`;
-      context.fillText('reference outfit search', x + 46, y + 46);
-      const cellW = (w - 54) / 3;
-      const cellH = (h - 108) / 4;
-      for (let i = 0; i < 12; i += 1) {
-        const col = i % 3;
-        const row = Math.floor(i / 3);
-        const cx = x + 18 + col * cellW;
-        const cy = y + 84 + row * cellH;
-        roundRect(context, cx, cy, cellW - 12, cellH - 10, 10);
-        const thumb = context.createLinearGradient(cx, cy, cx + cellW, cy + cellH);
-        thumb.addColorStop(0, `hsl(${210 + i * 18}, 64%, 76%)`);
-        thumb.addColorStop(1, `hsl(${300 + i * 13}, 58%, 50%)`);
-        context.fillStyle = thumb;
-        context.fill();
-        drawAvatar(context, cx + (cellW - 12) * 0.5, cy + (cellH - 10) * 0.72, Math.min(cellW, cellH) / 300, i === 0 ? '#ff6fa6' : '#e8e8f0', 0.75);
-      }
-    };
-
-    const drawTray = (x: number, y: number, w: number, h: number) => {
-      context.fillStyle = '#0f0d17';
-      context.fillRect(x, y, w, h);
-      for (let i = 0; i < controls.gridCount; i += 1) {
-        const col = i % 2;
-        const row = Math.floor(i / 2);
-        const cellW = (w - 28) / 2;
-        const cellH = Math.min(76, (h - 38) / 7);
-        const cx = x + 10 + col * (cellW + 8);
-        const cy = y + 12 + row * (cellH + 8);
-        if (cy + cellH > y + h - 8) continue;
-        roundRect(context, cx, cy, cellW, cellH, 8);
-        context.fillStyle = i === 0 ? '#ff7aa8' : `hsl(${260 + i * 18}, 56%, ${44 + (i % 3) * 12}%)`;
-        context.fill();
-        context.fillStyle = 'rgba(255,255,255,0.72)';
-        context.fillRect(cx + 6, cy + 7, 26, 5);
-        context.fillStyle = 'rgba(0,0,0,0.22)';
-        context.fillRect(cx + cellW - 24, cy + 8, 12, cellH - 16);
-      }
-    };
-
-    const drawControls = (x: number, y: number, w: number, h: number) => {
-      context.fillStyle = '#12101b';
-      context.fillRect(x, y, w, h);
-      context.fillStyle = '#f062aa';
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('STEP 2 - reference-guided edit', x + 18, y + 34);
-      const rows = [
-        ['reference', controls.referenceStrength / 1.4],
-        ['mask', controls.maskStability],
-        ['latency', controls.latency],
-        ['live blend', controls.liveBlend],
-      ];
-      rows.forEach(([label, value], index) => {
-        const yy = y + 76 + index * 54;
-        context.fillStyle = 'rgba(255,255,255,0.72)';
-        context.fillText(label as string, x + 18, yy);
-        context.fillStyle = 'rgba(255,255,255,0.12)';
-        context.fillRect(x + 18, yy + 12, w - 36, 8);
-        context.fillStyle = '#d9468d';
-        context.fillRect(x + 18, yy + 12, (w - 36) * Number(value), 8);
-      });
-      roundRect(context, x + 18, y + h - 78, w - 36, 46, 12);
-      context.fillStyle = '#c73372';
-      context.fill();
-      context.fillStyle = '#fff';
-      context.textAlign = 'center';
-      context.fillText('generate frame', x + w / 2, y + h - 51);
-      context.textAlign = 'left';
-    };
-
-    const drawLiveStage = (x: number, y: number, w: number, h: number, time: number) => {
-      context.fillStyle = '#050506';
-      context.fillRect(x, y, w, h);
-      const liveW = w * 0.78;
-      const liveH = h * 0.46;
-      const liveX = x + w * 0.11;
-      const liveY = y + h * 0.2;
-      roundRect(context, liveX, liveY, liveW, liveH, 12);
-      const cameraGradient = context.createLinearGradient(liveX, liveY, liveX, liveY + liveH);
-      cameraGradient.addColorStop(0, '#2a2521');
-      cameraGradient.addColorStop(1, '#121417');
-      context.fillStyle = cameraGradient;
-      context.fill();
-      context.save();
-      roundRect(context, liveX, liveY, liveW, liveH, 12);
-      context.clip();
-      for (let i = 0; i < 7; i += 1) {
-        context.strokeStyle = `rgba(255,255,255,${0.04 + i * 0.01})`;
-        context.beginPath();
-        context.moveTo(liveX, liveY + i * liveH * 0.15);
-        context.lineTo(liveX + liveW, liveY + i * liveH * 0.15 + Math.sin(time + i) * 4);
-        context.stroke();
-      }
-      drawAvatar(context, liveX + liveW * 0.5, liveY + liveH * 0.64, Math.min(liveW, liveH) / 250, '#20252d', 0.92);
-      drawAvatar(
-        context,
-        liveX + liveW * (0.5 + Math.sin(time) * 0.012),
-        liveY + liveH * 0.64,
-        Math.min(liveW, liveH) / 250,
-        '#ff6fa6',
-        controls.referenceStrength * 0.42,
-      );
-      context.restore();
-
-      roundRect(context, liveX + liveW * 0.37, liveY + liveH * 0.08, liveW * 0.25, 28, 14);
-      context.fillStyle = `rgba(255,255,255,${0.12 + controls.liveBlend * 0.16})`;
-      context.fill();
-      context.fillStyle = '#fff';
-      context.font = '12px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.textAlign = 'center';
-      context.fillText('AI Generated', liveX + liveW * 0.495, liveY + liveH * 0.08 + 18);
-      context.textAlign = 'left';
-
-      const previewW = liveW * 0.34;
-      const previewH = liveH * 0.56;
-      roundRect(context, liveX + liveW * 0.55, liveY + liveH + 20, previewW, previewH, 10);
-      context.fillStyle = '#171721';
-      context.fill();
-      drawAvatar(context, liveX + liveW * 0.72, liveY + liveH + 20 + previewH * 0.66, Math.min(previewW, previewH) / 220, '#e8e8f0', 0.95);
-      context.fillStyle = 'rgba(240,80,150,0.96)';
-      context.beginPath();
-      context.arc(x + 54, y + 42, 7 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
-      context.fill();
-      context.fillStyle = '#fff';
-      context.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
-      context.fillText('LIVE CAMERA', x + 68, y + 46);
-    };
-
-    const draw = (now: number) => {
-      const time = now * 0.001;
-      context.fillStyle = '#0d0b12';
-      context.fillRect(0, 0, width, height);
-      drawBrowserBar(context, width);
-      const top = 46;
-      const leftW = width * 0.31;
-      const trayW = width * 0.13;
-      const rightW = width * 0.24;
-      drawReferenceSearch(0, top, leftW, height - top);
-      drawTray(leftW, top, trayW, height - top);
-      drawControls(width - rightW, top, rightW, height - top);
-      drawLiveStage(leftW + trayW, top, width - leftW - trayW - rightW, height - top, time);
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.gridCount, controls.latency, controls.liveBlend, controls.maskStability, controls.referenceStrength]);
-
+  const controls = useControls('Gravitational Lensing', {
+    einsteinRadius: {value: 0.32, min: 0.12, max: 0.58, step: 0.01, label: 'Einstein radius'},
+    ellipticity: {value: 0.1, min: 0, max: 0.28, step: 0.01, label: 'Lens ellipticity'},
+    sourceOffset: {value: 0.06, min: -0.32, max: 0.32, step: 0.01, label: 'Source alignment'},
+    starDensity: {value: 0.68, min: 0.2, max: 1, step: 0.01, label: 'Background stars'},
+    clusterGlow: {value: 0.72, min: 0, max: 1.2, step: 0.01, label: 'Lens cluster glow'},
+    drift: {value: 0.2, min: 0, max: 0.7, step: 0.01, label: 'Source drift'},
+  }) as LensingControls;
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%'}} />
+    <div className="demo-viewport" style={{position: 'relative', background: '#010208'}}>
+      <DemoScene engineConfig={{background: '#010208', camera: {position: [0, 0, 1], fov: 50, near: 0.1, far: 10}}} orbitControls={false}>
+        <LensingField controls={controls} />
+      </DemoScene>
+      <div style={lensingLegendStyle}><strong>θE {controls.einsteinRadius.toFixed(2)}</strong><span>move pointer to offset lens mass</span></div>
     </div>
   );
 }
+
+const lensingLegendStyle = {
+  position: 'absolute', left: 18, bottom: 18, display: 'flex', gap: 10, padding: '8px 10px',
+  border: '1px solid rgba(116,174,224,0.18)', borderRadius: 6, background: 'rgba(2,5,13,0.78)',
+  color: '#7890a3', pointerEvents: 'none', fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;

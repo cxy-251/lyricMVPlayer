@@ -1,240 +1,168 @@
+import {useFrame} from '@react-three/fiber';
 import {useControls} from 'leva';
-import {useEffect, useRef} from 'react';
+import {useMemo, useRef} from 'react';
+import * as THREE from 'three';
 
-type PrismControls = {
-  dispersion: number;
-  beamWidth: number;
-  textSplit: number;
-  pulse: number;
-  grain: number;
+import {DemoScene} from '../../core/DemoScene';
+
+type ThinFilmControls = {
+  filmThickness: number;
+  thicknessVariation: number;
+  refractiveIndex: number;
+  flowSpeed: number;
+  surfaceTension: number;
+  reflection: number;
 };
 
-const drawRoundRect = (context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
-  const r = Math.min(radius, width / 2, height / 2);
-  context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + width, y, x + width, y + height, r);
-  context.arcTo(x + width, y + height, x, y + height, r);
-  context.arcTo(x, y + height, x, y, r);
-  context.arcTo(x, y, x + width, y, r);
-  context.closePath();
-};
+const vertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
 
-const drawChromaticText = (
-  context: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  fontSize: number,
-  split: number,
-) => {
-  context.font = `800 ${fontSize}px Inter, ui-sans-serif, system-ui, sans-serif`;
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  const offsets = [
-    {color: 'rgba(255,55,90,0.72)', dx: -split, dy: split * 0.25},
-    {color: 'rgba(42,238,255,0.7)', dx: split, dy: -split * 0.18},
-    {color: 'rgba(255,255,255,0.94)', dx: 0, dy: 0},
-  ];
-  for (const item of offsets) {
-    context.fillStyle = item.color;
-    context.fillText(text, x + item.dx, y + item.dy);
-  }
-};
+const fragmentShader = `
+precision highp float;
 
-export default function Demo044PrismAlbumMotion() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerRef = useRef({x: 0, y: 0, active: false});
-  const controls = useControls('Prism Album Motion', {
-    dispersion: {value: 0.82, min: 0, max: 1.8, step: 0.01},
-    beamWidth: {value: 0.7, min: 0.2, max: 1.8, step: 0.01},
-    textSplit: {value: 0.72, min: 0, max: 1.8, step: 0.01},
-    pulse: {value: 0.65, min: 0, max: 1.8, step: 0.01},
-    grain: {value: 0.42, min: 0, max: 1, step: 0.01},
-  }) as PrismControls;
+varying vec2 vUv;
+uniform float uTime;
+uniform float uAspect;
+uniform float uFilmThickness;
+uniform float uThicknessVariation;
+uniform float uRefractiveIndex;
+uniform float uFlowSpeed;
+uniform float uSurfaceTension;
+uniform float uReflection;
+uniform vec2 uPointer;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+float hash21(vec2 point) {
+  point = fract(point * vec2(123.34, 456.21));
+  point += dot(point, point + 45.32);
+  return fract(point.x * point.y);
+}
 
-    let width = 0;
-    let height = 0;
-    let frame = 0;
+float valueNoise(vec2 point) {
+  vec2 cell = floor(point);
+  vec2 local = fract(point);
+  local = local * local * (3.0 - 2.0 * local);
+  float a = hash21(cell);
+  float b = hash21(cell + vec2(1.0, 0.0));
+  float c = hash21(cell + vec2(0.0, 1.0));
+  float d = hash21(cell + vec2(1.0, 1.0));
+  return mix(mix(a, b, local.x), mix(c, d, local.x), local.y);
+}
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
+float thicknessField(vec2 point) {
+  float tensionScale = mix(4.8, 1.8, uSurfaceTension);
+  vec2 flow = vec2(uTime * uFlowSpeed * 0.12, -uTime * uFlowSpeed * 0.08);
+  float field = valueNoise(point * tensionScale + flow) * 0.58;
+  field += valueNoise(point * tensionScale * 2.07 - flow * 1.4) * 0.27;
+  field += valueNoise(point * tensionScale * 4.13 + flow * 0.7) * 0.15;
+  float drainage = smoothstep(-0.9, 0.85, point.y) * 0.24;
+  return field - drainage;
+}
 
-    const onPointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      pointerRef.current.x = (event.clientX - rect.left) / Math.max(1, width);
-      pointerRef.current.y = (event.clientY - rect.top) / Math.max(1, height);
-      pointerRef.current.active = true;
-    };
-    const onPointerLeave = () => {
-      pointerRef.current.active = false;
-    };
+vec3 thinFilmInterference(float thicknessNm, float cosineAngle) {
+  const vec3 wavelengths = vec3(650.0, 510.0, 475.0);
+  vec3 phase = 12.5663706 * uRefractiveIndex * thicknessNm * cosineAngle / wavelengths;
+  vec3 constructive = 0.5 + 0.5 * cos(phase + 3.14159265);
+  constructive = pow(constructive, vec3(1.35));
+  return constructive;
+}
 
-    const drawBeam = (points: Array<[number, number]>, color: string, lineWidth: number, alpha: number) => {
-      context.save();
-      context.globalCompositeOperation = 'lighter';
-      context.strokeStyle = color;
-      context.lineWidth = lineWidth;
-      context.globalAlpha = alpha;
-      context.lineJoin = 'round';
-      context.beginPath();
-      context.moveTo(points[0][0], points[0][1]);
-      for (const point of points.slice(1)) context.lineTo(point[0], point[1]);
-      context.stroke();
-      context.restore();
-    };
+void main() {
+  vec2 point = (vUv - 0.5) * 2.0;
+  point.x *= uAspect;
+  float radius = length(point);
+  float membrane = 1.0 - smoothstep(0.78, 0.8, radius);
+  float field = thicknessField(point);
+  float epsilon = 0.004;
+  vec2 gradient = vec2(
+    thicknessField(point + vec2(epsilon, 0.0)) - thicknessField(point - vec2(epsilon, 0.0)),
+    thicknessField(point + vec2(0.0, epsilon)) - thicknessField(point - vec2(0.0, epsilon))
+  ) / (2.0 * epsilon);
+  vec3 normal = normalize(vec3(-gradient * uThicknessVariation * 0.0024, 1.0));
+  vec3 viewDirection = normalize(vec3(uPointer * 0.42, 1.0));
+  float cosineAngle = clamp(dot(normal, viewDirection), 0.16, 1.0);
+  float thicknessNm = max(20.0, uFilmThickness + (field - 0.5) * uThicknessVariation);
+  vec3 interference = thinFilmInterference(thicknessNm, cosineAngle);
+  float fresnel = pow(1.0 - cosineAngle, 3.2);
+  float broadHighlight = pow(max(dot(normal, normalize(vec3(-0.5, 0.65, 0.8))), 0.0), 16.0);
 
-    const draw = (now: number) => {
-      const t = now * 0.001;
-      const pointerTilt = pointerRef.current.active ? (pointerRef.current.x - 0.5) : Math.sin(t * 0.42) * 0.24;
-      context.fillStyle = '#010105';
-      context.fillRect(0, 0, width, height);
-      const stageGlow = context.createRadialGradient(width * 0.5, height * 0.45, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.7);
-      stageGlow.addColorStop(0, 'rgba(64,72,110,0.16)');
-      stageGlow.addColorStop(0.5, 'rgba(13,16,32,0.16)');
-      stageGlow.addColorStop(1, 'rgba(0,0,0,0)');
-      context.fillStyle = stageGlow;
-      context.fillRect(0, 0, width, height);
+  vec3 background = mix(vec3(0.006, 0.012, 0.022), vec3(0.018, 0.006, 0.028), vUv.y);
+  background += vec3(0.025, 0.06, 0.1) * exp(-3.4 * radius);
+  vec3 reflected = interference * (0.3 + uReflection * 0.74);
+  reflected += vec3(0.45, 0.75, 1.0) * fresnel * 0.42;
+  reflected += vec3(1.0, 0.92, 0.78) * broadHighlight * 0.34;
+  reflected *= 0.62 + smoothstep(0.82, 0.15, radius) * 0.38;
+  float rim = 1.0 - smoothstep(0.0, 0.035, abs(radius - 0.79));
+  vec3 color = mix(background, reflected, membrane * 0.94);
+  color += vec3(0.5, 0.72, 0.95) * rim * 0.36;
+  gl_FragColor = vec4(color, 1.0);
+}
+`;
 
-      const panelW = Math.min(width * 0.58, height * 0.66, 620);
-      const panelH = panelW * 1.28;
-      const px = width / 2 - panelW / 2;
-      const py = height / 2 - panelH / 2;
-      drawRoundRect(context, px - panelW * 0.045, py - panelW * 0.045, panelW * 1.09, panelH * 1.09, panelW * 0.08);
-      context.fillStyle = '#0c0c12';
-      context.shadowColor = 'rgba(0,0,0,0.9)';
-      context.shadowBlur = 46;
-      context.fill();
-      context.shadowBlur = 0;
-      context.strokeStyle = 'rgba(255,255,255,0.12)';
-      context.lineWidth = 1;
-      context.stroke();
-      drawRoundRect(context, px, py, panelW, panelH, panelW * 0.06);
-      context.fillStyle = '#050509';
-      context.shadowColor = 'rgba(0,0,0,0.8)';
-      context.shadowBlur = 30;
-      context.fill();
-      context.shadowBlur = 0;
-      context.save();
-      drawRoundRect(context, px, py, panelW, panelH, panelW * 0.06);
-      context.clip();
+function ThinFilmMembrane({controls}: {controls: ThinFilmControls}) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(() => ({
+    uTime: {value: 0}, uAspect: {value: 1}, uFilmThickness: {value: 420},
+    uThicknessVariation: {value: 190}, uRefractiveIndex: {value: 1.33},
+    uFlowSpeed: {value: 0.2}, uSurfaceTension: {value: 0.62}, uReflection: {value: 0.78},
+    uPointer: {value: new THREE.Vector2()},
+  }), []);
 
-      const pulse = 1 + Math.sin(t * 1.7) * 0.09 * controls.pulse;
-      const cx = px + panelW * (0.5 + pointerTilt * 0.08);
-      const cy = py + panelH * 0.42;
-      const prism = panelW * 0.19 * pulse;
-      const left = px + panelW * 0.1;
-      const whiteY = cy - panelH * 0.05 + pointerTilt * panelH * 0.06;
-      drawBeam([[left, whiteY], [cx - prism * 0.52, cy]], 'rgba(255,255,255,0.25)', panelW * 0.08 * controls.beamWidth, 0.46);
-      drawBeam([[left, whiteY], [cx - prism * 0.52, cy]], 'rgba(255,255,255,0.95)', panelW * 0.014 * controls.beamWidth, 0.9);
-
-      const colors = ['#ff235d', '#ff8a20', '#ffd64a', '#55ff77', '#38ddff', '#5578ff', '#ca52ff'];
-      colors.forEach((color, index) => {
-        const spread = (index - (colors.length - 1) / 2) * panelH * 0.022 * controls.dispersion;
-        drawBeam(
-          [[cx + prism * 0.48, cy], [px + panelW * 0.92, cy + spread + Math.sin(t * 1.1 + index) * 6 * controls.pulse]],
-          color,
-          panelW * 0.034,
-          0.62,
-        );
-      });
-
-      context.save();
-      context.translate(cx, cy);
-      context.rotate(pointerTilt * 0.16);
-      context.strokeStyle = 'rgba(255,255,255,0.86)';
-      context.lineWidth = 3;
-      context.beginPath();
-      context.moveTo(0, -prism * 0.84);
-      context.lineTo(prism * 0.78, prism * 0.64);
-      context.lineTo(-prism * 0.82, prism * 0.64);
-      context.closePath();
-      context.stroke();
-      const prismGradient = context.createLinearGradient(-prism, -prism, prism, prism);
-      prismGradient.addColorStop(0, 'rgba(255,255,255,0.08)');
-      prismGradient.addColorStop(0.55, 'rgba(255,255,255,0.32)');
-      prismGradient.addColorStop(1, 'rgba(100,210,255,0.08)');
-      context.fillStyle = prismGradient;
-      context.fill();
-      context.restore();
-
-      drawChromaticText(context, 'DARK', cx - panelW * 0.1, cy - panelH * 0.08, panelW * 0.12, controls.textSplit * panelW * 0.016);
-      drawChromaticText(context, 'SIDE', cx + panelW * 0.09, cy + panelH * 0.09, panelW * 0.12, controls.textSplit * panelW * 0.016);
-
-      context.fillStyle = 'rgba(255,255,255,0.82)';
-      context.font = `${panelW * 0.031}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'left';
-      context.fillText('text', px + panelW * 0.14, py + panelH * 0.72);
-      context.fillText('light', px + panelW * 0.54, py + panelH * 0.72);
-      for (let i = 0; i < 2; i += 1) {
-        drawRoundRect(context, px + panelW * (0.28 + i * 0.36), py + panelH * 0.695, panelW * 0.13, panelH * 0.028, panelH * 0.014);
-        context.fillStyle = 'rgba(255,255,255,0.9)';
-        context.fill();
-      }
-      context.strokeStyle = 'rgba(255,255,255,0.72)';
-      context.lineWidth = 2;
-      context.beginPath();
-      context.moveTo(px + panelW * 0.16, py + panelH * 0.81);
-      context.lineTo(px + panelW * 0.82, py + panelH * 0.81);
-      context.stroke();
-      context.fillStyle = 'rgba(255,255,255,0.94)';
-      context.beginPath();
-      context.arc(px + panelW * (0.2 + controls.dispersion * 0.22), py + panelH * 0.81, panelW * 0.025, 0, Math.PI * 2);
-      context.fill();
-
-      context.globalCompositeOperation = 'screen';
-      const flare = context.createLinearGradient(px + panelW * 0.12, py, px + panelW * 0.84, py + panelH);
-      flare.addColorStop(0, 'rgba(255,255,255,0.16)');
-      flare.addColorStop(0.22, 'rgba(255,255,255,0)');
-      flare.addColorStop(0.68, 'rgba(58,214,255,0)');
-      flare.addColorStop(1, 'rgba(58,214,255,0.12)');
-      context.fillStyle = flare;
-      context.fillRect(px, py, panelW, panelH);
-      context.globalCompositeOperation = 'source-over';
-
-      if (controls.grain > 0) {
-        context.fillStyle = `rgba(255,255,255,${0.02 * controls.grain})`;
-        for (let i = 0; i < 240; i += 1) {
-          const gx = px + ((i * 47) % 997) / 997 * panelW;
-          const gy = py + ((i * 89) % 997) / 997 * panelH;
-          context.fillRect(gx, gy, 1, 1);
-        }
-      }
-      context.restore();
-
-      frame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerleave', onPointerLeave);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      observer.disconnect();
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerleave', onPointerLeave);
-      cancelAnimationFrame(frame);
-    };
-  }, [controls.beamWidth, controls.dispersion, controls.grain, controls.pulse, controls.textSplit]);
+  useFrame((state) => {
+    const material = materialRef.current;
+    if (!material) return;
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uAspect.value = state.size.width / Math.max(1, state.size.height);
+    material.uniforms.uFilmThickness.value = controls.filmThickness;
+    material.uniforms.uThicknessVariation.value = controls.thicknessVariation;
+    material.uniforms.uRefractiveIndex.value = controls.refractiveIndex;
+    material.uniforms.uFlowSpeed.value = controls.flowSpeed;
+    material.uniforms.uSurfaceTension.value = controls.surfaceTension;
+    material.uniforms.uReflection.value = controls.reflection;
+    material.uniforms.uPointer.value.set(state.pointer.x, state.pointer.y);
+  });
 
   return (
-    <div className="demo-viewport">
-      <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%', touchAction: 'none'}} />
+    <mesh frustumCulled={false}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial ref={materialRef} depthTest={false} depthWrite={false} fragmentShader={fragmentShader} toneMapped={false} uniforms={uniforms} vertexShader={vertexShader} />
+    </mesh>
+  );
+}
+
+export default function Demo044PrismAlbumMotion() {
+  const controls = useControls('Thin-Film Interference', {
+    filmThickness: {value: 420, min: 120, max: 900, step: 5, label: 'Mean thickness (nm)'},
+    thicknessVariation: {value: 190, min: 20, max: 380, step: 5, label: 'Thickness variation'},
+    refractiveIndex: {value: 1.33, min: 1.2, max: 1.65, step: 0.01, label: 'Film refractive index'},
+    flowSpeed: {value: 0.22, min: 0, max: 0.72, step: 0.01, label: 'Thickness flow'},
+    surfaceTension: {value: 0.62, min: 0.15, max: 1, step: 0.01, label: 'Surface tension'},
+    reflection: {value: 0.78, min: 0.3, max: 1.15, step: 0.01, label: 'Reflected intensity'},
+  }) as ThinFilmControls;
+
+  return (
+    <div className="demo-viewport" style={{position: 'relative', background: '#02050a'}}>
+      <DemoScene
+        engineConfig={{background: '#02050a', camera: {position: [0, 0, 1], fov: 50, near: 0.1, far: 10}}}
+        orbitControls={false}
+      >
+        <ThinFilmMembrane controls={controls} />
+      </DemoScene>
+      <div style={filmLegendStyle}>
+        <strong>THIN FILM · RGB PHASE</strong>
+        <span>650 nm</span><span>510 nm</span><span>475 nm</span>
+      </div>
     </div>
   );
 }
+
+const filmLegendStyle = {
+  position: 'absolute', left: 18, bottom: 18, display: 'flex', gap: 10, alignItems: 'center',
+  padding: '8px 10px', border: '1px solid rgba(130,202,255,0.18)', borderRadius: 6,
+  background: 'rgba(3,7,14,0.78)', color: '#849eaf', pointerEvents: 'none',
+  fontFamily: '"SFMono-Regular", Menlo, Consolas, monospace', fontSize: 10,
+} as const;

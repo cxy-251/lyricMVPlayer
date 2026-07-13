@@ -1,10 +1,11 @@
 import type {DemoMetadata} from '../../types';
 
 export const alifeParticleSelectionMetadata: DemoMetadata = {
+  number: '046',
   id: 'alife-particle-selection',
-  title: 'ALife Particle Selection',
-  description: 'A natural-selection particle life lab where neon organisms mutate or adopt nearby species behavior under local density conditions.',
+  title: 'Evolving Microbe Field',
+  description: 'An artificial-life ecosystem where inherited speed, perception, turning, and color genes face explicit metabolic costs while food access drives reproduction, death, and mutation.',
   route: '/demos/alife-particle-selection',
-  tags: ['Canvas2D', 'Artificial Life', 'Particle Life', 'Mutation'],
-  instructions: ['Tune population, mutation, neighbor radius, and trail to inspect local-rule organisms rather than random sparkle particles.'],
+  tags: ['Canvas2D', 'Artificial Life', 'Genetics', 'Natural Selection', 'Mutation'],
+  instructions: ['Press to add food locally, then change metabolic pressure or mutation probability and watch average speed, sensing range, and generation depth evolve.'],
 };

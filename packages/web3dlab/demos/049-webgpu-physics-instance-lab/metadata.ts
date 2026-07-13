@@ -1,6 +1,7 @@
 import type {DemoMetadata} from '../../types';
 
 export const webgpuPhysicsInstanceLabMetadata: DemoMetadata = {
+  number: '049',
   id: 'webgpu-physics-instance-lab',
   title: 'WebGPU Physics Instance Lab',
   description: 'A Kevin Levron WebGPU physics demo study: thousands of colored instances gather, collide, and spread while a debug panel exposes GPU-style controls.',

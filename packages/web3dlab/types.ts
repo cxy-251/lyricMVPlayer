@@ -36,6 +36,7 @@ export const SILENT_AUDIO_FRAME: EffectAudioFrame = {
 
 export type DemoMetadata = {
   id: string;
+  number?: string;
   title: string;
   description: string;
   tags: string[];

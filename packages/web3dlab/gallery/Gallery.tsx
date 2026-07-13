@@ -49,7 +49,7 @@ export function Gallery({
                     ))}
                   </div>
                   <h2>
-                    <span className="demo-number">{getDemoNumberLabel(index)}</span>
+                    <span className="demo-number">{demo.number ?? getDemoNumberLabel(index)}</span>
                     <span>{demo.title}</span>
                   </h2>
                   <p>{demo.description}</p>
@@ -92,6 +92,11 @@ export const EffectLabPage: React.FC<{song: LabSong}> = () => {
   const splatParam = params["*"] ?? "";
   
   const activeDemo = useMemo(() => findDemo(splatParam), [splatParam]);
+  const activeDemoIndex = activeDemo ? web3dDemos.indexOf(activeDemo) : -1;
+  const previousDemo = activeDemoIndex > 0 ? web3dDemos[activeDemoIndex - 1] : undefined;
+  const nextDemo = activeDemoIndex >= 0 && activeDemoIndex < web3dDemos.length - 1
+    ? web3dDemos[activeDemoIndex + 1]
+    : undefined;
 
   const openGallery = () => {
     navigate(effectRoutePrefix);
@@ -110,7 +115,14 @@ export const EffectLabPage: React.FC<{song: LabSong}> = () => {
   const ActiveDemo = activeDemo.Component;
 
   return (
-    <DemoLayout metadata={activeDemo} onBack={openGallery}>
+    <DemoLayout
+      metadata={activeDemo}
+      nextTitle={nextDemo?.title}
+      onBack={openGallery}
+      onNext={nextDemo ? () => openDemo(nextDemo.route) : undefined}
+      onPrevious={previousDemo ? () => openDemo(previousDemo.route) : undefined}
+      previousTitle={previousDemo?.title}
+    >
       <ActiveDemo />
     </DemoLayout>
   );

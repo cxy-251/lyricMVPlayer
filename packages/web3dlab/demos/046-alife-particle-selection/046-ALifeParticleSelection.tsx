@@ -2,104 +2,77 @@ import {useControls} from 'leva';
 import {useEffect, useRef} from 'react';
 
 type ALifeControls = {
-  population: number;
-  speciesCount: number;
-  neighborRadius: number;
-  mutation: number;
+  startingPopulation: number;
+  foodDensity: number;
+  mutationRate: number;
+  selectionPressure: number;
+  timeScale: number;
   trail: number;
+};
+
+type Genome = {
+  hue: number;
+  perception: number;
   speed: number;
+  turnRate: number;
 };
 
-type LifeParticle = {
-  x: number;
-  y: number;
-  px: number;
-  py: number;
-  vx: number;
-  vy: number;
-  species: number;
+type Organism = {
+  age: number;
   energy: number;
-  seed: number;
-};
-
-type Colony = {
+  generation: number;
+  genome: Genome;
+  heading: number;
   x: number;
   y: number;
-  radius: number;
-  species: number;
-  intensity: number;
 };
 
-const COLORS = ['#62ff45', '#ff38d0', '#37d8ff', '#ffec38', '#ff7a30', '#b678ff'];
+type Food = {energy: number; x: number; y: number};
 
-const rand = (index: number, seed = 1) => {
-  const value = Math.sin(index * 127.1 + seed * 311.7) * 43758.5453123;
-  return value - Math.floor(value);
+const randomGenome = (): Genome => ({
+  hue: 165 + Math.random() * 170,
+  perception: 42 + Math.random() * 88,
+  speed: 22 + Math.random() * 48,
+  turnRate: 1.2 + Math.random() * 2.8,
+});
+
+const mutateGenome = (parent: Genome, rate: number): Genome => {
+  const mutate = (value: number, amount: number) => (
+    Math.random() < rate ? value + (Math.random() - 0.5) * amount : value
+  );
+  return {
+    hue: (mutate(parent.hue, 42) + 360) % 360,
+    perception: Math.max(28, Math.min(170, mutate(parent.perception, 30))),
+    speed: Math.max(16, Math.min(92, mutate(parent.speed, 22))),
+    turnRate: Math.max(0.7, Math.min(5.4, mutate(parent.turnRate, 1.2))),
+  };
 };
 
-const speciesForce = (a: number, b: number) => {
-  const v = Math.sin((a + 1) * 12.989 + (b + 1) * 78.23);
-  return v > 0.35 ? 1 : v < -0.25 ? -1 : 0.18;
-};
+const createOrganism = (width: number, height: number, generation = 0, genome = randomGenome()): Organism => ({
+  age: 0,
+  energy: 0.55 + Math.random() * 0.35,
+  generation,
+  genome,
+  heading: Math.random() * Math.PI * 2,
+  x: Math.random() * width,
+  y: Math.random() * height,
+});
 
-const makeParticles = (count: number, speciesCount: number, width: number, height: number): LifeParticle[] => (
-  Array.from({length: count}, (_, index) => {
-    const angle = rand(index, 3) * Math.PI * 2;
-    return {
-      x: width * rand(index, 1),
-      y: height * rand(index, 2),
-      px: width * rand(index, 1),
-      py: height * rand(index, 2),
-      vx: Math.cos(angle) * 0.4,
-      vy: Math.sin(angle) * 0.4,
-      species: index % speciesCount,
-      energy: 0.5 + rand(index, 4) * 0.5,
-      seed: rand(index, 5),
-    };
-  })
-);
-
-const drawMicrobeBackdrop = (context: CanvasRenderingContext2D, width: number, height: number, time: number) => {
-  const glow = context.createRadialGradient(width * 0.48, height * 0.5, 0, width * 0.48, height * 0.5, Math.max(width, height) * 0.72);
-  glow.addColorStop(0, '#04110b');
-  glow.addColorStop(0.52, '#020505');
-  glow.addColorStop(1, '#000');
-  context.fillStyle = glow;
-  context.fillRect(0, 0, width, height);
-  context.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < 28; i += 1) {
-    const x = width * (0.04 + rand(i, 11) * 0.92);
-    const y = height * (0.08 + rand(i, 12) * 0.84);
-    const r = Math.min(width, height) * (0.018 + rand(i, 13) * 0.028);
-    const color = COLORS[i % COLORS.length];
-    context.strokeStyle = color;
-    context.globalAlpha = 0.05 + rand(i, 14) * 0.08;
-    context.lineWidth = 1.2;
-    context.beginPath();
-    for (let a = 0; a <= 48; a += 1) {
-      const angle = (a / 48) * Math.PI * 2;
-      const wobble = 1 + Math.sin(angle * (3 + (i % 4)) + time * 0.001 + i) * 0.18;
-      const px = x + Math.cos(angle) * r * wobble;
-      const py = y + Math.sin(angle) * r * wobble;
-      if (a === 0) context.moveTo(px, py);
-      else context.lineTo(px, py);
-    }
-    context.stroke();
-  }
-  context.globalAlpha = 1;
-  context.globalCompositeOperation = 'source-over';
-};
+const createFood = (width: number, height: number, x?: number, y?: number): Food => ({
+  energy: 0.22 + Math.random() * 0.16,
+  x: x ?? Math.random() * width,
+  y: y ?? Math.random() * height,
+});
 
 export default function Demo046ALifeParticleSelection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerRef = useRef({x: 0, y: 0, active: false});
-  const controls = useControls('ALife Particle Selection', {
-    population: {value: 920, min: 260, max: 1800, step: 20},
-    speciesCount: {value: 5, min: 2, max: 6, step: 1},
-    neighborRadius: {value: 46, min: 18, max: 92, step: 1},
-    mutation: {value: 0.42, min: 0, max: 1.6, step: 0.01},
-    trail: {value: 0.18, min: 0.04, max: 0.68, step: 0.01},
-    speed: {value: 0.85, min: 0.15, max: 2.2, step: 0.01},
+  const controls = useControls('Evolving Microbes', {
+    startingPopulation: {value: 180, min: 60, max: 360, step: 20, label: 'Founding population'},
+    foodDensity: {value: 0.62, min: 0.2, max: 1, step: 0.01, label: 'Food availability'},
+    mutationRate: {value: 0.12, min: 0, max: 0.35, step: 0.01, label: 'Mutation probability'},
+    selectionPressure: {value: 0.58, min: 0.15, max: 1, step: 0.01, label: 'Metabolic pressure'},
+    timeScale: {value: 0.82, min: 0.2, max: 1.6, step: 0.01, label: 'Evolution speed'},
+    trail: {value: 0.34, min: 0, max: 0.72, step: 0.01, label: 'Motion persistence'},
   }) as ALifeControls;
 
   useEffect(() => {
@@ -108,12 +81,22 @@ export default function Demo046ALifeParticleSelection() {
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    let width = 0;
-    let height = 0;
-    let particles: LifeParticle[] = [];
-    let frame = 0;
-    let tick = 0;
+    let width = 1;
+    let height = 1;
+    let organisms: Organism[] = [];
+    let food: Food[] = [];
+    let animationFrame = 0;
+    let previousTime = performance.now();
+    let foodAccumulator = 0;
+    const pointer = {x: 0, y: 0, down: false};
 
+    const reset = () => {
+      organisms = Array.from({length: controls.startingPopulation}, () => createOrganism(width, height));
+      const targetFood = Math.round(55 + controls.foodDensity * 150);
+      food = Array.from({length: targetFood}, () => createFood(width, height));
+      context.fillStyle = '#03070a';
+      context.fillRect(0, 0, width, height);
+    };
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -122,195 +105,164 @@ export default function Demo046ALifeParticleSelection() {
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      particles = makeParticles(controls.population, controls.speciesCount, width, height);
+      reset();
     };
-
-    const onPointerMove = (event: PointerEvent) => {
+    const updatePointer = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
-      pointerRef.current.x = event.clientX - rect.left;
-      pointerRef.current.y = event.clientY - rect.top;
-      pointerRef.current.active = true;
+      pointer.x = event.clientX - rect.left;
+      pointer.y = event.clientY - rect.top;
     };
-    const onPointerLeave = () => {
-      pointerRef.current.active = false;
+    const onPointerDown = (event: PointerEvent) => {
+      updatePointer(event);
+      pointer.down = true;
+    };
+    const onPointerUp = () => {
+      pointer.down = false;
     };
 
-    const buildGrid = () => {
-      const cell = Math.max(12, controls.neighborRadius);
-      const grid = new Map<string, LifeParticle[]>();
-      for (const particle of particles) {
-        const cx = Math.floor(particle.x / cell);
-        const cy = Math.floor(particle.y / cell);
-        const key = `${cx}:${cy}`;
-        const bucket = grid.get(key);
-        if (bucket) bucket.push(particle);
-        else grid.set(key, [particle]);
+    const update = (delta: number) => {
+      const dt = delta * controls.timeScale;
+      const maxPopulation = Math.round(controls.startingPopulation * 2.3);
+      const targetFood = Math.round(55 + controls.foodDensity * 150);
+      foodAccumulator += dt * (8 + controls.foodDensity * 22);
+      while (foodAccumulator >= 1 && food.length < targetFood) {
+        food.push(createFood(width, height));
+        foodAccumulator -= 1;
       }
-      return {grid, cell};
-    };
+      if (pointer.down && food.length < targetFood * 1.7) {
+        for (let index = 0; index < 2; index++) {
+          food.push(createFood(width, height, pointer.x + (Math.random() - 0.5) * 32, pointer.y + (Math.random() - 0.5) * 32));
+        }
+      }
 
-    const step = () => {
-      tick += 1;
-      const {grid, cell} = buildGrid();
-      for (let index = 0; index < particles.length; index += 1) {
-        const particle = particles[index];
-        particle.px = particle.x;
-        particle.py = particle.y;
-        const cx = Math.floor(particle.x / cell);
-        const cy = Math.floor(particle.y / cell);
-        let fx = 0;
-        let fy = 0;
-        let closeCount = 0;
-        const speciesHits = new Array(controls.speciesCount).fill(0) as number[];
-
-        for (let gx = cx - 1; gx <= cx + 1; gx += 1) {
-          for (let gy = cy - 1; gy <= cy + 1; gy += 1) {
-            const bucket = grid.get(`${gx}:${gy}`);
-            if (!bucket) continue;
-            for (const other of bucket) {
-              if (other === particle) continue;
-              const dx = other.x - particle.x;
-              const dy = other.y - particle.y;
-              const distance = Math.hypot(dx, dy);
-              if (distance <= 0 || distance > controls.neighborRadius) continue;
-              const normalized = distance / controls.neighborRadius;
-              const force = speciesForce(particle.species, other.species) * (1 - normalized);
-              const separation = distance < controls.neighborRadius * 0.24 ? -1.8 * (1 - normalized) : 0;
-              fx += (dx / distance) * (force + separation);
-              fy += (dy / distance) * (force + separation);
-              closeCount += 1;
-              speciesHits[other.species] += 1;
-            }
+      const children: Organism[] = [];
+      for (const organism of organisms) {
+        organism.age += dt;
+        let target: Food | null = null;
+        let nearestSquared = organism.genome.perception * organism.genome.perception;
+        for (const nutrient of food) {
+          if (nutrient.energy <= 0) continue;
+          let dx = nutrient.x - organism.x;
+          let dy = nutrient.y - organism.y;
+          if (Math.abs(dx) > width / 2) dx -= Math.sign(dx) * width;
+          if (Math.abs(dy) > height / 2) dy -= Math.sign(dy) * height;
+          const distanceSquared = dx * dx + dy * dy;
+          if (distanceSquared < nearestSquared) {
+            nearestSquared = distanceSquared;
+            target = nutrient;
           }
         }
 
-        if (pointerRef.current.active) {
-          const dx = pointerRef.current.x - particle.x;
-          const dy = pointerRef.current.y - particle.y;
-          const distance = Math.hypot(dx, dy) + 0.001;
-          const pull = Math.max(0, 1 - distance / 240);
-          fx += (dx / distance) * pull * 0.8;
-          fy += (dy / distance) * pull * 0.8;
+        if (target) {
+          let dx = target.x - organism.x;
+          let dy = target.y - organism.y;
+          if (Math.abs(dx) > width / 2) dx -= Math.sign(dx) * width;
+          if (Math.abs(dy) > height / 2) dy -= Math.sign(dy) * height;
+          const desired = Math.atan2(dy, dx);
+          let difference = ((desired - organism.heading + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+          organism.heading += Math.max(-organism.genome.turnRate * dt, Math.min(organism.genome.turnRate * dt, difference));
+          if (nearestSquared < 64) {
+            organism.energy = Math.min(1.45, organism.energy + target.energy);
+            target.energy = 0;
+          }
+        } else {
+          organism.heading += Math.sin(organism.age * 0.8 + organism.genome.hue) * dt * 0.7;
         }
 
-        particle.energy += (closeCount - 5) * 0.003;
-        particle.energy = Math.max(0.08, Math.min(1.8, particle.energy));
-        const mutationGate = rand(index + tick * 13, 9);
-        if (mutationGate < controls.mutation * 0.0025 * (closeCount > 9 ? 1.8 : 0.7)) {
-          const bestSpecies = speciesHits.indexOf(Math.max(...speciesHits));
-          particle.species = closeCount > 4 && bestSpecies >= 0 ? bestSpecies : (particle.species + 1 + Math.floor(rand(index + tick, 7) * (controls.speciesCount - 1))) % controls.speciesCount;
+        organism.x += Math.cos(organism.heading) * organism.genome.speed * dt;
+        organism.y += Math.sin(organism.heading) * organism.genome.speed * dt;
+        organism.x = (organism.x + width) % width;
+        organism.y = (organism.y + height) % height;
+        const traitCost = 0.006 + organism.genome.speed * 0.000055 + organism.genome.perception * 0.000022;
+        organism.energy -= traitCost * controls.selectionPressure * dt;
+
+        if (organism.energy > 1.12 && organisms.length + children.length < maxPopulation) {
+          organism.energy *= 0.52;
+          const child = createOrganism(
+            width,
+            height,
+            organism.generation + 1,
+            mutateGenome(organism.genome, controls.mutationRate),
+          );
+          child.x = organism.x + (Math.random() - 0.5) * 12;
+          child.y = organism.y + (Math.random() - 0.5) * 12;
+          child.energy = organism.energy;
+          children.push(child);
         }
-
-        particle.vx = (particle.vx + fx * 0.035 * controls.speed) * 0.92;
-        particle.vy = (particle.vy + fy * 0.035 * controls.speed) * 0.92;
-        const swim = particle.seed * Math.PI * 2 + tick * 0.03 * controls.speed;
-        particle.vx += Math.cos(swim) * 0.018;
-        particle.vy += Math.sin(swim * 1.17) * 0.018;
-        particle.x = (particle.x + particle.vx + width) % width;
-        particle.y = (particle.y + particle.vy + height) % height;
       }
-    };
-
-    const sampleColonies = (): Colony[] => {
-      const cols = 18;
-      const rows = 12;
-      const buckets = Array.from({length: cols * rows}, () => ({count: 0, species: new Array(controls.speciesCount).fill(0) as number[], energy: 0}));
-      for (const particle of particles) {
-        const x = Math.min(cols - 1, Math.max(0, Math.floor((particle.x / width) * cols)));
-        const y = Math.min(rows - 1, Math.max(0, Math.floor((particle.y / height) * rows)));
-        const bucket = buckets[y * cols + x];
-        bucket.count += 1;
-        bucket.species[particle.species] += 1;
-        bucket.energy += particle.energy;
+      food = food.filter(item => item.energy > 0);
+      organisms = organisms.filter(organism => organism.energy > 0 && organism.age < 95).concat(children);
+      if (organisms.length < 12) {
+        organisms.push(...Array.from({length: 18}, () => createOrganism(width, height)));
       }
-      return buckets.flatMap((bucket, index) => {
-        if (bucket.count < 5) return [];
-        const gx = index % cols;
-        const gy = Math.floor(index / cols);
-        const species = bucket.species.indexOf(Math.max(...bucket.species));
-        return [{
-          x: (gx + 0.5) * (width / cols),
-          y: (gy + 0.5) * (height / rows),
-          radius: Math.min(width / cols, height / rows) * (0.7 + Math.min(2.1, bucket.count / 13)),
-          species,
-          intensity: Math.min(1, bucket.energy / Math.max(1, bucket.count)),
-        }];
-      });
     };
 
     const draw = (now: number) => {
-      step();
-      context.fillStyle = `rgba(0,0,0,${controls.trail * 0.72})`;
+      const delta = Math.min((now - previousTime) / 1000, 0.04);
+      previousTime = now;
+      update(delta);
+      context.fillStyle = `rgba(3,7,10,${0.28 - controls.trail * 0.25})`;
       context.fillRect(0, 0, width, height);
-      if (tick < 2) drawMicrobeBackdrop(context, width, height, now);
-      const colonies = sampleColonies();
-      context.save();
-      context.globalCompositeOperation = 'lighter';
-      for (const colony of colonies) {
-        const color = COLORS[colony.species % COLORS.length];
-        const gradient = context.createRadialGradient(colony.x, colony.y, 0, colony.x, colony.y, colony.radius * 1.45);
-        gradient.addColorStop(0, `${color}44`);
-        gradient.addColorStop(0.45, `${color}18`);
-        gradient.addColorStop(1, `${color}00`);
-        context.globalAlpha = 0.5 + colony.intensity * 0.35;
-        context.fillStyle = gradient;
-        context.beginPath();
-        context.arc(colony.x, colony.y, colony.radius * 1.45, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = color;
-        context.globalAlpha = 0.22 + colony.intensity * 0.22;
-        context.lineWidth = 1.4;
-        context.beginPath();
-        for (let i = 0; i <= 36; i += 1) {
-          const angle = (i / 36) * Math.PI * 2;
-          const wobble = 1 + Math.sin(angle * 5 + tick * 0.04 + colony.x * 0.01) * 0.16;
-          const px = colony.x + Math.cos(angle) * colony.radius * wobble;
-          const py = colony.y + Math.sin(angle) * colony.radius * wobble;
-          if (i === 0) context.moveTo(px, py);
-          else context.lineTo(px, py);
-        }
-        context.stroke();
-      }
-      context.lineWidth = 1.1;
-      for (const particle of particles) {
-        const color = COLORS[particle.species % COLORS.length];
-        context.strokeStyle = color;
-        context.globalAlpha = 0.1 + particle.energy * 0.16;
-        context.beginPath();
-        context.moveTo(particle.px, particle.py);
-        context.lineTo(particle.x, particle.y);
-        context.stroke();
-        context.fillStyle = color;
-        context.globalAlpha = 0.22 + particle.energy * 0.48;
-        context.beginPath();
-        context.arc(particle.x, particle.y, 1.1 + particle.energy * 1.4, 0, Math.PI * 2);
-        context.fill();
-      }
-      context.restore();
 
-      context.fillStyle = 'rgba(210,255,218,0.72)';
-      context.font = `${Math.max(11, width * 0.012)}px "SFMono-Regular", Menlo, Consolas, monospace`;
-      context.textAlign = 'left';
-      context.fillText(`natural selection field  particles=${particles.length}  colonies=${colonies.length}`, 18, 24);
-      frame = requestAnimationFrame(draw);
+      context.globalCompositeOperation = 'lighter';
+      for (const nutrient of food) {
+        context.fillStyle = 'rgba(74,255,187,0.5)';
+        context.beginPath();
+        context.arc(nutrient.x, nutrient.y, 1.3 + nutrient.energy * 4, 0, Math.PI * 2);
+        context.fill();
+      }
+      for (const organism of organisms) {
+        const size = 2.2 + Math.min(1, organism.energy) * 2.2;
+        context.save();
+        context.translate(organism.x, organism.y);
+        context.rotate(organism.heading);
+        context.fillStyle = `hsla(${organism.genome.hue}, 88%, 64%, ${0.48 + Math.min(1, organism.energy) * 0.42})`;
+        context.shadowColor = `hsla(${organism.genome.hue}, 92%, 62%, 0.65)`;
+        context.shadowBlur = 5;
+        context.beginPath();
+        context.moveTo(size * 1.5, 0);
+        context.lineTo(-size, size * 0.72);
+        context.lineTo(-size * 0.55, 0);
+        context.lineTo(-size, -size * 0.72);
+        context.closePath();
+        context.fill();
+        context.restore();
+      }
+      context.globalCompositeOperation = 'source-over';
+
+      const average = organisms.reduce((sum, organism) => {
+        sum.speed += organism.genome.speed;
+        sum.perception += organism.genome.perception;
+        sum.generation = Math.max(sum.generation, organism.generation);
+        return sum;
+      }, {speed: 0, perception: 0, generation: 0});
+      const count = Math.max(1, organisms.length);
+      context.fillStyle = 'rgba(215,243,238,0.82)';
+      context.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
+      context.fillText(`POP ${organisms.length}  FOOD ${food.length}  MAX GEN ${average.generation}`, 18, 26);
+      context.fillStyle = 'rgba(123,174,170,0.72)';
+      context.fillText(`AVG SPEED ${(average.speed / count).toFixed(1)}  SENSE ${(average.perception / count).toFixed(1)}`, 18, 44);
+      animationFrame = requestAnimationFrame(draw);
     };
 
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerleave', onPointerLeave);
-    frame = requestAnimationFrame(draw);
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', updatePointer);
+    window.addEventListener('pointerup', onPointerUp);
+    animationFrame = requestAnimationFrame(draw);
     return () => {
       observer.disconnect();
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerleave', onPointerLeave);
-      cancelAnimationFrame(frame);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointermove', updatePointer);
+      window.removeEventListener('pointerup', onPointerUp);
+      cancelAnimationFrame(animationFrame);
     };
-  }, [controls.mutation, controls.neighborRadius, controls.population, controls.speciesCount, controls.speed, controls.trail]);
+  }, [controls]);
 
   return (
-    <div className="demo-viewport">
+    <div className="demo-viewport" style={{background: '#03070a'}}>
       <canvas ref={canvasRef} style={{display: 'block', width: '100%', height: '100%', touchAction: 'none'}} />
     </div>
   );
