@@ -88,7 +88,14 @@ export function strokeNode(
     lineWidth = 1,
 ): Graphics {
     resizeNode(node, width, height);
-    const graphics = node.getComponent(Graphics) ?? node.addComponent(Graphics);
+
+    const borderNode = node.getChildByName('__Border')
+        ?? createUiNode(node, '__Border', width, height);
+    borderNode.setPosition(0, 0, 0);
+    resizeNode(borderNode, width, height);
+
+    const graphics = borderNode.getComponent(Graphics) ?? borderNode.addComponent(Graphics);
+    graphics.clear();
     graphics.strokeColor = color;
     graphics.lineWidth = lineWidth;
 
