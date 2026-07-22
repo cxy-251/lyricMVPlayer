@@ -1,55 +1,84 @@
 import {
     _decorator,
+    Canvas,
     Component,
-    Layers,
+    director,
     Node,
-    UITransform,
-    view,
 } from 'cc';
 import { AppRoot } from '../core/AppRoot';
+import type { NavigationService } from '../core/NavigationService';
 
 const { ccclass } = _decorator;
 
 @ccclass('Bootstrap')
 export class Bootstrap extends Component {
     private appRoot: AppRoot | null = null;
-    private contentHost: Node | null = null;
+    private canvasNode: Node | null = null;
+    private navigationReady: Promise<NavigationService> | null = null;
 
     onLoad(): void {
-        this.contentHost = this.createContentHost();
+        const canvas = this.resolveCanvas();
+        this.canvasNode = canvas.node;
         this.appRoot = AppRoot.ensure();
-        this.appRoot.attachHost(this.contentHost);
+        this.navigationReady = this.appRoot.attachCanvas(this.canvasNode);
     }
 
     start(): void {
-        void this.appRoot?.navigation.home().catch((error: unknown) => {
-            console.error('[cocoslab] bootstrap failed', error);
-        });
+        void this.navigationReady
+            ?.then((navigation) => navigation.home())
+            .catch((error: unknown) => {
+                console.error('[cocoslab] bootstrap failed', error);
+            });
     }
 
     onDestroy(): void {
-        if (this.appRoot && this.contentHost) {
-            void this.appRoot.navigation.detachHost(this.contentHost);
+        if (this.appRoot && this.canvasNode) {
+            void this.appRoot.detachCanvas(this.canvasNode);
         }
 
-        this.contentHost = null;
+        this.navigationReady = null;
+        this.canvasNode = null;
         this.appRoot = null;
     }
 
-    private createContentHost(): Node {
-        const existing = this.node.getChildByName('ContentHost');
-        const host = existing ?? new Node('ContentHost');
+    private resolveCanvas(): Canvas {
+        let current: Node | null = this.node;
 
-        host.layer = Layers.Enum.UI_2D;
+        while (current) {
+            const canvas = current.getComponent(Canvas);
 
-        if (!existing) {
-            this.node.addChild(host);
+            if (canvas) {
+                return canvas;
+            }
+
+            current = current.parent;
         }
 
-        const size = view.getVisibleSize();
-        const transform = host.getComponent(UITransform) ?? host.addComponent(UITransform);
-        transform.setContentSize(size.width, size.height);
+        const scene = director.getScene();
+        const canvas = scene ? this.findCanvas(scene) : null;
 
-        return host;
+        if (!canvas) {
+            throw new Error('Bootstrap requires a Canvas in the active scene');
+        }
+
+        return canvas;
+    }
+
+    private findCanvas(node: Node): Canvas | null {
+        const canvas = node.getComponent(Canvas);
+
+        if (canvas) {
+            return canvas;
+        }
+
+        for (const child of node.children) {
+            const nested = this.findCanvas(child);
+
+            if (nested) {
+                return nested;
+            }
+        }
+
+        return null;
     }
 }
