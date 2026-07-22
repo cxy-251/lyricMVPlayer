@@ -97,7 +97,12 @@ export class ModuleHost {
     update(dt: number): void {
         const module = this.activeModule;
 
-        if (!module || this.appliedPaused || !isUpdatable(module)) {
+        if (
+            !module
+            || this.manuallyPaused
+            || this.backgroundPaused
+            || !isUpdatable(module)
+        ) {
             return;
         }
 
