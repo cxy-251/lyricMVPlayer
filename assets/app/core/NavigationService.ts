@@ -1,44 +1,63 @@
-import type { Node } from 'cc';
 import type {
     InteractiveModule,
-    ModuleContext,
+    ModuleDefinition,
 } from '../contracts/InteractiveModule';
+import type { AppShell } from '../shell/AppShell';
+import type { AppState } from './AppState';
+import type { ModuleHost } from './ModuleHost';
 import type { ModuleRegistry } from './ModuleRegistry';
 
+const homeDefinition: ModuleDefinition = {
+    id: 'home',
+    title: 'Cocos Lab',
+    description: 'Interactive works catalog',
+    category: 'system',
+    hidden: true,
+    create: () => {
+        throw new Error('Home module is created by the application shell');
+    },
+};
+
 export class NavigationService {
-    private host: Node | null = null;
-    private activeModule: InteractiveModule | null = null;
     private transition: Promise<void> = Promise.resolve();
 
     constructor(
         private readonly registry: ModuleRegistry,
+        private readonly moduleHost: ModuleHost,
+        private readonly shell: AppShell,
+        private readonly appState: AppState,
         private readonly createHome: () => InteractiveModule,
     ) {}
 
-    attachHost(host: Node): void {
-        this.host = host;
-    }
-
-    detachHost(host: Node): Promise<void> {
-        if (this.host !== host) {
-            return Promise.resolve();
-        }
-
-        return this.enqueue(async () => {
-            await this.disposeActiveModule();
-            this.host = null;
-        });
-    }
-
     home(): Promise<void> {
-        return this.enqueue(() => this.activate('home', this.createHome()));
+        return this.enqueue(() => this.activate(homeDefinition, this.createHome(), true));
     }
 
     open(moduleId: string): Promise<void> {
         return this.enqueue(() => {
             const definition = this.registry.get(moduleId);
-            return this.activate(moduleId, definition.create());
+            return this.activate(definition, definition.create(), false);
         });
+    }
+
+    togglePause(): void {
+        const paused = this.moduleHost.togglePause();
+        this.shell.navigationBar.setPaused(paused);
+    }
+
+    reset(): void {
+        this.moduleHost.reset();
+    }
+
+    setAppVisible(visible: boolean): void {
+        this.moduleHost.setAppVisible(visible);
+        this.shell.navigationBar.setPaused(this.moduleHost.paused);
+    }
+
+    async dispose(): Promise<void> {
+        await this.moduleHost.dispose();
+        this.shell.navigationBar.showHome();
+        this.shell.clearOverlay();
     }
 
     private enqueue(operation: () => Promise<void>): Promise<void> {
@@ -48,56 +67,45 @@ export class NavigationService {
     }
 
     private async activate(
-        moduleId: string,
+        definition: ModuleDefinition,
         module: InteractiveModule,
+        isHome: boolean,
     ): Promise<void> {
-        const host = this.host;
-
-        if (!host) {
-            throw new Error('Navigation host is not attached');
-        }
-
-        await this.disposeActiveModule();
-        this.destroyHostChildren(host);
-
-        const context: ModuleContext = {
-            host,
-            moduleId,
-            open: (targetId) => this.open(targetId),
-            home: () => this.home(),
-        };
-
-        this.activeModule = module;
+        this.shell.clearOverlay();
 
         try {
-            await module.mount(context);
-        } catch (error) {
-            this.activeModule = null;
-            this.destroyHostChildren(host);
-            throw error;
-        }
-    }
+            await this.moduleHost.activate(definition, module, {
+                open: (moduleId) => this.open(moduleId),
+                home: () => this.home(),
+            });
+            this.appState.clearError();
 
-    private async disposeActiveModule(): Promise<void> {
-        const activeModule = this.activeModule;
-        this.activeModule = null;
-
-        if (!activeModule) {
-            return;
-        }
-
-        try {
-            await activeModule.unmount();
-        } finally {
-            if (this.host) {
-                this.destroyHostChildren(this.host);
+            if (isHome) {
+                this.shell.navigationBar.showHome();
+            } else {
+                this.shell.navigationBar.showModule(
+                    definition,
+                    {
+                        onBack: () => {
+                            void this.home();
+                        },
+                        onTogglePause: () => {
+                            this.togglePause();
+                        },
+                        onReset: () => {
+                            this.reset();
+                        },
+                    },
+                    this.moduleHost.paused,
+                );
             }
-        }
-    }
-
-    private destroyHostChildren(host: Node): void {
-        for (const child of [...host.children]) {
-            child.destroy();
+        } catch (error) {
+            this.appState.setError(error);
+            console.error(`[cocoslab] failed to open ${definition.id}`, error);
+            const message = error instanceof Error ? error.message : String(error);
+            this.shell.showError(message, () => {
+                void this.home();
+            });
         }
     }
 }
