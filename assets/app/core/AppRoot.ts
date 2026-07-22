@@ -8,6 +8,7 @@ import {
 } from 'cc';
 import { HomeModule } from '../features/home/HomeModule';
 import { parametricCurveDefinition } from '../features/mathematics/ParametricCurveModule';
+import { doublePendulumDefinition } from '../features/simulation/DoublePendulumModule';
 import { systemCheckDefinition } from '../features/system/SystemCheckModule';
 import { InputService } from '../services/InputService';
 import { StorageService } from '../services/StorageService';
@@ -122,6 +123,7 @@ export class AppRoot extends Component {
 
         this.moduleRegistry.registerAll([
             parametricCurveDefinition,
+            doublePendulumDefinition,
             systemCheckDefinition,
         ]);
         this.viewportService.start();
