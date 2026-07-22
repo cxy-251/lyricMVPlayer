@@ -34,7 +34,9 @@ export class AppRoot extends Component {
     private moduleHost: ModuleHost | null = null;
     private navigationService: NavigationService | null = null;
     private inputDisposers: Array<() => void> = [];
+    private shellTransition: Promise<void> = Promise.resolve();
     private initialized = false;
+    private shuttingDown = false;
 
     static ensure(): AppRoot {
         if (AppRoot.instance) {
@@ -58,46 +60,12 @@ export class AppRoot extends Component {
         return this.appStateService;
     }
 
-    async attachCanvas(canvasNode: Node): Promise<NavigationService> {
-        this.initialize();
-
-        if (this.shell?.belongsTo(canvasNode) && this.navigationService) {
-            return this.navigationService;
-        }
-
-        await this.detachCanvas();
-
-        this.shell = new AppShell(canvasNode, this.viewportService);
-        this.moduleHost = new ModuleHost(
-            this.shell.contentLayer,
-            this.viewportService,
-            this.storageService,
-            this.inputService,
-            this.appStateService,
-        );
-        this.navigationService = new NavigationService(
-            this.moduleRegistry,
-            this.moduleHost,
-            this.shell,
-            this.appStateService,
-            () => new HomeModule(this.moduleRegistry),
-        );
-        this.navigationService.setAppVisible(this.appStateService.current.appVisible);
-        this.bindInput(this.navigationService);
-        return this.navigationService;
+    attachCanvas(canvasNode: Node): Promise<NavigationService> {
+        return this.enqueueShellTransition(() => this.attachCanvasNow(canvasNode));
     }
 
-    async detachCanvas(canvasNode?: Node): Promise<void> {
-        if (!this.shell || (canvasNode && !this.shell.belongsTo(canvasNode))) {
-            return;
-        }
-
-        this.clearInputBindings();
-        await this.navigationService?.dispose();
-        this.shell.dispose();
-        this.navigationService = null;
-        this.moduleHost = null;
-        this.shell = null;
+    detachCanvas(canvasNode?: Node): Promise<void> {
+        return this.enqueueShellTransition(() => this.detachCanvasNow(canvasNode));
     }
 
     onLoad(): void {
@@ -119,13 +87,31 @@ export class AppRoot extends Component {
             return;
         }
 
+        this.shuttingDown = true;
         game.off(Game.EVENT_HIDE, this.handleAppHide, this);
         game.off(Game.EVENT_SHOW, this.handleAppShow, this);
         this.clearInputBindings();
         this.inputService.stop();
         this.viewportService.stop();
-        void this.navigationService?.dispose();
-        this.shell?.dispose();
+
+        const navigation = this.navigationService;
+        const shell = this.shell;
+        this.navigationService = null;
+        this.moduleHost = null;
+        this.shell = null;
+
+        if (navigation) {
+            void navigation.dispose()
+                .catch((error: unknown) => {
+                    console.error('[cocoslab] failed to dispose application shell', error);
+                })
+                .finally(() => {
+                    shell?.dispose();
+                });
+        } else {
+            shell?.dispose();
+        }
+
         AppRoot.instance = null;
     }
 
@@ -143,6 +129,68 @@ export class AppRoot extends Component {
         game.on(Game.EVENT_HIDE, this.handleAppHide, this);
         game.on(Game.EVENT_SHOW, this.handleAppShow, this);
         this.initialized = true;
+    }
+
+    private async attachCanvasNow(canvasNode: Node): Promise<NavigationService> {
+        if (this.shuttingDown) {
+            throw new Error('Cannot attach a Canvas while AppRoot is shutting down');
+        }
+
+        this.initialize();
+
+        if (this.shell?.belongsTo(canvasNode) && this.navigationService) {
+            return this.navigationService;
+        }
+
+        await this.detachCanvasNow();
+
+        this.shell = new AppShell(canvasNode, this.viewportService);
+        this.moduleHost = new ModuleHost(
+            this.shell.contentLayer,
+            this.viewportService,
+            this.storageService,
+            this.inputService,
+            this.appStateService,
+        );
+        this.navigationService = new NavigationService(
+            this.moduleRegistry,
+            this.moduleHost,
+            this.shell,
+            this.appStateService,
+            () => new HomeModule(this.moduleRegistry),
+        );
+        this.navigationService.setAppVisible(this.appStateService.current.appVisible);
+        this.bindInput(this.navigationService);
+        return this.navigationService;
+    }
+
+    private async detachCanvasNow(canvasNode?: Node): Promise<void> {
+        const shell = this.shell;
+
+        if (!shell || (canvasNode && !shell.belongsTo(canvasNode))) {
+            return;
+        }
+
+        const navigation = this.navigationService;
+        this.clearInputBindings();
+        this.navigationService = null;
+        this.moduleHost = null;
+        this.shell = null;
+
+        try {
+            await navigation?.dispose();
+        } finally {
+            shell.dispose();
+        }
+    }
+
+    private enqueueShellTransition<T>(operation: () => Promise<T>): Promise<T> {
+        const next = this.shellTransition.then(operation, () => operation());
+        this.shellTransition = next.then(
+            () => undefined,
+            () => undefined,
+        );
+        return next;
     }
 
     private bindInput(navigation: NavigationService): void {
