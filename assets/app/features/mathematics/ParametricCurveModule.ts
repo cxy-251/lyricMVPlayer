@@ -30,6 +30,11 @@ interface CurveSettings {
     phase: number;
 }
 
+interface CurveLayer {
+    readonly trail: number;
+    readonly graphics: Graphics;
+}
+
 const defaultSettings: CurveSettings = {
     frequencyX: 3,
     frequencyY: 2,
@@ -39,7 +44,8 @@ const defaultSettings: CurveSettings = {
 class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, Resettable {
     private root: Node | null = null;
     private context: ModuleContext | null = null;
-    private curveGraphics: Graphics | null = null;
+    private curveLayers: CurveLayer[] = [];
+    private markerGraphics: Graphics | null = null;
     private unsubscribeViewport: (() => void) | null = null;
     private settings: CurveSettings = { ...defaultSettings };
     private elapsed = 0;
@@ -49,10 +55,11 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
     mount(context: ModuleContext): void {
         this.context = context;
-        this.settings = context.storage.get<CurveSettings>(
-            'module:parametric-curve:settings',
-            { ...defaultSettings },
+        this.settings = this.normalizeSettings(
+            context.storage.get<unknown>('module:parametric-curve:settings', null),
         );
+        this.elapsed = 0;
+        this.paused = false;
 
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, 'ParametricCurveLab', viewport.width, viewport.height);
@@ -91,7 +98,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     unmount(): void {
         this.unsubscribeViewport?.();
         this.unsubscribeViewport = null;
-        this.curveGraphics = null;
+        this.curveLayers = [];
+        this.markerGraphics = null;
         this.root?.destroy();
         this.root = null;
         this.context = null;
@@ -105,6 +113,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         }
 
         clearNode(root);
+        this.curveLayers = [];
+        this.markerGraphics = null;
         root.setPosition(0, 0, 0);
         fillNode(root, viewport.width, viewport.height, palette.background);
 
@@ -134,9 +144,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, 20);
         strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, 20, 1.5);
         this.drawGrid(plot);
-
-        const curveNode = createUiNode(plot, 'Curve', this.plotWidth, this.plotHeight);
-        this.curveGraphics = curveNode.addComponent(Graphics);
+        this.createCurveLayers(plot);
         this.drawCurve();
 
         createPill(
@@ -151,7 +159,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         createLabel(
             root,
             'Lissajous field · x = sin(at + φ), y = sin(bt)',
-            Math.min(this.plotWidth - 120, 520),
+            Math.max(120, Math.min(this.plotWidth - 120, 520)),
             30,
             compact ? 13 : 15,
             palette.muted,
@@ -165,10 +173,10 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
     private renderControls(root: Node, viewport: ViewportSnapshot, centerX: number): void {
         const compact = viewport.breakpoint === 'compact';
-        const panelWidth = Math.min(
+        const panelWidth = Math.max(260, Math.min(
             viewport.width - viewport.safeInsets.left - viewport.safeInsets.right - 24,
             compact ? 620 : 880,
-        );
+        ));
         const panelHeight = compact ? 142 : 104;
         const panelY = -viewport.height / 2
             + viewport.safeInsets.bottom
@@ -234,8 +242,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 
     private renderCompactControls(panel: Node, panelWidth: number): void {
-        const rowY = [38, -38];
-        const columnX = [-panelWidth * 0.27, 0, panelWidth * 0.27];
+        const rowY = [38, -38] as const;
+        const columnX = [-panelWidth * 0.27, 0, panelWidth * 0.27] as const;
         const controls = [
             {
                 label: `X ${this.settings.frequencyX}`,
@@ -300,51 +308,95 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         this.context?.storage.set('module:parametric-curve:settings', this.settings);
     }
 
+    private normalizeSettings(value: unknown): CurveSettings {
+        const candidate = typeof value === 'object' && value !== null
+            ? value as Partial<CurveSettings>
+            : {};
+
+        return {
+            frequencyX: this.clampInteger(candidate.frequencyX, defaultSettings.frequencyX, 1, 9),
+            frequencyY: this.clampInteger(candidate.frequencyY, defaultSettings.frequencyY, 1, 9),
+            phase: this.clampNumber(candidate.phase, defaultSettings.phase, 0, Math.PI),
+        };
+    }
+
+    private clampInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
+        return Math.round(this.clampNumber(value, fallback, minimum, maximum));
+    }
+
+    private clampNumber(value: unknown, fallback: number, minimum: number, maximum: number): number {
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
+            return fallback;
+        }
+
+        return Math.max(minimum, Math.min(maximum, value));
+    }
+
     private drawGrid(plot: Node): void {
-        const gridNode = createUiNode(plot, 'CurveGrid', this.plotWidth, this.plotHeight);
-        const graphics = gridNode.addComponent(Graphics);
-        graphics.lineWidth = 1;
-        graphics.strokeColor = new Color(72, 89, 120, 80);
+        const gridNode = createUiNode(plot, 'CurveGridLines', this.plotWidth, this.plotHeight);
+        const grid = gridNode.addComponent(Graphics);
+        grid.lineWidth = 1;
+        grid.strokeColor = new Color(72, 89, 120, 80);
 
         const verticalSteps = 10;
         const horizontalSteps = 8;
 
         for (let index = 1; index < verticalSteps; index += 1) {
             const x = -this.plotWidth / 2 + (this.plotWidth * index) / verticalSteps;
-            graphics.moveTo(x, -this.plotHeight / 2);
-            graphics.lineTo(x, this.plotHeight / 2);
+            grid.moveTo(x, -this.plotHeight / 2);
+            grid.lineTo(x, this.plotHeight / 2);
         }
 
         for (let index = 1; index < horizontalSteps; index += 1) {
             const y = -this.plotHeight / 2 + (this.plotHeight * index) / horizontalSteps;
-            graphics.moveTo(-this.plotWidth / 2, y);
-            graphics.lineTo(this.plotWidth / 2, y);
+            grid.moveTo(-this.plotWidth / 2, y);
+            grid.lineTo(this.plotWidth / 2, y);
         }
 
-        graphics.stroke();
-        graphics.lineWidth = 1.5;
-        graphics.strokeColor = new Color(110, 129, 161, 130);
-        graphics.moveTo(-this.plotWidth / 2, 0);
-        graphics.lineTo(this.plotWidth / 2, 0);
-        graphics.moveTo(0, -this.plotHeight / 2);
-        graphics.lineTo(0, this.plotHeight / 2);
-        graphics.stroke();
+        grid.stroke();
+
+        const axesNode = createUiNode(plot, 'CurveAxes', this.plotWidth, this.plotHeight);
+        const axes = axesNode.addComponent(Graphics);
+        axes.lineWidth = 1.5;
+        axes.strokeColor = new Color(110, 129, 161, 130);
+        axes.moveTo(-this.plotWidth / 2, 0);
+        axes.lineTo(this.plotWidth / 2, 0);
+        axes.moveTo(0, -this.plotHeight / 2);
+        axes.lineTo(0, this.plotHeight / 2);
+        axes.stroke();
+    }
+
+    private createCurveLayers(plot: Node): void {
+        for (let trail = 3; trail >= 0; trail -= 1) {
+            const node = createUiNode(
+                plot,
+                `CurveTrail:${trail}`,
+                this.plotWidth,
+                this.plotHeight,
+            );
+            this.curveLayers.push({
+                trail,
+                graphics: node.addComponent(Graphics),
+            });
+        }
+
+        const markerNode = createUiNode(plot, 'CurveMarker', this.plotWidth, this.plotHeight);
+        this.markerGraphics = markerNode.addComponent(Graphics);
     }
 
     private drawCurve(): void {
-        const graphics = this.curveGraphics;
-
-        if (!graphics) {
+        if (this.curveLayers.length === 0 || !this.markerGraphics) {
             return;
         }
 
-        graphics.clear();
         const scaleX = this.plotWidth * 0.42;
         const scaleY = this.plotHeight * 0.40;
         const sampleCount = Math.max(320, Math.round(this.plotWidth * 0.72));
 
-        for (let trail = 3; trail >= 0; trail -= 1) {
+        for (const layer of this.curveLayers) {
+            const { graphics, trail } = layer;
             const alpha = 52 + (3 - trail) * 54;
+            graphics.clear();
             graphics.strokeColor = trail === 0
                 ? new Color(54, 221, 184, 255)
                 : new Color(255, 92, 142, alpha);
@@ -371,9 +423,10 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             this.settings.frequencyX * markerT + this.settings.phase + this.elapsed,
         ) * scaleX;
         const markerY = Math.sin(this.settings.frequencyY * markerT) * scaleY;
-        graphics.fillColor = palette.warning;
-        graphics.circle(markerX, markerY, 6);
-        graphics.fill();
+        this.markerGraphics.clear();
+        this.markerGraphics.fillColor = palette.warning;
+        this.markerGraphics.circle(markerX, markerY, 6);
+        this.markerGraphics.fill();
     }
 }
 
