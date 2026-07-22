@@ -1,0 +1,7 @@
+library/
+temp/
+local/
+profiles/
+build/
+node_modules/
+.DS_Store
