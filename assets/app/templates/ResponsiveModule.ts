@@ -1,0 +1,76 @@
+import { Node } from 'cc';
+import type {
+    InteractiveModule,
+    ModuleContext,
+} from '../contracts/InteractiveModule';
+import type { ViewportSnapshot } from '../services/ViewportService';
+import { createUiNode, resizeNode } from '../ui/UiFactory';
+
+export abstract class ResponsiveModule implements InteractiveModule {
+    protected context: ModuleContext | null = null;
+    protected root: Node | null = null;
+
+    private unsubscribeViewport: (() => void) | null = null;
+
+    protected abstract readonly rootName: string;
+
+    mount(context: ModuleContext): void | Promise<void> {
+        if (this.context) {
+            throw new Error(`${this.rootName} is already mounted`);
+        }
+
+        this.context = context;
+        const viewport = context.viewport.current;
+        this.root = createUiNode(
+            context.host,
+            this.rootName,
+            viewport.width,
+            viewport.height,
+        );
+
+        this.onMount();
+        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+            if (!this.root) {
+                return;
+            }
+
+            resizeNode(this.root, snapshot.width, snapshot.height);
+            this.render(snapshot);
+        });
+    }
+
+    async unmount(): Promise<void> {
+        this.unsubscribeViewport?.();
+        this.unsubscribeViewport = null;
+
+        try {
+            await this.onUnmount();
+        } finally {
+            this.root?.destroy();
+            this.root = null;
+            this.context = null;
+        }
+    }
+
+    protected requireContext(): ModuleContext {
+        if (!this.context) {
+            throw new Error(`${this.rootName} is not mounted`);
+        }
+
+        return this.context;
+    }
+
+    protected requireRoot(): Node {
+        if (!this.root) {
+            throw new Error(`${this.rootName} has no root node`);
+        }
+
+        return this.root;
+    }
+
+    protected onMount(): void {}
+
+    protected onUnmount(): void | Promise<void> {}
+
+    protected abstract render(viewport: ViewportSnapshot): void;
+}
