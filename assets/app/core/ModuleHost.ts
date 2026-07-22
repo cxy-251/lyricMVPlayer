@@ -27,6 +27,7 @@ export class ModuleHost {
     private manuallyPaused = false;
     private backgroundPaused = false;
     private appliedPaused = false;
+    private runtimeFailed = false;
     private readonly unsubscribeViewport: () => void;
 
     constructor(
@@ -35,6 +36,7 @@ export class ModuleHost {
         private readonly storage: StorageService,
         private readonly input: InputService,
         private readonly appState: AppState,
+        private readonly onRuntimeError: (error: unknown) => void,
     ) {
         this.unsubscribeViewport = viewport.subscribe((snapshot) => {
             if (this.activeRoot) {
@@ -72,6 +74,7 @@ export class ModuleHost {
         this.manuallyPaused = false;
         this.backgroundPaused = !this.appState.current.appVisible;
         this.appliedPaused = false;
+        this.runtimeFailed = false;
         this.appState.setActiveModule(definition.id, definition.title);
 
         const context: ModuleContext = {
@@ -99,6 +102,7 @@ export class ModuleHost {
 
         if (
             !module
+            || this.runtimeFailed
             || this.manuallyPaused
             || this.backgroundPaused
             || !isUpdatable(module)
@@ -106,35 +110,55 @@ export class ModuleHost {
             return;
         }
 
-        module.update(dt);
+        try {
+            module.update(dt);
+        } catch (error) {
+            this.failRuntime(error);
+        }
     }
 
     togglePause(): boolean {
         const module = this.activeModule;
 
-        if (!module || !isPausable(module)) {
+        if (!module || this.runtimeFailed || !isPausable(module)) {
             return false;
         }
 
         this.manuallyPaused = !this.manuallyPaused;
-        this.syncPauseState();
+
+        try {
+            this.syncPauseState();
+        } catch (error) {
+            this.failRuntime(error);
+        }
+
         return this.appliedPaused;
     }
 
     reset(): boolean {
         const module = this.activeModule;
 
-        if (!module || !isResettable(module)) {
+        if (!module || this.runtimeFailed || !isResettable(module)) {
             return false;
         }
 
-        module.reset();
-        return true;
+        try {
+            module.reset();
+            return true;
+        } catch (error) {
+            this.failRuntime(error);
+            return false;
+        }
     }
 
     setAppVisible(visible: boolean): void {
         this.backgroundPaused = !visible;
-        this.syncPauseState();
+
+        try {
+            this.syncPauseState();
+        } catch (error) {
+            this.failRuntime(error);
+        }
     }
 
     async dispose(): Promise<void> {
@@ -159,6 +183,17 @@ export class ModuleHost {
         }
     }
 
+    private failRuntime(error: unknown): void {
+        if (this.runtimeFailed) {
+            return;
+        }
+
+        this.runtimeFailed = true;
+        this.appState.setError(error);
+        console.error('[cocoslab] module runtime failed', error);
+        this.onRuntimeError(error);
+    }
+
     private async disposeActive(): Promise<void> {
         const module = this.activeModule;
         const root = this.activeRoot;
@@ -169,6 +204,7 @@ export class ModuleHost {
         this.manuallyPaused = false;
         this.backgroundPaused = false;
         this.appliedPaused = false;
+        this.runtimeFailed = false;
 
         try {
             await module?.unmount();
