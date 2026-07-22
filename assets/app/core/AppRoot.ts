@@ -151,6 +151,7 @@ export class AppRoot extends Component {
             this.storageService,
             this.inputService,
             this.appStateService,
+            this.handleModuleRuntimeError,
         );
         this.navigationService = new NavigationService(
             this.moduleRegistry,
@@ -217,6 +218,13 @@ export class AppRoot extends Component {
 
         this.inputDisposers = [];
     }
+
+    private readonly handleModuleRuntimeError = (error: unknown): void => {
+        const message = error instanceof Error ? error.message : String(error);
+        this.shell?.showError(message, () => {
+            void this.navigationService?.home();
+        });
+    };
 
     private readonly handleAppHide = (): void => {
         this.appStateService.setVisible(false);
