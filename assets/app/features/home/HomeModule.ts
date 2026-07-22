@@ -1,157 +1,348 @@
-import { Color, Graphics, Node, view } from 'cc';
+import {
+    Color,
+    Graphics,
+    HorizontalTextAlignment,
+    Node,
+} from 'cc';
 import type {
     InteractiveModule,
+    ModuleCategory,
     ModuleContext,
+    ModuleDefinition,
 } from '../../contracts/InteractiveModule';
 import type { ModuleRegistry } from '../../core/ModuleRegistry';
+import type { ViewportSnapshot } from '../../services/ViewportService';
 import {
+    clearNode,
     createButton,
     createLabel,
+    createPill,
     createUiNode,
     fillNode,
     palette,
+    strokeNode,
 } from '../../ui/UiFactory';
+
+type CategoryFilter = 'all' | ModuleCategory;
+
+const categoryLabels: Record<ModuleCategory, string> = {
+    game: 'Games',
+    simulation: 'Simulations',
+    mathematics: 'Mathematics',
+    generative: 'Generative',
+    shader: 'Shaders',
+    music: 'Music',
+    tool: 'Tools',
+    system: 'System',
+};
 
 export class HomeModule implements InteractiveModule {
     private root: Node | null = null;
+    private context: ModuleContext | null = null;
+    private selectedCategory: CategoryFilter = 'all';
+    private page = 0;
+    private unsubscribeViewport: (() => void) | null = null;
 
     constructor(private readonly registry: ModuleRegistry) {}
 
     mount(context: ModuleContext): void {
-        const size = view.getVisibleSize();
-        const width = Math.max(640, size.width);
-        const height = Math.max(480, size.height);
-
-        this.root = createUiNode(context.host, 'Home', width, height);
-        fillNode(this.root, width, height, palette.background);
-        this.drawDecoration(this.root, width, height);
-
-        createLabel(
-            this.root,
-            'COCOS LAB',
-            Math.min(760, width - 48),
-            76,
-            52,
-            palette.text,
-            0,
-            height / 2 - 92,
-        );
-
-        createLabel(
-            this.root,
-            'Games · Simulations · Mathematics · Generative · Shaders · Music · Tools',
-            Math.min(900, width - 48),
-            48,
-            18,
-            palette.muted,
-            0,
-            height / 2 - 144,
-        );
-
-        const definitions = this.registry.list();
-        const cardWidth = Math.min(620, width - 64);
-        let y = 34;
-
-        for (const definition of definitions) {
-            const card = createUiNode(
-                this.root,
-                `ModuleCard:${definition.id}`,
-                cardWidth,
-                122,
-                0,
-                y,
-            );
-
-            fillNode(card, cardWidth, 122, palette.surface, 18);
-
-            createLabel(
-                card,
-                definition.title,
-                cardWidth - 190,
-                42,
-                25,
-                palette.text,
-                -70,
-                25,
-            );
-
-            createLabel(
-                card,
-                definition.description,
-                cardWidth - 190,
-                54,
-                16,
-                palette.muted,
-                -70,
-                -24,
-            );
-
-            createButton(card, {
-                name: `Open:${definition.id}`,
-                text: 'OPEN',
-                width: 122,
-                height: 54,
-                x: cardWidth / 2 - 82,
-                y: 0,
-                onPress: () => {
-                    void context.open(definition.id);
-                },
-            });
-
-            y -= 148;
-        }
-
-        if (definitions.length === 0) {
-            createLabel(
-                this.root,
-                'The application shell is ready. Register a module to make it appear here.',
-                Math.min(700, width - 64),
-                100,
-                20,
-                palette.muted,
-                0,
-                0,
-            );
-        }
-
-        createLabel(
-            this.root,
-            'All visible content in this project is generated at runtime by TypeScript and shaders.',
-            Math.min(860, width - 48),
-            46,
-            16,
-            palette.muted,
-            0,
-            -height / 2 + 40,
-        );
+        this.context = context;
+        const viewport = context.viewport.current;
+        this.root = createUiNode(context.host, 'HomeCatalog', viewport.width, viewport.height);
+        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+            this.render(snapshot);
+        });
     }
 
     unmount(): void {
+        this.unsubscribeViewport?.();
+        this.unsubscribeViewport = null;
         this.root?.destroy();
         this.root = null;
+        this.context = null;
+    }
+
+    private render(viewport: ViewportSnapshot): void {
+        const root = this.root;
+
+        if (!root) {
+            return;
+        }
+
+        clearNode(root);
+        root.setPosition(0, 0, 0);
+        fillNode(root, viewport.width, viewport.height, palette.background);
+        this.drawDecoration(root, viewport.width, viewport.height);
+
+        const compact = viewport.breakpoint === 'compact';
+        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
+        const titleY = viewport.height / 2 - viewport.safeInsets.top - (compact ? 54 : 68);
+
+        createLabel(
+            root,
+            'COCOS LAB',
+            Math.min(760, safeWidth - 32),
+            compact ? 54 : 70,
+            compact ? 38 : 54,
+            palette.text,
+            centerX,
+            titleY,
+        );
+
+        createLabel(
+            root,
+            'Interactive works generated by TypeScript, mathematics and shaders',
+            Math.min(900, safeWidth - 40),
+            38,
+            compact ? 14 : 18,
+            palette.muted,
+            centerX,
+            titleY - (compact ? 48 : 58),
+        );
+
+        const filterY = titleY - (compact ? 94 : 112);
+        this.renderCategoryFilters(root, viewport, centerX, filterY);
+        this.renderCards(root, viewport, centerX, filterY - (compact ? 48 : 56));
+    }
+
+    private renderCategoryFilters(
+        root: Node,
+        viewport: ViewportSnapshot,
+        centerX: number,
+        y: number,
+    ): void {
+        const filters: CategoryFilter[] = ['all', ...this.registry.categories()];
+        const compact = viewport.breakpoint === 'compact';
+        const gap = compact ? 8 : 10;
+        const widths = filters.map((filter) => {
+            const label = filter === 'all' ? 'All' : categoryLabels[filter];
+            return Math.max(compact ? 62 : 76, label.length * (compact ? 9 : 10) + 28);
+        });
+        const totalWidth = widths.reduce((sum, width) => sum + width, 0) + gap * (filters.length - 1);
+        let x = centerX - totalWidth / 2;
+
+        for (let index = 0; index < filters.length; index += 1) {
+            const filter = filters[index];
+            const width = widths[index];
+            const label = filter === 'all' ? 'All' : categoryLabels[filter];
+            x += width / 2;
+            createButton(root, {
+                name: `Category:${filter}`,
+                text: label.toUpperCase(),
+                width,
+                height: compact ? 36 : 40,
+                x,
+                y,
+                fontSize: compact ? 11 : 12,
+                variant: this.selectedCategory === filter ? 'primary' : 'ghost',
+                onPress: () => {
+                    this.selectedCategory = filter;
+                    this.page = 0;
+                    this.render(viewport);
+                },
+            });
+            x += width / 2 + gap;
+        }
+    }
+
+    private renderCards(
+        root: Node,
+        viewport: ViewportSnapshot,
+        centerX: number,
+        cardsTop: number,
+    ): void {
+        const definitions = this.selectedCategory === 'all'
+            ? this.registry.list()
+            : this.registry.list(this.selectedCategory);
+        const compact = viewport.breakpoint === 'compact';
+        const columns = viewport.breakpoint === 'wide' ? 3 : viewport.breakpoint === 'medium' ? 2 : 1;
+        const horizontalPadding = compact ? 18 : 38;
+        const gap = compact ? 14 : 18;
+        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const gridWidth = Math.min(1320, safeWidth - horizontalPadding * 2);
+        const cardWidth = (gridWidth - gap * (columns - 1)) / columns;
+        const cardHeight = compact ? 148 : 164;
+        const cardsBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 58;
+        const availableHeight = Math.max(cardHeight, cardsTop - cardsBottom);
+        const rows = Math.max(1, Math.floor((availableHeight + gap) / (cardHeight + gap)));
+        const pageSize = rows * columns;
+        const pageCount = Math.max(1, Math.ceil(definitions.length / pageSize));
+        this.page = Math.min(this.page, pageCount - 1);
+        const visible = definitions.slice(this.page * pageSize, (this.page + 1) * pageSize);
+
+        if (definitions.length === 0) {
+            createLabel(
+                root,
+                'No modules in this category yet.',
+                Math.min(620, safeWidth - 40),
+                80,
+                20,
+                palette.muted,
+                centerX,
+                (cardsTop + cardsBottom) / 2,
+            );
+            return;
+        }
+
+        for (let index = 0; index < visible.length; index += 1) {
+            const row = Math.floor(index / columns);
+            const column = index % columns;
+            const rowCount = Math.min(columns, visible.length - row * columns);
+            const rowWidth = cardWidth * rowCount + gap * (rowCount - 1);
+            const rowStart = centerX - rowWidth / 2 + cardWidth / 2;
+            const x = rowStart + column * (cardWidth + gap);
+            const y = cardsTop - cardHeight / 2 - row * (cardHeight + gap);
+            this.renderCard(root, visible[index], cardWidth, cardHeight, x, y, compact);
+        }
+
+        if (pageCount > 1) {
+            const pagerY = cardsBottom - 20;
+            createButton(root, {
+                name: 'CatalogPrevious',
+                text: '←',
+                width: 48,
+                height: 36,
+                x: centerX - 64,
+                y: pagerY,
+                variant: 'ghost',
+                onPress: () => {
+                    this.page = (this.page - 1 + pageCount) % pageCount;
+                    this.render(viewport);
+                },
+            });
+            createLabel(
+                root,
+                `${this.page + 1} / ${pageCount}`,
+                70,
+                36,
+                13,
+                palette.muted,
+                centerX,
+                pagerY,
+            );
+            createButton(root, {
+                name: 'CatalogNext',
+                text: '→',
+                width: 48,
+                height: 36,
+                x: centerX + 64,
+                y: pagerY,
+                variant: 'ghost',
+                onPress: () => {
+                    this.page = (this.page + 1) % pageCount;
+                    this.render(viewport);
+                },
+            });
+        }
+    }
+
+    private renderCard(
+        root: Node,
+        definition: ModuleDefinition,
+        width: number,
+        height: number,
+        x: number,
+        y: number,
+        compact: boolean,
+    ): void {
+        const card = createUiNode(root, `ModuleCard:${definition.id}`, width, height, x, y);
+        fillNode(card, width, height, palette.surface, 18);
+        strokeNode(card, width, height, palette.border, 18, 1.25);
+
+        const innerWidth = width - 32;
+        const leftX = -width / 2 + 16 + innerWidth / 2;
+        const status = definition.status ?? 'prototype';
+        const statusWidth = status === 'prototype' ? 86 : 64;
+
+        createPill(
+            card,
+            categoryLabels[definition.category],
+            Math.min(110, Math.max(72, categoryLabels[definition.category].length * 8 + 20)),
+            -width / 2 + 66,
+            height / 2 - 26,
+            true,
+        );
+        createPill(
+            card,
+            status,
+            statusWidth,
+            width / 2 - statusWidth / 2 - 14,
+            height / 2 - 26,
+        );
+
+        createLabel(
+            card,
+            definition.title,
+            innerWidth,
+            38,
+            compact ? 21 : 23,
+            palette.text,
+            leftX,
+            30,
+            HorizontalTextAlignment.LEFT,
+        );
+        createLabel(
+            card,
+            definition.description,
+            innerWidth,
+            compact ? 48 : 54,
+            compact ? 14 : 15,
+            palette.muted,
+            leftX,
+            -8,
+            HorizontalTextAlignment.LEFT,
+        );
+
+        const tags = definition.tags?.slice(0, compact ? 2 : 3).join(' · ') ?? '';
+        createLabel(
+            card,
+            tags.toUpperCase(),
+            Math.max(80, width - 150),
+            28,
+            11,
+            palette.subtle,
+            -54,
+            -height / 2 + 25,
+            HorizontalTextAlignment.LEFT,
+        );
+
+        createButton(card, {
+            name: `Open:${definition.id}`,
+            text: 'OPEN',
+            width: 92,
+            height: 40,
+            x: width / 2 - 62,
+            y: -height / 2 + 27,
+            fontSize: 13,
+            onPress: () => {
+                void this.context?.open(definition.id);
+            },
+        });
     }
 
     private drawDecoration(parent: Node, width: number, height: number): void {
-        const decoration = createUiNode(parent, 'Decoration', width, height);
+        const decoration = createUiNode(parent, 'CatalogDecoration', width, height);
         const graphics = decoration.addComponent(Graphics);
+        const radiusLimit = Math.min(width, height) * 0.62;
 
-        graphics.strokeColor = new Color(42, 55, 78, 130);
-        graphics.lineWidth = 2;
+        graphics.strokeColor = new Color(42, 55, 78, 80);
+        graphics.lineWidth = 1.5;
 
-        for (let radius = 90; radius <= Math.min(width, height) * 0.62; radius += 64) {
-            graphics.circle(width * 0.34, height * 0.24, radius);
+        for (let radius = 100; radius <= radiusLimit; radius += 72) {
+            graphics.circle(width * 0.37, height * 0.28, radius);
         }
 
         graphics.stroke();
-        graphics.fillColor = palette.accent;
+        graphics.fillColor = new Color(255, 92, 142, 120);
 
-        for (let index = 0; index < 16; index += 1) {
-            const angle = (Math.PI * 2 * index) / 16;
-            const radius = Math.min(width, height) * 0.34;
+        for (let index = 0; index < 18; index += 1) {
+            const angle = (Math.PI * 2 * index) / 18;
+            const radius = Math.min(width, height) * 0.36;
             graphics.circle(
-                width * 0.34 + Math.cos(angle) * radius,
-                height * 0.24 + Math.sin(angle) * radius,
-                3 + (index % 4),
+                width * 0.37 + Math.cos(angle) * radius,
+                height * 0.28 + Math.sin(angle) * radius,
+                2 + (index % 3),
             );
         }
 
