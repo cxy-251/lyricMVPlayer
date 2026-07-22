@@ -2,52 +2,89 @@
 
 Cocos Lab is a cross-platform collection of code-generated interactive works built with Cocos Creator 3.8.8.
 
-The application may contain games, simulations, mathematical visualizations, generative art, shaders, music interactions and tools. Visible content is generated at runtime with TypeScript, geometry and shaders rather than imported image or model assets.
+The catalog can contain games, simulations, mathematical visualizations, generative art, shaders, music interactions and tools. Visible content is generated at runtime with TypeScript, geometry and shaders.
 
-## Architecture
-
-- `Bootstrap` connects the active scene UI to the persistent application core.
-- `AppRoot` owns cross-scene services and survives scene changes.
-- `NavigationService` serializes transitions and owns module cleanup.
-- `ModuleRegistry` is the catalog used by the generated home screen.
-- Feature modules implement `mount()` and `unmount()`; optional capabilities such as pause or reset are separate interfaces.
-- Asset Bundles will be introduced only when a feature needs an independent loading or deployment boundary.
-
-Dependency direction:
+## Runtime architecture
 
 ```text
-Cocos Engine
-    ↑
-Application Core
-    ↑
-Feature Modules
+Boot scene
+└── Canvas
+    └── AppShell
+        ├── ContentLayer
+        ├── NavigationLayer
+        └── OverlayLayer
+
+Persistent AppRoot
+├── ModuleRegistry
+├── NavigationService
+├── ModuleHost
+├── ViewportService
+├── InputService
+├── StorageService
+└── AppState
 ```
 
-Feature modules must not depend on each other.
+`Bootstrap` finds the active Canvas and attaches it to the persistent `AppRoot`. Its exact scene-node location does not determine the application layout.
 
-## Run the current shell
+`ModuleHost` gives every work an isolated root node and manages its mount, frame updates, pause state, reset behavior and cleanup. Navigation transitions are serialized so two modules cannot mount into the same host concurrently.
+
+`AppShell` separates work content from application navigation and error overlays. Responsive layout data, safe-area insets and orientation changes are distributed through `ViewportService`.
+
+## Module model
+
+Every work exports a `ModuleDefinition` containing its catalog metadata and factory:
+
+```ts
+{
+    id,
+    title,
+    description,
+    category,
+    tags,
+    capabilities,
+    status,
+    order,
+    create,
+}
+```
+
+The required runtime lifecycle is:
+
+```ts
+mount(context)
+unmount()
+```
+
+Modules may additionally implement `update(dt)`, `pause()/resume()` and `reset()`. The application navigation bar derives its controls from the module capability declaration.
+
+Feature modules depend on application contracts and shared services. Feature modules do not depend on each other.
+
+## Current modules
+
+- **Parametric Curve Lab** — an animated, adjustable Lissajous field that validates frame updates, responsive layout, saved settings, pause, reset and cleanup.
+- **Architecture Check** — a live view of the application-shell and module-host responsibilities.
+
+## Run
 
 1. Pull the `cocoslab` branch.
 2. Open the project with Cocos Creator 3.8.8.
-3. Create and save a 2D scene named `Boot`.
-4. Create a UI Canvas using Creator's UI menu so its UI Camera is configured correctly.
-5. Attach `assets/app/bootstrap/Bootstrap.ts` to the Canvas.
-6. Save the scene and run Browser Preview.
+3. Wait for Creator to import new TypeScript files and generate their `.meta` files.
+4. Open the existing `Boot` scene.
+5. Run Browser Preview.
 
-The first screen is generated entirely by code. Open **Architecture Check** to verify navigation and cleanup, then return to the home screen.
+Keyboard actions:
 
-Creator will generate `.meta` files for newly imported source files on the first project import. Those `.meta` files and the saved Boot scene must be committed because they contain stable Cocos UUID references.
+- `Escape`: return to the catalog
+- `Space`: pause or resume the active module
+- `R`: reset the active module
+
+Creator-generated `.meta` files are committed because they preserve stable resource UUIDs.
 
 ## Version control
 
-Committed:
+Committed source includes TypeScript, shaders, scene entry files, `.meta` files and project settings.
 
-- TypeScript and shader source
-- scene entry files
-- Cocos `.meta` files
-- project settings
-
-Ignored:
+Generated directories remain ignored:
 
 - `library/`
 - `temp/`
@@ -56,4 +93,4 @@ Ignored:
 - `build/`
 - `node_modules/`
 
-Web builds are generated outside Git and deployed as static files to Cloudflare Pages.
+Web builds are produced from the `cocoslab` branch and deployed as static files.
