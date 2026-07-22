@@ -323,29 +323,33 @@ export class HomeModule implements InteractiveModule {
 
     private drawDecoration(parent: Node, width: number, height: number): void {
         const decoration = createUiNode(parent, 'CatalogDecoration', width, height);
-        const graphics = decoration.addComponent(Graphics);
         const radiusLimit = Math.min(width, height) * 0.62;
 
-        graphics.strokeColor = new Color(42, 55, 78, 80);
-        graphics.lineWidth = 1.5;
+        const ringsNode = createUiNode(decoration, 'CatalogRings', width, height);
+        const rings = ringsNode.addComponent(Graphics);
+        rings.strokeColor = new Color(42, 55, 78, 80);
+        rings.lineWidth = 1.5;
 
         for (let radius = 100; radius <= radiusLimit; radius += 72) {
-            graphics.circle(width * 0.37, height * 0.28, radius);
+            rings.circle(width * 0.37, height * 0.28, radius);
         }
 
-        graphics.stroke();
-        graphics.fillColor = new Color(255, 92, 142, 120);
+        rings.stroke();
+
+        const dotsNode = createUiNode(decoration, 'CatalogDots', width, height);
+        const dots = dotsNode.addComponent(Graphics);
+        dots.fillColor = new Color(255, 92, 142, 120);
 
         for (let index = 0; index < 18; index += 1) {
             const angle = (Math.PI * 2 * index) / 18;
             const radius = Math.min(width, height) * 0.36;
-            graphics.circle(
+            dots.circle(
                 width * 0.37 + Math.cos(angle) * radius,
                 height * 0.28 + Math.sin(angle) * radius,
                 2 + (index % 3),
             );
         }
 
-        graphics.fill();
+        dots.fill();
     }
 }
