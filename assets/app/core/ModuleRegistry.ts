@@ -18,6 +18,12 @@ export class ModuleRegistry {
         this.definitions.set(definition.id, definition);
     }
 
+    registerAll(definitions: readonly ModuleDefinition[]): void {
+        for (const definition of definitions) {
+            this.register(definition);
+        }
+    }
+
     get(moduleId: string): ModuleDefinition {
         const definition = this.definitions.get(moduleId);
 
@@ -32,6 +38,13 @@ export class ModuleRegistry {
         return [...this.definitions.values()]
             .filter((definition) => !definition.hidden)
             .filter((definition) => !category || definition.category === category)
-            .sort((left, right) => left.title.localeCompare(right.title));
+            .sort((left, right) => {
+                const orderDifference = (left.order ?? 1000) - (right.order ?? 1000);
+                return orderDifference || left.title.localeCompare(right.title);
+            });
+    }
+
+    categories(): readonly ModuleCategory[] {
+        return [...new Set(this.list().map((definition) => definition.category))];
     }
 }
