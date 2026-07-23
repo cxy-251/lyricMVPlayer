@@ -32,6 +32,17 @@ export interface CatalogCardOptions {
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
+    const radius = Math.min(16, Math.max(10, options.width * 0.035));
+    const shadow = createUiNode(
+        parent,
+        `${options.name}:Shadow`,
+        options.width,
+        options.height,
+        options.x,
+        options.y - 5,
+    );
+    fillNode(shadow, options.width, options.height, new Color(30, 38, 52, 14), radius);
+
     const card = createUiNode(
         parent,
         options.name,
@@ -40,12 +51,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.x,
         options.y,
     );
-
-    const radius = Math.min(16, Math.max(10, options.width * 0.035));
-    const shadow = createUiNode(card, 'Shadow', options.width, options.height, 0, -5);
-    fillNode(shadow, options.width, options.height, new Color(30, 38, 52, 14), radius);
     fillNode(card, options.width, options.height, palette.surface, radius);
-    strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
     const hoverLayer = createUiNode(card, 'HoverLayer', options.width - 2, options.height - 2);
     fillNode(
@@ -57,6 +63,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
     hoverOpacity.opacity = 0;
+    strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
     const coverHeight = options.height * 0.68;
     const cover = drawCatalogCover(
@@ -126,7 +133,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
 
         tween(card)
             .to(0.16, {
-                scale: next ? new Vec3(1.018, 1.018, 1) : Vec3.ONE,
+                scale: next ? new Vec3(1.018, 1.018, 1) : new Vec3(1, 1, 1),
             })
             .start();
         tween(cover)
