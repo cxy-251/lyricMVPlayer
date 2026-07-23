@@ -1,10 +1,14 @@
 import {
+    Button,
     Color,
     Graphics,
     HorizontalTextAlignment,
     Label,
     Layers,
     Node,
+    Slider,
+    Sprite,
+    Toggle,
     UITransform,
     VerticalTextAlignment,
 } from 'cc';
@@ -16,6 +20,8 @@ export const palette = {
     surfaceStrong: new Color(232, 232, 228, 255),
     surfaceSoft: new Color(249, 249, 247, 255),
     border: new Color(211, 211, 205, 255),
+    borderStrong: new Color(181, 181, 174, 255),
+    hover: new Color(237, 237, 233, 255),
     primary: new Color(22, 22, 21, 255),
     primaryMuted: new Color(232, 232, 228, 255),
     primaryText: new Color(255, 255, 253, 255),
@@ -23,12 +29,14 @@ export const palette = {
     muted: new Color(91, 91, 87, 255),
     subtle: new Color(139, 139, 133, 255),
     accent: new Color(45, 92, 214, 255),
+    accentSoft: new Color(225, 232, 249, 255),
     warning: new Color(159, 101, 22, 255),
     danger: new Color(177, 47, 47, 255),
     clear: new Color(0, 0, 0, 0),
 } as const;
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonShape = 'rounded' | 'capsule' | 'circle';
 
 export function createUiNode(
     parent: Node,
@@ -146,48 +154,162 @@ export function createButton(
         y?: number;
         fontSize?: number;
         variant?: ButtonVariant;
+        shape?: ButtonShape;
         onPress: () => void;
     },
 ): Node {
-    const button = createUiNode(
+    const hitWidth = Math.max(44, options.width);
+    const hitHeight = Math.max(44, options.height);
+    const root = createUiNode(
         parent,
         options.name,
-        options.width,
-        options.height,
+        hitWidth,
+        hitHeight,
         options.x ?? 0,
         options.y ?? 0,
     );
-
+    const visual = createUiNode(root, '__ButtonVisual', options.width, options.height);
     const variant = options.variant ?? 'primary';
-    const background = variant === 'primary'
-        ? palette.primary
-        : variant === 'danger'
-            ? palette.danger
-            : variant === 'secondary'
-                ? palette.surfaceSoft
-                : palette.clear;
+    const shape = options.shape ?? (options.width === options.height ? 'circle' : 'rounded');
+    const radius = shape === 'circle'
+        ? Math.min(options.width, options.height) / 2
+        : shape === 'capsule'
+            ? options.height / 2
+            : Math.min(10, options.height / 3);
+
+    const paint = (hovered: boolean): void => {
+        const background = variant === 'primary'
+            ? hovered ? new Color(42, 42, 40, 255) : palette.primary
+            : variant === 'danger'
+                ? hovered ? new Color(155, 38, 38, 255) : palette.danger
+                : hovered
+                    ? palette.hover
+                    : variant === 'secondary'
+                        ? palette.surface
+                        : palette.clear;
+        fillNode(visual, options.width, options.height, background, radius);
+
+        if (variant === 'secondary') {
+            strokeNode(
+                visual,
+                options.width,
+                options.height,
+                hovered ? palette.borderStrong : palette.border,
+                radius,
+                1,
+            );
+        }
+    };
+
+    paint(false);
     const textColor = variant === 'primary' || variant === 'danger'
         ? palette.primaryText
         : palette.text;
-    const radius = Math.min(7, options.height / 5);
-
-    fillNode(button, options.width, options.height, background, radius);
-
-    if (variant === 'secondary') {
-        strokeNode(button, options.width, options.height, palette.border, radius, 1);
-    }
-
     createLabel(
-        button,
+        visual,
         options.text,
-        options.width - 16,
+        Math.max(1, options.width - 12),
         options.height,
-        options.fontSize ?? 15,
+        options.fontSize ?? 14,
         textColor,
     );
 
-    button.on(Node.EventType.TOUCH_END, options.onPress);
-    return button;
+    const button = root.addComponent(Button);
+    button.target = visual;
+    button.transition = Button.Transition.SCALE;
+    button.zoomScale = 0.94;
+    button.duration = 0.08;
+    root.on(Button.EventType.CLICK, options.onPress);
+    root.on(Node.EventType.MOUSE_ENTER, () => {
+        paint(true);
+        setPointerCursor(true);
+    });
+    root.on(Node.EventType.MOUSE_LEAVE, () => {
+        paint(false);
+        setPointerCursor(false);
+    });
+
+    return root;
+}
+
+export function createToggle(
+    parent: Node,
+    options: {
+        name: string;
+        checked: boolean;
+        x?: number;
+        y?: number;
+        onChange: (checked: boolean) => void;
+    },
+): Toggle {
+    const root = createUiNode(parent, options.name, 52, 44, options.x ?? 0, options.y ?? 0);
+    const track = createUiNode(root, '__ToggleTrack', 44, 26);
+    const knob = createUiNode(track, '__ToggleKnob', 20, 20);
+
+    const paint = (checked: boolean): void => {
+        fillNode(track, 44, 26, checked ? palette.accent : palette.surfaceStrong, 13);
+        fillNode(knob, 20, 20, palette.surface, 10);
+        knob.setPosition(checked ? 9 : -9, 0, 0);
+    };
+
+    const toggle = root.addComponent(Toggle);
+    toggle.transition = Button.Transition.SCALE;
+    toggle.target = track;
+    toggle.zoomScale = 0.96;
+    toggle.duration = 0.08;
+    toggle.setIsCheckedWithoutNotify(options.checked);
+    paint(options.checked);
+
+    root.on('toggle', () => {
+        paint(toggle.isChecked);
+        options.onChange(toggle.isChecked);
+    });
+    root.on(Node.EventType.MOUSE_ENTER, () => setPointerCursor(true));
+    root.on(Node.EventType.MOUSE_LEAVE, () => setPointerCursor(false));
+    return toggle;
+}
+
+export function createSlider(
+    parent: Node,
+    options: {
+        name: string;
+        width: number;
+        progress: number;
+        x?: number;
+        y?: number;
+        onChange: (progress: number) => void;
+    },
+): Slider {
+    const root = createUiNode(parent, options.name, options.width, 44, options.x ?? 0, options.y ?? 0);
+    const trackWidth = Math.max(24, options.width - 20);
+    const track = createUiNode(root, '__SliderTrack', trackWidth, 4);
+    fillNode(track, trackWidth, 4, palette.surfaceStrong, 2);
+    const progress = createUiNode(root, '__SliderProgress', 1, 4, -trackWidth / 2, 0);
+    const handle = createUiNode(root, '__SliderHandle', 20, 20);
+    const handleSprite = handle.addComponent(Sprite);
+    fillNode(handle, 20, 20, palette.surface, 10);
+    strokeNode(handle, 20, 20, palette.borderStrong, 10, 1);
+
+    const slider = root.addComponent(Slider);
+    slider.handle = handleSprite;
+    slider.direction = Slider.Direction.Horizontal;
+
+    const paint = (): void => {
+        const value = Math.max(0, Math.min(1, slider.progress));
+        const filledWidth = Math.max(1, trackWidth * value);
+        fillNode(progress, filledWidth, 4, palette.accent, 2);
+        progress.setPosition(-trackWidth / 2 + filledWidth / 2, 0, 0);
+    };
+
+    slider.progress = Math.max(0, Math.min(1, options.progress));
+    paint();
+    root.on('slide', () => {
+        paint();
+        options.onChange(slider.progress);
+    });
+    root.on(Node.EventType.MOUSE_ENTER, () => setPointerCursor(true));
+    root.on(Node.EventType.MOUSE_LEAVE, () => setPointerCursor(false));
+    return slider;
 }
 
 export function createPill(
@@ -199,10 +321,10 @@ export function createPill(
     emphasized = false,
 ): Node {
     const node = createUiNode(parent, `Pill:${text}`, width, 26, x, y);
-    fillNode(node, width, 26, emphasized ? palette.primary : palette.surfaceSoft, 5);
+    fillNode(node, width, 26, emphasized ? palette.primary : palette.surfaceSoft, 13);
 
     if (!emphasized) {
-        strokeNode(node, width, 26, palette.border, 5, 1);
+        strokeNode(node, width, 26, palette.border, 13, 1);
     }
 
     createLabel(
@@ -214,4 +336,12 @@ export function createPill(
         emphasized ? palette.primaryText : palette.muted,
     );
     return node;
+}
+
+function setPointerCursor(active: boolean): void {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    document.body.style.cursor = active ? 'pointer' : 'default';
 }
