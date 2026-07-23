@@ -6,6 +6,7 @@
     "version": "3.8.8"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.10.0"
+    "@awesome.me/webawesome": "^3.10.0",
+    "lucide": "^1.25.0"
   }
 }
