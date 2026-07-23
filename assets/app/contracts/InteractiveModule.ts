@@ -16,6 +16,7 @@ export interface LabDefinition {
 export type ModuleCategory =
     | 'game'
     | 'simulation'
+    | 'physics'
     | 'mathematics'
     | 'generative'
     | 'shader'
