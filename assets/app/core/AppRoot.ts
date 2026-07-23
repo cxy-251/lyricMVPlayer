@@ -7,6 +7,7 @@ import {
     Node,
 } from 'cc';
 import { HomeModule } from '../features/home/HomeModule';
+import { LabCatalogModule } from '../features/home/LabCatalogModule';
 import { parametricCurveDefinition } from '../features/mathematics/ParametricCurveModule';
 import { doublePendulumDefinition } from '../features/simulation/DoublePendulumModule';
 import { systemCheckDefinition } from '../features/system/SystemCheckModule';
@@ -161,6 +162,7 @@ export class AppRoot extends Component {
             this.shell,
             this.appStateService,
             () => new HomeModule(this.moduleRegistry),
+            (labId) => new LabCatalogModule(this.moduleRegistry, labId),
         );
         this.navigationService.setAppVisible(this.appStateService.current.appVisible);
         this.bindInput(this.navigationService);
@@ -200,9 +202,7 @@ export class AppRoot extends Component {
         this.clearInputBindings();
         this.inputDisposers = [
             this.inputService.bind('back', () => {
-                if (this.appStateService.current.activeModuleId !== 'home') {
-                    void navigation.home();
-                }
+                void navigation.back();
             }),
             this.inputService.bind('toggle-pause', () => {
                 navigation.togglePause();
