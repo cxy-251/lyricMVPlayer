@@ -1,4 +1,4 @@
-import { HorizontalTextAlignment, Node } from 'cc';
+import { Node } from 'cc';
 import type {
     InteractiveModule,
     LabId,
@@ -14,8 +14,9 @@ import {
     createUiNode,
     fillNode,
     palette,
-    strokeNode,
 } from '../../ui/UiFactory';
+import { createCatalogCard } from './CatalogCard';
+import type { CatalogCoverKind } from './CatalogCovers';
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -53,177 +54,125 @@ export class LabCatalogModule implements InteractiveModule {
             return;
         }
 
-        const lab = this.registry.getLab(this.labId);
+        this.registry.getLab(this.labId);
         const modules = this.registry.listByLab(this.labId);
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const safeHeight = viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const contentWidth = Math.min(1080, safeWidth - (compact ? 32 : 72));
-        const top = viewport.height / 2 - viewport.safeInsets.top - (compact ? 104 : 118);
+        const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 78 : 86);
+        const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 28;
+        const availableHeight = Math.max(180, contentTop - contentBottom);
+        const contentWidth = Math.min(1120, safeWidth - (compact ? 28 : 72));
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
 
-        createLabel(
-            root,
-            lab.title,
-            contentWidth,
-            compact ? 46 : 58,
-            compact ? 31 : 42,
-            palette.text,
-            centerX,
-            top,
-            HorizontalTextAlignment.LEFT,
+        const columns = compact
+            ? 1
+            : viewport.breakpoint === 'wide'
+                ? Math.min(3, modules.length)
+                : Math.min(2, modules.length);
+        const gap = compact ? 14 : 22;
+        const maximumCardWidth = compact ? 360 : 350;
+        const cardWidth = Math.min(
+            maximumCardWidth,
+            (contentWidth - gap * (columns - 1)) / columns,
         );
-        createLabel(
-            root,
-            lab.description,
-            contentWidth,
-            40,
-            compact ? 14 : 16,
-            palette.muted,
-            centerX,
-            top - (compact ? 46 : 58),
-            HorizontalTextAlignment.LEFT,
+        const cardHeight = Math.min(
+            compact ? 330 : 420,
+            Math.max(190, cardWidth * 1.12),
         );
-        createLabel(
-            root,
-            `${modules.length} ${modules.length === 1 ? 'EXPERIMENT' : 'EXPERIMENTS'}`,
-            contentWidth,
-            24,
-            11,
-            palette.subtle,
-            centerX,
-            top - (compact ? 82 : 98),
-            HorizontalTextAlignment.LEFT,
+        const rowsPerPage = Math.max(
+            1,
+            Math.floor((availableHeight + gap) / (cardHeight + gap)),
         );
-
-        this.renderRows(
-            root,
-            modules,
-            viewport,
-            centerX,
-            contentWidth,
-            top - (compact ? 116 : 134),
-        );
-    }
-
-    private renderRows(
-        root: Node,
-        modules: readonly ModuleDefinition[],
-        viewport: ViewportSnapshot,
-        centerX: number,
-        contentWidth: number,
-        rowsTop: number,
-    ): void {
-        const compact = viewport.breakpoint === 'compact';
-        const rowHeight = compact ? 142 : 154;
-        const gap = 12;
-        const rowsBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 56;
-        const availableHeight = Math.max(rowHeight, rowsTop - rowsBottom);
-        const pageSize = Math.max(1, Math.floor((availableHeight + gap) / (rowHeight + gap)));
+        const pageSize = Math.max(1, rowsPerPage * columns);
         const pageCount = Math.max(1, Math.ceil(modules.length / pageSize));
         this.page = Math.min(this.page, pageCount - 1);
         const visible = modules.slice(this.page * pageSize, (this.page + 1) * pageSize);
+        const rows = Math.ceil(visible.length / columns);
+        const gridWidth = columns * cardWidth + gap * (columns - 1);
+        const gridHeight = rows * cardHeight + gap * (rows - 1);
+        const gridCenterY = (contentTop + contentBottom) / 2 + (pageCount > 1 ? 18 : 0);
+        const startX = centerX - gridWidth / 2 + cardWidth / 2;
+        const startY = gridCenterY + gridHeight / 2 - cardHeight / 2;
 
         for (let index = 0; index < visible.length; index += 1) {
-            const y = rowsTop - rowHeight / 2 - index * (rowHeight + gap);
-            this.renderModuleRow(root, visible[index], contentWidth, rowHeight, centerX, y, compact);
+            const definition = visible[index];
+            const row = Math.floor(index / columns);
+            const column = index % columns;
+
+            createCatalogCard(root, {
+                name: `ModuleCard:${definition.id}`,
+                title: definition.title,
+                subtitle: this.subtitleForModule(definition),
+                cover: this.coverForModule(definition),
+                width: cardWidth,
+                height: cardHeight,
+                x: startX + column * (cardWidth + gap),
+                y: startY - row * (cardHeight + gap),
+                onOpen: () => {
+                    void this.context?.open(definition.id);
+                },
+            });
         }
 
         if (pageCount > 1) {
-            const y = rowsBottom - 16;
-            createButton(root, {
-                name: 'LaboratoryCatalogPrevious',
-                text: '←',
-                width: 42,
-                height: 34,
-                x: centerX - 52,
-                y,
-                variant: 'secondary',
-                onPress: () => {
-                    this.page = (this.page - 1 + pageCount) % pageCount;
-                    this.render(viewport);
-                },
-            });
-            createLabel(root, `${this.page + 1} / ${pageCount}`, 54, 34, 12, palette.muted, centerX, y);
-            createButton(root, {
-                name: 'LaboratoryCatalogNext',
-                text: '→',
-                width: 42,
-                height: 34,
-                x: centerX + 52,
-                y,
-                variant: 'secondary',
-                onPress: () => {
-                    this.page = (this.page + 1) % pageCount;
-                    this.render(viewport);
-                },
-            });
+            this.renderPager(root, viewport, centerX, pageCount);
         }
+
+        void safeHeight;
     }
 
-    private renderModuleRow(
+    private renderPager(
         root: Node,
-        definition: ModuleDefinition,
-        width: number,
-        height: number,
-        x: number,
-        y: number,
-        compact: boolean,
+        viewport: ViewportSnapshot,
+        centerX: number,
+        pageCount: number,
     ): void {
-        const row = createUiNode(root, `ModuleRow:${definition.id}`, width, height, x, y);
-        fillNode(row, width, height, palette.surface, 8);
-        strokeNode(row, width, height, palette.border, 8, 1);
+        const y = -viewport.height / 2 + viewport.safeInsets.bottom + 26;
 
-        const innerWidth = width - 36;
-        const leftX = -width / 2 + 18 + innerWidth / 2;
-
-        createLabel(
-            row,
-            definition.title,
-            innerWidth - 116,
-            38,
-            compact ? 22 : 25,
-            palette.text,
-            leftX - 58,
-            height / 2 - 34,
-            HorizontalTextAlignment.LEFT,
-        );
-        createLabel(
-            row,
-            definition.description,
-            innerWidth - 116,
-            compact ? 50 : 54,
-            compact ? 13 : 14,
-            palette.muted,
-            leftX - 58,
-            4,
-            HorizontalTextAlignment.LEFT,
-        );
-        createLabel(
-            row,
-            definition.tags?.join(' · ').toUpperCase() ?? '',
-            innerWidth - 116,
-            24,
-            10,
-            palette.subtle,
-            leftX - 58,
-            -height / 2 + 24,
-            HorizontalTextAlignment.LEFT,
-        );
-        createButton(row, {
-            name: `Open:${definition.id}`,
-            text: 'OPEN →',
-            width: 96,
-            height: 38,
-            x: width / 2 - 66,
-            y: 0,
-            fontSize: 12,
-            variant: 'primary',
+        createButton(root, {
+            name: 'LaboratoryCatalogPrevious',
+            text: '←',
+            width: 38,
+            height: 32,
+            x: centerX - 50,
+            y,
+            variant: 'ghost',
             onPress: () => {
-                void this.context?.open(definition.id);
+                this.page = (this.page - 1 + pageCount) % pageCount;
+                this.render(viewport);
             },
         });
+        createLabel(root, `${this.page + 1}/${pageCount}`, 48, 32, 11, palette.subtle, centerX, y);
+        createButton(root, {
+            name: 'LaboratoryCatalogNext',
+            text: '→',
+            width: 38,
+            height: 32,
+            x: centerX + 50,
+            y,
+            variant: 'ghost',
+            onPress: () => {
+                this.page = (this.page + 1) % pageCount;
+                this.render(viewport);
+            },
+        });
+    }
+
+    private coverForModule(definition: ModuleDefinition): CatalogCoverKind {
+        return definition.id === 'double-pendulum-lab'
+            ? 'double-pendulum'
+            : 'parametric-curve';
+    }
+
+    private subtitleForModule(definition: ModuleDefinition): string {
+        if (definition.id === 'double-pendulum-lab') {
+            return 'ideal conservative system';
+        }
+
+        return 'code generated curve system';
     }
 }
