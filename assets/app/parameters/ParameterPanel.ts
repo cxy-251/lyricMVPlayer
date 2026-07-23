@@ -52,6 +52,9 @@ export class ParameterPanel {
         private readonly schema: ParameterSchema,
         private readonly controller: ParameterController,
         private readonly onChange: (key: string) => void,
+        private readonly onError: (error: unknown) => void = (error) => {
+            throw error;
+        },
     ) {
         this.root = createUiNode(parent, 'ParameterPanel', 1, 1);
     }
@@ -174,16 +177,18 @@ export class ParameterPanel {
             progress: initialProgress,
             y: -height * 0.19,
             onChange: (progress) => {
-                const next = this.valueFromProgress(definition, progress);
+                this.guard(() => {
+                    const next = this.valueFromProgress(definition, progress);
 
-                if (!this.controller.set(definition.key, next)) {
-                    return;
-                }
+                    if (!this.controller.set(definition.key, next)) {
+                        return;
+                    }
 
-                if (valueLabel) {
-                    valueLabel.string = this.controller.format(definition);
-                }
-                this.onChange(definition.key);
+                    if (valueLabel) {
+                        valueLabel.string = this.controller.format(definition);
+                    }
+                    this.onChange(definition.key);
+                });
             },
         });
     }
@@ -209,11 +214,13 @@ export class ParameterPanel {
             checked: this.controller.getBoolean(definition.key),
             x: width / 2 - 30,
             onChange: (checked) => {
-                if (!this.controller.set(definition.key, checked)) {
-                    return;
-                }
+                this.guard(() => {
+                    if (!this.controller.set(definition.key, checked)) {
+                        return;
+                    }
 
-                this.onChange(definition.key);
+                    this.onChange(definition.key);
+                });
             },
         });
     }
@@ -243,9 +250,10 @@ export class ParameterPanel {
             x: -valueWidth / 2 - 26,
             y: -height * 0.2,
             tone: 'neutral',
-            onPress: () => this.change(definition.key, () => {
-                this.controller.cycle(definition.key, -1);
-            }),
+            onPress: () => this.guard(() => this.change(
+                definition.key,
+                () => this.controller.cycle(definition.key, -1),
+            )),
         });
         createLabel(
             group,
@@ -263,9 +271,10 @@ export class ParameterPanel {
             x: valueWidth / 2 + 26,
             y: -height * 0.2,
             tone: 'neutral',
-            onPress: () => this.change(definition.key, () => {
-                this.controller.cycle(definition.key, 1);
-            }),
+            onPress: () => this.guard(() => this.change(
+                definition.key,
+                () => this.controller.cycle(definition.key, 1),
+            )),
         });
     }
 
@@ -278,10 +287,10 @@ export class ParameterPanel {
             x: -54,
             y,
             tone: 'lilac',
-            onPress: () => {
+            onPress: () => this.guard(() => {
                 this.page = (this.page - 1 + metrics.pageCount) % metrics.pageCount;
                 this.renderCurrent();
-            },
+            }),
         });
         createLabel(
             this.root,
@@ -299,10 +308,10 @@ export class ParameterPanel {
             x: 54,
             y,
             tone: 'lilac',
-            onPress: () => {
+            onPress: () => this.guard(() => {
                 this.page = (this.page + 1) % metrics.pageCount;
                 this.renderCurrent();
-            },
+            }),
         });
 
         createLabel(
@@ -327,8 +336,11 @@ export class ParameterPanel {
         return definition.minimum + stepIndex * definition.step;
     }
 
-    private change(key: string, action: () => void): void {
-        action();
+    private change(key: string, action: () => boolean): void {
+        if (!action()) {
+            return;
+        }
+
         this.onChange(key);
         this.renderCurrent();
     }
@@ -336,6 +348,14 @@ export class ParameterPanel {
     private renderCurrent(): void {
         if (this.layout) {
             this.render(this.layout);
+        }
+    }
+
+    private guard(action: () => void): void {
+        try {
+            action();
+        } catch (error) {
+            this.onError(error);
         }
     }
 
