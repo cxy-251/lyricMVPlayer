@@ -1,11 +1,11 @@
 import { Node } from 'cc';
 import type { ViewportBreakpoint } from '../services/ViewportService';
 import { createUiNode } from '../ui/UiFactory';
+import { createLibraryIconButton } from '../ui/WebIcons';
 import {
     applyRect,
     clearWebUiScope,
     cocosRectToCss,
-    createWebIconButton,
     getWebUiScope,
 } from '../ui/WebUiKit';
 import type { ParameterController } from './ParameterController';
@@ -133,6 +133,7 @@ export class ParameterPanel {
             step: number;
         };
         slider.setAttribute('aria-label', definition.label);
+        slider.setAttribute('size', 's');
         slider.min = definition.minimum;
         slider.max = definition.maximum;
         slider.step = definition.step;
@@ -154,6 +155,7 @@ export class ParameterPanel {
         definition: ParameterDefinition & { readonly kind: 'toggle' },
     ): void {
         const toggle = document.createElement('wa-switch') as HTMLElement & { checked: boolean };
+        toggle.setAttribute('size', 's');
         toggle.textContent = definition.label;
         toggle.checked = this.controller.getBoolean(definition.key);
         toggle.addEventListener('change', () => {
@@ -185,7 +187,7 @@ export class ParameterPanel {
         controls.style.justifyContent = 'center';
         controls.style.gap = '8px';
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: controls,
             icon: 'chevron-left',
             label: `Previous ${definition.label}`,
@@ -193,7 +195,7 @@ export class ParameterPanel {
                 this.controller.cycle(definition.key, -1);
             }),
         });
-        createWebIconButton({
+        createLibraryIconButton({
             parent: controls,
             icon: 'chevron-right',
             label: `Next ${definition.label}`,
@@ -213,7 +215,7 @@ export class ParameterPanel {
         pager.style.gap = '8px';
         pager.style.gridColumn = '1 / -1';
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: pager,
             icon: 'arrow-left',
             label: 'Previous parameter page',
@@ -228,7 +230,7 @@ export class ParameterPanel {
         label.textContent = `${this.page + 1} / ${pageCount}`;
         pager.appendChild(label);
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: pager,
             icon: 'arrow-right',
             label: 'Next parameter page',
