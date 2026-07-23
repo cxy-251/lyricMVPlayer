@@ -1,7 +1,4 @@
-import {
-    HorizontalTextAlignment,
-    Node,
-} from 'cc';
+import { HorizontalTextAlignment, Node } from 'cc';
 import type {
     InteractiveModule,
     LabId,
@@ -14,7 +11,6 @@ import {
     clearNode,
     createButton,
     createLabel,
-    createPill,
     createUiNode,
     fillNode,
     palette,
@@ -36,6 +32,7 @@ export class LabCatalogModule implements InteractiveModule {
         this.context = context;
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, `LaboratoryCatalog:${this.labId}`, viewport.width, viewport.height);
+        this.render(viewport);
         this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
             this.render(snapshot);
         });
@@ -61,118 +58,103 @@ export class LabCatalogModule implements InteractiveModule {
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const titleY = viewport.height / 2 - viewport.safeInsets.top - (compact ? 106 : 122);
+        const contentWidth = Math.min(1080, safeWidth - (compact ? 32 : 72));
+        const top = viewport.height / 2 - viewport.safeInsets.top - (compact ? 104 : 118);
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
 
         createLabel(
             root,
-            'COCOS LAB  /  LABORATORY',
-            Math.min(840, safeWidth - 36),
-            28,
-            compact ? 11 : 12,
-            palette.subtle,
-            centerX,
-            titleY + (compact ? 38 : 46),
-        );
-        createLabel(
-            root,
             lab.title,
-            Math.min(920, safeWidth - 36),
-            compact ? 50 : 62,
-            compact ? 31 : 43,
+            contentWidth,
+            compact ? 46 : 58,
+            compact ? 31 : 42,
             palette.text,
             centerX,
-            titleY,
+            top,
+            HorizontalTextAlignment.LEFT,
         );
         createLabel(
             root,
             lab.description,
-            Math.min(920, safeWidth - 44),
-            42,
-            compact ? 14 : 17,
+            contentWidth,
+            40,
+            compact ? 14 : 16,
             palette.muted,
             centerX,
-            titleY - (compact ? 44 : 54),
+            top - (compact ? 46 : 58),
+            HorizontalTextAlignment.LEFT,
+        );
+        createLabel(
+            root,
+            `${modules.length} ${modules.length === 1 ? 'EXPERIMENT' : 'EXPERIMENTS'}`,
+            contentWidth,
+            24,
+            11,
+            palette.subtle,
+            centerX,
+            top - (compact ? 82 : 98),
+            HorizontalTextAlignment.LEFT,
         );
 
-        this.renderCards(
+        this.renderRows(
             root,
             modules,
             viewport,
             centerX,
-            titleY - (compact ? 92 : 112),
+            contentWidth,
+            top - (compact ? 116 : 134),
         );
     }
 
-    private renderCards(
+    private renderRows(
         root: Node,
         modules: readonly ModuleDefinition[],
         viewport: ViewportSnapshot,
         centerX: number,
-        cardsTop: number,
+        contentWidth: number,
+        rowsTop: number,
     ): void {
         const compact = viewport.breakpoint === 'compact';
-        const columns = viewport.breakpoint === 'wide' ? 3 : viewport.breakpoint === 'medium' ? 2 : 1;
-        const horizontalPadding = compact ? 18 : 38;
-        const gap = compact ? 14 : 18;
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
-        const gridWidth = Math.min(1320, safeWidth - horizontalPadding * 2);
-        const cardWidth = (gridWidth - gap * (columns - 1)) / columns;
-        const cardHeight = compact ? 166 : 184;
-        const cardsBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 62;
-        const availableHeight = Math.max(cardHeight, cardsTop - cardsBottom);
-        const rows = Math.max(1, Math.floor((availableHeight + gap) / (cardHeight + gap)));
-        const pageSize = rows * columns;
+        const rowHeight = compact ? 142 : 154;
+        const gap = 12;
+        const rowsBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 56;
+        const availableHeight = Math.max(rowHeight, rowsTop - rowsBottom);
+        const pageSize = Math.max(1, Math.floor((availableHeight + gap) / (rowHeight + gap)));
         const pageCount = Math.max(1, Math.ceil(modules.length / pageSize));
         this.page = Math.min(this.page, pageCount - 1);
         const visible = modules.slice(this.page * pageSize, (this.page + 1) * pageSize);
 
         for (let index = 0; index < visible.length; index += 1) {
-            const row = Math.floor(index / columns);
-            const column = index % columns;
-            const rowCount = Math.min(columns, visible.length - row * columns);
-            const rowWidth = cardWidth * rowCount + gap * (rowCount - 1);
-            const rowStart = centerX - rowWidth / 2 + cardWidth / 2;
-            const x = rowStart + column * (cardWidth + gap);
-            const y = cardsTop - cardHeight / 2 - row * (cardHeight + gap);
-            this.renderModuleCard(root, visible[index], cardWidth, cardHeight, x, y, compact);
+            const y = rowsTop - rowHeight / 2 - index * (rowHeight + gap);
+            this.renderModuleRow(root, visible[index], contentWidth, rowHeight, centerX, y, compact);
         }
 
         if (pageCount > 1) {
-            const pagerY = cardsBottom - 18;
+            const y = rowsBottom - 16;
             createButton(root, {
                 name: 'LaboratoryCatalogPrevious',
                 text: '←',
-                width: 48,
-                height: 36,
-                x: centerX - 64,
-                y: pagerY,
-                variant: 'ghost',
+                width: 42,
+                height: 34,
+                x: centerX - 52,
+                y,
+                variant: 'secondary',
                 onPress: () => {
                     this.page = (this.page - 1 + pageCount) % pageCount;
                     this.render(viewport);
                 },
             });
-            createLabel(
-                root,
-                `${this.page + 1} / ${pageCount}`,
-                70,
-                36,
-                13,
-                palette.muted,
-                centerX,
-                pagerY,
-            );
+            createLabel(root, `${this.page + 1} / ${pageCount}`, 54, 34, 12, palette.muted, centerX, y);
             createButton(root, {
                 name: 'LaboratoryCatalogNext',
                 text: '→',
-                width: 48,
-                height: 36,
-                x: centerX + 64,
-                y: pagerY,
-                variant: 'ghost',
+                width: 42,
+                height: 34,
+                x: centerX + 52,
+                y,
+                variant: 'secondary',
                 onPress: () => {
                     this.page = (this.page + 1) % pageCount;
                     this.render(viewport);
@@ -181,7 +163,7 @@ export class LabCatalogModule implements InteractiveModule {
         }
     }
 
-    private renderModuleCard(
+    private renderModuleRow(
         root: Node,
         definition: ModuleDefinition,
         width: number,
@@ -190,61 +172,55 @@ export class LabCatalogModule implements InteractiveModule {
         y: number,
         compact: boolean,
     ): void {
-        const card = createUiNode(root, `ModuleCard:${definition.id}`, width, height, x, y);
-        fillNode(card, width, height, palette.surface, 18);
-        strokeNode(card, width, height, palette.border, 18, 1.25);
+        const row = createUiNode(root, `ModuleRow:${definition.id}`, width, height, x, y);
+        fillNode(row, width, height, palette.surface, 8);
+        strokeNode(row, width, height, palette.border, 8, 1);
 
-        createPill(
-            card,
-            definition.category,
-            Math.max(88, definition.category.length * 8 + 22),
-            -width / 2 + 66,
-            height / 2 - 27,
-            true,
-        );
+        const innerWidth = width - 36;
+        const leftX = -width / 2 + 18 + innerWidth / 2;
+
         createLabel(
-            card,
+            row,
             definition.title,
-            width - 32,
-            40,
-            compact ? 21 : 24,
+            innerWidth - 116,
+            38,
+            compact ? 22 : 25,
             palette.text,
-            0,
-            30,
+            leftX - 58,
+            height / 2 - 34,
             HorizontalTextAlignment.LEFT,
         );
         createLabel(
-            card,
+            row,
             definition.description,
-            width - 32,
-            compact ? 50 : 56,
-            compact ? 14 : 15,
+            innerWidth - 116,
+            compact ? 50 : 54,
+            compact ? 13 : 14,
             palette.muted,
-            0,
-            -10,
+            leftX - 58,
+            4,
             HorizontalTextAlignment.LEFT,
         );
-
-        const tags = definition.tags?.slice(0, compact ? 2 : 3).join(' · ') ?? '';
         createLabel(
-            card,
-            tags.toUpperCase(),
-            Math.max(80, width - 150),
-            28,
-            11,
+            row,
+            definition.tags?.join(' · ').toUpperCase() ?? '',
+            innerWidth - 116,
+            24,
+            10,
             palette.subtle,
-            -54,
-            -height / 2 + 27,
+            leftX - 58,
+            -height / 2 + 24,
             HorizontalTextAlignment.LEFT,
         );
-        createButton(card, {
+        createButton(row, {
             name: `Open:${definition.id}`,
-            text: 'OPEN',
-            width: 92,
-            height: 40,
-            x: width / 2 - 62,
-            y: -height / 2 + 29,
-            fontSize: 13,
+            text: 'OPEN →',
+            width: 96,
+            height: 38,
+            x: width / 2 - 66,
+            y: 0,
+            fontSize: 12,
+            variant: 'primary',
             onPress: () => {
                 void this.context?.open(definition.id);
             },
