@@ -7,16 +7,14 @@ import {
 } from 'cc';
 import type { ViewportBreakpoint } from '../services/ViewportService';
 import {
+    clearNode,
     createIconButton,
+    createLabel,
     createNativeSlider,
     createNativeToggle,
-    nativeTheme,
-} from '../ui/NativeUiKit';
-import {
-    clearNode,
-    createLabel,
     createUiNode,
     fillNode,
+    nativeTheme,
     resizeNode,
     strokeNode,
 } from '../ui/UiFactory';
