@@ -183,8 +183,12 @@ export class LabCatalogModule implements InteractiveModule {
     }
 
     private coverForModule(definition: ModuleDefinition): CatalogCoverKind {
-        return definition.id === 'double-pendulum-lab'
-            ? 'double-pendulum'
+        if (definition.id === 'double-pendulum-lab') {
+            return 'double-pendulum';
+        }
+
+        return definition.id === 'cursor-space'
+            ? 'cursor-space'
             : 'parametric-curve';
     }
 
@@ -193,6 +197,8 @@ export class LabCatalogModule implements InteractiveModule {
             return 'ideal conservative system';
         }
 
-        return 'code generated curve system';
+        return definition.id === 'cursor-space'
+            ? 'minimal cursor survival'
+            : 'code generated curve system';
     }
 }
