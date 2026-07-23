@@ -64,19 +64,35 @@ export interface Resettable {
     reset(): void;
 }
 
-export interface ModuleDefinition {
+interface ModuleDefinitionBase {
     readonly id: string;
     readonly title: string;
     readonly description: string;
-    readonly category: ModuleCategory;
-    readonly labId?: LabId;
     readonly tags?: readonly string[];
     readonly capabilities?: readonly ModuleCapability[];
     readonly status?: ModuleStatus;
     readonly order?: number;
-    readonly hidden?: boolean;
     create(): InteractiveModule;
 }
+
+type VisibleModuleCategory = Exclude<ModuleCategory, 'system'>;
+
+export type ModuleDefinition =
+    | (ModuleDefinitionBase & {
+        readonly category: VisibleModuleCategory;
+        readonly labId: LabId;
+        readonly hidden?: false;
+    })
+    | (ModuleDefinitionBase & {
+        readonly category: ModuleCategory;
+        readonly labId?: LabId;
+        readonly hidden: true;
+    })
+    | (ModuleDefinitionBase & {
+        readonly category: 'system';
+        readonly labId?: never;
+        readonly hidden?: true;
+    });
 
 export function isUpdatable(module: InteractiveModule): module is InteractiveModule & Updatable {
     return typeof (module as Partial<Updatable>).update === 'function';
