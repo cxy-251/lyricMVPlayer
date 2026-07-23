@@ -27,7 +27,6 @@ export class HomeModule implements InteractiveModule {
         this.context = context;
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, 'LaboratoryHome', viewport.width, viewport.height);
-        this.render(viewport);
         this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
             this.render(snapshot);
         });
@@ -112,6 +111,7 @@ export class HomeModule implements InteractiveModule {
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
+                directOpen: compact,
                 onOpen: () => {
                     void this.context?.openLab(lab.id);
                 },
