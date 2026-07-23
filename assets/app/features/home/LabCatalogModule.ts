@@ -59,28 +59,37 @@ export class LabCatalogModule implements InteractiveModule {
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 78 : 86);
-        const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 28;
-        const availableHeight = Math.max(180, contentTop - contentBottom);
-        const contentWidth = Math.min(1120, safeWidth - (compact ? 28 : 72));
+        const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
+        const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
+        const availableHeight = Math.max(220, contentTop - contentBottom);
+        const contentWidth = Math.min(1280, safeWidth - (compact ? 24 : 56));
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
 
+        const singleModule = modules.length === 1;
         const columns = compact
             ? 1
-            : viewport.breakpoint === 'wide'
-                ? Math.min(3, modules.length)
-                : Math.min(2, modules.length);
-        const gap = compact ? 14 : 22;
-        const maximumCardWidth = compact ? 360 : 350;
-        const cardWidth = Math.min(
+            : singleModule
+                ? 1
+                : viewport.breakpoint === 'wide'
+                    ? Math.min(3, modules.length)
+                    : Math.min(2, modules.length);
+        const gap = compact ? 14 : 28;
+        const maximumCardWidth = singleModule
+            ? compact ? 460 : 560
+            : compact ? 430 : 440;
+        const cardWidth = Math.max(220, Math.min(
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
-        );
-        const cardHeight = Math.min(
-            compact ? 330 : 420,
-            Math.max(190, cardWidth * 1.12),
+        ));
+        const cardHeight = Math.max(
+            compact ? 220 : 340,
+            Math.min(
+                singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
+                availableHeight,
+                cardWidth * (singleModule ? 1.14 : 1.08),
+            ),
         );
         const rowsPerPage = Math.max(
             1,
@@ -128,7 +137,7 @@ export class LabCatalogModule implements InteractiveModule {
         centerX: number,
         pageCount: number,
     ): void {
-        const y = -viewport.height / 2 + viewport.safeInsets.bottom + 26;
+        const y = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
 
         createButton(root, {
             name: 'LaboratoryCatalogPrevious',
