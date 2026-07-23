@@ -1,4 +1,10 @@
-import { screen, sys, view } from 'cc';
+import {
+    profiler,
+    ResolutionPolicy,
+    screen,
+    sys,
+    view,
+} from 'cc';
 
 export type ViewportBreakpoint = 'compact' | 'medium' | 'wide';
 export type ViewportOrientation = 'portrait' | 'landscape';
@@ -24,6 +30,7 @@ export class ViewportService {
     private snapshot = this.readSnapshot();
     private readonly listeners = new Set<ViewportListener>();
     private started = false;
+    private applyingResolution = false;
 
     get current(): ViewportSnapshot {
         return this.snapshot;
@@ -35,6 +42,9 @@ export class ViewportService {
         }
 
         this.started = true;
+        profiler.hideStats();
+        view.resizeWithBrowserSize(true);
+        this.syncDesignResolutionToBrowser();
         screen.on('window-resize', this.handleViewportChange, this);
         screen.on('orientation-change', this.handleViewportChange, this);
         this.refresh();
@@ -78,8 +88,34 @@ export class ViewportService {
     }
 
     private readonly handleViewportChange = (): void => {
+        this.syncDesignResolutionToBrowser();
         this.refresh();
     };
+
+    private syncDesignResolutionToBrowser(): void {
+        if (this.applyingResolution) {
+            return;
+        }
+
+        const frame = view.getFrameSize();
+        const browserWidth = typeof window === 'undefined' ? frame.width : window.innerWidth;
+        const browserHeight = typeof window === 'undefined' ? frame.height : window.innerHeight;
+        const width = Math.max(1, Math.round(browserWidth));
+        const height = Math.max(1, Math.round(browserHeight));
+        const current = view.getDesignResolutionSize();
+
+        if (Math.round(current.width) === width && Math.round(current.height) === height) {
+            return;
+        }
+
+        this.applyingResolution = true;
+
+        try {
+            view.setDesignResolutionSize(width, height, ResolutionPolicy.EXACT_FIT);
+        } finally {
+            this.applyingResolution = false;
+        }
+    }
 
     private readSnapshot(): ViewportSnapshot {
         const visible = view.getVisibleSize();
