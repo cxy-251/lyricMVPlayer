@@ -287,8 +287,9 @@ export function createSlider(
     const progress = createUiNode(root, '__SliderProgress', 1, 4, -trackWidth / 2, 0);
     const handle = createUiNode(root, '__SliderHandle', 20, 20);
     const handleSprite = handle.addComponent(Sprite);
-    fillNode(handle, 20, 20, palette.surface, 10);
-    strokeNode(handle, 20, 20, palette.borderStrong, 10, 1);
+    const handleVisual = createUiNode(handle, '__SliderHandleVisual', 20, 20);
+    fillNode(handleVisual, 20, 20, palette.surface, 10);
+    strokeNode(handleVisual, 20, 20, palette.borderStrong, 10, 1);
 
     const slider = root.addComponent(Slider);
     slider.handle = handleSprite;
