@@ -32,6 +32,8 @@ export class ViewportService {
     private started = false;
     private applyingResolution = false;
     private animationFrame = 0;
+    private surfaceWidth = 0;
+    private surfaceHeight = 0;
 
     get current(): ViewportSnapshot {
         return this.snapshot;
@@ -78,6 +80,8 @@ export class ViewportService {
             }
         }
 
+        this.surfaceWidth = 0;
+        this.surfaceHeight = 0;
         this.started = false;
         this.listeners.clear();
     }
@@ -142,22 +146,30 @@ export class ViewportService {
             return;
         }
 
-        const viewport = window.visualViewport;
+        const browserViewport = window.visualViewport;
         const width = Math.max(1, Math.round(
-            viewport?.width
+            browserViewport?.width
             ?? document.documentElement.clientWidth
             ?? window.innerWidth,
         ));
         const height = Math.max(1, Math.round(
-            viewport?.height
+            browserViewport?.height
             ?? document.documentElement.clientHeight
             ?? window.innerHeight,
         ));
 
+        this.applyDocumentStyles();
+        this.applyCanvasStyles();
+
+        if (width === this.surfaceWidth && height === this.surfaceHeight) {
+            return;
+        }
+
         this.applyingResolution = true;
 
         try {
-            this.applyDocumentStyles();
+            this.surfaceWidth = width;
+            this.surfaceHeight = height;
 
             // Resize every layer involved in a Cocos Web surface. Updating only
             // the design resolution leaves the outer container at 1280 x 720.
