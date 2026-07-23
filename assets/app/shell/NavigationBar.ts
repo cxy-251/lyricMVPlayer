@@ -9,12 +9,10 @@ import type {
 } from '../contracts/InteractiveModule';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
-    createIconButton,
-    nativeTheme,
-} from '../ui/NativeUiKit';
-import {
     clearNode,
+    createIconButton,
     createLabel,
+    nativeTheme,
     resizeNode,
 } from '../ui/UiFactory';
 
