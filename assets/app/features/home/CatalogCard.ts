@@ -32,16 +32,16 @@ export interface CatalogCardOptions {
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
-    const radius = Math.min(16, Math.max(10, options.width * 0.035));
+    const radius = Math.min(20, Math.max(10, options.width * 0.035));
     const shadow = createUiNode(
         parent,
         `${options.name}:Shadow`,
         options.width,
         options.height,
         options.x,
-        options.y - 5,
+        options.y - 7,
     );
-    fillNode(shadow, options.width, options.height, new Color(30, 38, 52, 14), radius);
+    fillNode(shadow, options.width, options.height, new Color(30, 38, 52, 16), radius);
 
     const card = createUiNode(
         parent,
@@ -65,22 +65,22 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     hoverOpacity.opacity = 0;
     strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
-    const coverHeight = options.height * 0.68;
+    const coverHeight = options.height * 0.78;
     const cover = drawCatalogCover(
         card,
         options.cover,
-        options.width - 32,
+        options.width - Math.max(26, options.width * 0.07),
         coverHeight,
     );
-    cover.setPosition(0, options.height * 0.06, 0);
+    cover.setPosition(0, options.height * 0.025, 0);
 
     const detail = createUiNode(
         card,
         'Details',
         options.width - 36,
-        Math.max(84, options.height * 0.26),
+        Math.max(98, options.height * 0.27),
         0,
-        -options.height * 0.30,
+        -options.height * 0.32,
     );
     const detailOpacity = detail.addComponent(UIOpacity);
     detailOpacity.opacity = 0;
@@ -89,33 +89,33 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         detail,
         options.title,
         options.width - 48,
-        38,
-        Math.max(18, Math.min(25, options.width * 0.066)),
+        44,
+        Math.max(20, Math.min(31, options.width * 0.061)),
         palette.text,
         0,
-        22,
+        27,
         HorizontalTextAlignment.CENTER,
     );
     createLabel(
         detail,
         options.subtitle,
         options.width - 64,
-        24,
-        11,
+        28,
+        Math.max(12, Math.min(15, options.width * 0.028)),
         new Color(45, 92, 214, 255),
         0,
-        -10,
+        -11,
         HorizontalTextAlignment.CENTER,
     );
     createLabel(
         detail,
         '→',
-        48,
-        28,
-        21,
+        54,
+        32,
+        24,
         new Color(45, 92, 214, 255),
         0,
-        -38,
+        -48,
     );
 
     let revealed = false;
@@ -133,12 +133,12 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
 
         tween(card)
             .to(0.16, {
-                scale: next ? new Vec3(1.018, 1.018, 1) : new Vec3(1, 1, 1),
+                scale: next ? new Vec3(1.016, 1.016, 1) : new Vec3(1, 1, 1),
             })
             .start();
         tween(cover)
             .to(0.16, {
-                position: new Vec3(0, next ? options.height * 0.11 : options.height * 0.06, 0),
+                position: new Vec3(0, next ? options.height * 0.115 : options.height * 0.025, 0),
             })
             .start();
         tween(detailOpacity)
