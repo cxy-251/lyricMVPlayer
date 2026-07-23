@@ -25,7 +25,7 @@ function inferLabId(category: ModuleCategory): LabId | undefined {
         return 'mathematics';
     }
 
-    if (category === 'simulation') {
+    if (category === 'simulation' || category === 'physics') {
         return 'physics';
     }
 
