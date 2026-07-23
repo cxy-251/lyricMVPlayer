@@ -1,6 +1,7 @@
 import { Node } from 'cc';
 import type {
     InteractiveModule,
+    LabId,
     ModuleContext,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
@@ -17,6 +18,8 @@ import type { AppState } from './AppState';
 
 interface ModuleNavigation {
     open(moduleId: string): Promise<void>;
+    openLab(labId: LabId): Promise<void>;
+    back(): Promise<void>;
     home(): Promise<void>;
 }
 
@@ -85,6 +88,8 @@ export class ModuleHost {
             input: this.input,
             appState: this.appState,
             open: navigation.open,
+            openLab: navigation.openLab,
+            back: navigation.back,
             home: navigation.home,
         };
 
