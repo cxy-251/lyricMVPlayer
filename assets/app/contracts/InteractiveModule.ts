@@ -44,6 +44,7 @@ export interface ModuleContext {
     openLab(labId: LabId): Promise<void>;
     back(): Promise<void>;
     home(): Promise<void>;
+    reportError(error: unknown): void;
 }
 
 export interface InteractiveModule {
