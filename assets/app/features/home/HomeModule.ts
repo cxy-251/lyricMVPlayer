@@ -56,33 +56,41 @@ export class HomeModule implements InteractiveModule {
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
         const safeHeight = viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const centerY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2 - 8;
-        const contentWidth = Math.min(920, safeWidth - (compact ? 28 : 72));
+        const centerY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2 - 4;
+        const contentWidth = Math.min(1240, safeWidth - (compact ? 24 : 56));
 
         createLabel(
             root,
             'COCOS LAB',
             contentWidth,
-            24,
-            11,
+            28,
+            compact ? 11 : 13,
             palette.subtle,
             centerX,
-            viewport.height / 2 - viewport.safeInsets.top - 28,
+            viewport.height / 2 - viewport.safeInsets.top - (compact ? 25 : 31),
             HorizontalTextAlignment.LEFT,
         );
 
         const columns = compact ? 1 : Math.min(2, labs.length);
         const rows = Math.ceil(labs.length / columns);
-        const gap = compact ? 14 : 22;
-        const availableHeight = Math.max(220, safeHeight - (compact ? 78 : 104));
-        const maximumCardWidth = compact ? 360 : 380;
-        const cardWidth = Math.min(
+        const gap = compact ? 14 : 34;
+        const availableHeight = Math.max(240, safeHeight - (compact ? 62 : 82));
+        const rowHeightLimit = Math.max(
+            170,
+            (availableHeight - gap * (rows - 1)) / rows,
+        );
+        const maximumCardWidth = compact ? 460 : 520;
+        const cardWidth = Math.max(220, Math.min(
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
-        );
-        const cardHeight = Math.min(
-            compact ? 300 : 430,
-            Math.max(160, (availableHeight - gap * (rows - 1)) / rows),
+        ));
+        const cardHeight = Math.max(
+            compact ? 190 : 360,
+            Math.min(
+                compact ? 390 : 620,
+                rowHeightLimit,
+                cardWidth * (compact ? 0.94 : 1.16),
+            ),
         );
         const gridWidth = columns * cardWidth + gap * (columns - 1);
         const gridHeight = rows * cardHeight + gap * (rows - 1);
