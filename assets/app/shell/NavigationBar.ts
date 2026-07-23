@@ -1,4 +1,9 @@
-import { HorizontalTextAlignment, Node } from 'cc';
+import {
+    Color,
+    Graphics,
+    HorizontalTextAlignment,
+    Node,
+} from 'cc';
 import type {
     LabDefinition,
     ModuleCapability,
@@ -7,7 +12,6 @@ import type {
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
-    createButton,
     createLabel,
     createUiNode,
     fillNode,
@@ -23,8 +27,6 @@ interface NavigationHandlers {
 
 interface NavigationState {
     readonly title: string;
-    readonly subtitle: string;
-    readonly backLabel: string;
     readonly capabilities: readonly ModuleCapability[];
     readonly paused: boolean;
     readonly handlers: NavigationHandlers;
@@ -56,8 +58,6 @@ export class NavigationBar {
     showLab(lab: LabDefinition, onBack: () => void): void {
         this.state = {
             title: lab.title,
-            subtitle: 'Laboratory',
-            backLabel: 'Home',
             capabilities: [],
             paused: false,
             handlers: { onBack },
@@ -68,14 +68,12 @@ export class NavigationBar {
 
     showModule(
         definition: ModuleDefinition,
-        parentLab: LabDefinition | null,
+        _parentLab: LabDefinition | null,
         handlers: NavigationHandlers,
         paused: boolean,
     ): void {
         this.state = {
             title: definition.title,
-            subtitle: parentLab?.title ?? definition.category,
-            backLabel: parentLab ? 'Laboratory' : 'Home',
             capabilities: definition.capabilities ?? [],
             paused,
             handlers,
@@ -109,92 +107,107 @@ export class NavigationBar {
 
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const barHeight = compact ? 60 : 66;
+        const barHeight = compact ? 54 : 60;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
         const y = height / 2 - safeInsets.top - barHeight / 2;
 
         this.root.setPosition(centerX, y, 0);
         resizeNode(this.root, contentWidth, barHeight);
-        fillNode(this.root, contentWidth, barHeight, palette.backgroundRaised);
-        const divider = createUiNode(this.root, 'NavigationDivider', contentWidth, 1, 0, -barHeight / 2 + 0.5);
-        fillNode(divider, contentWidth, 1, palette.border);
+        fillNode(this.root, contentWidth, barHeight, palette.background);
+        this.drawDivider(contentWidth, barHeight);
 
-        createButton(this.root, {
-            name: 'NavigationBack',
-            text: compact ? '←' : `← ${state.backLabel}`,
-            width: compact ? 44 : 112,
-            height: 36,
-            x: -contentWidth / 2 + (compact ? 28 : 64),
-            variant: 'ghost',
-            fontSize: compact ? 22 : 13,
-            onPress: state.handlers.onBack,
-        });
+        const sidePadding = compact ? 12 : 22;
+        const backWidth = compact ? 46 : 64;
+        this.createTextAction(
+            'NavigationBack',
+            '←',
+            backWidth,
+            barHeight,
+            -contentWidth / 2 + sidePadding + backWidth / 2,
+            0,
+            compact ? 23 : 20,
+            state.handlers.onBack,
+        );
 
-        const actionWidth = compact ? 44 : 82;
-        const actionGap = 8;
+        const actionWidth = compact ? 48 : 68;
+        const actionGap = compact ? 2 : 6;
         const hasPause = state.capabilities.includes('pause');
         const hasReset = state.capabilities.includes('reset');
-        let rightCursor = contentWidth / 2 - 14;
+        let rightCursor = contentWidth / 2 - sidePadding;
 
         if (hasReset && state.handlers.onReset) {
             rightCursor -= actionWidth / 2;
-            createButton(this.root, {
-                name: 'NavigationReset',
-                text: compact ? 'R' : 'RESET',
-                width: actionWidth,
-                height: 34,
-                x: rightCursor,
-                variant: 'secondary',
-                fontSize: compact ? 13 : 11,
-                onPress: state.handlers.onReset,
-            });
+            this.createTextAction(
+                'NavigationReset',
+                compact ? 'R' : 'RESET',
+                actionWidth,
+                barHeight,
+                rightCursor,
+                0,
+                compact ? 13 : 11,
+                state.handlers.onReset,
+            );
             rightCursor -= actionWidth / 2 + actionGap;
         }
 
         if (hasPause && state.handlers.onTogglePause) {
             rightCursor -= actionWidth / 2;
-            createButton(this.root, {
-                name: 'NavigationPause',
-                text: compact ? (state.paused ? '▶' : 'Ⅱ') : (state.paused ? 'RESUME' : 'PAUSE'),
-                width: actionWidth,
-                height: 34,
-                x: rightCursor,
-                variant: state.paused ? 'primary' : 'secondary',
-                fontSize: compact ? 15 : 11,
-                onPress: state.handlers.onTogglePause,
-            });
+            this.createTextAction(
+                'NavigationPause',
+                compact ? (state.paused ? '▶' : 'Ⅱ') : (state.paused ? 'PLAY' : 'PAUSE'),
+                actionWidth,
+                barHeight,
+                rightCursor,
+                0,
+                compact ? 16 : 11,
+                state.handlers.onTogglePause,
+                state.paused ? new Color(45, 92, 214, 255) : palette.muted,
+            );
         }
 
-        const leftBoundary = -contentWidth / 2 + (compact ? 58 : 126);
-        const rightBoundary = rightCursor - actionWidth / 2 - 12;
-        const titleWidth = Math.max(100, rightBoundary - leftBoundary);
+        const leftBoundary = -contentWidth / 2 + sidePadding + backWidth + 8;
+        const rightBoundary = Math.min(contentWidth / 2 - sidePadding, rightCursor - actionWidth / 2 - 8);
+        const titleWidth = Math.max(80, rightBoundary - leftBoundary);
         const titleX = leftBoundary + titleWidth / 2;
 
         createLabel(
             this.root,
             state.title,
             titleWidth,
-            28,
-            compact ? 16 : 18,
-            palette.text,
+            barHeight,
+            compact ? 13 : 14,
+            palette.muted,
             titleX,
-            compact ? 0 : 7,
+            0,
             HorizontalTextAlignment.LEFT,
         );
+    }
 
-        if (!compact) {
-            createLabel(
-                this.root,
-                state.subtitle,
-                titleWidth,
-                18,
-                10,
-                palette.subtle,
-                titleX,
-                -14,
-                HorizontalTextAlignment.LEFT,
-            );
-        }
+    private createTextAction(
+        name: string,
+        text: string,
+        width: number,
+        height: number,
+        x: number,
+        y: number,
+        fontSize: number,
+        onPress: () => void,
+        color = palette.text,
+    ): Node {
+        const action = createUiNode(this.root, name, width, height, x, y);
+        createLabel(action, text, width, height, fontSize, color);
+        action.on(Node.EventType.TOUCH_END, onPress);
+        return action;
+    }
+
+    private drawDivider(width: number, height: number): void {
+        const line = createUiNode(this.root, 'NavigationDivider', width, 2, 0, -height / 2 + 1);
+        const graphics = line.addComponent(Graphics);
+        graphics.strokeColor = palette.border;
+        graphics.lineWidth = 1;
+        graphics.moveTo(-width / 2, 0);
+        graphics.lineTo(width / 2, 0);
+        graphics.stroke();
     }
 }
