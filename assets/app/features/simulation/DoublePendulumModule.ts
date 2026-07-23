@@ -152,6 +152,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
     }
 
     protected onUnmount(): void {
+        this.parameterPanel?.destroy();
         this.parameterPanel = null;
         this.parameters = null;
         this.trailGraphics = null;
@@ -443,7 +444,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
         rodGraphics.clear();
         rodGraphics.strokeColor = palette.text;
-        rodGraphics.lineWidth = 2;
+        rodGraphics.lineWidth = 3;
         rodGraphics.moveTo(this.pivotX, this.pivotY);
         rodGraphics.lineTo(x1, y1);
         rodGraphics.lineTo(x2, y2);
@@ -451,39 +452,35 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
         pivotGraphics.clear();
         pivotGraphics.fillColor = palette.text;
-        pivotGraphics.circle(this.pivotX, this.pivotY, 4);
+        pivotGraphics.circle(this.pivotX, this.pivotY, 5);
         pivotGraphics.fill();
 
         bob1Graphics.clear();
-        bob1Graphics.fillColor = palette.surface;
-        bob1Graphics.strokeColor = palette.text;
-        bob1Graphics.lineWidth = 2;
-        bob1Graphics.circle(x1, y1, 8 + Math.sqrt(mass1) * 3);
+        bob1Graphics.fillColor = new Color(45, 92, 214, 255);
+        bob1Graphics.circle(x1, y1, 8 + Math.sqrt(mass1) * 4);
         bob1Graphics.fill();
-        bob1Graphics.stroke();
 
         bob2Graphics.clear();
-        bob2Graphics.fillColor = palette.text;
-        bob2Graphics.circle(x2, y2, 8 + Math.sqrt(mass2) * 3);
+        bob2Graphics.fillColor = new Color(177, 47, 47, 255);
+        bob2Graphics.circle(x2, y2, 8 + Math.sqrt(mass2) * 4);
         bob2Graphics.fill();
 
+        const diagnostics = this.model.diagnostics();
+        const constraintMicrometers = diagnostics.constraintError * 1_000_000;
+
         if (this.diagnosticsLabel) {
-            const diagnostics = this.model.diagnostics();
-            const driftPpm = diagnostics.relativeEnergyDrift * 1_000_000;
             this.diagnosticsLabel.string = [
                 `t ${diagnostics.elapsedTime.toFixed(2)} s`,
                 `E ${diagnostics.totalEnergy.toFixed(5)} J`,
-                `energy drift ${driftPpm.toFixed(1)} ppm`,
-                `constraint ${diagnostics.constraintError.toExponential(1)} m`,
-                'RK4 240 Hz',
+                `ΔE ${(diagnostics.relativeEnergyDrift * 1_000_000).toFixed(1)} ppm`,
+                `constraint ${constraintMicrometers.toFixed(3)} µm`,
             ].join('   ·   ');
-            this.diagnosticsLabel.color = driftPpm < 500 ? palette.muted : palette.danger;
         }
     }
 
     private requireParameters(): ParameterController {
         if (!this.parameters) {
-            throw new Error('Double pendulum parameters are not initialized');
+            throw new Error('Double pendulum parameters are unavailable');
         }
 
         return this.parameters;
@@ -493,12 +490,11 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 export const doublePendulumDefinition: ModuleDefinition = {
     id: 'double-pendulum-lab',
     title: 'Double Pendulum',
-    description: 'An ideal two-point-mass pendulum with explicit constraints and energy diagnostics.',
-    category: 'simulation',
-    labId: 'physics',
-    tags: ['lagrange mechanics', 'energy', 'rk4'],
-    capabilities: ['pause', 'reset', 'settings', 'save-state'],
+    description: 'Study a conservative planar double pendulum with measurable energy and constraint error.',
+    category: 'physics',
+    tags: ['mechanics', 'chaos', 'conservation'],
+    capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
-    order: 20,
+    order: 10,
     create: () => new DoublePendulumModule(),
 };
