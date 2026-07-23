@@ -106,10 +106,10 @@ export class NavigationBar {
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
         const controlHeight = compact ? 42 : 44;
-        const topMargin = compact ? 12 : 16;
+        const topMargin = compact ? 10 : 14;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
-        const y = height / 2 - topMargin - controlHeight / 2;
+        const y = height / 2 - safeInsets.top - topMargin - controlHeight / 2;
 
         this.root.setPosition(centerX, y, 0);
         resizeNode(this.root, contentWidth, controlHeight);
