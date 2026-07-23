@@ -34,7 +34,6 @@ export class LabCatalogModule implements InteractiveModule {
         this.context = context;
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, `LaboratoryCatalog:${this.labId}`, viewport.width, viewport.height);
-        this.render(viewport);
         this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
             this.render(snapshot);
         });
@@ -62,7 +61,7 @@ export class LabCatalogModule implements InteractiveModule {
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
         const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
-        const availableHeight = Math.max(220, contentTop - contentBottom);
+        const availableHeight = Math.max(1, contentTop - contentBottom);
         const contentWidth = Math.min(1280, safeWidth - (compact ? 24 : 56));
 
         clearNode(root);
@@ -84,14 +83,11 @@ export class LabCatalogModule implements InteractiveModule {
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
         ));
-        const cardHeight = Math.max(
-            compact ? 220 : 340,
-            Math.min(
-                singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
-                availableHeight,
-                cardWidth * (singleModule ? 1.14 : 1.08),
-            ),
+        const preferredCardHeight = Math.min(
+            singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
+            cardWidth * (singleModule ? 1.14 : 1.08),
         );
+        const cardHeight = Math.max(120, Math.min(preferredCardHeight, availableHeight));
         const rowsPerPage = Math.max(
             1,
             Math.floor((availableHeight + gap) / (cardHeight + gap)),
@@ -121,6 +117,7 @@ export class LabCatalogModule implements InteractiveModule {
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
+                directOpen: compact,
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
