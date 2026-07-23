@@ -52,11 +52,20 @@ export class HomeModule implements InteractiveModule {
 
         const labs = this.registry.labs();
         const compact = viewport.breakpoint === 'compact';
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
-        const safeHeight = viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom;
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
+        const safeHeight = Math.max(
+            1,
+            viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom,
+        );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const centerY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2 - 4;
-        const contentWidth = Math.min(1240, safeWidth - (compact ? 24 : 56));
+        const contentWidth = Math.max(
+            1,
+            Math.min(1240, safeWidth - (compact ? 24 : 56)),
+        );
 
         createLabel(
             root,
@@ -71,20 +80,20 @@ export class HomeModule implements InteractiveModule {
         );
 
         const columns = compact ? 1 : Math.min(2, labs.length);
-        const rows = Math.ceil(labs.length / columns);
+        const rows = Math.max(1, Math.ceil(labs.length / columns));
         const gap = compact ? 14 : 34;
         const availableHeight = Math.max(1, safeHeight - (compact ? 62 : 82));
         const rowHeightLimit = Math.max(
-            100,
+            1,
             (availableHeight - gap * (rows - 1)) / rows,
         );
         const maximumCardWidth = compact ? 460 : 520;
-        const cardWidth = Math.max(220, Math.min(
+        const cardWidth = Math.max(1, Math.min(
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
         ));
         const cardHeight = Math.max(
-            120,
+            1,
             Math.min(
                 compact ? 390 : 620,
                 rowHeightLimit,
