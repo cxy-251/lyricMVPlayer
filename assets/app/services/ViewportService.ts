@@ -6,6 +6,7 @@ import {
     sys,
     view,
 } from 'cc';
+import { PREVIEW } from 'cc/env';
 
 export type ViewportBreakpoint = 'compact' | 'medium' | 'wide';
 export type ViewportOrientation = 'portrait' | 'landscape';
@@ -27,7 +28,8 @@ export interface ViewportSnapshot {
 
 type ViewportListener = (snapshot: ViewportSnapshot) => void;
 
-const WEB_PREVIEW_TOP_INSET = 56;
+const CREATOR_PREVIEW_TOP_INSET = 56;
+const WEB_SURFACE_BACKGROUND = '#181b1a';
 
 export class ViewportService {
     private snapshot = this.readSnapshot();
@@ -51,8 +53,6 @@ export class ViewportService {
         profiler.hideStats();
 
         if (this.hasBrowserDom()) {
-            // CocosLab owns the complete browser surface. Creator Preview's
-            // external toolbar must never participate in dynamic layout.
             view.resizeWithBrowserSize(false);
             window.addEventListener('resize', this.handleBrowserResize, { passive: true });
             window.visualViewport?.addEventListener('resize', this.handleBrowserResize, { passive: true });
@@ -196,7 +196,7 @@ export class ViewportService {
         rootStyle.margin = '0';
         rootStyle.padding = '0';
         rootStyle.overflow = 'hidden';
-        rootStyle.background = '#f7f6f2';
+        rootStyle.background = WEB_SURFACE_BACKGROUND;
 
         const bodyStyle = document.body.style;
         bodyStyle.width = '100%';
@@ -204,7 +204,7 @@ export class ViewportService {
         bodyStyle.margin = '0';
         bodyStyle.padding = '0';
         bodyStyle.overflow = 'hidden';
-        bodyStyle.background = '#f7f6f2';
+        bodyStyle.background = WEB_SURFACE_BACKGROUND;
     }
 
     private applyCanvasStyles(): void {
@@ -223,7 +223,7 @@ export class ViewportService {
             style.margin = '0';
             style.padding = '0';
             style.overflow = 'hidden';
-            style.background = '#f7f6f2';
+            style.background = WEB_SURFACE_BACKGROUND;
         }
 
         const canvas = document.getElementById('GameCanvas')
@@ -240,7 +240,7 @@ export class ViewportService {
             style.maxHeight = 'none';
             style.margin = '0';
             style.padding = '0';
-            style.background = '#f7f6f2';
+            style.background = WEB_SURFACE_BACKGROUND;
         }
     }
 
@@ -263,7 +263,7 @@ export class ViewportService {
                 orientation: width >= height ? 'landscape' : 'portrait',
                 breakpoint: width < 720 ? 'compact' : width < 1180 ? 'medium' : 'wide',
                 safeInsets: {
-                    top: WEB_PREVIEW_TOP_INSET,
+                    top: PREVIEW ? CREATOR_PREVIEW_TOP_INSET : 0,
                     right: 0,
                     bottom: 0,
                     left: 0,
