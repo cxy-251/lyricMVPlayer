@@ -58,7 +58,6 @@ export class LabCatalogModule implements InteractiveModule {
         const modules = this.registry.listByLab(this.labId);
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
-        const safeHeight = viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 78 : 86);
         const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 28;
@@ -121,8 +120,6 @@ export class LabCatalogModule implements InteractiveModule {
         if (pageCount > 1) {
             this.renderPager(root, viewport, centerX, pageCount);
         }
-
-        void safeHeight;
     }
 
     private renderPager(
