@@ -64,18 +64,57 @@ export class AppShell {
         const { width, height, safeInsets } = this.viewport;
         fillNode(this.overlayLayer, width, height, nativeTheme.background);
 
-        const panelWidth = Math.min(620, width - safeInsets.left - safeInsets.right - 40);
-        const panelHeight = 280;
-        const panel = createUiNode(this.overlayLayer, 'ErrorPanel', panelWidth, panelHeight);
-        fillNode(panel, panelWidth, panelHeight, nativeTheme.card, 22);
+        const safeWidth = Math.max(1, width - safeInsets.left - safeInsets.right);
+        const safeHeight = Math.max(1, height - safeInsets.top - safeInsets.bottom);
+        const centerX = (safeInsets.left - safeInsets.right) / 2;
+        const centerY = (safeInsets.bottom - safeInsets.top) / 2;
+        const panelWidth = Math.max(1, Math.min(620, safeWidth - 32));
+        const panelHeight = Math.max(1, Math.min(280, safeHeight - 32));
+        const compact = panelWidth < 380 || panelHeight < 240;
+        const radius = Math.min(22, panelWidth / 2, panelHeight / 2);
+        const buttonWidth = Math.max(96, Math.min(168, panelWidth - 48));
+        const titleY = panelHeight / 2 - (compact ? 34 : 58);
+        const buttonY = -panelHeight / 2 + 38;
+        const messageTop = titleY - (compact ? 30 : 38);
+        const messageBottom = buttonY + 28;
+        const messageHeight = Math.max(24, messageTop - messageBottom);
+        const messageY = (messageTop + messageBottom) / 2;
 
-        createLabel(panel, 'MODULE ERROR', panelWidth - 48, 44, 26, palette.danger, 0, 82);
-        createLabel(panel, message, panelWidth - 64, 94, 17, nativeTheme.ink, 0, 12);
+        const panel = createUiNode(
+            this.overlayLayer,
+            'ErrorPanel',
+            panelWidth,
+            panelHeight,
+            centerX,
+            centerY,
+        );
+        fillNode(panel, panelWidth, panelHeight, nativeTheme.card, radius);
+
+        createLabel(
+            panel,
+            'MODULE ERROR',
+            Math.max(1, panelWidth - 48),
+            compact ? 34 : 44,
+            compact ? 20 : 26,
+            palette.danger,
+            0,
+            titleY,
+        );
+        createLabel(
+            panel,
+            message,
+            Math.max(1, panelWidth - 64),
+            messageHeight,
+            compact ? 14 : 17,
+            nativeTheme.ink,
+            0,
+            messageY,
+        );
         createTextButton(panel, {
             name: 'ErrorHome',
             text: 'Return home',
-            width: 168,
-            y: -82,
+            width: buttonWidth,
+            y: buttonY,
             onPress: onHome,
         });
     }
