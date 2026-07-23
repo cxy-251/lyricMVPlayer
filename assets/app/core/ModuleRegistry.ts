@@ -18,6 +18,12 @@ const laboratories: Record<LabId, LabDefinition> = {
         description: 'Dynamic simulations built from physical models and numerical methods.',
         order: 20,
     },
+    games: {
+        id: 'games',
+        title: 'Games Laboratory',
+        description: 'Minimal playable systems built from reusable Cocos runtime primitives.',
+        order: 30,
+    },
 };
 
 export class ModuleRegistry {
