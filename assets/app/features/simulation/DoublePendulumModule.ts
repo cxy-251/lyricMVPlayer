@@ -333,6 +333,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             parameterSchema,
             parameters,
             (key) => this.handleParameterChange(key),
+            (error) => this.requireContext().reportError(error),
         );
         this.parameterPanel.render({
             width: contentWidth,
