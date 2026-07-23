@@ -6,12 +6,13 @@ import {
     Node,
 } from 'cc';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
-import { createTextButton, nativeTheme } from '../ui/NativeUiKit';
 import {
     clearNode,
     createLabel,
+    createTextButton,
     createUiNode,
     fillNode,
+    nativeTheme,
     palette,
     resizeNode,
 } from '../ui/UiFactory';
