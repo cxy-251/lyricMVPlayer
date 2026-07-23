@@ -7,10 +7,10 @@ import {
 import type {
     InteractiveModule,
     ModuleContext,
-    ModuleDefinition,
     Pausable,
     Resettable,
     Updatable,
+    VisibleModuleDefinition,
 } from '../../contracts/InteractiveModule';
 import { ParameterController } from '../../parameters/ParameterController';
 import { ParameterPanel } from '../../parameters/ParameterPanel';
@@ -194,8 +194,9 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             centerX,
             plotCenterY,
         );
-        fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, 18);
-        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, 18, 1);
+        const plotRadius = Math.min(18, this.plotHeight / 2);
+        fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, plotRadius);
+        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, plotRadius, 1);
         this.drawGrid(plot);
         this.createCurveLayers(plot);
         this.drawCurve();
@@ -336,7 +337,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 }
 
-export const parametricCurveDefinition: ModuleDefinition = {
+export const parametricCurveDefinition: VisibleModuleDefinition = {
     id: 'parametric-curve-lab',
     title: 'Parametric Curve Lab',
     description: 'Animate and tune a code-generated Lissajous field in real time.',
