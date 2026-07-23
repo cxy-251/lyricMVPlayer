@@ -170,20 +170,10 @@ export class ViewportService {
             ?? document.documentElement.clientHeight
             ?? window.innerHeight,
         ));
-        const nextPreviewInset = this.detectCreatorPreviewToolbarInset();
-        const previewInsetChanged = nextPreviewInset !== this.previewToolbarInset;
-        this.previewToolbarInset = nextPreviewInset;
+        this.previewToolbarInset = this.detectCreatorPreviewToolbarInset();
 
         this.applyDocumentStyles();
         this.applyCanvasStyles();
-
-        if (
-            width === this.surfaceWidth
-            && height === this.surfaceHeight
-            && !previewInsetChanged
-        ) {
-            return;
-        }
 
         if (width === this.surfaceWidth && height === this.surfaceHeight) {
             return;
@@ -319,7 +309,7 @@ export class ViewportService {
         }
 
         if (controlCount >= 2) {
-            return Math.max(48, Math.min(84, Math.ceil(maximumBottom + 8)));
+            return Math.max(48, Math.min(72, Math.ceil(maximumBottom + 8)));
         }
 
         // Creator preview scripts are a reliable fallback even when the toolbar
@@ -352,14 +342,31 @@ export class ViewportService {
         const visible = view.getVisibleSize();
         const width = Math.max(1, visible.width);
         const height = Math.max(1, visible.height);
-        const safeArea = sys.getSafeAreaRect();
-        const nativeTop = Math.max(0, height - safeArea.y - safeArea.height);
 
+        // On Web, sys.getSafeAreaRect() may retain Boot.scene's saved 1280 x 720
+        // rectangle after the browser surface has resized. Using it would turn the
+        // stale size difference into a huge top inset and push navigation inward.
+        if (this.hasBrowserDom()) {
+            return {
+                width,
+                height,
+                orientation: width >= height ? 'landscape' : 'portrait',
+                breakpoint: width < 720 ? 'compact' : width < 1180 ? 'medium' : 'wide',
+                safeInsets: {
+                    top: this.previewToolbarInset,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                },
+            };
+        }
+
+        const safeArea = sys.getSafeAreaRect();
         const safeInsets: ViewportInsets = {
             left: Math.max(0, safeArea.x),
             bottom: Math.max(0, safeArea.y),
             right: Math.max(0, width - safeArea.x - safeArea.width),
-            top: Math.min(height - 1, nativeTop + this.previewToolbarInset),
+            top: Math.max(0, height - safeArea.y - safeArea.height),
         };
 
         return {
