@@ -52,12 +52,13 @@ export interface CursorSpaceConfig {
     readonly playerFollowResponse: number;
     readonly playerMaximumSpeed: number;
     readonly playerNoseOffset: number;
+    readonly playerAimResponse: number;
     readonly projectileSpeed: number;
     readonly projectileLife: number;
     readonly projectileRadius: number;
     readonly fireInterval: number;
-    readonly autoFireRange: number;
-    readonly autoFireHalfAngle: number;
+    readonly autoAimRange: number;
+    readonly autoFireTolerance: number;
     readonly inheritedVelocity: number;
     readonly enemyRadius: number;
     readonly enemySpeed: number;
@@ -78,12 +79,13 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     playerFollowResponse: 13,
     playerMaximumSpeed: 460,
     playerNoseOffset: 19,
-    projectileSpeed: 560,
+    playerAimResponse: 18,
+    projectileSpeed: 590,
     projectileLife: 1.5,
     projectileRadius: 3,
     fireInterval: 0.18,
-    autoFireRange: 560,
-    autoFireHalfAngle: Math.PI * 0.34,
+    autoAimRange: 620,
+    autoFireTolerance: Math.PI * 0.055,
     inheritedVelocity: 0.18,
     enemyRadius: 11,
     enemySpeed: 86,
@@ -96,5 +98,5 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     respawnClearRadius: 150,
     projectileCapacity: 48,
     enemyCapacity: 28,
-    effectCapacity: 64,
+    effectCapacity: 48,
 };
