@@ -35,74 +35,94 @@ export interface CatalogCardOptions {
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
-    const radius = Math.min(22, Math.max(14, options.width * 0.038));
+    const width = Math.max(1, options.width);
+    const height = Math.max(1, options.height);
+    const radius = Math.min(22, Math.max(1, width * 0.038), width / 2, height / 2);
     const directOpen = options.directOpen ?? sys.isMobile;
     const hit = createUiNode(
         parent,
         options.name,
-        options.width,
-        options.height,
+        width,
+        height,
         options.x,
         options.y,
     );
-    const card = createUiNode(hit, '__CardVisual', options.width, options.height);
-    fillNode(card, options.width, options.height, nativeTheme.card, radius);
-    strokeNode(card, options.width, options.height, nativeTheme.border, radius, 1);
+    const card = createUiNode(hit, '__CardVisual', width, height);
+    fillNode(card, width, height, nativeTheme.card, radius);
+    strokeNode(card, width, height, nativeTheme.border, radius, 1);
 
-    const hoverLayer = createUiNode(card, 'HoverLayer', options.width - 2, options.height - 2);
+    const hoverWidth = Math.max(1, width - 2);
+    const hoverHeight = Math.max(1, height - 2);
+    const hoverLayer = createUiNode(card, 'HoverLayer', hoverWidth, hoverHeight);
     fillNode(
         hoverLayer,
-        options.width - 2,
-        options.height - 2,
+        hoverWidth,
+        hoverHeight,
         nativeTheme.cardHover,
-        Math.max(12, radius - 1),
+        Math.min(Math.max(1, radius - 1), hoverWidth / 2, hoverHeight / 2),
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
     hoverOpacity.opacity = directOpen ? 255 : 0;
 
-    const coverHeight = options.height * 0.8;
+    const coverHeight = Math.max(1, height * 0.8);
+    const coverWidth = Math.max(1, width - Math.max(28, width * 0.08));
     const cover = drawCatalogCover(
         card,
         options.cover,
-        options.width - Math.max(28, options.width * 0.08),
+        coverWidth,
         coverHeight,
     );
-    cover.setPosition(0, options.height * (directOpen ? 0.105 : 0.02), 0);
+    cover.setPosition(0, height * (directOpen ? 0.105 : 0.02), 0);
 
+    const detailWidth = Math.max(1, width - 40);
+    const detailHeight = Math.max(1, Math.min(height, Math.max(72, height * 0.26)));
     const detail = createUiNode(
         card,
         'Details',
-        options.width - 40,
-        Math.max(96, options.height * 0.26),
+        detailWidth,
+        detailHeight,
         0,
-        -options.height * 0.32,
+        -height * 0.32,
     );
     const detailOpacity = detail.addComponent(UIOpacity);
     detailOpacity.opacity = directOpen ? 255 : 0;
 
+    const titleFontSize = Math.max(11, Math.min(28, width * 0.056, height * 0.12));
+    const subtitleFontSize = Math.max(9, Math.min(14, width * 0.027, height * 0.065));
+    const titleY = Math.min(26, detailHeight * 0.22);
+    const subtitleY = -Math.min(10, detailHeight * 0.08);
+    const iconY = -Math.min(45, detailHeight * 0.38);
+
     createLabel(
         detail,
         options.title,
-        options.width - 52,
-        42,
-        Math.max(19, Math.min(28, options.width * 0.056)),
+        Math.max(1, width - 52),
+        Math.max(1, Math.min(42, detailHeight * 0.38)),
+        titleFontSize,
         nativeTheme.ink,
         0,
-        26,
+        titleY,
         HorizontalTextAlignment.CENTER,
     );
     createLabel(
         detail,
         options.subtitle,
-        options.width - 68,
-        26,
-        Math.max(11, Math.min(14, options.width * 0.027)),
+        Math.max(1, width - 68),
+        Math.max(1, Math.min(26, detailHeight * 0.24)),
+        subtitleFontSize,
         nativeTheme.muted,
         0,
-        -10,
+        subtitleY,
         HorizontalTextAlignment.CENTER,
     );
-    createNativeIcon(detail, 'chevron-right', 18, nativeTheme.accent, 0, -45);
+    createNativeIcon(
+        detail,
+        'chevron-right',
+        Math.max(10, Math.min(18, width * 0.05)),
+        nativeTheme.accent,
+        0,
+        iconY,
+    );
 
     const button = hit.addComponent(Button);
     button.target = card;
@@ -113,16 +133,20 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     let revealed = directOpen;
     let pointerWasTouch = false;
 
+    const stopAnimations = (): void => {
+        Tween.stopAllByTarget(card);
+        Tween.stopAllByTarget(cover);
+        Tween.stopAllByTarget(detailOpacity);
+        Tween.stopAllByTarget(hoverOpacity);
+    };
+
     const setRevealed = (next: boolean): void => {
         if (revealed === next) {
             return;
         }
 
         revealed = next;
-        Tween.stopAllByTarget(card);
-        Tween.stopAllByTarget(cover);
-        Tween.stopAllByTarget(detailOpacity);
-        Tween.stopAllByTarget(hoverOpacity);
+        stopAnimations();
 
         tween(card)
             .to(0.16, {
@@ -131,7 +155,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
             .start();
         tween(cover)
             .to(0.16, {
-                position: new Vec3(0, next ? options.height * 0.105 : options.height * 0.02, 0),
+                position: new Vec3(0, next ? height * 0.105 : height * 0.02, 0),
             })
             .start();
         tween(detailOpacity)
@@ -162,6 +186,8 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     hit.on(Button.EventType.CLICK, () => {
         if (directOpen || pointerWasTouch || revealed) {
             pointerWasTouch = false;
+            stopAnimations();
+            setPointerCursor(false);
             options.onOpen();
             return;
         }
