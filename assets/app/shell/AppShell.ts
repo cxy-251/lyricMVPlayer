@@ -8,14 +8,19 @@ import {
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
-    createButton,
     createLabel,
     createUiNode,
     fillNode,
     palette,
     resizeNode,
 } from '../ui/UiFactory';
+import {
+    clearWebUiScope,
+    getWebUiScope,
+} from '../ui/WebUiKit';
 import { NavigationBar } from './NavigationBar';
+
+const ERROR_SCOPE = 'error-overlay';
 
 export class AppShell {
     readonly root: Node;
@@ -52,6 +57,7 @@ export class AppShell {
 
     clearOverlay(): void {
         clearNode(this.overlayLayer);
+        clearWebUiScope(ERROR_SCOPE);
         this.overlayLayer.active = false;
     }
 
@@ -67,23 +73,34 @@ export class AppShell {
         const panelWidth = Math.min(620, width - safeInsets.left - safeInsets.right - 40);
         const panelHeight = 280;
         const panel = createUiNode(this.overlayLayer, 'ErrorPanel', panelWidth, panelHeight);
-        fillNode(panel, panelWidth, panelHeight, palette.surface, 20);
-
+        fillNode(panel, panelWidth, panelHeight, palette.surfaceSoft, 20);
         createLabel(panel, 'MODULE ERROR', panelWidth - 48, 44, 26, palette.danger, 0, 82);
         createLabel(panel, message, panelWidth - 64, 94, 17, palette.text, 0, 12);
-        createButton(panel, {
-            name: 'ErrorHome',
-            text: 'RETURN HOME',
-            width: 190,
-            height: 52,
-            y: -82,
-            onPress: onHome,
-        });
+
+        const scope = getWebUiScope(ERROR_SCOPE);
+
+        if (!scope) {
+            return;
+        }
+
+        const button = document.createElement('wa-button') as HTMLElement;
+        button.setAttribute('appearance', 'filled');
+        button.setAttribute('variant', 'brand');
+        button.setAttribute('size', 'm');
+        button.textContent = 'Return home';
+        button.style.position = 'absolute';
+        button.style.left = '50%';
+        button.style.top = `${Math.round(height / 2 + 62)}px`;
+        button.style.transform = 'translateX(-50%)';
+        button.style.pointerEvents = 'auto';
+        button.addEventListener('click', onHome);
+        scope.appendChild(button);
     }
 
     dispose(): void {
         this.unsubscribeViewport();
         this.navigationBar.dispose();
+        clearWebUiScope(ERROR_SCOPE);
         this.root.destroy();
     }
 
@@ -92,7 +109,7 @@ export class AppShell {
         const camera = canvas?.cameraComponent;
 
         if (camera) {
-            camera.clearColor = new Color(247, 246, 242, 255);
+            camera.clearColor = new Color(242, 241, 237, 255);
         }
     }
 
