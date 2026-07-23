@@ -30,6 +30,8 @@ interface CurveLayer {
     readonly graphics: Graphics;
 }
 
+const CURVE_FRAME_INTERVAL = 1 / 30;
+
 const parameterSchema: ParameterSchema = [
     {
         kind: 'number',
@@ -73,9 +75,12 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     private parameters: ParameterController | null = null;
     private parameterPanel: ParameterPanel | null = null;
     private elapsed = 0;
+    private redrawAccumulator = 0;
     private paused = false;
     private plotWidth = 1;
     private plotHeight = 1;
+    private sampleCount = 320;
+    private trailLayerCount = 4;
 
     mount(context: ModuleContext): void {
         this.context = context;
@@ -85,6 +90,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             parameterSchema,
         );
         this.elapsed = 0;
+        this.redrawAccumulator = 0;
         this.paused = false;
 
         const viewport = context.viewport.current;
@@ -100,6 +106,13 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         }
 
         this.elapsed += dt * 0.55;
+        this.redrawAccumulator += dt;
+
+        if (this.redrawAccumulator < CURVE_FRAME_INTERVAL) {
+            return;
+        }
+
+        this.redrawAccumulator %= CURVE_FRAME_INTERVAL;
         this.drawCurve();
     }
 
@@ -114,7 +127,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     reset(): void {
         this.parameters?.reset();
         this.elapsed = 0;
-        this.paused = false;
+        this.redrawAccumulator = 0;
 
         if (this.context) {
             this.renderLayout(this.context.viewport.current);
@@ -126,6 +139,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         this.unsubscribeViewport = null;
         this.parameterPanel?.destroy();
         this.parameterPanel = null;
+        this.parameters?.dispose();
         this.parameters = null;
         this.curveLayers = [];
         this.markerGraphics = null;
@@ -142,6 +156,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             return;
         }
 
+        this.parameterPanel?.destroy();
         this.parameterPanel = null;
         clearNode(root);
         this.curveLayers = [];
@@ -150,6 +165,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         fillNode(root, viewport.width, viewport.height, palette.background);
 
         const compact = viewport.breakpoint === 'compact';
+        this.trailLayerCount = compact ? 3 : 4;
+        this.sampleCount = compact ? 300 : viewport.breakpoint === 'medium' ? 460 : 620;
         const horizontalPadding = compact ? 18 : 44;
         const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
         const contentWidth = Math.min(1180, Math.max(280, safeWidth - horizontalPadding * 2));
@@ -166,7 +183,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         const plotTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
         const plotBottom = panelY + panelHeight / 2 + 12;
         this.plotWidth = contentWidth;
-        this.plotHeight = Math.max(180, plotTop - plotBottom);
+        this.plotHeight = Math.max(1, plotTop - plotBottom);
         const plotCenterY = (plotTop + plotBottom) / 2;
 
         const plot = createUiNode(
@@ -183,17 +200,19 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         this.createCurveLayers(plot);
         this.drawCurve();
 
-        createLabel(
-            plot,
-            'x = sin(at + φ)   ·   y = sin(bt)',
-            Math.max(180, Math.min(this.plotWidth - 40, 520)),
-            28,
-            compact ? 11 : 13,
-            palette.muted,
-            -this.plotWidth / 2 + Math.min(this.plotWidth / 2, 270),
-            this.plotHeight / 2 - 22,
-            HorizontalTextAlignment.LEFT,
-        );
+        if (this.plotHeight >= 90) {
+            createLabel(
+                plot,
+                'x = sin(at + φ)   ·   y = sin(bt)',
+                Math.max(180, Math.min(this.plotWidth - 40, 520)),
+                28,
+                compact ? 11 : 13,
+                palette.muted,
+                -this.plotWidth / 2 + Math.min(this.plotWidth / 2, 270),
+                this.plotHeight / 2 - 22,
+                HorizontalTextAlignment.LEFT,
+            );
+        }
 
         this.parameterPanel = new ParameterPanel(
             root,
@@ -213,7 +232,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         const gridNode = createUiNode(plot, 'CurveGridLines', this.plotWidth, this.plotHeight);
         const grid = gridNode.addComponent(Graphics);
         grid.lineWidth = 1;
-        grid.strokeColor = new Color(91, 105, 100, 38);
+        grid.strokeColor = new Color(palette.border.r, palette.border.g, palette.border.b, 54);
 
         const verticalSteps = 10;
         const horizontalSteps = 8;
@@ -235,7 +254,12 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         const axesNode = createUiNode(plot, 'CurveAxes', this.plotWidth, this.plotHeight);
         const axes = axesNode.addComponent(Graphics);
         axes.lineWidth = 1.25;
-        axes.strokeColor = new Color(82, 98, 92, 82);
+        axes.strokeColor = new Color(
+            palette.borderStrong.r,
+            palette.borderStrong.g,
+            palette.borderStrong.b,
+            92,
+        );
         axes.moveTo(-this.plotWidth / 2, 0);
         axes.lineTo(this.plotWidth / 2, 0);
         axes.moveTo(0, -this.plotHeight / 2);
@@ -244,7 +268,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 
     private createCurveLayers(plot: Node): void {
-        for (let trail = 3; trail >= 0; trail -= 1) {
+        for (let trail = this.trailLayerCount - 1; trail >= 0; trail -= 1) {
             const node = createUiNode(
                 plot,
                 `CurveTrail:${trail}`,
@@ -273,20 +297,20 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         const basePhase = parameters.getNumber('phase');
         const scaleX = this.plotWidth * 0.42;
         const scaleY = this.plotHeight * 0.40;
-        const sampleCount = Math.max(320, Math.round(this.plotWidth * 0.72));
+        const maximumTrail = Math.max(1, this.trailLayerCount - 1);
 
         for (const layer of this.curveLayers) {
             const { graphics, trail } = layer;
-            const alpha = 42 + (3 - trail) * 48;
+            const alpha = Math.round(46 + (maximumTrail - trail) * (164 / maximumTrail));
             graphics.clear();
             graphics.strokeColor = trail === 0
-                ? new Color(79, 127, 113, 230)
-                : new Color(116, 125, 163, alpha);
+                ? new Color(palette.accent.r, palette.accent.g, palette.accent.b, 230)
+                : new Color(palette.primary.r, palette.primary.g, palette.primary.b, alpha);
             graphics.lineWidth = trail === 0 ? 2.4 : 1.2;
             const phase = basePhase + this.elapsed - trail * 0.07;
 
-            for (let index = 0; index <= sampleCount; index += 1) {
-                const t = (Math.PI * 2 * index) / sampleCount;
+            for (let index = 0; index <= this.sampleCount; index += 1) {
+                const t = (Math.PI * 2 * index) / this.sampleCount;
                 const x = Math.sin(frequencyX * t + phase) * scaleX;
                 const y = Math.sin(frequencyY * t) * scaleY;
 
@@ -306,7 +330,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         ) * scaleX;
         const markerY = Math.sin(frequencyY * markerT) * scaleY;
         this.markerGraphics.clear();
-        this.markerGraphics.fillColor = new Color(150, 113, 73, 220);
+        this.markerGraphics.fillColor = palette.warning;
         this.markerGraphics.circle(markerX, markerY, 5);
         this.markerGraphics.fill();
     }
@@ -317,6 +341,7 @@ export const parametricCurveDefinition: ModuleDefinition = {
     title: 'Parametric Curve Lab',
     description: 'Animate and tune a code-generated Lissajous field in real time.',
     category: 'mathematics',
+    labId: 'mathematics',
     tags: ['curves', 'graphics', 'animation'],
     capabilities: ['pause', 'reset', 'settings', 'save-state'],
     status: 'ready',
