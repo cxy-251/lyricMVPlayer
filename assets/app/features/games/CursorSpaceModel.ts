@@ -150,9 +150,8 @@ export class CursorSpaceModel {
     private updatePlayer(dt: number): void {
         const player = this.player;
         player.invulnerableRemaining = Math.max(0, player.invulnerableRemaining - dt);
-
-        let desiredVelocityX = 0;
-        let desiredVelocityY = 0;
+        const previousX = player.position.x;
+        const previousY = player.position.y;
 
         if (this.targetActive) {
             const dx = this.target.x - player.position.x;
@@ -161,21 +160,30 @@ export class CursorSpaceModel {
 
             if (distanceSquared > 0.25) {
                 const distance = Math.sqrt(distanceSquared);
-                const desiredSpeed = Math.min(
-                    this.config.playerMaximumSpeed,
-                    distance * this.config.playerFollowGain,
-                );
-                desiredVelocityX = dx / distance * desiredSpeed;
-                desiredVelocityY = dy / distance * desiredSpeed;
-                player.rotation = Math.atan2(dy, dx);
+                const response = 1 - Math.exp(-this.config.playerFollowResponse * dt);
+                const maximumMovement = this.config.playerMaximumSpeed * dt;
+                const requestedMovement = distance * response;
+                const movement = Math.min(maximumMovement, requestedMovement);
+                player.position.x += dx / distance * movement;
+                player.position.y += dy / distance * movement;
+
+                if (distance > 2) {
+                    player.rotation = Math.atan2(dy, dx);
+                }
             }
+        } else {
+            const retention = Math.exp(-this.config.playerFollowResponse * dt);
+            player.velocity.x *= retention;
+            player.velocity.y *= retention;
+            player.position.x += player.velocity.x * dt;
+            player.position.y += player.velocity.y * dt;
         }
 
-        const response = 1 - Math.exp(-this.config.playerVelocityResponse * dt);
-        player.velocity.x += (desiredVelocityX - player.velocity.x) * response;
-        player.velocity.y += (desiredVelocityY - player.velocity.y) * response;
-        player.position.x += player.velocity.x * dt;
-        player.position.y += player.velocity.y * dt;
+        if (this.targetActive) {
+            player.velocity.x = (player.position.x - previousX) / dt;
+            player.velocity.y = (player.position.y - previousY) / dt;
+        }
+
         this.clampPlayerToBounds();
     }
 
