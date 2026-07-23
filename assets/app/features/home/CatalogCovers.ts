@@ -91,14 +91,15 @@ function drawPhysics(parent: Node, width: number, height: number): void {
 
     trail.stroke();
 
-    const points = createGraphics(parent, 'PhysicsPoints', width, height);
-    points.fillColor = palette.text;
-    points.circle(0, centerY, Math.max(2, unit * 0.009));
-    points.fill();
-    points.clear();
-    points.fillColor = new Color(45, 92, 214, 255);
-    points.circle(Math.cos(0.76) * radius, centerY + Math.sin(0.76) * radius, Math.max(4, unit * 0.018));
-    points.fill();
+    const center = createGraphics(parent, 'PhysicsCenter', width, height);
+    center.fillColor = palette.text;
+    center.circle(0, centerY, Math.max(2, unit * 0.009));
+    center.fill();
+
+    const point = createGraphics(parent, 'PhysicsPoint', width, height);
+    point.fillColor = new Color(45, 92, 214, 255);
+    point.circle(Math.cos(0.76) * radius, centerY + Math.sin(0.76) * radius, Math.max(4, unit * 0.018));
+    point.fill();
 }
 
 function drawParametricCurve(parent: Node, width: number, height: number): void {
