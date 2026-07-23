@@ -27,6 +27,8 @@ export interface ViewportSnapshot {
 
 type ViewportListener = (snapshot: ViewportSnapshot) => void;
 
+const WEB_PREVIEW_TOP_INSET = 56;
+
 export class ViewportService {
     private snapshot = this.readSnapshot();
     private readonly listeners = new Set<ViewportListener>();
@@ -50,7 +52,7 @@ export class ViewportService {
 
         if (this.hasBrowserDom()) {
             // CocosLab owns the complete browser surface. Creator Preview's
-            // external toolbar must never participate in application layout.
+            // external toolbar must never participate in dynamic layout.
             view.resizeWithBrowserSize(false);
             window.addEventListener('resize', this.handleBrowserResize, { passive: true });
             window.visualViewport?.addEventListener('resize', this.handleBrowserResize, { passive: true });
@@ -261,7 +263,7 @@ export class ViewportService {
                 orientation: width >= height ? 'landscape' : 'portrait',
                 breakpoint: width < 720 ? 'compact' : width < 1180 ? 'medium' : 'wide',
                 safeInsets: {
-                    top: 0,
+                    top: WEB_PREVIEW_TOP_INSET,
                     right: 0,
                     bottom: 0,
                     left: 0,
