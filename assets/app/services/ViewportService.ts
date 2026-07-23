@@ -31,6 +31,7 @@ export class ViewportService {
     private readonly listeners = new Set<ViewportListener>();
     private started = false;
     private applyingResolution = false;
+    private animationFrame = 0;
 
     get current(): ViewportSnapshot {
         return this.snapshot;
@@ -43,8 +44,17 @@ export class ViewportService {
 
         this.started = true;
         profiler.hideStats();
-        view.resizeWithBrowserSize(true);
-        this.syncDesignResolutionToBrowser();
+
+        if (this.hasBrowserDom()) {
+            // Cocos' automatic browser resize reapplies the scene's saved resolution
+            // policy. CocosLab owns the complete web surface instead.
+            view.resizeWithBrowserSize(false);
+            window.addEventListener('resize', this.handleBrowserResize, { passive: true });
+            window.visualViewport?.addEventListener('resize', this.handleBrowserResize, { passive: true });
+            this.applyBrowserSurface();
+            this.scheduleBrowserSurfaceSync();
+        }
+
         screen.on('window-resize', this.handleViewportChange, this);
         screen.on('orientation-change', this.handleViewportChange, this);
         this.refresh();
@@ -57,6 +67,17 @@ export class ViewportService {
 
         screen.off('window-resize', this.handleViewportChange, this);
         screen.off('orientation-change', this.handleViewportChange, this);
+
+        if (this.hasBrowserDom()) {
+            window.removeEventListener('resize', this.handleBrowserResize);
+            window.visualViewport?.removeEventListener('resize', this.handleBrowserResize);
+
+            if (this.animationFrame !== 0) {
+                window.cancelAnimationFrame(this.animationFrame);
+                this.animationFrame = 0;
+            }
+        }
+
         this.started = false;
         this.listeners.clear();
     }
@@ -87,34 +108,128 @@ export class ViewportService {
         }
     }
 
+    private readonly handleBrowserResize = (): void => {
+        this.scheduleBrowserSurfaceSync();
+    };
+
     private readonly handleViewportChange = (): void => {
-        this.syncDesignResolutionToBrowser();
+        if (this.hasBrowserDom()) {
+            this.scheduleBrowserSurfaceSync();
+            return;
+        }
+
         this.refresh();
     };
 
-    private syncDesignResolutionToBrowser(): void {
-        if (this.applyingResolution) {
+    private scheduleBrowserSurfaceSync(): void {
+        if (!this.hasBrowserDom()) {
             return;
         }
 
-        const frame = view.getFrameSize();
-        const browserWidth = typeof window === 'undefined' ? frame.width : window.innerWidth;
-        const browserHeight = typeof window === 'undefined' ? frame.height : window.innerHeight;
-        const width = Math.max(1, Math.round(browserWidth));
-        const height = Math.max(1, Math.round(browserHeight));
-        const current = view.getDesignResolutionSize();
+        if (this.animationFrame !== 0) {
+            window.cancelAnimationFrame(this.animationFrame);
+        }
 
-        if (Math.round(current.width) === width && Math.round(current.height) === height) {
+        this.animationFrame = window.requestAnimationFrame(() => {
+            this.animationFrame = 0;
+            this.applyBrowserSurface();
+            this.refresh();
+        });
+    }
+
+    private applyBrowserSurface(): void {
+        if (!this.hasBrowserDom() || this.applyingResolution) {
             return;
         }
+
+        const viewport = window.visualViewport;
+        const width = Math.max(1, Math.round(
+            viewport?.width
+            ?? document.documentElement.clientWidth
+            ?? window.innerWidth,
+        ));
+        const height = Math.max(1, Math.round(
+            viewport?.height
+            ?? document.documentElement.clientHeight
+            ?? window.innerHeight,
+        ));
 
         this.applyingResolution = true;
 
         try {
+            this.applyDocumentStyles();
+
+            // Resize every layer involved in a Cocos Web surface. Updating only
+            // the design resolution leaves the outer container at 1280 x 720.
+            view.setFrameSize(width, height);
+            view.setCanvasSize(width, height);
             view.setDesignResolutionSize(width, height, ResolutionPolicy.EXACT_FIT);
+            this.applyCanvasStyles();
         } finally {
             this.applyingResolution = false;
         }
+    }
+
+    private applyDocumentStyles(): void {
+        const rootStyle = document.documentElement.style;
+        rootStyle.width = '100%';
+        rootStyle.height = '100%';
+        rootStyle.margin = '0';
+        rootStyle.padding = '0';
+        rootStyle.overflow = 'hidden';
+        rootStyle.background = '#f7f6f2';
+
+        const bodyStyle = document.body.style;
+        bodyStyle.width = '100%';
+        bodyStyle.height = '100%';
+        bodyStyle.margin = '0';
+        bodyStyle.padding = '0';
+        bodyStyle.overflow = 'hidden';
+        bodyStyle.background = '#f7f6f2';
+    }
+
+    private applyCanvasStyles(): void {
+        const container = document.getElementById('Cocos3dGameContainer')
+            ?? document.getElementById('GameDiv')
+            ?? document.getElementById('GameContainer');
+
+        if (container instanceof HTMLElement) {
+            const style = container.style;
+            style.position = 'fixed';
+            style.inset = '0';
+            style.width = '100vw';
+            style.height = '100vh';
+            style.maxWidth = 'none';
+            style.maxHeight = 'none';
+            style.margin = '0';
+            style.padding = '0';
+            style.overflow = 'hidden';
+            style.background = '#f7f6f2';
+        }
+
+        const canvas = document.getElementById('GameCanvas')
+            ?? document.querySelector('canvas');
+
+        if (canvas instanceof HTMLCanvasElement) {
+            const style = canvas.style;
+            style.position = 'absolute';
+            style.inset = '0';
+            style.display = 'block';
+            style.width = '100%';
+            style.height = '100%';
+            style.maxWidth = 'none';
+            style.maxHeight = 'none';
+            style.margin = '0';
+            style.padding = '0';
+            style.background = '#f7f6f2';
+        }
+    }
+
+    private hasBrowserDom(): boolean {
+        return typeof window !== 'undefined'
+            && typeof document !== 'undefined'
+            && Boolean(document.documentElement)
+            && Boolean(document.body);
     }
 
     private readSnapshot(): ViewportSnapshot {
