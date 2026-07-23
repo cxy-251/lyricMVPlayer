@@ -49,8 +49,7 @@ export interface CursorSpaceEffect {
 
 export interface CursorSpaceConfig {
     readonly playerRadius: number;
-    readonly playerFollowGain: number;
-    readonly playerVelocityResponse: number;
+    readonly playerFollowResponse: number;
     readonly playerMaximumSpeed: number;
     readonly playerNoseOffset: number;
     readonly projectileSpeed: number;
@@ -76,8 +75,7 @@ export interface CursorSpaceConfig {
 
 export const cursorSpaceConfig: CursorSpaceConfig = {
     playerRadius: 10,
-    playerFollowGain: 8.5,
-    playerVelocityResponse: 14,
+    playerFollowResponse: 13,
     playerMaximumSpeed: 460,
     playerNoseOffset: 19,
     projectileSpeed: 560,
