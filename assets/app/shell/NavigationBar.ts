@@ -110,7 +110,12 @@ export class NavigationBar {
         const barHeight = compact ? 54 : 60;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
-        const y = height / 2 - safeInsets.top - barHeight / 2;
+
+        // Creator Browser Preview reveals an external toolbar when the pointer
+        // reaches the top edge. Keep app navigation at one stable canvas
+        // coordinate instead of following that toolbar or safe-area changes.
+        const fixedTopOffset = compact ? 64 : 68;
+        const y = height / 2 - fixedTopOffset - barHeight / 2;
 
         this.root.setPosition(centerX, y, 0);
         resizeNode(this.root, contentWidth, barHeight);
