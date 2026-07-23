@@ -1,9 +1,11 @@
 import {
     _decorator,
     Canvas,
+    Color,
     Component,
     director,
     Node,
+    profiler,
 } from 'cc';
 import { AppRoot } from '../core/AppRoot';
 import type { NavigationService } from '../core/NavigationService';
@@ -16,17 +18,37 @@ export class Bootstrap extends Component {
     private canvasNode: Node | null = null;
     private navigationReady: Promise<NavigationService> | null = null;
 
+    onEnable(): void {
+        profiler.hideStats();
+    }
+
     onLoad(): void {
-        const canvas = this.resolveCanvas();
-        this.canvasNode = canvas.node;
-        this.appRoot = AppRoot.ensure();
-        this.navigationReady = this.appRoot.attachCanvas(this.canvasNode);
+        profiler.hideStats();
+
+        try {
+            const canvas = this.resolveCanvas();
+            const camera = canvas.cameraComponent;
+
+            if (camera) {
+                camera.clearColor = new Color(242, 240, 234, 255);
+            }
+
+            this.canvasNode = canvas.node;
+            this.appRoot = AppRoot.ensure();
+            this.navigationReady = this.appRoot.attachCanvas(this.canvasNode);
+        } catch (error: unknown) {
+            profiler.hideStats();
+            console.error('[cocoslab] bootstrap initialization failed', error);
+            this.navigationReady = null;
+        }
     }
 
     start(): void {
+        profiler.hideStats();
         void this.navigationReady
             ?.then((navigation) => navigation.home())
             .catch((error: unknown) => {
+                profiler.hideStats();
                 console.error('[cocoslab] bootstrap failed', error);
             });
     }
