@@ -8,16 +8,14 @@ import {
     Vec3,
 } from 'cc';
 import {
-    createNativeIcon,
-    nativeTheme,
-    surfaceColor,
-    type SurfaceTone,
-} from '../../ui/NativeUiKit';
-import {
     createLabel,
+    createNativeIcon,
     createUiNode,
     fillNode,
+    nativeTheme,
     strokeNode,
+    surfaceColor,
+    type SurfaceTone,
 } from '../../ui/UiFactory';
 import {
     drawCatalogCover,
