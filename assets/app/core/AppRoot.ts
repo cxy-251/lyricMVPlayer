@@ -6,7 +6,6 @@ import {
     Game,
     Node,
 } from 'cc';
-import '../features/games/CursorSpaceEnemyContacts';
 import { cursorSpaceDefinition } from '../features/games/CursorSpaceModule';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
