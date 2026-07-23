@@ -1,7 +1,6 @@
 import {
     BlockInputEvents,
     Canvas,
-    Color,
     Layers,
     Node,
 } from 'cc';
@@ -68,7 +67,7 @@ export class AppShell {
         const panelWidth = Math.min(620, width - safeInsets.left - safeInsets.right - 40);
         const panelHeight = 280;
         const panel = createUiNode(this.overlayLayer, 'ErrorPanel', panelWidth, panelHeight);
-        fillNode(panel, panelWidth, panelHeight, nativeTheme.lilac, 22);
+        fillNode(panel, panelWidth, panelHeight, nativeTheme.card, 22);
 
         createLabel(panel, 'MODULE ERROR', panelWidth - 48, 44, 26, palette.danger, 0, 82);
         createLabel(panel, message, panelWidth - 64, 94, 17, nativeTheme.ink, 0, 12);
@@ -77,7 +76,6 @@ export class AppShell {
             text: 'Return home',
             width: 168,
             y: -82,
-            tone: 'blue',
             onPress: onHome,
         });
     }
@@ -93,7 +91,7 @@ export class AppShell {
         const camera = canvas?.cameraComponent;
 
         if (camera) {
-            camera.clearColor = new Color(242, 240, 234, 255);
+            camera.clearColor = nativeTheme.background;
         }
     }
 
