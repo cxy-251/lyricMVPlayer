@@ -4,7 +4,6 @@ import type {
     ModuleContext,
 } from '../contracts/InteractiveModule';
 import type { ViewportSnapshot } from '../services/ViewportService';
-import { navigationContentTopInset } from '../shell/NavigationBar';
 import { createUiNode, resizeNode } from '../ui/UiFactory';
 
 export abstract class ResponsiveModule implements InteractiveModule {
@@ -36,7 +35,7 @@ export abstract class ResponsiveModule implements InteractiveModule {
             }
 
             resizeNode(this.root, snapshot.width, snapshot.height);
-            this.render(this.withNavigationSpace(snapshot));
+            this.render(snapshot);
         });
     }
 
@@ -74,17 +73,4 @@ export abstract class ResponsiveModule implements InteractiveModule {
     protected onUnmount(): void | Promise<void> {}
 
     protected abstract render(viewport: ViewportSnapshot): void;
-
-    private withNavigationSpace(viewport: ViewportSnapshot): ViewportSnapshot {
-        return {
-            ...viewport,
-            safeInsets: {
-                ...viewport.safeInsets,
-                top: Math.max(
-                    viewport.safeInsets.top,
-                    navigationContentTopInset(viewport.breakpoint),
-                ),
-            },
-        };
-    }
 }
