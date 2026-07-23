@@ -1,6 +1,5 @@
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/card/card.js';
-import '@awesome.me/webawesome/dist/components/icon/icon.js';
 import '@awesome.me/webawesome/dist/components/slider/slider.js';
 import '@awesome.me/webawesome/dist/components/switch/switch.js';
 
@@ -75,29 +74,6 @@ export function applyRect(element: HTMLElement, rect: WebUiRect): void {
     element.style.height = `${Math.round(rect.height)}px`;
 }
 
-export function createWebIconButton(options: {
-    readonly parent: HTMLElement;
-    readonly icon: string;
-    readonly label: string;
-    readonly onPress: () => void;
-    readonly selected?: boolean;
-}): HTMLElement {
-    const button = document.createElement('wa-button') as HTMLElement;
-    button.className = `cocoslab-icon-button${options.selected ? ' is-selected' : ''}`;
-    button.setAttribute('appearance', options.selected ? 'filled' : 'plain');
-    button.setAttribute('variant', options.selected ? 'brand' : 'neutral');
-    button.setAttribute('size', 'small');
-    button.setAttribute('aria-label', options.label);
-
-    const icon = document.createElement('wa-icon');
-    icon.setAttribute('name', options.icon);
-    icon.setAttribute('label', options.label);
-    button.appendChild(icon);
-    button.addEventListener('click', options.onPress);
-    options.parent.appendChild(button);
-    return button;
-}
-
 function ensureRoot(): HTMLDivElement | null {
     if (!hasWebUi()) {
         return null;
@@ -143,6 +119,17 @@ function ensureStyles(): void {
   --wa-color-brand-700: #4f687c;
   --wa-color-brand-800: #445767;
   --wa-color-brand-900: #3c4a56;
+  --wa-color-neutral-0: #ffffff;
+  --wa-color-neutral-50: #f7f7f4;
+  --wa-color-neutral-100: #efefeb;
+  --wa-color-neutral-200: #e3e4df;
+  --wa-color-neutral-300: #d3d5cf;
+  --wa-color-neutral-400: #adb2ac;
+  --wa-color-neutral-500: #7d847f;
+  --wa-color-neutral-600: #666d68;
+  --wa-color-neutral-700: #4f5652;
+  --wa-color-neutral-800: #3b403d;
+  --wa-color-neutral-900: #292d2b;
   --wa-font-family-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
   --wa-font-family-heading: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   --wa-border-radius-s: 10px;
@@ -194,9 +181,14 @@ function ensureStyles(): void {
   min-height: 40px;
   border-radius: 999px;
   color: var(--cocoslab-ink);
+  box-shadow: none;
 }
 .cocoslab-icon-button:not(.is-selected)::part(base) {
-  background: color-mix(in srgb, var(--cocoslab-blue) 58%, transparent);
+  background: color-mix(in srgb, var(--cocoslab-blue) 66%, transparent);
+  border-color: color-mix(in srgb, var(--cocoslab-line) 72%, transparent);
+}
+.cocoslab-icon-button:not(.is-selected):hover::part(base) {
+  background: color-mix(in srgb, var(--cocoslab-blue) 90%, transparent);
 }
 .cocoslab-catalog-card {
   position: absolute;
@@ -211,6 +203,11 @@ function ensureStyles(): void {
   transform: translateY(-3px);
   filter: saturate(1.04);
   outline: none;
+}
+.cocoslab-catalog-card::part(base) {
+  height: 100%;
+  border-color: color-mix(in srgb, var(--cocoslab-line) 78%, transparent);
+  box-shadow: 0 16px 36px rgba(57, 65, 61, 0.055);
 }
 .cocoslab-catalog-card::part(body) {
   height: 100%;
@@ -266,6 +263,12 @@ function ensureStyles(): void {
   position: absolute;
   display: block;
   pointer-events: auto;
+}
+.cocoslab-parameter-card::part(base) {
+  height: 100%;
+  background: color-mix(in srgb, var(--cocoslab-green) 42%, #f8f8f5);
+  border-color: color-mix(in srgb, var(--cocoslab-line) 82%, transparent);
+  box-shadow: 0 12px 30px rgba(57, 65, 61, 0.045);
 }
 .cocoslab-parameter-card::part(body) {
   height: 100%;
