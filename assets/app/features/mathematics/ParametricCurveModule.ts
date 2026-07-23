@@ -220,6 +220,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             parameterSchema,
             parameters,
             () => this.drawCurve(),
+            (error) => this.context?.reportError(error),
         );
         this.parameterPanel.render({
             width: contentWidth,
