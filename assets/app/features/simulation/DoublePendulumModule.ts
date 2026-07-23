@@ -6,10 +6,10 @@ import {
     Node,
 } from 'cc';
 import type {
-    ModuleDefinition,
     Pausable,
     Resettable,
     Updatable,
+    VisibleModuleDefinition,
 } from '../../contracts/InteractiveModule';
 import { FixedStepClock } from '../../animation/FixedStepClock';
 import { TrailBuffer } from '../../graphics/TrailBuffer';
@@ -252,8 +252,9 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             centerX,
             plotY,
         );
-        fillNode(plot, this.plotWidth, this.plotHeight, palette.surface, 8);
-        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, 8, 1);
+        const plotRadius = Math.min(8, this.plotHeight / 2);
+        fillNode(plot, this.plotWidth, this.plotHeight, palette.surface, plotRadius);
+        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, plotRadius, 1);
 
         this.pivotX = 0;
         this.pivotY = this.plotHeight * 0.29;
@@ -524,7 +525,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
     }
 }
 
-export const doublePendulumDefinition: ModuleDefinition = {
+export const doublePendulumDefinition: VisibleModuleDefinition = {
     id: 'double-pendulum-lab',
     title: 'Double Pendulum',
     description: 'Study a conservative planar double pendulum with measurable energy and constraint error.',
