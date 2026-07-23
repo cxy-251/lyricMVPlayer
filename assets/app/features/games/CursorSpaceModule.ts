@@ -7,13 +7,13 @@ import {
     UITransform,
     Vec3,
 } from 'cc';
+import { FixedStepClock } from '../../animation/FixedStepClock';
 import type {
     Pausable,
     Resettable,
     Updatable,
     VisibleModuleDefinition,
 } from '../../contracts/InteractiveModule';
-import { FixedStepClock } from '../../animation/FixedStepClock';
 import type { ViewportSnapshot } from '../../services/ViewportService';
 import { ResponsiveModule } from '../../templates/ResponsiveModule';
 import {
@@ -48,7 +48,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private readonly clock = new FixedStepClock(1 / 120, 12);
     private readonly model = new CursorSpaceModel();
     private readonly screenPoint = new Vec3();
-    private readonly localPoint = new Vec3();
     private readonly projectileColor = new Color(
         palette.primaryText.r,
         palette.primaryText.g,
@@ -71,7 +70,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         palette.primaryText.r,
         palette.primaryText.g,
         palette.primaryText.b,
-        255,
+        180,
     );
     private readonly starColor = new Color(
         palette.subtle.r,
@@ -94,6 +93,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     }
 
     protected onUnmount(): void {
+        this.setBrowserCursor(false);
         this.unbindPointerInput();
         this.model.clearTarget();
         this.clock.reset();
@@ -121,6 +121,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     pause(): void {
         this.paused = true;
         this.model.clearTarget();
+        this.setBrowserCursor(false);
     }
 
     resume(): void {
@@ -198,6 +199,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private bindPointerInput(): void {
         const root = this.requireRoot();
+        root.on(Node.EventType.MOUSE_ENTER, this.handleMouseEnter, this);
         root.on(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
         root.on(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
         root.on(Node.EventType.TOUCH_START, this.handleTouch, this);
@@ -213,6 +215,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             return;
         }
 
+        root.off(Node.EventType.MOUSE_ENTER, this.handleMouseEnter, this);
         root.off(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
         root.off(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
         root.off(Node.EventType.TOUCH_START, this.handleTouch, this);
@@ -221,18 +224,34 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         root.off(Node.EventType.TOUCH_CANCEL, this.handlePointerLeave, this);
     }
 
+    private readonly handleMouseEnter = (): void => {
+        if (!this.paused) {
+            this.setBrowserCursor(true);
+        }
+    };
+
     private readonly handleMouseMove = (event: EventMouse): void => {
+        if (this.paused) {
+            return;
+        }
+
+        this.setBrowserCursor(true);
         const location = event.getUILocation();
         this.updateTarget(location.x, location.y);
     };
 
     private readonly handleTouch = (event: EventTouch): void => {
+        if (this.paused) {
+            return;
+        }
+
         const location = event.getUILocation();
         this.updateTarget(location.x, location.y);
     };
 
     private readonly handlePointerLeave = (): void => {
         this.model.clearTarget();
+        this.setBrowserCursor(false);
     };
 
     private updateTarget(screenX: number, screenY: number): void {
@@ -244,8 +263,8 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         this.screenPoint.set(screenX, screenY, 0);
-        transform.convertToNodeSpaceAR(this.screenPoint, this.localPoint);
-        this.model.setTarget(this.localPoint.x, this.localPoint.y);
+        const localPoint = transform.convertToNodeSpaceAR(this.screenPoint);
+        this.model.setTarget(localPoint.x, localPoint.y);
     }
 
     private drawStars(bounds: Readonly<CursorSpaceBounds>): void {
@@ -354,20 +373,19 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         graphics.clear();
+        graphics.strokeColor = this.effectColor;
         graphics.lineWidth = 1.5;
+        let visible = false;
 
         for (const effect of this.model.effects) {
             if (!effect.active) {
                 continue;
             }
 
-            const progress = Math.max(0, effect.life / Math.max(0.0001, effect.initialLife));
-            this.effectColor.a = Math.round(220 * progress);
-            graphics.strokeColor = this.effectColor;
+            visible = true;
 
             if (effect.kind === 'ring') {
                 graphics.circle(effect.position.x, effect.position.y, effect.radius);
-                graphics.stroke();
                 continue;
             }
 
@@ -385,6 +403,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 effect.position.x + directionX * effect.radius,
                 effect.position.y + directionY * effect.radius,
             );
+        }
+
+        if (visible) {
             graphics.stroke();
         }
     }
@@ -410,6 +431,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             return;
         }
 
+        graphics.fillColor = this.playerColor;
+        graphics.strokeColor = palette.primaryText;
+        graphics.lineWidth = 1.25;
         const speed = Math.sqrt(
             player.velocity.x * player.velocity.x
             + player.velocity.y * player.velocity.y,
@@ -418,8 +442,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         if (speed > 16) {
             const directionX = player.velocity.x / speed;
             const directionY = player.velocity.y / speed;
-            graphics.strokeColor = this.playerColor;
-            graphics.lineWidth = 1.5;
             graphics.moveTo(
                 player.position.x - directionX * 11,
                 player.position.y - directionY * 11,
@@ -428,12 +450,8 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 player.position.x - directionX * Math.min(26, 11 + speed * 0.035),
                 player.position.y - directionY * Math.min(26, 11 + speed * 0.035),
             );
-            graphics.stroke();
         }
 
-        graphics.fillColor = this.playerColor;
-        graphics.strokeColor = palette.primaryText;
-        graphics.lineWidth = 1.25;
         this.appendPolygon(
             graphics,
             player.position.x,
@@ -472,6 +490,12 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             x + firstX * cosine - firstY * sine,
             y + firstX * sine + firstY * cosine,
         );
+    }
+
+    private setBrowserCursor(hidden: boolean): void {
+        if (typeof document !== 'undefined' && document.body) {
+            document.body.style.cursor = hidden ? 'none' : 'default';
+        }
     }
 }
 
