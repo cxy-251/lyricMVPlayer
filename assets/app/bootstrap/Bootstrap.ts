@@ -42,11 +42,11 @@ export class Bootstrap extends Component {
             const camera = canvas.cameraComponent;
 
             if (camera) {
-                camera.clearColor = new Color(242, 240, 234, 255);
+                camera.clearColor = new Color(24, 27, 26, 255);
             }
 
             this.canvasNode = canvas.node;
-            this.showStatus('Starting Cocos Lab…', new Color(79, 86, 81, 255));
+            this.showStatus('Starting Cocos Lab…', new Color(158, 170, 163, 255));
             void this.initializeApplication();
         } catch (error: unknown) {
             this.showStartupError(error);
@@ -94,7 +94,7 @@ export class Bootstrap extends Component {
         console.error('[cocoslab] startup failed', error);
         this.showStatus(
             `COCOS LAB STARTUP ERROR\n${message}`,
-            new Color(151, 67, 67, 255),
+            new Color(205, 118, 118, 255),
         );
     }
 
