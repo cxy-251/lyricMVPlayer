@@ -1,24 +1,10 @@
+import { Node } from 'cc';
+import { createUiNode } from '../../ui/UiFactory';
 import {
-    Button,
-    Color,
-    HorizontalTextAlignment,
-    Node,
-    Tween,
-    tween,
-    UIOpacity,
-    Vec3,
-} from 'cc';
-import {
-    createLabel,
-    createUiNode,
-    fillNode,
-    palette,
-    strokeNode,
-} from '../../ui/UiFactory';
-import {
-    drawCatalogCover,
-    type CatalogCoverKind,
-} from './CatalogCovers';
+    applyRect,
+    cocosRectToCss,
+} from '../../ui/WebUiKit';
+import type { CatalogCoverKind } from './CatalogCovers';
 
 export interface CatalogCardOptions {
     readonly name: string;
@@ -29,139 +15,213 @@ export interface CatalogCardOptions {
     readonly height: number;
     readonly x: number;
     readonly y: number;
+    readonly webParent: HTMLElement | null;
     readonly onOpen: () => void;
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
-    const radius = Math.min(18, Math.max(12, options.width * 0.03));
-    const hit = createUiNode(
+    const placeholder = createUiNode(
         parent,
         options.name,
-        options.width,
-        options.height,
+        1,
+        1,
         options.x,
         options.y,
     );
-    const card = createUiNode(hit, '__CardVisual', options.width, options.height);
-    fillNode(card, options.width, options.height, palette.surface, radius);
-    strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
-    const hoverLayer = createUiNode(card, 'HoverLayer', options.width - 2, options.height - 2);
-    fillNode(
-        hoverLayer,
-        options.width - 2,
-        options.height - 2,
-        new Color(225, 232, 249, 210),
-        Math.max(10, radius - 1),
-    );
-    const hoverOpacity = hoverLayer.addComponent(UIOpacity);
-    hoverOpacity.opacity = 0;
+    if (!options.webParent) {
+        return placeholder;
+    }
 
-    const coverHeight = options.height * 0.8;
-    const cover = drawCatalogCover(
-        card,
-        options.cover,
-        options.width - Math.max(28, options.width * 0.08),
-        coverHeight,
-    );
-    cover.setPosition(0, options.height * 0.02, 0);
+    const card = document.createElement('wa-card') as HTMLElement;
+    card.className = 'cocoslab-catalog-card';
+    card.setAttribute('appearance', 'filled-outlined');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `${options.title}. ${options.subtitle}`);
+    card.tabIndex = 0;
+    applyRect(card, cocosRectToCss(options.x, options.y, options.width, options.height));
 
-    const detail = createUiNode(
-        card,
-        'Details',
-        options.width - 40,
-        Math.max(96, options.height * 0.26),
-        0,
-        -options.height * 0.32,
-    );
-    const detailOpacity = detail.addComponent(UIOpacity);
-    detailOpacity.opacity = 0;
+    const inner = document.createElement('div');
+    inner.className = 'cocoslab-card-inner';
+    inner.dataset.tone = toneForCover(options.cover);
 
-    createLabel(
-        detail,
-        options.title,
-        options.width - 52,
-        42,
-        Math.max(19, Math.min(28, options.width * 0.056)),
-        palette.text,
-        0,
-        26,
-        HorizontalTextAlignment.CENTER,
-    );
-    createLabel(
-        detail,
-        options.subtitle,
-        options.width - 68,
-        26,
-        Math.max(11, Math.min(14, options.width * 0.027)),
-        palette.accent,
-        0,
-        -10,
-        HorizontalTextAlignment.CENTER,
-    );
-    createLabel(detail, '→', 44, 30, 21, palette.accent, 0, -44);
+    const canvas = document.createElement('canvas');
+    canvas.className = 'cocoslab-card-cover';
+    canvas.setAttribute('aria-hidden', 'true');
+    inner.appendChild(canvas);
 
-    const button = hit.addComponent(Button);
-    button.target = card;
-    button.transition = Button.Transition.SCALE;
-    button.zoomScale = 0.985;
-    button.duration = 0.08;
+    const copy = document.createElement('div');
+    copy.className = 'cocoslab-card-copy';
+    const title = document.createElement('div');
+    title.className = 'cocoslab-card-title';
+    title.textContent = options.title;
+    const subtitle = document.createElement('div');
+    subtitle.className = 'cocoslab-card-subtitle';
+    subtitle.textContent = options.subtitle;
+    const arrow = document.createElement('wa-icon');
+    arrow.setAttribute('name', 'arrow-right');
+    arrow.setAttribute('label', 'Open');
+    arrow.style.marginTop = '10px';
+    copy.append(title, subtitle, arrow);
+    inner.appendChild(copy);
+    card.appendChild(inner);
 
     let revealed = false;
-
-    const setRevealed = (next: boolean): void => {
-        if (revealed === next) {
-            return;
-        }
-
-        revealed = next;
-        Tween.stopAllByTarget(card);
-        Tween.stopAllByTarget(cover);
-        Tween.stopAllByTarget(detailOpacity);
-        Tween.stopAllByTarget(hoverOpacity);
-
-        tween(card)
-            .to(0.14, {
-                scale: next ? new Vec3(1.01, 1.01, 1) : new Vec3(1, 1, 1),
-            })
-            .start();
-        tween(cover)
-            .to(0.14, {
-                position: new Vec3(0, next ? options.height * 0.105 : options.height * 0.02, 0),
-            })
-            .start();
-        tween(detailOpacity)
-            .to(0.14, { opacity: next ? 255 : 0 })
-            .start();
-        tween(hoverOpacity)
-            .to(0.14, { opacity: next ? 255 : 0 })
-            .start();
+    const reveal = (value: boolean): void => {
+        revealed = value;
+        card.classList.toggle('is-revealed', value);
     };
+    const activate = (): void => {
+        const coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
-    hit.on(Node.EventType.MOUSE_ENTER, () => {
-        setRevealed(true);
-        setPointerCursor(true);
-    });
-    hit.on(Node.EventType.MOUSE_LEAVE, () => {
-        setRevealed(false);
-        setPointerCursor(false);
-    });
-    hit.on(Button.EventType.CLICK, () => {
-        if (!revealed) {
-            setRevealed(true);
+        if (coarsePointer && !revealed) {
+            reveal(true);
             return;
         }
 
         options.onOpen();
+    };
+
+    card.addEventListener('pointerenter', () => reveal(true));
+    card.addEventListener('pointerleave', () => reveal(false));
+    card.addEventListener('click', activate);
+    card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+            return;
+        }
+
+        event.preventDefault();
+        activate();
     });
 
-    return hit;
+    options.webParent.appendChild(card);
+    requestAnimationFrame(() => drawCover(canvas, options.cover));
+    return placeholder;
 }
 
-function setPointerCursor(active: boolean): void {
-    if (typeof document === 'undefined') {
+function toneForCover(cover: CatalogCoverKind): string {
+    if (cover === 'physics') {
+        return 'green';
+    }
+
+    if (cover === 'double-pendulum') {
+        return 'sand';
+    }
+
+    if (cover === 'parametric-curve') {
+        return 'blue';
+    }
+
+    return 'lilac';
+}
+
+function drawCover(canvas: HTMLCanvasElement, cover: CatalogCoverKind): void {
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    const context = canvas.getContext('2d');
+
+    if (!context) {
         return;
     }
 
-    document.body.style.cursor = active ? 'pointer' : 'default';
+    context.scale(dpr, dpr);
+    context.translate(width / 2, height / 2);
+    context.strokeStyle = 'rgba(54, 66, 62, 0.72)';
+    context.fillStyle = 'rgba(54, 66, 62, 0.72)';
+    context.lineWidth = Math.max(1.2, Math.min(width, height) * 0.0045);
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+
+    if (cover === 'double-pendulum') {
+        drawDoublePendulum(context, width, height);
+        return;
+    }
+
+    if (cover === 'physics') {
+        drawPhysics(context, width, height);
+        return;
+    }
+
+    drawCurve(context, width, height, cover === 'mathematics' ? 3 : 2);
+}
+
+function drawCurve(
+    context: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    frequency: number,
+): void {
+    const radiusX = width * 0.27;
+    const radiusY = height * 0.26;
+    context.globalAlpha = 0.38;
+    context.beginPath();
+    context.moveTo(-radiusX, 0);
+    context.lineTo(radiusX, 0);
+    context.moveTo(0, -radiusY);
+    context.lineTo(0, radiusY);
+    context.stroke();
+    context.globalAlpha = 1;
+    context.beginPath();
+
+    for (let index = 0; index <= 160; index += 1) {
+        const t = index / 160 * Math.PI * 2;
+        const x = Math.sin(frequency * t + 0.65) * radiusX;
+        const y = Math.sin(2 * t) * radiusY;
+
+        if (index === 0) {
+            context.moveTo(x, y);
+        } else {
+            context.lineTo(x, y);
+        }
+    }
+
+    context.stroke();
+}
+
+function drawPhysics(context: CanvasRenderingContext2D, width: number, height: number): void {
+    const radius = Math.min(width, height) * 0.24;
+    context.globalAlpha = 0.55;
+    context.beginPath();
+    context.arc(0, 0, radius, 0, Math.PI * 2);
+    context.stroke();
+    context.globalAlpha = 1;
+    context.beginPath();
+    context.arc(0, 0, 4, 0, Math.PI * 2);
+    context.fill();
+    const angle = -0.7;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.lineTo(x, y);
+    context.stroke();
+    context.beginPath();
+    context.arc(x, y, 8, 0, Math.PI * 2);
+    context.fill();
+}
+
+function drawDoublePendulum(
+    context: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+): void {
+    const unit = Math.min(width, height);
+    const pivotY = -height * 0.2;
+    const first = { x: -unit * 0.11, y: pivotY + unit * 0.19 };
+    const second = { x: unit * 0.13, y: first.y + unit * 0.22 };
+    context.beginPath();
+    context.moveTo(0, pivotY);
+    context.lineTo(first.x, first.y);
+    context.lineTo(second.x, second.y);
+    context.stroke();
+
+    for (const point of [{ x: 0, y: pivotY }, first, second]) {
+        context.beginPath();
+        context.arc(point.x, point.y, point === second ? 10 : 7, 0, Math.PI * 2);
+        context.fill();
+    }
 }
