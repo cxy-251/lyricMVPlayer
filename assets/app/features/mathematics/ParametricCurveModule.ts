@@ -95,9 +95,23 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, 'ParametricCurveLab', viewport.width, viewport.height);
-        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
-            this.renderLayout(snapshot);
-        });
+        let initializing = true;
+
+        try {
+            this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+                try {
+                    this.renderLayout(snapshot);
+                } catch (error) {
+                    if (initializing) {
+                        throw error;
+                    }
+
+                    context.reportError(error);
+                }
+            });
+        } finally {
+            initializing = false;
+        }
     }
 
     update(dt: number): void {
@@ -165,11 +179,18 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
         fillNode(root, viewport.width, viewport.height, palette.background);
 
         const compact = viewport.breakpoint === 'compact';
-        this.trailLayerCount = compact ? 3 : 4;
-        this.sampleCount = compact ? 300 : viewport.breakpoint === 'medium' ? 460 : 620;
         const horizontalPadding = compact ? 18 : 44;
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
-        const contentWidth = Math.min(1180, Math.max(280, safeWidth - horizontalPadding * 2));
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
+        const contentWidth = Math.max(
+            1,
+            Math.min(1180, safeWidth - horizontalPadding * 2),
+        );
+        this.trailLayerCount = contentWidth < 280 ? 2 : compact ? 3 : 4;
+        const sampleLimit = compact ? 300 : viewport.breakpoint === 'medium' ? 460 : 620;
+        this.sampleCount = Math.max(64, Math.min(sampleLimit, Math.round(contentWidth * 0.9)));
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const panelHeight = ParameterPanel.measureHeight(
             parameterSchema.length,
@@ -194,18 +215,18 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             centerX,
             plotCenterY,
         );
-        const plotRadius = Math.min(18, this.plotHeight / 2);
+        const plotRadius = Math.min(18, this.plotWidth / 2, this.plotHeight / 2);
         fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, plotRadius);
         strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, plotRadius, 1);
         this.drawGrid(plot);
         this.createCurveLayers(plot);
         this.drawCurve();
 
-        if (this.plotHeight >= 90) {
+        if (this.plotHeight >= 90 && this.plotWidth >= 80) {
             createLabel(
                 plot,
                 'x = sin(at + φ)   ·   y = sin(bt)',
-                Math.max(180, Math.min(this.plotWidth - 40, 520)),
+                Math.max(1, Math.min(this.plotWidth - 40, 520)),
                 28,
                 compact ? 11 : 13,
                 palette.muted,
