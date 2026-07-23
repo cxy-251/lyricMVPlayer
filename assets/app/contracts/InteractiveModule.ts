@@ -4,7 +4,7 @@ import type { InputService } from '../services/InputService';
 import type { StorageService } from '../services/StorageService';
 import type { ViewportService } from '../services/ViewportService';
 
-export type LabId = 'mathematics' | 'physics';
+export type LabId = 'mathematics' | 'physics' | 'games';
 
 export interface LabDefinition {
     readonly id: LabId;
