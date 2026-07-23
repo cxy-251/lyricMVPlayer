@@ -15,6 +15,18 @@ const DEFAULT_BOUNDS: CursorSpaceBounds = {
     top: 180,
 };
 
+const ATTACK_CIRCLE_RADIUS = 100;
+const APPROACH_LANE_RADIUS = 76;
+const APPROACH_LANE_HALF_ANGLE = Math.PI * 0.2;
+const NORMAL_PURSUIT_HALF_ANGLE = Math.PI * 0.16;
+const FRIENDLY_AVOIDANCE_HALF_ANGLE = Math.PI * 0.23;
+const PROJECTILE_AVOIDANCE_HALF_ANGLE = Math.PI * 0.34;
+const FRIENDLY_AVOIDANCE_HORIZON = 0.55;
+const FRIENDLY_PREDICTION_PADDING = 8;
+const FRIENDLY_AVOIDANCE_WEIGHT = 1.65;
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+const MINIMUM_VECTOR_LENGTH = 0.0001;
+
 export class CursorSpaceModel {
     readonly player: CursorSpacePlayer = {
         position: { x: 0, y: 0 },
@@ -39,6 +51,12 @@ export class CursorSpaceModel {
     private avoidanceX = 0;
     private avoidanceY = 0;
     private avoidanceThreat = 0;
+    private readonly enemyApproachAngle: number[];
+    private readonly enemyPursuitX: number[];
+    private readonly enemyPursuitY: number[];
+    private readonly enemyDecisionRotation: number[];
+    private readonly enemyDecisionSpeed: number[];
+    private readonly enemyDecisionThreat: number[];
 
     constructor(private readonly config: CursorSpaceConfig = cursorSpaceConfig) {
         this.enemies = Array.from({ length: config.enemyCapacity }, () => ({
@@ -66,6 +84,12 @@ export class CursorSpaceModel {
             initialLife: 0,
             radius: 0,
         }));
+        this.enemyApproachAngle = new Array(config.enemyCapacity).fill(0);
+        this.enemyPursuitX = new Array(config.enemyCapacity).fill(0);
+        this.enemyPursuitY = new Array(config.enemyCapacity).fill(0);
+        this.enemyDecisionRotation = new Array(config.enemyCapacity).fill(0);
+        this.enemyDecisionSpeed = new Array(config.enemyCapacity).fill(0);
+        this.enemyDecisionThreat = new Array(config.enemyCapacity).fill(0);
         this.reset();
     }
 
@@ -151,6 +175,7 @@ export class CursorSpaceModel {
 
         this.updateProjectiles(dt);
         this.updateEnemies(dt);
+        this.resolveEnemyContacts();
         this.updateEnemySpawning(dt);
         this.resolveProjectileCollisions();
         this.resolvePlayerCollisions();
@@ -352,11 +377,11 @@ export class CursorSpaceModel {
     }
 
     private spawnEnemy(): void {
-        const enemy = this.enemies.find((candidate) => !candidate.active);
-        if (!enemy) {
+        const enemyIndex = this.enemies.findIndex((candidate) => !candidate.active);
+        if (enemyIndex < 0) {
             return;
         }
-
+        const enemy = this.enemies[enemyIndex];
         const margin = 28;
         const edge = Math.floor(Math.random() * 4);
         const width = this.bounds.right - this.bounds.left;
@@ -382,59 +407,245 @@ export class CursorSpaceModel {
         enemy.velocity.x = Math.cos(enemy.rotation) * this.config.enemySpeed;
         enemy.velocity.y = Math.sin(enemy.rotation) * this.config.enemySpeed;
         enemy.radius = this.config.enemyRadius;
-        enemy.dodgeSide = Math.random() < 0.5 ? -1 : 1;
+        enemy.dodgeSide = this.stableSide(enemyIndex, Math.floor(this.elapsed * 10));
+        this.enemyApproachAngle[enemyIndex] = this.wrapAngle(
+            Math.atan2(
+                enemy.position.y - this.player.position.y,
+                enemy.position.x - this.player.position.x,
+            ) + this.approachLaneOffset(enemyIndex),
+        );
         enemy.threat = 0;
         enemy.active = true;
     }
 
     private updateEnemies(dt: number): void {
-        const removalMargin = 180;
-        const targetX = this.player.position.x;
-        const targetY = this.player.position.y;
         const speed = Math.min(180, this.config.enemySpeed + this.elapsed * 1.8);
 
-        for (const enemy of this.enemies) {
+        for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex += 1) {
+            const enemy = this.enemies[enemyIndex];
+            if (!enemy.active) {
+                this.enemyPursuitX[enemyIndex] = 0;
+                this.enemyPursuitY[enemyIndex] = 0;
+                this.enemyDecisionSpeed[enemyIndex] = 0;
+                this.enemyDecisionThreat[enemyIndex] = 0;
+                continue;
+            }
+
+            const toPlayerX = this.player.position.x - enemy.position.x;
+            const toPlayerY = this.player.position.y - enemy.position.y;
+            const playerDistance = Math.max(
+                MINIMUM_VECTOR_LENGTH,
+                Math.hypot(toPlayerX, toPlayerY),
+            );
+            const playerDirectionX = toPlayerX / playerDistance;
+            const playerDirectionY = toPlayerY / playerDistance;
+            const pursuit = this.evaluatePursuitDirection(
+                enemyIndex,
+                enemy,
+                playerDirectionX,
+                playerDirectionY,
+                playerDistance,
+            );
+            this.enemyPursuitX[enemyIndex] = pursuit.x;
+            this.enemyPursuitY[enemyIndex] = pursuit.y;
+        }
+
+        for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex += 1) {
+            const enemy = this.enemies[enemyIndex];
             if (!enemy.active) {
                 continue;
             }
 
-            let pursuitX = targetX - enemy.position.x;
-            let pursuitY = targetY - enemy.position.y;
-            const pursuitLength = Math.max(0.0001, Math.hypot(pursuitX, pursuitY));
-            pursuitX /= pursuitLength;
-            pursuitY /= pursuitLength;
+            const toPlayerX = this.player.position.x - enemy.position.x;
+            const toPlayerY = this.player.position.y - enemy.position.y;
+            const playerDistance = Math.max(
+                MINIMUM_VECTOR_LENGTH,
+                Math.hypot(toPlayerX, toPlayerY),
+            );
+            const playerDirectionX = toPlayerX / playerDistance;
+            const playerDirectionY = toPlayerY / playerDistance;
+            const pursuitX = this.enemyPursuitX[enemyIndex];
+            const pursuitY = this.enemyPursuitY[enemyIndex];
 
-            this.evaluateProjectileAvoidance(enemy);
-            const desiredX = pursuitX + this.avoidanceX * this.config.enemyAvoidanceWeight;
-            const desiredY = pursuitY + this.avoidanceY * this.config.enemyAvoidanceWeight;
-            const desiredRotation = Math.atan2(desiredY, desiredX);
-            const difference = this.wrapAngle(desiredRotation - enemy.rotation);
+            this.evaluateFriendlyAvoidance(
+                enemyIndex,
+                enemy,
+                playerDirectionX,
+                playerDirectionY,
+                speed,
+            );
+            const friendlyAvoidanceX = this.avoidanceX;
+            const friendlyAvoidanceY = this.avoidanceY;
+            const friendlyThreat = this.avoidanceThreat;
+
+            this.evaluateProjectileAvoidance(
+                enemy,
+                pursuitX * speed,
+                pursuitY * speed,
+            );
+            const projectileAvoidanceX = this.avoidanceX;
+            const projectileAvoidanceY = this.avoidanceY;
+            const projectileThreat = this.avoidanceThreat;
+
+            const desiredX = pursuitX
+                + friendlyAvoidanceX * FRIENDLY_AVOIDANCE_WEIGHT
+                + projectileAvoidanceX * this.config.enemyAvoidanceWeight;
+            const desiredY = pursuitY
+                + friendlyAvoidanceY * FRIENDLY_AVOIDANCE_WEIGHT
+                + projectileAvoidanceY * this.config.enemyAvoidanceWeight;
+            const maximumDeviation = projectileThreat > 0.05
+                ? PROJECTILE_AVOIDANCE_HALF_ANGLE
+                : friendlyThreat > 0.05
+                    ? FRIENDLY_AVOIDANCE_HALF_ANGLE
+                    : NORMAL_PURSUIT_HALF_ANGLE;
+            const desiredRotation = this.constrainPursuitRotation(
+                desiredX,
+                desiredY,
+                playerDirectionX,
+                playerDirectionY,
+                maximumDeviation,
+            );
+            const combinedThreat = Math.max(projectileThreat, friendlyThreat * 0.72);
             const turnRate = this.config.enemyTurnRate
-                * (1 + this.avoidanceThreat * this.config.enemyAvoidanceTurnBoost);
+                * (1 + combinedThreat * this.config.enemyAvoidanceTurnBoost);
             const maximumTurn = turnRate * dt;
-            enemy.rotation += this.clamp(difference, -maximumTurn, maximumTurn);
-            enemy.threat += (this.avoidanceThreat - enemy.threat)
-                * (1 - Math.exp(-12 * dt));
+            const difference = this.wrapAngle(desiredRotation - enemy.rotation);
+            let rotation = this.wrapAngle(
+                enemy.rotation + this.clamp(difference, -maximumTurn, maximumTurn),
+            );
 
-            const movementSpeed = speed * (1 + enemy.threat * 0.12);
-            enemy.velocity.x = Math.cos(enemy.rotation) * movementSpeed;
-            enemy.velocity.y = Math.sin(enemy.rotation) * movementSpeed;
-            enemy.position.x += enemy.velocity.x * dt;
-            enemy.position.y += enemy.velocity.y * dt;
-
-            if (
-                enemy.position.x < this.bounds.left - removalMargin
-                || enemy.position.x > this.bounds.right + removalMargin
-                || enemy.position.y < this.bounds.bottom - removalMargin
-                || enemy.position.y > this.bounds.top + removalMargin
-            ) {
-                enemy.active = false;
-                enemy.threat = 0;
+            if (!Number.isFinite(rotation)) {
+                rotation = Math.atan2(playerDirectionY, playerDirectionX);
             }
+            rotation = this.constrainPursuitRotation(
+                Math.cos(rotation),
+                Math.sin(rotation),
+                playerDirectionX,
+                playerDirectionY,
+                maximumDeviation,
+            );
+
+            this.enemyDecisionRotation[enemyIndex] = rotation;
+            this.enemyDecisionSpeed[enemyIndex] = speed * (1 + projectileThreat * 0.12);
+            this.enemyDecisionThreat[enemyIndex] = combinedThreat;
         }
+
+        this.applyEnemyMovement(dt);
     }
 
-    private evaluateProjectileAvoidance(enemy: CursorSpaceEnemy): void {
+    private evaluatePursuitDirection(
+        enemyIndex: number,
+        enemy: CursorSpaceEnemy,
+        playerDirectionX: number,
+        playerDirectionY: number,
+        playerDistance: number,
+    ): { x: number; y: number } {
+        if (playerDistance <= ATTACK_CIRCLE_RADIUS) {
+            return { x: playerDirectionX, y: playerDirectionY };
+        }
+
+        const approachAngle = this.enemyApproachAngle[enemyIndex];
+        const approachX = this.player.position.x
+            + Math.cos(approachAngle) * APPROACH_LANE_RADIUS;
+        const approachY = this.player.position.y
+            + Math.sin(approachAngle) * APPROACH_LANE_RADIUS;
+        const toApproachX = approachX - enemy.position.x;
+        const toApproachY = approachY - enemy.position.y;
+        const approachRotation = this.constrainPursuitRotation(
+            toApproachX,
+            toApproachY,
+            playerDirectionX,
+            playerDirectionY,
+            APPROACH_LANE_HALF_ANGLE,
+        );
+        return { x: Math.cos(approachRotation), y: Math.sin(approachRotation) };
+    }
+
+    private evaluateFriendlyAvoidance(
+        enemyIndex: number,
+        enemy: CursorSpaceEnemy,
+        playerDirectionX: number,
+        playerDirectionY: number,
+        speed: number,
+    ): void {
+        this.avoidanceX = 0;
+        this.avoidanceY = 0;
+        this.avoidanceThreat = 0;
+        const enemyVelocityX = this.enemyPursuitX[enemyIndex] * speed;
+        const enemyVelocityY = this.enemyPursuitY[enemyIndex] * speed;
+
+        for (let otherIndex = 0; otherIndex < this.enemies.length; otherIndex += 1) {
+            if (otherIndex === enemyIndex) {
+                continue;
+            }
+            const other = this.enemies[otherIndex];
+            if (!other.active) {
+                continue;
+            }
+
+            const relativeX = other.position.x - enemy.position.x;
+            const relativeY = other.position.y - enemy.position.y;
+            const relativeVelocityX = this.enemyPursuitX[otherIndex] * speed - enemyVelocityX;
+            const relativeVelocityY = this.enemyPursuitY[otherIndex] * speed - enemyVelocityY;
+            const relativeSpeedSquared = relativeVelocityX * relativeVelocityX
+                + relativeVelocityY * relativeVelocityY;
+            if (relativeSpeedSquared < 1) {
+                continue;
+            }
+
+            const approach = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
+            if (approach >= 0) {
+                continue;
+            }
+
+            const time = this.clamp(
+                -approach / relativeSpeedSquared,
+                0,
+                FRIENDLY_AVOIDANCE_HORIZON,
+            );
+            const closestX = relativeX + relativeVelocityX * time;
+            const closestY = relativeY + relativeVelocityY * time;
+            const closestDistanceSquared = closestX * closestX + closestY * closestY;
+            const dangerDistance = enemy.radius + other.radius + FRIENDLY_PREDICTION_PADDING;
+            if (closestDistanceSquared >= dangerDistance * dangerDistance) {
+                continue;
+            }
+
+            const closestDistance = Math.sqrt(Math.max(0, closestDistanceSquared));
+            const spatialThreat = this.clamp(
+                1 - closestDistance / dangerDistance,
+                0,
+                1,
+            );
+            const temporalThreat = 1 - time / FRIENDLY_AVOIDANCE_HORIZON;
+            const threat = this.clamp(
+                spatialThreat * 0.76 + temporalThreat * 0.24,
+                0,
+                1,
+            );
+            if (threat <= this.avoidanceThreat) {
+                continue;
+            }
+
+            if (closestDistance > MINIMUM_VECTOR_LENGTH) {
+                this.avoidanceX = -closestX / closestDistance;
+                this.avoidanceY = -closestY / closestDistance;
+            } else {
+                const side = this.pairAvoidanceSide(enemyIndex, otherIndex);
+                this.avoidanceX = -playerDirectionY * side;
+                this.avoidanceY = playerDirectionX * side;
+            }
+            this.avoidanceThreat = threat;
+        }
+
+        this.normalizeAvoidance();
+    }
+
+    private evaluateProjectileAvoidance(
+        enemy: CursorSpaceEnemy,
+        enemyVelocityX: number,
+        enemyVelocityY: number,
+    ): void {
         this.avoidanceX = 0;
         this.avoidanceY = 0;
         this.avoidanceThreat = 0;
@@ -447,8 +658,8 @@ export class CursorSpaceModel {
 
             const relativeX = projectile.position.x - enemy.position.x;
             const relativeY = projectile.position.y - enemy.position.y;
-            const relativeVelocityX = projectile.velocity.x - enemy.velocity.x;
-            const relativeVelocityY = projectile.velocity.y - enemy.velocity.y;
+            const relativeVelocityX = projectile.velocity.x - enemyVelocityX;
+            const relativeVelocityY = projectile.velocity.y - enemyVelocityY;
             const relativeSpeedSquared = relativeVelocityX * relativeVelocityX
                 + relativeVelocityY * relativeVelocityY;
             if (relativeSpeedSquared < 1) {
@@ -484,7 +695,7 @@ export class CursorSpaceModel {
 
             if (dodgeLengthSquared < 1) {
                 const projectileSpeed = Math.max(
-                    0.0001,
+                    MINIMUM_VECTOR_LENGTH,
                     Math.hypot(projectile.velocity.x, projectile.velocity.y),
                 );
                 dodgeX = -projectile.velocity.y / projectileSpeed * enemy.dodgeSide;
@@ -500,13 +711,84 @@ export class CursorSpaceModel {
             this.avoidanceThreat = Math.max(this.avoidanceThreat, threat);
         }
 
-        const totalLengthSquared = this.avoidanceX * this.avoidanceX
-            + this.avoidanceY * this.avoidanceY;
-        if (totalLengthSquared > 1) {
-            const inverseLength = 1 / Math.sqrt(totalLengthSquared);
-            this.avoidanceX *= inverseLength;
-            this.avoidanceY *= inverseLength;
+        this.normalizeAvoidance();
+    }
+
+    private applyEnemyMovement(dt: number): void {
+        const removalMargin = 180;
+
+        for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex += 1) {
+            const enemy = this.enemies[enemyIndex];
+            if (!enemy.active) {
+                continue;
+            }
+
+            const rotation = this.enemyDecisionRotation[enemyIndex];
+            const movementSpeed = this.enemyDecisionSpeed[enemyIndex];
+            enemy.rotation = rotation;
+            enemy.threat += (this.enemyDecisionThreat[enemyIndex] - enemy.threat)
+                * (1 - Math.exp(-12 * dt));
+            enemy.velocity.x = Math.cos(rotation) * movementSpeed;
+            enemy.velocity.y = Math.sin(rotation) * movementSpeed;
+            enemy.position.x += enemy.velocity.x * dt;
+            enemy.position.y += enemy.velocity.y * dt;
+
+            if (
+                !Number.isFinite(enemy.position.x)
+                || !Number.isFinite(enemy.position.y)
+                || !Number.isFinite(enemy.velocity.x)
+                || !Number.isFinite(enemy.velocity.y)
+                || enemy.position.x < this.bounds.left - removalMargin
+                || enemy.position.x > this.bounds.right + removalMargin
+                || enemy.position.y < this.bounds.bottom - removalMargin
+                || enemy.position.y > this.bounds.top + removalMargin
+            ) {
+                enemy.active = false;
+                enemy.threat = 0;
+            }
         }
+    }
+
+    private resolveEnemyContacts(): void {
+        for (let firstIndex = 0; firstIndex < this.enemies.length; firstIndex += 1) {
+            const first = this.enemies[firstIndex];
+            if (!first.active) {
+                continue;
+            }
+
+            for (let secondIndex = firstIndex + 1; secondIndex < this.enemies.length; secondIndex += 1) {
+                const second = this.enemies[secondIndex];
+                if (!second.active) {
+                    continue;
+                }
+
+                const dx = second.position.x - first.position.x;
+                const dy = second.position.y - first.position.y;
+                const contactDistance = first.radius + second.radius;
+                if (dx * dx + dy * dy > contactDistance * contactDistance) {
+                    continue;
+                }
+
+                this.destroyEnemyPair(first, second);
+                break;
+            }
+        }
+    }
+
+    private destroyEnemyPair(first: CursorSpaceEnemy, second: CursorSpaceEnemy): void {
+        const firstX = first.position.x;
+        const firstY = first.position.y;
+        const secondX = second.position.x;
+        const secondY = second.position.y;
+        first.active = false;
+        second.active = false;
+        first.threat = 0;
+        second.threat = 0;
+        if (this.aimTarget === first || this.aimTarget === second) {
+            this.aimTarget = null;
+        }
+        this.spawnBurst(firstX, firstY, false);
+        this.spawnBurst(secondX, secondY, false);
     }
 
     private resolveProjectileCollisions(): void {
@@ -703,6 +985,53 @@ export class CursorSpaceModel {
             effect.position.y += effect.velocity.y * dt;
             effect.velocity.x *= drag;
             effect.velocity.y *= drag;
+        }
+    }
+
+    private approachLaneOffset(enemyIndex: number): number {
+        const lane = enemyIndex % 7 - 3;
+        return lane * GOLDEN_ANGLE * 0.005;
+    }
+
+    private pairAvoidanceSide(enemyIndex: number, otherIndex: number): -1 | 1 {
+        const lower = Math.min(enemyIndex, otherIndex);
+        const higher = Math.max(enemyIndex, otherIndex);
+        const pairSide = this.stableSide(lower, higher);
+        return enemyIndex === lower ? pairSide : pairSide === 1 ? -1 : 1;
+    }
+
+    private stableSide(first: number, second: number): -1 | 1 {
+        const hash = ((first + 1) * 73856093) ^ ((second + 1) * 19349663);
+        return (hash & 1) === 0 ? -1 : 1;
+    }
+
+    private constrainPursuitRotation(
+        desiredX: number,
+        desiredY: number,
+        pursuitX: number,
+        pursuitY: number,
+        maximumDeviation: number,
+    ): number {
+        const pursuitRotation = Math.atan2(pursuitY, pursuitX);
+        const desiredLengthSquared = desiredX * desiredX + desiredY * desiredY;
+        if (!Number.isFinite(desiredLengthSquared) || desiredLengthSquared < MINIMUM_VECTOR_LENGTH) {
+            return pursuitRotation;
+        }
+
+        const desiredRotation = Math.atan2(desiredY, desiredX);
+        const deviation = this.wrapAngle(desiredRotation - pursuitRotation);
+        return this.wrapAngle(
+            pursuitRotation + this.clamp(deviation, -maximumDeviation, maximumDeviation),
+        );
+    }
+
+    private normalizeAvoidance(): void {
+        const totalLengthSquared = this.avoidanceX * this.avoidanceX
+            + this.avoidanceY * this.avoidanceY;
+        if (totalLengthSquared > 1) {
+            const inverseLength = 1 / Math.sqrt(totalLengthSquared);
+            this.avoidanceX *= inverseLength;
+            this.avoidanceY *= inverseLength;
         }
     }
 
