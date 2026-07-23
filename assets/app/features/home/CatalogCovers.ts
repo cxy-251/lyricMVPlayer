@@ -7,6 +7,10 @@ export type CatalogCoverKind =
     | 'parametric-curve'
     | 'double-pendulum';
 
+const coverAccent = new Color(126, 158, 143, 235);
+const coverAccentSoft = new Color(126, 158, 143, 125);
+const coverAccentStrong = new Color(142, 174, 159, 255);
+
 export function drawCatalogCover(
     parent: Node,
     kind: CatalogCoverKind,
@@ -44,7 +48,7 @@ function drawMathematics(parent: Node, width: number, height: number): void {
     guide.stroke();
 
     const curve = createGraphics(parent, 'MathematicsCurve', width, height);
-    curve.strokeColor = new Color(45, 92, 214, 235);
+    curve.strokeColor = coverAccent;
     curve.lineWidth = Math.max(1.75, unit * 0.0065);
 
     for (let index = 0; index <= 128; index += 1) {
@@ -79,7 +83,7 @@ function drawPhysics(parent: Node, width: number, height: number): void {
     orbit.stroke();
 
     const trail = createGraphics(parent, 'PhysicsTrail', width, height);
-    trail.strokeColor = new Color(45, 92, 214, 145);
+    trail.strokeColor = coverAccentSoft;
     trail.lineWidth = Math.max(1.25, unit * 0.0045);
 
     for (let index = 0; index < 9; index += 1) {
@@ -97,7 +101,7 @@ function drawPhysics(parent: Node, width: number, height: number): void {
     center.fill();
 
     const movingPoint = createGraphics(parent, 'PhysicsMovingPoint', width, height);
-    movingPoint.fillColor = new Color(45, 92, 214, 255);
+    movingPoint.fillColor = coverAccentStrong;
     movingPoint.circle(
         Math.cos(0.76) * radius,
         centerY + Math.sin(0.76) * radius,
@@ -121,7 +125,7 @@ function drawParametricCurve(parent: Node, width: number, height: number): void 
     axes.stroke();
 
     const curve = createGraphics(parent, 'ParametricLine', width, height);
-    curve.strokeColor = new Color(45, 92, 214, 235);
+    curve.strokeColor = coverAccent;
     curve.lineWidth = Math.max(1.75, unit * 0.0065);
 
     for (let index = 0; index <= 160; index += 1) {
@@ -152,7 +156,7 @@ function drawDoublePendulum(parent: Node, width: number, height: number): void {
     const y2 = y1 - Math.cos(theta2) * length2;
 
     const path = createGraphics(parent, 'PendulumPath', width, height);
-    path.strokeColor = new Color(45, 92, 214, 105);
+    path.strokeColor = coverAccentSoft;
     path.lineWidth = Math.max(1.25, unit * 0.004);
 
     for (let index = 0; index < 8; index += 1) {
@@ -183,14 +187,14 @@ function drawDoublePendulum(parent: Node, width: number, height: number): void {
 
     const firstMass = createGraphics(parent, 'PendulumFirstMass', width, height);
     firstMass.fillColor = palette.surface;
-    firstMass.strokeColor = new Color(45, 92, 214, 255);
+    firstMass.strokeColor = coverAccentStrong;
     firstMass.lineWidth = Math.max(1.25, unit * 0.0045);
     firstMass.circle(x1, y1, Math.max(6, unit * 0.021));
     firstMass.fill();
     firstMass.stroke();
 
     const secondMass = createGraphics(parent, 'PendulumSecondMass', width, height);
-    secondMass.fillColor = new Color(45, 92, 214, 255);
+    secondMass.fillColor = coverAccentStrong;
     secondMass.circle(x2, y2, Math.max(7, unit * 0.026));
     secondMass.fill();
 }
