@@ -29,11 +29,13 @@ export interface CatalogCardOptions {
     readonly height: number;
     readonly x: number;
     readonly y: number;
+    readonly directOpen?: boolean;
     readonly onOpen: () => void;
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
     const radius = Math.min(22, Math.max(14, options.width * 0.038));
+    const directOpen = options.directOpen ?? false;
     const hit = createUiNode(
         parent,
         options.name,
@@ -55,7 +57,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         Math.max(12, radius - 1),
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
-    hoverOpacity.opacity = 0;
+    hoverOpacity.opacity = directOpen ? 255 : 0;
 
     const coverHeight = options.height * 0.8;
     const cover = drawCatalogCover(
@@ -64,7 +66,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.width - Math.max(28, options.width * 0.08),
         coverHeight,
     );
-    cover.setPosition(0, options.height * 0.02, 0);
+    cover.setPosition(0, options.height * (directOpen ? 0.105 : 0.02), 0);
 
     const detail = createUiNode(
         card,
@@ -75,7 +77,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         -options.height * 0.32,
     );
     const detailOpacity = detail.addComponent(UIOpacity);
-    detailOpacity.opacity = 0;
+    detailOpacity.opacity = directOpen ? 255 : 0;
 
     createLabel(
         detail,
@@ -107,7 +109,8 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     button.zoomScale = 0.985;
     button.duration = 0.08;
 
-    let revealed = false;
+    let revealed = directOpen;
+    let pointerWasTouch = false;
 
     const setRevealed = (next: boolean): void => {
         if (revealed === next) {
@@ -138,21 +141,28 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
             .start();
     };
 
-    hit.on(Node.EventType.MOUSE_ENTER, () => {
-        setRevealed(true);
-        setPointerCursor(true);
-    });
-    hit.on(Node.EventType.MOUSE_LEAVE, () => {
-        setRevealed(false);
-        setPointerCursor(false);
+    if (!directOpen) {
+        hit.on(Node.EventType.MOUSE_ENTER, () => {
+            setRevealed(true);
+            setPointerCursor(true);
+        });
+        hit.on(Node.EventType.MOUSE_LEAVE, () => {
+            setRevealed(false);
+            setPointerCursor(false);
+        });
+    }
+
+    hit.on(Node.EventType.TOUCH_START, () => {
+        pointerWasTouch = true;
     });
     hit.on(Button.EventType.CLICK, () => {
-        if (!revealed) {
-            setRevealed(true);
+        if (directOpen || pointerWasTouch || revealed) {
+            pointerWasTouch = false;
+            options.onOpen();
             return;
         }
 
-        options.onOpen();
+        setRevealed(true);
     });
 
     return hit;
