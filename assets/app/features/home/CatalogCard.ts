@@ -1,4 +1,5 @@
 import {
+    Button,
     Color,
     HorizontalTextAlignment,
     Node,
@@ -32,18 +33,8 @@ export interface CatalogCardOptions {
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
-    const radius = Math.min(20, Math.max(10, options.width * 0.035));
-    const shadow = createUiNode(
-        parent,
-        `${options.name}:Shadow`,
-        options.width,
-        options.height,
-        options.x,
-        options.y - 7,
-    );
-    fillNode(shadow, options.width, options.height, new Color(30, 38, 52, 16), radius);
-
-    const card = createUiNode(
+    const radius = Math.min(18, Math.max(12, options.width * 0.03));
+    const hit = createUiNode(
         parent,
         options.name,
         options.width,
@@ -51,34 +42,35 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.x,
         options.y,
     );
+    const card = createUiNode(hit, '__CardVisual', options.width, options.height);
     fillNode(card, options.width, options.height, palette.surface, radius);
+    strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
     const hoverLayer = createUiNode(card, 'HoverLayer', options.width - 2, options.height - 2);
     fillNode(
         hoverLayer,
         options.width - 2,
         options.height - 2,
-        new Color(225, 233, 248, 220),
-        Math.max(8, radius - 1),
+        new Color(225, 232, 249, 210),
+        Math.max(10, radius - 1),
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
     hoverOpacity.opacity = 0;
-    strokeNode(card, options.width, options.height, palette.border, radius, 1);
 
-    const coverHeight = options.height * 0.78;
+    const coverHeight = options.height * 0.8;
     const cover = drawCatalogCover(
         card,
         options.cover,
-        options.width - Math.max(26, options.width * 0.07),
+        options.width - Math.max(28, options.width * 0.08),
         coverHeight,
     );
-    cover.setPosition(0, options.height * 0.025, 0);
+    cover.setPosition(0, options.height * 0.02, 0);
 
     const detail = createUiNode(
         card,
         'Details',
-        options.width - 36,
-        Math.max(98, options.height * 0.27),
+        options.width - 40,
+        Math.max(96, options.height * 0.26),
         0,
         -options.height * 0.32,
     );
@@ -88,35 +80,32 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     createLabel(
         detail,
         options.title,
-        options.width - 48,
-        44,
-        Math.max(20, Math.min(31, options.width * 0.061)),
+        options.width - 52,
+        42,
+        Math.max(19, Math.min(28, options.width * 0.056)),
         palette.text,
         0,
-        27,
+        26,
         HorizontalTextAlignment.CENTER,
     );
     createLabel(
         detail,
         options.subtitle,
-        options.width - 64,
-        28,
-        Math.max(12, Math.min(15, options.width * 0.028)),
-        new Color(45, 92, 214, 255),
+        options.width - 68,
+        26,
+        Math.max(11, Math.min(14, options.width * 0.027)),
+        palette.accent,
         0,
-        -11,
+        -10,
         HorizontalTextAlignment.CENTER,
     );
-    createLabel(
-        detail,
-        '→',
-        54,
-        32,
-        24,
-        new Color(45, 92, 214, 255),
-        0,
-        -48,
-    );
+    createLabel(detail, '→', 44, 30, 21, palette.accent, 0, -44);
+
+    const button = hit.addComponent(Button);
+    button.target = card;
+    button.transition = Button.Transition.SCALE;
+    button.zoomScale = 0.985;
+    button.duration = 0.08;
 
     let revealed = false;
 
@@ -132,30 +121,32 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         Tween.stopAllByTarget(hoverOpacity);
 
         tween(card)
-            .to(0.16, {
-                scale: next ? new Vec3(1.016, 1.016, 1) : new Vec3(1, 1, 1),
+            .to(0.14, {
+                scale: next ? new Vec3(1.01, 1.01, 1) : new Vec3(1, 1, 1),
             })
             .start();
         tween(cover)
-            .to(0.16, {
-                position: new Vec3(0, next ? options.height * 0.115 : options.height * 0.025, 0),
+            .to(0.14, {
+                position: new Vec3(0, next ? options.height * 0.105 : options.height * 0.02, 0),
             })
             .start();
         tween(detailOpacity)
-            .to(0.16, { opacity: next ? 255 : 0 })
+            .to(0.14, { opacity: next ? 255 : 0 })
             .start();
         tween(hoverOpacity)
-            .to(0.16, { opacity: next ? 255 : 0 })
+            .to(0.14, { opacity: next ? 255 : 0 })
             .start();
     };
 
-    card.on(Node.EventType.MOUSE_ENTER, () => {
+    hit.on(Node.EventType.MOUSE_ENTER, () => {
         setRevealed(true);
+        setPointerCursor(true);
     });
-    card.on(Node.EventType.MOUSE_LEAVE, () => {
+    hit.on(Node.EventType.MOUSE_LEAVE, () => {
         setRevealed(false);
+        setPointerCursor(false);
     });
-    card.on(Node.EventType.TOUCH_END, () => {
+    hit.on(Button.EventType.CLICK, () => {
         if (!revealed) {
             setRevealed(true);
             return;
@@ -164,5 +155,13 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.onOpen();
     });
 
-    return card;
+    return hit;
+}
+
+function setPointerCursor(active: boolean): void {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    document.body.style.cursor = active ? 'pointer' : 'default';
 }
