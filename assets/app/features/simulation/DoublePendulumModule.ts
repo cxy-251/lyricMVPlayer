@@ -32,6 +32,12 @@ import {
 } from './DoublePendulumModel';
 
 const PARAMETER_APPLY_DELAY_MS = 140;
+const TRAIL_COLOR = new Color(
+    palette.primary.r,
+    palette.primary.g,
+    palette.primary.b,
+    156,
+);
 
 const parameterSchema: ParameterSchema = [
     {
@@ -225,8 +231,14 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
         const compact = viewport.breakpoint === 'compact';
         const horizontalPadding = compact ? 16 : 36;
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
-        const contentWidth = Math.min(1180, Math.max(280, safeWidth - horizontalPadding * 2));
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
+        const contentWidth = Math.max(
+            1,
+            Math.min(1180, safeWidth - horizontalPadding * 2),
+        );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const panelHeight = ParameterPanel.measureHeight(
             parameterSchema.length,
@@ -252,7 +264,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             centerX,
             plotY,
         );
-        const plotRadius = Math.min(8, this.plotHeight / 2);
+        const plotRadius = Math.min(8, this.plotWidth / 2, this.plotHeight / 2);
         fillNode(plot, this.plotWidth, this.plotHeight, palette.surface, plotRadius);
         strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, plotRadius, 1);
 
@@ -299,11 +311,11 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             this.plotHeight,
         ).addComponent(Graphics);
 
-        if (this.plotHeight >= 100) {
+        if (this.plotHeight >= 100 && this.plotWidth >= 160) {
             createLabel(
                 plot,
                 'IDEAL MODEL  ·  POINT MASSES  ·  MASSLESS RIGID RODS  ·  FRICTIONLESS PIVOTS',
-                this.plotWidth - 32,
+                Math.max(1, this.plotWidth - 32),
                 24,
                 compact ? 9 : 10,
                 palette.subtle,
@@ -313,11 +325,11 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             );
         }
 
-        if (this.plotHeight >= 70) {
+        if (this.plotHeight >= 70 && this.plotWidth >= 120) {
             const diagnosticsNode = createLabel(
                 plot,
                 '',
-                this.plotWidth - 32,
+                Math.max(1, this.plotWidth - 32),
                 28,
                 compact ? 10 : 12,
                 palette.muted,
@@ -363,10 +375,14 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
                 return;
             }
 
-            this.resetModelFromParameters();
-            this.recalculateScale();
-            this.drawReference();
-            this.drawSimulation();
+            try {
+                this.resetModelFromParameters();
+                this.recalculateScale();
+                this.drawReference();
+                this.drawSimulation();
+            } catch (error) {
+                this.context?.reportError(error);
+            }
         }, PARAMETER_APPLY_DELAY_MS);
     }
 
@@ -456,12 +472,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
         if (parameters.getBoolean('showTrail')) {
             const points = this.trail.values;
-            trailGraphics.strokeColor = new Color(
-                palette.primary.r,
-                palette.primary.g,
-                palette.primary.b,
-                156,
-            );
+            trailGraphics.strokeColor = TRAIL_COLOR;
             trailGraphics.lineWidth = 1.5;
 
             for (let index = 0; index < points.length; index += 1) {
