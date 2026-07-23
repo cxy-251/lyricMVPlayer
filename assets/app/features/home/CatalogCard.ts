@@ -2,6 +2,7 @@ import {
     Button,
     HorizontalTextAlignment,
     Node,
+    sys,
     Tween,
     tween,
     UIOpacity,
@@ -35,7 +36,7 @@ export interface CatalogCardOptions {
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
     const radius = Math.min(22, Math.max(14, options.width * 0.038));
-    const directOpen = options.directOpen ?? false;
+    const directOpen = options.directOpen ?? sys.isMobile;
     const hit = createUiNode(
         parent,
         options.name,
@@ -154,6 +155,9 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
 
     hit.on(Node.EventType.TOUCH_START, () => {
         pointerWasTouch = true;
+    });
+    hit.on(Node.EventType.TOUCH_CANCEL, () => {
+        pointerWasTouch = false;
     });
     hit.on(Button.EventType.CLICK, () => {
         if (directOpen || pointerWasTouch || revealed) {
