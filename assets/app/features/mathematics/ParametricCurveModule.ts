@@ -12,34 +12,57 @@ import type {
     Resettable,
     Updatable,
 } from '../../contracts/InteractiveModule';
+import { ParameterController } from '../../parameters/ParameterController';
+import { ParameterPanel } from '../../parameters/ParameterPanel';
+import type { ParameterSchema } from '../../parameters/ParameterSchema';
 import type { ViewportSnapshot } from '../../services/ViewportService';
 import {
     clearNode,
-    createButton,
     createLabel,
-    createPill,
     createUiNode,
     fillNode,
     palette,
     strokeNode,
 } from '../../ui/UiFactory';
 
-interface CurveSettings {
-    frequencyX: number;
-    frequencyY: number;
-    phase: number;
-}
-
 interface CurveLayer {
     readonly trail: number;
     readonly graphics: Graphics;
 }
 
-const defaultSettings: CurveSettings = {
-    frequencyX: 3,
-    frequencyY: 2,
-    phase: 0.65,
-};
+const parameterSchema: ParameterSchema = [
+    {
+        kind: 'number',
+        key: 'frequencyX',
+        label: 'X frequency',
+        defaultValue: 3,
+        minimum: 1,
+        maximum: 9,
+        step: 1,
+        decimals: 0,
+    },
+    {
+        kind: 'number',
+        key: 'frequencyY',
+        label: 'Y frequency',
+        defaultValue: 2,
+        minimum: 1,
+        maximum: 9,
+        step: 1,
+        decimals: 0,
+    },
+    {
+        kind: 'number',
+        key: 'phase',
+        label: 'Phase',
+        defaultValue: 0.65,
+        minimum: 0,
+        maximum: Math.PI,
+        step: 0.05,
+        decimals: 2,
+        unit: ' rad',
+    },
+];
 
 class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, Resettable {
     private root: Node | null = null;
@@ -47,7 +70,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     private curveLayers: CurveLayer[] = [];
     private markerGraphics: Graphics | null = null;
     private unsubscribeViewport: (() => void) | null = null;
-    private settings: CurveSettings = { ...defaultSettings };
+    private parameters: ParameterController | null = null;
+    private parameterPanel: ParameterPanel | null = null;
     private elapsed = 0;
     private paused = false;
     private plotWidth = 1;
@@ -55,8 +79,10 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
     mount(context: ModuleContext): void {
         this.context = context;
-        this.settings = this.normalizeSettings(
-            context.storage.get<unknown>('module:parametric-curve:settings', null),
+        this.parameters = new ParameterController(
+            context.storage,
+            'module:parametric-curve:parameters-v2',
+            parameterSchema,
         );
         this.elapsed = 0;
         this.paused = false;
@@ -69,7 +95,7 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 
     update(dt: number): void {
-        if (this.paused) {
+        if (this.paused || !this.parameters) {
             return;
         }
 
@@ -86,9 +112,9 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 
     reset(): void {
-        this.settings = { ...defaultSettings };
+        this.parameters?.reset();
         this.elapsed = 0;
-        this.persistSettings();
+        this.paused = false;
 
         if (this.context) {
             this.renderLayout(this.context.viewport.current);
@@ -98,6 +124,9 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     unmount(): void {
         this.unsubscribeViewport?.();
         this.unsubscribeViewport = null;
+        this.parameterPanel?.destroy();
+        this.parameterPanel = null;
+        this.parameters = null;
         this.curveLayers = [];
         this.markerGraphics = null;
         this.root?.destroy();
@@ -107,11 +136,13 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
     private renderLayout(viewport: ViewportSnapshot): void {
         const root = this.root;
+        const parameters = this.parameters;
 
-        if (!root) {
+        if (!root || !parameters) {
             return;
         }
 
+        this.parameterPanel = null;
         clearNode(root);
         this.curveLayers = [];
         this.markerGraphics = null;
@@ -120,18 +151,23 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
         const compact = viewport.breakpoint === 'compact';
         const horizontalPadding = compact ? 18 : 44;
-        const topInset = viewport.safeInsets.top + (compact ? 82 : 96);
-        const bottomInset = viewport.safeInsets.bottom + (compact ? 176 : 142);
-        const contentWidth = viewport.width
-            - viewport.safeInsets.left
-            - viewport.safeInsets.right
-            - horizontalPadding * 2;
-        const plotTop = viewport.height / 2 - topInset;
-        const plotBottom = -viewport.height / 2 + bottomInset;
-        this.plotWidth = Math.max(240, contentWidth);
+        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const contentWidth = Math.min(1180, Math.max(280, safeWidth - horizontalPadding * 2));
+        const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
+        const panelHeight = ParameterPanel.measureHeight(
+            parameterSchema.length,
+            contentWidth,
+            viewport.breakpoint,
+        );
+        const panelY = -viewport.height / 2
+            + viewport.safeInsets.bottom
+            + 12
+            + panelHeight / 2;
+        const plotTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
+        const plotBottom = panelY + panelHeight / 2 + 12;
+        this.plotWidth = contentWidth;
         this.plotHeight = Math.max(180, plotTop - plotBottom);
         const plotCenterY = (plotTop + plotBottom) / 2;
-        const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
 
         const plot = createUiNode(
             root,
@@ -141,202 +177,43 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
             centerX,
             plotCenterY,
         );
-        fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, 20);
-        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, 20, 1.5);
+        fillNode(plot, this.plotWidth, this.plotHeight, palette.surfaceSoft, 18);
+        strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, 18, 1);
         this.drawGrid(plot);
         this.createCurveLayers(plot);
         this.drawCurve();
 
-        createPill(
-            root,
-            `${this.settings.frequencyX}:${this.settings.frequencyY}`,
-            compact ? 78 : 90,
-            centerX - this.plotWidth / 2 + (compact ? 47 : 54),
-            plotTop - 26,
-            true,
-        );
-
         createLabel(
-            root,
-            'Lissajous field · x = sin(at + φ), y = sin(bt)',
-            Math.max(120, Math.min(this.plotWidth - 120, 520)),
-            30,
-            compact ? 13 : 15,
+            plot,
+            'x = sin(at + φ)   ·   y = sin(bt)',
+            Math.max(180, Math.min(this.plotWidth - 40, 520)),
+            28,
+            compact ? 11 : 13,
             palette.muted,
-            centerX + (compact ? 42 : 72),
-            plotTop - 26,
+            -this.plotWidth / 2 + Math.min(this.plotWidth / 2, 270),
+            this.plotHeight / 2 - 22,
             HorizontalTextAlignment.LEFT,
         );
 
-        this.renderControls(root, viewport, centerX);
-    }
-
-    private renderControls(root: Node, viewport: ViewportSnapshot, centerX: number): void {
-        const compact = viewport.breakpoint === 'compact';
-        const panelWidth = Math.max(260, Math.min(
-            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right - 24,
-            compact ? 620 : 880,
-        ));
-        const panelHeight = compact ? 142 : 104;
-        const panelY = -viewport.height / 2
-            + viewport.safeInsets.bottom
-            + panelHeight / 2
-            + 14;
-        const panel = createUiNode(root, 'CurveControls', panelWidth, panelHeight, centerX, panelY);
-        fillNode(panel, panelWidth, panelHeight, palette.surface, 18);
-
-        if (compact) {
-            this.renderCompactControls(panel, panelWidth);
-        } else {
-            this.renderWideControls(panel, panelWidth);
-        }
-    }
-
-    private renderWideControls(panel: Node, panelWidth: number): void {
-        const groups = [
-            {
-                label: `X FREQ  ${this.settings.frequencyX}`,
-                x: -panelWidth * 0.31,
-                decrease: () => this.adjust('frequencyX', -1),
-                increase: () => this.adjust('frequencyX', 1),
-            },
-            {
-                label: `Y FREQ  ${this.settings.frequencyY}`,
-                x: 0,
-                decrease: () => this.adjust('frequencyY', -1),
-                increase: () => this.adjust('frequencyY', 1),
-            },
-            {
-                label: `PHASE  ${this.settings.phase.toFixed(2)}`,
-                x: panelWidth * 0.31,
-                decrease: () => this.adjust('phase', -0.1),
-                increase: () => this.adjust('phase', 0.1),
-            },
-        ];
-
-        for (const group of groups) {
-            createLabel(panel, group.label, 180, 30, 14, palette.muted, group.x, 27);
-            createButton(panel, {
-                name: `${group.label}:decrease`,
-                text: '−',
-                width: 54,
-                height: 42,
-                x: group.x - 34,
-                y: -20,
-                variant: 'secondary',
-                fontSize: 24,
-                onPress: group.decrease,
-            });
-            createButton(panel, {
-                name: `${group.label}:increase`,
-                text: '+',
-                width: 54,
-                height: 42,
-                x: group.x + 34,
-                y: -20,
-                variant: 'primary',
-                fontSize: 22,
-                onPress: group.increase,
-            });
-        }
-    }
-
-    private renderCompactControls(panel: Node, panelWidth: number): void {
-        const rowY = [38, -38] as const;
-        const columnX = [-panelWidth * 0.27, 0, panelWidth * 0.27] as const;
-        const controls = [
-            {
-                label: `X ${this.settings.frequencyX}`,
-                decrease: () => this.adjust('frequencyX', -1),
-                increase: () => this.adjust('frequencyX', 1),
-            },
-            {
-                label: `Y ${this.settings.frequencyY}`,
-                decrease: () => this.adjust('frequencyY', -1),
-                increase: () => this.adjust('frequencyY', 1),
-            },
-            {
-                label: `φ ${this.settings.phase.toFixed(1)}`,
-                decrease: () => this.adjust('phase', -0.1),
-                increase: () => this.adjust('phase', 0.1),
-            },
-        ];
-
-        for (let index = 0; index < controls.length; index += 1) {
-            const control = controls[index];
-            const x = columnX[index];
-            createLabel(panel, control.label, 92, 28, 14, palette.muted, x, rowY[0]);
-            createButton(panel, {
-                name: `${control.label}:decrease`,
-                text: '−',
-                width: 42,
-                height: 38,
-                x: x - 26,
-                y: rowY[1],
-                variant: 'secondary',
-                fontSize: 21,
-                onPress: control.decrease,
-            });
-            createButton(panel, {
-                name: `${control.label}:increase`,
-                text: '+',
-                width: 42,
-                height: 38,
-                x: x + 26,
-                y: rowY[1],
-                fontSize: 19,
-                onPress: control.increase,
-            });
-        }
-    }
-
-    private adjust(key: keyof CurveSettings, delta: number): void {
-        if (key === 'phase') {
-            this.settings.phase = Math.max(0, Math.min(Math.PI, this.settings.phase + delta));
-        } else {
-            this.settings[key] = Math.max(1, Math.min(9, Math.round(this.settings[key] + delta)));
-        }
-
-        this.persistSettings();
-
-        if (this.context) {
-            this.renderLayout(this.context.viewport.current);
-        }
-    }
-
-    private persistSettings(): void {
-        this.context?.storage.set('module:parametric-curve:settings', this.settings);
-    }
-
-    private normalizeSettings(value: unknown): CurveSettings {
-        const candidate = typeof value === 'object' && value !== null
-            ? value as Partial<CurveSettings>
-            : {};
-
-        return {
-            frequencyX: this.clampInteger(candidate.frequencyX, defaultSettings.frequencyX, 1, 9),
-            frequencyY: this.clampInteger(candidate.frequencyY, defaultSettings.frequencyY, 1, 9),
-            phase: this.clampNumber(candidate.phase, defaultSettings.phase, 0, Math.PI),
-        };
-    }
-
-    private clampInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
-        return Math.round(this.clampNumber(value, fallback, minimum, maximum));
-    }
-
-    private clampNumber(value: unknown, fallback: number, minimum: number, maximum: number): number {
-        if (typeof value !== 'number' || !Number.isFinite(value)) {
-            return fallback;
-        }
-
-        return Math.max(minimum, Math.min(maximum, value));
+        this.parameterPanel = new ParameterPanel(
+            root,
+            parameterSchema,
+            parameters,
+            () => this.drawCurve(),
+        );
+        this.parameterPanel.render({
+            width: contentWidth,
+            x: centerX,
+            y: panelY,
+            breakpoint: viewport.breakpoint,
+        });
     }
 
     private drawGrid(plot: Node): void {
         const gridNode = createUiNode(plot, 'CurveGridLines', this.plotWidth, this.plotHeight);
         const grid = gridNode.addComponent(Graphics);
         grid.lineWidth = 1;
-        grid.strokeColor = new Color(72, 89, 120, 80);
+        grid.strokeColor = new Color(91, 105, 100, 38);
 
         const verticalSteps = 10;
         const horizontalSteps = 8;
@@ -357,8 +234,8 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
         const axesNode = createUiNode(plot, 'CurveAxes', this.plotWidth, this.plotHeight);
         const axes = axesNode.addComponent(Graphics);
-        axes.lineWidth = 1.5;
-        axes.strokeColor = new Color(110, 129, 161, 130);
+        axes.lineWidth = 1.25;
+        axes.strokeColor = new Color(82, 98, 92, 82);
         axes.moveTo(-this.plotWidth / 2, 0);
         axes.lineTo(this.plotWidth / 2, 0);
         axes.moveTo(0, -this.plotHeight / 2);
@@ -385,28 +262,33 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
     }
 
     private drawCurve(): void {
-        if (this.curveLayers.length === 0 || !this.markerGraphics) {
+        const parameters = this.parameters;
+
+        if (!parameters || this.curveLayers.length === 0 || !this.markerGraphics) {
             return;
         }
 
+        const frequencyX = parameters.getNumber('frequencyX');
+        const frequencyY = parameters.getNumber('frequencyY');
+        const basePhase = parameters.getNumber('phase');
         const scaleX = this.plotWidth * 0.42;
         const scaleY = this.plotHeight * 0.40;
         const sampleCount = Math.max(320, Math.round(this.plotWidth * 0.72));
 
         for (const layer of this.curveLayers) {
             const { graphics, trail } = layer;
-            const alpha = 52 + (3 - trail) * 54;
+            const alpha = 42 + (3 - trail) * 48;
             graphics.clear();
             graphics.strokeColor = trail === 0
-                ? new Color(54, 221, 184, 255)
-                : new Color(255, 92, 142, alpha);
-            graphics.lineWidth = trail === 0 ? 3 : 1.5;
-            const phase = this.settings.phase + this.elapsed - trail * 0.07;
+                ? new Color(79, 127, 113, 230)
+                : new Color(116, 125, 163, alpha);
+            graphics.lineWidth = trail === 0 ? 2.4 : 1.2;
+            const phase = basePhase + this.elapsed - trail * 0.07;
 
             for (let index = 0; index <= sampleCount; index += 1) {
                 const t = (Math.PI * 2 * index) / sampleCount;
-                const x = Math.sin(this.settings.frequencyX * t + phase) * scaleX;
-                const y = Math.sin(this.settings.frequencyY * t) * scaleY;
+                const x = Math.sin(frequencyX * t + phase) * scaleX;
+                const y = Math.sin(frequencyY * t) * scaleY;
 
                 if (index === 0) {
                     graphics.moveTo(x, y);
@@ -420,12 +302,12 @@ class ParametricCurveModule implements InteractiveModule, Updatable, Pausable, R
 
         const markerT = this.elapsed % (Math.PI * 2);
         const markerX = Math.sin(
-            this.settings.frequencyX * markerT + this.settings.phase + this.elapsed,
+            frequencyX * markerT + basePhase + this.elapsed,
         ) * scaleX;
-        const markerY = Math.sin(this.settings.frequencyY * markerT) * scaleY;
+        const markerY = Math.sin(frequencyY * markerT) * scaleY;
         this.markerGraphics.clear();
-        this.markerGraphics.fillColor = palette.warning;
-        this.markerGraphics.circle(markerX, markerY, 6);
+        this.markerGraphics.fillColor = new Color(150, 113, 73, 220);
+        this.markerGraphics.circle(markerX, markerY, 5);
         this.markerGraphics.fill();
     }
 }
