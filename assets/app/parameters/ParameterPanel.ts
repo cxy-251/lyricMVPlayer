@@ -1,9 +1,17 @@
-import { HorizontalTextAlignment, Node } from 'cc';
+import {
+    HorizontalTextAlignment,
+    Label,
+    Layout,
+    Node,
+    Size,
+} from 'cc';
 import type { ViewportBreakpoint } from '../services/ViewportService';
 import {
     clearNode,
     createButton,
     createLabel,
+    createSlider,
+    createToggle,
     createUiNode,
     fillNode,
     palette,
@@ -12,6 +20,7 @@ import {
 } from '../ui/UiFactory';
 import type { ParameterController } from './ParameterController';
 import type {
+    NumberParameter,
     ParameterDefinition,
     ParameterSchema,
 } from './ParameterSchema';
@@ -67,22 +76,37 @@ export class ParameterPanel {
         clearNode(this.root);
         resizeNode(this.root, layout.width, metrics.height);
         this.root.setPosition(layout.x, layout.y, 0);
-        fillNode(this.root, layout.width, metrics.height, palette.surface, 18);
-        strokeNode(this.root, layout.width, metrics.height, palette.border, 18, 1.25);
+        fillNode(this.root, layout.width, metrics.height, palette.surfaceSoft, 16);
+        strokeNode(this.root, layout.width, metrics.height, palette.border, 16, 1);
 
         const start = this.page * metrics.pageSize;
         const visible = this.schema.slice(start, start + metrics.pageSize);
         const contentHeight = metrics.height - metrics.pagerHeight;
+        const content = createUiNode(
+            this.root,
+            'ParameterGrid',
+            layout.width - 24,
+            contentHeight - 8,
+            0,
+            metrics.pagerHeight / 2 + 2,
+        );
         const cellWidth = (layout.width - 24) / metrics.columns;
-        const top = contentHeight / 2 - metrics.rowHeight / 2;
+        const grid = content.addComponent(Layout);
+        grid.type = Layout.Type.GRID;
+        grid.resizeMode = Layout.ResizeMode.NONE;
+        grid.startAxis = Layout.AxisDirection.HORIZONTAL;
+        grid.constraint = Layout.Constraint.FIXED_COL;
+        grid.constraintNum = metrics.columns;
+        grid.cellSize = new Size(cellWidth, metrics.rowHeight);
+        grid.spacingX = 0;
+        grid.spacingY = 0;
+        grid.padding = 0;
 
-        for (let index = 0; index < visible.length; index += 1) {
-            const row = Math.floor(index / metrics.columns);
-            const column = index % metrics.columns;
-            const x = -layout.width / 2 + 12 + cellWidth * (column + 0.5);
-            const y = top - row * metrics.rowHeight + metrics.pagerHeight / 2;
-            this.renderControl(visible[index], cellWidth - 10, x, y);
+        for (const definition of visible) {
+            this.renderControl(content, definition, cellWidth - 12, metrics.rowHeight - 8);
         }
+
+        grid.updateLayout(true);
 
         if (metrics.pageCount > 1) {
             this.renderPager(metrics, layout.width);
@@ -95,75 +119,72 @@ export class ParameterPanel {
     }
 
     private renderControl(
+        parent: Node,
         definition: ParameterDefinition,
         width: number,
-        x: number,
-        y: number,
+        height: number,
     ): void {
-        const group = createUiNode(this.root, `Parameter:${definition.key}`, width, 60, x, y);
-        createLabel(
-            group,
-            definition.label.toUpperCase(),
-            width - 8,
-            22,
-            11,
-            palette.subtle,
-            0,
-            19,
-            HorizontalTextAlignment.CENTER,
-        );
+        const group = createUiNode(parent, `Parameter:${definition.key}`, width, height);
 
         if (definition.kind === 'number') {
-            this.renderNumber(group, definition, width);
+            this.renderNumber(group, definition, width, height);
         } else if (definition.kind === 'toggle') {
-            this.renderToggle(group, definition, width);
+            this.renderToggle(group, definition, width, height);
         } else {
-            this.renderSelect(group, definition, width);
+            this.renderSelect(group, definition, width, height);
         }
     }
 
     private renderNumber(
         group: Node,
-        definition: ParameterDefinition & { readonly kind: 'number' },
+        definition: NumberParameter,
         width: number,
+        height: number,
     ): void {
-        const buttonWidth = Math.min(38, Math.max(32, width * 0.22));
-        const valueWidth = Math.max(48, width - buttonWidth * 2 - 12);
-
-        createButton(group, {
-            name: `${definition.key}:decrease`,
-            text: '−',
-            width: buttonWidth,
-            height: 32,
-            x: -valueWidth / 2 - buttonWidth / 2 - 4,
-            y: -12,
-            variant: 'secondary',
-            fontSize: 20,
-            onPress: () => this.change(definition.key, () => {
-                this.controller.adjust(definition.key, -1);
-            }),
-        });
+        const labelY = height / 2 - 18;
         createLabel(
             group,
-            this.controller.format(definition),
-            valueWidth,
-            32,
-            14,
-            palette.text,
-            0,
-            -12,
+            definition.label,
+            width * 0.58,
+            24,
+            11,
+            palette.subtle,
+            -width * 0.21,
+            labelY,
+            HorizontalTextAlignment.LEFT,
         );
-        createButton(group, {
-            name: `${definition.key}:increase`,
-            text: '+',
-            width: buttonWidth,
-            height: 32,
-            x: valueWidth / 2 + buttonWidth / 2 + 4,
-            y: -12,
-            fontSize: 18,
-            onPress: () => this.change(definition.key, () => {
-                this.controller.adjust(definition.key, 1);
-            }),
+        const valueNode = createLabel(
+            group,
+            this.controller.format(definition),
+            width * 0.4,
+            24,
+            12,
+            palette.text,
+            width * 0.28,
+            labelY,
+            HorizontalTextAlignment.RIGHT,
+        );
+        const valueLabel = valueNode.getComponent(Label);
+        const range = Math.max(definition.step, definition.maximum - definition.minimum);
+        const initialProgress = (this.controller.getNumber(definition.key) - definition.minimum) / range;
+
+        createSlider(group, {
+            name: `${definition.key}:slider`,
+            width: Math.max(80, width - 6),
+            progress: initialProgress,
+            y: -height * 0.19,
+            onChange: (progress) => {
+                const next = this.valueFromProgress(definition, progress);
+
+                if (!this.controller.set(definition.key, next)) {
+                    return;
+                }
+
+                if (valueLabel) {
+                    valueLabel.string = this.controller.format(definition);
+                }
+                this.onChange(definition.key);
+            },
         });
     }
 
@@ -171,18 +192,30 @@ export class ParameterPanel {
         group: Node,
         definition: ParameterDefinition & { readonly kind: 'toggle' },
         width: number,
+        _height: number,
     ): void {
-        createButton(group, {
+        createLabel(
+            group,
+            definition.label,
+            width - 74,
+            32,
+            11,
+            palette.subtle,
+            -28,
+            0,
+            HorizontalTextAlignment.LEFT,
+        );
+        createToggle(group, {
             name: `${definition.key}:toggle`,
-            text: this.controller.format(definition),
-            width: Math.min(112, width - 18),
-            height: 32,
-            y: -12,
-            variant: this.controller.getBoolean(definition.key) ? 'primary' : 'secondary',
-            fontSize: 13,
-            onPress: () => this.change(definition.key, () => {
-                this.controller.toggle(definition.key);
-            }),
+            checked: this.controller.getBoolean(definition.key),
+            x: width / 2 - 30,
+            onChange: (checked) => {
+                if (!this.controller.set(definition.key, checked)) {
+                    return;
+                }
+
+                this.onChange(definition.key);
+            },
         });
     }
 
@@ -190,18 +223,30 @@ export class ParameterPanel {
         group: Node,
         definition: ParameterDefinition & { readonly kind: 'select' },
         width: number,
+        height: number,
     ): void {
-        const buttonWidth = 34;
-        const valueWidth = Math.max(58, width - buttonWidth * 2 - 12);
+        const labelY = height / 2 - 18;
+        createLabel(
+            group,
+            definition.label,
+            width - 8,
+            22,
+            11,
+            palette.subtle,
+            0,
+            labelY,
+        );
+        const valueWidth = Math.max(58, width - 92);
 
         createButton(group, {
             name: `${definition.key}:previous`,
             text: '‹',
-            width: buttonWidth,
-            height: 32,
-            x: -valueWidth / 2 - buttonWidth / 2 - 4,
-            y: -12,
-            variant: 'secondary',
+            width: 36,
+            height: 36,
+            x: -valueWidth / 2 - 24,
+            y: -height * 0.2,
+            variant: 'ghost',
+            shape: 'circle',
             fontSize: 20,
             onPress: () => this.change(definition.key, () => {
                 this.controller.cycle(definition.key, -1);
@@ -209,22 +254,23 @@ export class ParameterPanel {
         });
         createLabel(
             group,
-            this.controller.format(definition).toUpperCase(),
+            this.controller.format(definition),
             valueWidth,
-            32,
+            36,
             12,
             palette.text,
             0,
-            -12,
+            -height * 0.2,
         );
         createButton(group, {
             name: `${definition.key}:next`,
             text: '›',
-            width: buttonWidth,
-            height: 32,
-            x: valueWidth / 2 + buttonWidth / 2 + 4,
-            y: -12,
-            variant: 'secondary',
+            width: 36,
+            height: 36,
+            x: valueWidth / 2 + 24,
+            y: -height * 0.2,
+            variant: 'ghost',
+            shape: 'circle',
             fontSize: 20,
             onPress: () => this.change(definition.key, () => {
                 this.controller.cycle(definition.key, 1);
@@ -238,12 +284,13 @@ export class ParameterPanel {
         createButton(this.root, {
             name: 'ParameterPagePrevious',
             text: '←',
-            width: 44,
-            height: 30,
-            x: -58,
+            width: 34,
+            height: 34,
+            x: -52,
             y,
             variant: 'ghost',
-            fontSize: 15,
+            shape: 'circle',
+            fontSize: 14,
             onPress: () => {
                 this.page = (this.page - 1 + metrics.pageCount) % metrics.pageCount;
                 this.renderCurrent();
@@ -252,9 +299,9 @@ export class ParameterPanel {
         createLabel(
             this.root,
             `${this.page + 1} / ${metrics.pageCount}`,
-            64,
+            58,
             30,
-            12,
+            11,
             palette.muted,
             0,
             y,
@@ -262,12 +309,13 @@ export class ParameterPanel {
         createButton(this.root, {
             name: 'ParameterPageNext',
             text: '→',
-            width: 44,
-            height: 30,
-            x: 58,
+            width: 34,
+            height: 34,
+            x: 52,
             y,
             variant: 'ghost',
-            fontSize: 15,
+            shape: 'circle',
+            fontSize: 14,
             onPress: () => {
                 this.page = (this.page + 1) % metrics.pageCount;
                 this.renderCurrent();
@@ -285,6 +333,15 @@ export class ParameterPanel {
             y,
             HorizontalTextAlignment.LEFT,
         );
+    }
+
+    private valueFromProgress(definition: NumberParameter, progress: number): number {
+        const stepCount = Math.max(
+            1,
+            Math.round((definition.maximum - definition.minimum) / definition.step),
+        );
+        const stepIndex = Math.round(Math.max(0, Math.min(1, progress)) * stepCount);
+        return definition.minimum + stepIndex * definition.step;
     }
 
     private change(key: string, action: () => void): void {
@@ -314,8 +371,8 @@ export class ParameterPanel {
         const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
         const visibleCount = Math.min(itemCount, pageSize);
         const rows = Math.max(1, Math.ceil(visibleCount / columns));
-        const rowHeight = 68;
-        const pagerHeight = pageCount > 1 ? 38 : 12;
+        const rowHeight = 78;
+        const pagerHeight = pageCount > 1 ? 40 : 12;
 
         return {
             columns,
@@ -324,7 +381,7 @@ export class ParameterPanel {
             pageCount,
             rowHeight,
             pagerHeight,
-            height: rows * rowHeight + pagerHeight + 12,
+            height: rows * rowHeight + pagerHeight + 14,
         };
     }
 }
