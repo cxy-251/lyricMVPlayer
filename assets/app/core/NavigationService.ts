@@ -28,6 +28,8 @@ type NavigationRoute =
 export class NavigationService {
     private transition: Promise<void> = Promise.resolve();
     private route: NavigationRoute = { kind: 'home' };
+    private disposed = false;
+    private disposal: Promise<void> | null = null;
 
     constructor(
         private readonly registry: ModuleRegistry,
@@ -94,14 +96,27 @@ export class NavigationService {
         this.shell.navigationBar.setPaused(this.moduleHost.paused);
     }
 
-    async dispose(): Promise<void> {
-        this.route = { kind: 'home' };
-        await this.moduleHost.dispose();
-        this.shell.navigationBar.showHome();
-        this.shell.clearOverlay();
+    dispose(): Promise<void> {
+        if (this.disposal) {
+            return this.disposal;
+        }
+
+        this.disposed = true;
+        this.disposal = (async () => {
+            await this.transition.catch(() => undefined);
+            this.route = { kind: 'home' };
+            await this.moduleHost.dispose();
+            this.shell.navigationBar.showHome();
+            this.shell.clearOverlay();
+        })();
+        return this.disposal;
     }
 
     private enqueue(operation: () => Promise<void>): Promise<void> {
+        if (this.disposed) {
+            return Promise.reject(new Error('Navigation service is disposed'));
+        }
+
         const next = this.transition.then(operation, operation);
         this.transition = next.catch(() => undefined);
         return next;
