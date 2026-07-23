@@ -1,4 +1,5 @@
 import {
+    director,
     profiler,
     ResolutionPolicy,
     screen,
@@ -171,11 +172,17 @@ export class ViewportService {
             this.surfaceWidth = width;
             this.surfaceHeight = height;
 
-            // Resize every layer involved in a Cocos Web surface. Updating only
-            // the design resolution leaves the outer container at 1280 x 720.
+            // Resize the DOM frame, canvas, design coordinate space and render
+            // target together. Leaving any one at 1280 x 720 creates borders.
             view.setFrameSize(width, height);
             view.setCanvasSize(width, height);
             view.setDesignResolutionSize(width, height, ResolutionPolicy.EXACT_FIT);
+
+            const canvasSize = view.getCanvasSize();
+            director.root?.resize(
+                Math.max(1, Math.round(canvasSize.width)),
+                Math.max(1, Math.round(canvasSize.height)),
+            );
             this.applyCanvasStyles();
         } finally {
             this.applyingResolution = false;
