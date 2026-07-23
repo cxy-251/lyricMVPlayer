@@ -1,5 +1,6 @@
 import { Node } from 'cc';
 import { createUiNode } from '../../ui/UiFactory';
+import { createLucideIcon } from '../../ui/WebIcons';
 import {
     applyRect,
     cocosRectToCss,
@@ -58,10 +59,8 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     const subtitle = document.createElement('div');
     subtitle.className = 'cocoslab-card-subtitle';
     subtitle.textContent = options.subtitle;
-    const arrow = document.createElement('wa-icon');
-    arrow.setAttribute('name', 'arrow-right');
-    arrow.setAttribute('label', 'Open');
-    arrow.style.marginTop = '10px';
+    const arrow = createLucideIcon('arrow-right', 'Open', 20);
+    arrow.style.margin = '10px auto 0';
     copy.append(title, subtitle, arrow);
     inner.appendChild(copy);
     card.appendChild(inner);
