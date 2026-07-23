@@ -9,6 +9,7 @@ import {
     clearNode,
     createButton,
     createLabel,
+    createUiNode,
     fillNode,
     palette,
     resizeNode,
@@ -55,8 +56,8 @@ export class NavigationBar {
     showLab(lab: LabDefinition, onBack: () => void): void {
         this.state = {
             title: lab.title,
-            subtitle: 'LABORATORY',
-            backLabel: 'HOME',
+            subtitle: 'Laboratory',
+            backLabel: 'Home',
             capabilities: [],
             paused: false,
             handlers: { onBack },
@@ -73,8 +74,8 @@ export class NavigationBar {
     ): void {
         this.state = {
             title: definition.title,
-            subtitle: parentLab?.title ?? definition.category.toUpperCase(),
-            backLabel: parentLab ? 'LAB' : 'HOME',
+            subtitle: parentLab?.title ?? definition.category,
+            backLabel: parentLab ? 'Laboratory' : 'Home',
             capabilities: definition.capabilities ?? [],
             paused,
             handlers,
@@ -108,7 +109,7 @@ export class NavigationBar {
 
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const barHeight = compact ? 68 : 76;
+        const barHeight = compact ? 60 : 66;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
         const y = height / 2 - safeInsets.top - barHeight / 2;
@@ -116,23 +117,25 @@ export class NavigationBar {
         this.root.setPosition(centerX, y, 0);
         resizeNode(this.root, contentWidth, barHeight);
         fillNode(this.root, contentWidth, barHeight, palette.backgroundRaised);
+        const divider = createUiNode(this.root, 'NavigationDivider', contentWidth, 1, 0, -barHeight / 2 + 0.5);
+        fillNode(divider, contentWidth, 1, palette.border);
 
         createButton(this.root, {
             name: 'NavigationBack',
             text: compact ? '←' : `← ${state.backLabel}`,
-            width: compact ? 56 : 118,
-            height: 44,
-            x: -contentWidth / 2 + (compact ? 38 : 70),
+            width: compact ? 44 : 112,
+            height: 36,
+            x: -contentWidth / 2 + (compact ? 28 : 64),
             variant: 'ghost',
-            fontSize: compact ? 26 : 16,
+            fontSize: compact ? 22 : 13,
             onPress: state.handlers.onBack,
         });
 
-        const actionWidth = compact ? 52 : 94;
-        const actionGap = compact ? 10 : 12;
+        const actionWidth = compact ? 44 : 82;
+        const actionGap = 8;
         const hasPause = state.capabilities.includes('pause');
         const hasReset = state.capabilities.includes('reset');
-        let rightCursor = contentWidth / 2 - 18;
+        let rightCursor = contentWidth / 2 - 14;
 
         if (hasReset && state.handlers.onReset) {
             rightCursor -= actionWidth / 2;
@@ -140,10 +143,10 @@ export class NavigationBar {
                 name: 'NavigationReset',
                 text: compact ? 'R' : 'RESET',
                 width: actionWidth,
-                height: 44,
+                height: 34,
                 x: rightCursor,
                 variant: 'secondary',
-                fontSize: compact ? 16 : 14,
+                fontSize: compact ? 13 : 11,
                 onPress: state.handlers.onReset,
             });
             rightCursor -= actionWidth / 2 + actionGap;
@@ -155,41 +158,41 @@ export class NavigationBar {
                 name: 'NavigationPause',
                 text: compact ? (state.paused ? '▶' : 'Ⅱ') : (state.paused ? 'RESUME' : 'PAUSE'),
                 width: actionWidth,
-                height: 44,
+                height: 34,
                 x: rightCursor,
                 variant: state.paused ? 'primary' : 'secondary',
-                fontSize: compact ? 19 : 14,
+                fontSize: compact ? 15 : 11,
                 onPress: state.handlers.onTogglePause,
             });
         }
 
-        const leftBoundary = -contentWidth / 2 + (compact ? 78 : 142);
-        const titleRightBoundary = rightCursor - actionWidth / 2 - 12;
-        const titleWidth = Math.max(120, titleRightBoundary - leftBoundary);
+        const leftBoundary = -contentWidth / 2 + (compact ? 58 : 126);
+        const rightBoundary = rightCursor - actionWidth / 2 - 12;
+        const titleWidth = Math.max(100, rightBoundary - leftBoundary);
         const titleX = leftBoundary + titleWidth / 2;
 
         createLabel(
             this.root,
             state.title,
             titleWidth,
-            34,
-            compact ? 18 : 22,
+            28,
+            compact ? 16 : 18,
             palette.text,
             titleX,
-            compact ? 0 : 10,
+            compact ? 0 : 7,
             HorizontalTextAlignment.LEFT,
         );
 
         if (!compact) {
             createLabel(
                 this.root,
-                state.subtitle.toUpperCase(),
+                state.subtitle,
                 titleWidth,
-                22,
-                11,
-                palette.muted,
+                18,
+                10,
+                palette.subtle,
                 titleX,
-                -18,
+                -14,
                 HorizontalTextAlignment.LEFT,
             );
         }
