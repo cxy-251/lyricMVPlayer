@@ -1,6 +1,5 @@
 import {
     Color,
-    Graphics,
     HorizontalTextAlignment,
     Node,
 } from 'cc';
@@ -9,16 +8,11 @@ import type {
     ModuleCapability,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
-import type {
-    ViewportBreakpoint,
-    ViewportService,
-    ViewportSnapshot,
-} from '../services/ViewportService';
+import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
     createLabel,
     createUiNode,
-    fillNode,
     palette,
     resizeNode,
 } from '../ui/UiFactory';
@@ -34,19 +28,6 @@ interface NavigationState {
     readonly capabilities: readonly ModuleCapability[];
     readonly paused: boolean;
     readonly handlers: NavigationHandlers;
-}
-
-export function navigationBarHeight(breakpoint: ViewportBreakpoint): number {
-    return breakpoint === 'compact' ? 54 : 60;
-}
-
-export function navigationTopOffset(breakpoint: ViewportBreakpoint): number {
-    return breakpoint === 'compact' ? 64 : 68;
-}
-
-export function navigationContentTopInset(breakpoint: ViewportBreakpoint): number {
-    const gap = breakpoint === 'compact' ? 12 : 16;
-    return navigationTopOffset(breakpoint) + navigationBarHeight(breakpoint) + gap;
 }
 
 export class NavigationBar {
@@ -124,31 +105,32 @@ export class NavigationBar {
 
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const barHeight = navigationBarHeight(breakpoint);
+        const controlHeight = compact ? 42 : 44;
+        const topMargin = compact ? 12 : 16;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
-        const y = height / 2 - navigationTopOffset(breakpoint) - barHeight / 2;
+        const y = height / 2 - topMargin - controlHeight / 2;
 
         this.root.setPosition(centerX, y, 0);
-        resizeNode(this.root, contentWidth, barHeight);
-        fillNode(this.root, contentWidth, barHeight, palette.background);
-        this.drawDivider(contentWidth, barHeight);
+        resizeNode(this.root, contentWidth, controlHeight);
 
-        const sidePadding = compact ? 12 : 22;
-        const backWidth = compact ? 46 : 64;
+        const sidePadding = compact ? 10 : 18;
+        const backWidth = compact ? 42 : 46;
+        const backX = -contentWidth / 2 + sidePadding + backWidth / 2;
+
         this.createTextAction(
             'NavigationBack',
             '←',
             backWidth,
-            barHeight,
-            -contentWidth / 2 + sidePadding + backWidth / 2,
+            controlHeight,
+            backX,
             0,
-            compact ? 23 : 20,
+            compact ? 22 : 20,
             state.handlers.onBack,
         );
 
-        const actionWidth = compact ? 48 : 68;
-        const actionGap = compact ? 2 : 6;
+        const actionWidth = compact ? 46 : 58;
+        const actionGap = compact ? 4 : 8;
         const hasPause = state.capabilities.includes('pause');
         const hasReset = state.capabilities.includes('reset');
         let rightCursor = contentWidth / 2 - sidePadding;
@@ -159,10 +141,10 @@ export class NavigationBar {
                 'NavigationReset',
                 compact ? 'R' : 'RESET',
                 actionWidth,
-                barHeight,
+                controlHeight,
                 rightCursor,
                 0,
-                compact ? 13 : 11,
+                compact ? 12 : 10,
                 state.handlers.onReset,
             );
             rightCursor -= actionWidth / 2 + actionGap;
@@ -174,28 +156,29 @@ export class NavigationBar {
                 'NavigationPause',
                 compact ? (state.paused ? '▶' : 'Ⅱ') : (state.paused ? 'PLAY' : 'PAUSE'),
                 actionWidth,
-                barHeight,
+                controlHeight,
                 rightCursor,
                 0,
-                compact ? 16 : 11,
+                compact ? 15 : 10,
                 state.handlers.onTogglePause,
                 state.paused ? new Color(45, 92, 214, 255) : palette.muted,
             );
         }
 
-        const leftBoundary = -contentWidth / 2 + sidePadding + backWidth + 8;
-        const rightBoundary = Math.min(contentWidth / 2 - sidePadding, rightCursor - actionWidth / 2 - 8);
-        const titleWidth = Math.max(80, rightBoundary - leftBoundary);
-        const titleX = leftBoundary + titleWidth / 2;
+        const titleLeft = backX + backWidth / 2 + (compact ? 4 : 8);
+        const titleRight = hasPause || hasReset
+            ? rightCursor - actionWidth / 2 - 12
+            : contentWidth / 2 - sidePadding;
+        const titleWidth = Math.max(80, titleRight - titleLeft);
 
         createLabel(
             this.root,
             state.title,
             titleWidth,
-            barHeight,
-            compact ? 13 : 14,
+            controlHeight,
+            compact ? 12 : 13,
             palette.muted,
-            titleX,
+            titleLeft + titleWidth / 2,
             0,
             HorizontalTextAlignment.LEFT,
         );
@@ -216,15 +199,5 @@ export class NavigationBar {
         createLabel(action, text, width, height, fontSize, color);
         action.on(Node.EventType.TOUCH_END, onPress);
         return action;
-    }
-
-    private drawDivider(width: number, height: number): void {
-        const line = createUiNode(this.root, 'NavigationDivider', width, 2, 0, -height / 2 + 1);
-        const graphics = line.addComponent(Graphics);
-        graphics.strokeColor = palette.border;
-        graphics.lineWidth = 1;
-        graphics.moveTo(-width / 2, 0);
-        graphics.lineTo(width / 2, 0);
-        graphics.stroke();
     }
 }
