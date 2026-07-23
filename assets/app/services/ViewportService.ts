@@ -35,6 +35,7 @@ export class ViewportService {
     private animationFrame = 0;
     private surfaceWidth = 0;
     private surfaceHeight = 0;
+    private previewToolbarInset = 0;
 
     get current(): ViewportSnapshot {
         return this.snapshot;
@@ -54,6 +55,7 @@ export class ViewportService {
             view.resizeWithBrowserSize(false);
             window.addEventListener('resize', this.handleBrowserResize, { passive: true });
             window.visualViewport?.addEventListener('resize', this.handleBrowserResize, { passive: true });
+            window.addEventListener('pointermove', this.handlePreviewPointerMove, { passive: true });
             this.applyBrowserSurface();
             this.scheduleBrowserSurfaceSync();
         }
@@ -74,6 +76,7 @@ export class ViewportService {
         if (this.hasBrowserDom()) {
             window.removeEventListener('resize', this.handleBrowserResize);
             window.visualViewport?.removeEventListener('resize', this.handleBrowserResize);
+            window.removeEventListener('pointermove', this.handlePreviewPointerMove);
 
             if (this.animationFrame !== 0) {
                 window.cancelAnimationFrame(this.animationFrame);
@@ -83,6 +86,7 @@ export class ViewportService {
 
         this.surfaceWidth = 0;
         this.surfaceHeight = 0;
+        this.previewToolbarInset = 0;
         this.started = false;
         this.listeners.clear();
     }
@@ -115,6 +119,14 @@ export class ViewportService {
 
     private readonly handleBrowserResize = (): void => {
         this.scheduleBrowserSurfaceSync();
+    };
+
+    private readonly handlePreviewPointerMove = (event: PointerEvent): void => {
+        // Creator reveals its preview controls when the pointer reaches the top.
+        // Re-scan at that moment so the navigation bar stays below the overlay.
+        if (event.clientY <= 110) {
+            this.scheduleBrowserSurfaceSync();
+        }
     };
 
     private readonly handleViewportChange = (): void => {
@@ -158,9 +170,20 @@ export class ViewportService {
             ?? document.documentElement.clientHeight
             ?? window.innerHeight,
         ));
+        const nextPreviewInset = this.detectCreatorPreviewToolbarInset();
+        const previewInsetChanged = nextPreviewInset !== this.previewToolbarInset;
+        this.previewToolbarInset = nextPreviewInset;
 
         this.applyDocumentStyles();
         this.applyCanvasStyles();
+
+        if (
+            width === this.surfaceWidth
+            && height === this.surfaceHeight
+            && !previewInsetChanged
+        ) {
+            return;
+        }
 
         if (width === this.surfaceWidth && height === this.surfaceHeight) {
             return;
@@ -244,6 +267,80 @@ export class ViewportService {
         }
     }
 
+    private detectCreatorPreviewToolbarInset(): number {
+        if (!this.hasBrowserDom()) {
+            return 0;
+        }
+
+        let previewScriptDetected = false;
+        let controlCount = 0;
+        let maximumBottom = 0;
+
+        for (const currentDocument of this.accessibleDocuments()) {
+            const scriptSources = Array.from(currentDocument.scripts)
+                .map((script) => script.src)
+                .join(' ');
+
+            if (/preview-scripts|cocos[^/]*preview|\/preview\//i.test(scriptSources)) {
+                previewScriptDetected = true;
+            }
+
+            const gameRoots = [
+                currentDocument.getElementById('Cocos3dGameContainer'),
+                currentDocument.getElementById('GameDiv'),
+                currentDocument.getElementById('GameContainer'),
+                currentDocument.getElementById('GameCanvas'),
+            ].filter((candidate): candidate is HTMLElement => candidate instanceof HTMLElement);
+
+            const controls = currentDocument.querySelectorAll<HTMLElement>(
+                'select, input, button, [role="button"]',
+            );
+
+            for (const control of Array.from(controls)) {
+                if (gameRoots.some((root) => root.contains(control))) {
+                    continue;
+                }
+
+                const rect = control.getBoundingClientRect();
+
+                if (
+                    rect.width <= 0
+                    || rect.height < 16
+                    || rect.height > 72
+                    || rect.bottom <= 0
+                    || rect.top > 96
+                ) {
+                    continue;
+                }
+
+                controlCount += 1;
+                maximumBottom = Math.max(maximumBottom, rect.bottom);
+            }
+        }
+
+        if (controlCount >= 2) {
+            return Math.max(48, Math.min(84, Math.ceil(maximumBottom + 8)));
+        }
+
+        // Creator preview scripts are a reliable fallback even when the toolbar
+        // is temporarily translated off-screen until the pointer reaches it.
+        return previewScriptDetected ? 56 : 0;
+    }
+
+    private accessibleDocuments(): readonly Document[] {
+        const documents: Document[] = [document];
+
+        try {
+            if (window.parent !== window && window.parent.document !== document) {
+                documents.push(window.parent.document);
+            }
+        } catch {
+            // A cross-origin parent is not part of the Creator local preview.
+        }
+
+        return documents;
+    }
+
     private hasBrowserDom(): boolean {
         return typeof window !== 'undefined'
             && typeof document !== 'undefined'
@@ -256,12 +353,13 @@ export class ViewportService {
         const width = Math.max(1, visible.width);
         const height = Math.max(1, visible.height);
         const safeArea = sys.getSafeAreaRect();
+        const nativeTop = Math.max(0, height - safeArea.y - safeArea.height);
 
         const safeInsets: ViewportInsets = {
             left: Math.max(0, safeArea.x),
             bottom: Math.max(0, safeArea.y),
             right: Math.max(0, width - safeArea.x - safeArea.width),
-            top: Math.max(0, height - safeArea.y - safeArea.height),
+            top: Math.min(height - 1, nativeTop + this.previewToolbarInset),
         };
 
         return {
