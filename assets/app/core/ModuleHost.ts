@@ -91,6 +91,7 @@ export class ModuleHost {
             openLab: navigation.openLab,
             back: navigation.back,
             home: navigation.home,
+            reportError: (error) => this.failRuntime(error),
         };
 
         try {
