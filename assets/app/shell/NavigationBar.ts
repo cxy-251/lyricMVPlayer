@@ -9,7 +9,11 @@ import type {
     ModuleCapability,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
-import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
+import type {
+    ViewportBreakpoint,
+    ViewportService,
+    ViewportSnapshot,
+} from '../services/ViewportService';
 import {
     clearNode,
     createLabel,
@@ -30,6 +34,19 @@ interface NavigationState {
     readonly capabilities: readonly ModuleCapability[];
     readonly paused: boolean;
     readonly handlers: NavigationHandlers;
+}
+
+export function navigationBarHeight(breakpoint: ViewportBreakpoint): number {
+    return breakpoint === 'compact' ? 54 : 60;
+}
+
+export function navigationTopOffset(breakpoint: ViewportBreakpoint): number {
+    return breakpoint === 'compact' ? 64 : 68;
+}
+
+export function navigationContentTopInset(breakpoint: ViewportBreakpoint): number {
+    const gap = breakpoint === 'compact' ? 12 : 16;
+    return navigationTopOffset(breakpoint) + navigationBarHeight(breakpoint) + gap;
 }
 
 export class NavigationBar {
@@ -107,15 +124,10 @@ export class NavigationBar {
 
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const barHeight = compact ? 54 : 60;
+        const barHeight = navigationBarHeight(breakpoint);
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
-
-        // Creator Browser Preview reveals an external toolbar when the pointer
-        // reaches the top edge. Keep app navigation at one stable canvas
-        // coordinate instead of following that toolbar or safe-area changes.
-        const fixedTopOffset = compact ? 64 : 68;
-        const y = height / 2 - fixedTopOffset - barHeight / 2;
+        const y = height / 2 - navigationTopOffset(breakpoint) - barHeight / 2;
 
         this.root.setPosition(centerX, y, 0);
         resizeNode(this.root, contentWidth, barHeight);
