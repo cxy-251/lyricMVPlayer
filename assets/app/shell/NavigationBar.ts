@@ -1,20 +1,16 @@
-import {
-    HorizontalTextAlignment,
-    Node,
-} from 'cc';
+import { Node } from 'cc';
 import type {
     LabDefinition,
     ModuleCapability,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
+import { clearNode } from '../ui/UiFactory';
 import {
-    clearNode,
-    createButton,
-    createLabel,
-    palette,
-    resizeNode,
-} from '../ui/UiFactory';
+    clearWebUiScope,
+    createWebIconButton,
+    getWebUiScope,
+} from '../ui/WebUiKit';
 
 interface NavigationHandlers {
     readonly onBack: () => void;
@@ -28,6 +24,8 @@ interface NavigationState {
     readonly paused: boolean;
     readonly handlers: NavigationHandlers;
 }
+
+const NAVIGATION_SCOPE = 'navigation';
 
 export class NavigationBar {
     private state: NavigationState | null = null;
@@ -49,6 +47,7 @@ export class NavigationBar {
     showHome(): void {
         this.state = null;
         clearNode(this.root);
+        clearWebUiScope(NAVIGATION_SCOPE);
         this.root.active = false;
     }
 
@@ -91,94 +90,71 @@ export class NavigationBar {
     dispose(): void {
         this.unsubscribeViewport();
         clearNode(this.root);
+        clearWebUiScope(NAVIGATION_SCOPE);
     }
 
     private render(): void {
         const state = this.state;
 
         if (!state) {
+            clearWebUiScope(NAVIGATION_SCOPE);
             return;
         }
 
         clearNode(this.root);
+        const scope = getWebUiScope(NAVIGATION_SCOPE);
 
-        const { width, height, breakpoint, safeInsets } = this.viewport;
+        if (!scope) {
+            return;
+        }
+
+        const { width, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const controlSize = 44;
-        const topMargin = compact ? 10 : 14;
-        const contentWidth = width - safeInsets.left - safeInsets.right;
-        const centerX = (safeInsets.left - safeInsets.right) / 2;
-        const y = height / 2 - safeInsets.top - topMargin - controlSize / 2;
-
-        this.root.setPosition(centerX, y, 0);
-        resizeNode(this.root, contentWidth, controlSize);
-
         const sidePadding = compact ? 10 : 18;
-        const backX = -contentWidth / 2 + sidePadding + controlSize / 2;
-        createButton(this.root, {
-            name: 'NavigationBack',
-            text: '←',
-            width: 38,
-            height: 38,
-            x: backX,
-            variant: 'ghost',
-            shape: 'circle',
-            fontSize: 21,
+        const topMargin = compact ? 10 : 14;
+        const navigation = document.createElement('div');
+        navigation.className = 'cocoslab-navigation';
+        navigation.style.left = `${safeInsets.left + sidePadding}px`;
+        navigation.style.right = `${safeInsets.right + sidePadding}px`;
+        navigation.style.top = `${safeInsets.top + topMargin}px`;
+        navigation.style.width = `${Math.max(1, width - safeInsets.left - safeInsets.right - sidePadding * 2)}px`;
+        navigation.style.height = '44px';
+
+        createWebIconButton({
+            parent: navigation,
+            icon: 'arrow-left',
+            label: 'Back',
             onPress: state.handlers.onBack,
         });
 
-        const hasPause = state.capabilities.includes('pause');
-        const hasReset = state.capabilities.includes('reset');
-        const gap = 8;
-        let rightCursor = contentWidth / 2 - sidePadding;
+        const title = document.createElement('div');
+        title.className = 'cocoslab-navigation-title';
+        title.textContent = state.title;
+        navigation.appendChild(title);
 
-        if (hasReset && state.handlers.onReset) {
-            rightCursor -= controlSize / 2;
-            createButton(this.root, {
-                name: 'NavigationReset',
-                text: '↺',
-                width: 38,
-                height: 38,
-                x: rightCursor,
-                variant: 'ghost',
-                shape: 'circle',
-                fontSize: 18,
-                onPress: state.handlers.onReset,
-            });
-            rightCursor -= controlSize / 2 + gap;
-        }
+        const spacer = document.createElement('div');
+        spacer.className = 'cocoslab-navigation-spacer';
+        navigation.appendChild(spacer);
 
-        if (hasPause && state.handlers.onTogglePause) {
-            rightCursor -= controlSize / 2;
-            createButton(this.root, {
-                name: 'NavigationPause',
-                text: state.paused ? '▶' : 'Ⅱ',
-                width: 38,
-                height: 38,
-                x: rightCursor,
-                variant: state.paused ? 'secondary' : 'ghost',
-                shape: 'circle',
-                fontSize: state.paused ? 14 : 16,
+        if (state.capabilities.includes('pause') && state.handlers.onTogglePause) {
+            createWebIconButton({
+                parent: navigation,
+                icon: state.paused ? 'play' : 'pause',
+                label: state.paused ? 'Resume' : 'Pause',
+                selected: state.paused,
                 onPress: state.handlers.onTogglePause,
             });
         }
 
-        const titleLeft = backX + controlSize / 2 + (compact ? 4 : 8);
-        const titleRight = hasPause || hasReset
-            ? rightCursor - controlSize / 2 - 12
-            : contentWidth / 2 - sidePadding;
-        const titleWidth = Math.max(80, titleRight - titleLeft);
+        if (state.capabilities.includes('reset') && state.handlers.onReset) {
+            createWebIconButton({
+                parent: navigation,
+                icon: 'rotate-left',
+                label: 'Reset',
+                onPress: state.handlers.onReset,
+            });
+        }
 
-        createLabel(
-            this.root,
-            state.title,
-            titleWidth,
-            controlSize,
-            compact ? 12 : 13,
-            palette.muted,
-            titleLeft + titleWidth / 2,
-            0,
-            HorizontalTextAlignment.LEFT,
-        );
+        scope.appendChild(navigation);
     }
 }
