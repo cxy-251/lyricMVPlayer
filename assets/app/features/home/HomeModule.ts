@@ -93,9 +93,13 @@ export class HomeModule implements InteractiveModule {
             HorizontalTextAlignment.LEFT,
         );
 
-        const columns = compact ? 1 : Math.min(2, labs.length);
+        const columns = compact
+            ? 1
+            : viewport.breakpoint === 'wide'
+                ? Math.min(3, labs.length)
+                : Math.min(2, labs.length);
         const rows = Math.max(1, Math.ceil(labs.length / columns));
-        const gap = compact ? 14 : 34;
+        const gap = compact ? 14 : 26;
         const availableHeight = Math.max(1, safeHeight - (compact ? 62 : 82));
         const rowHeightLimit = Math.max(
             1,
@@ -143,6 +147,10 @@ export class HomeModule implements InteractiveModule {
     }
 
     private coverForLab(lab: LabDefinition): CatalogCoverKind {
-        return lab.id === 'physics' ? 'physics' : 'mathematics';
+        if (lab.id === 'physics') {
+            return 'physics';
+        }
+
+        return lab.id === 'games' ? 'games' : 'mathematics';
     }
 }
