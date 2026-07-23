@@ -79,21 +79,23 @@ export class ParameterPanel {
         clearNode(this.root);
         resizeNode(this.root, layout.width, metrics.height);
         this.root.setPosition(layout.x, layout.y, 0);
-        fillNode(this.root, layout.width, metrics.height, nativeTheme.sand, 18);
-        strokeNode(this.root, layout.width, metrics.height, nativeTheme.border, 18, 1);
+        const radius = Math.min(18, layout.width / 2, metrics.height / 2);
+        fillNode(this.root, layout.width, metrics.height, nativeTheme.sand, radius);
+        strokeNode(this.root, layout.width, metrics.height, nativeTheme.border, radius, 1);
 
         const start = this.page * metrics.pageSize;
         const visible = this.schema.slice(start, start + metrics.pageSize);
         const contentHeight = metrics.height - metrics.pagerHeight;
+        const contentWidth = Math.max(1, layout.width - 24);
         const content = createUiNode(
             this.root,
             'ParameterGrid',
-            layout.width - 24,
-            contentHeight - 8,
+            contentWidth,
+            Math.max(1, contentHeight - 8),
             0,
             metrics.pagerHeight / 2 + 2,
         );
-        const cellWidth = (layout.width - 24) / metrics.columns;
+        const cellWidth = contentWidth / metrics.columns;
         const grid = content.addComponent(Layout);
         grid.type = Layout.Type.GRID;
         grid.resizeMode = Layout.ResizeMode.NONE;
@@ -106,7 +108,12 @@ export class ParameterPanel {
         grid.padding = 0;
 
         for (const definition of visible) {
-            this.renderControl(content, definition, cellWidth - 12, metrics.rowHeight - 8);
+            this.renderControl(
+                content,
+                definition,
+                Math.max(1, cellWidth - 12),
+                Math.max(1, metrics.rowHeight - 8),
+            );
         }
 
         grid.updateLayout(true);
@@ -148,7 +155,7 @@ export class ParameterPanel {
         createLabel(
             group,
             definition.label,
-            width * 0.58,
+            Math.max(1, width * 0.58),
             24,
             11,
             nativeTheme.muted,
@@ -159,7 +166,7 @@ export class ParameterPanel {
         const valueNode = createLabel(
             group,
             this.controller.format(definition),
-            width * 0.4,
+            Math.max(1, width * 0.4),
             24,
             12,
             nativeTheme.ink,
@@ -173,7 +180,7 @@ export class ParameterPanel {
 
         createNativeSlider(group, {
             name: `${definition.key}:slider`,
-            width: Math.max(80, width - 6),
+            width: Math.max(44, width - 6),
             progress: initialProgress,
             y: -height * 0.19,
             onChange: (progress) => {
@@ -201,7 +208,7 @@ export class ParameterPanel {
         createLabel(
             group,
             definition.label,
-            width - 74,
+            Math.max(1, width - 74),
             32,
             11,
             nativeTheme.muted,
@@ -235,21 +242,20 @@ export class ParameterPanel {
         createLabel(
             group,
             definition.label,
-            width - 8,
+            Math.max(1, width - 8),
             22,
             11,
             nativeTheme.muted,
             0,
             labelY,
         );
-        const valueWidth = Math.max(58, width - 100);
+        const valueWidth = Math.max(36, width - 100);
 
         createIconButton(group, {
             name: `${definition.key}:previous`,
             icon: 'chevron-left',
             x: -valueWidth / 2 - 26,
             y: -height * 0.2,
-            tone: 'neutral',
             onPress: () => this.guard(() => this.change(
                 definition.key,
                 () => this.controller.cycle(definition.key, -1),
@@ -270,7 +276,6 @@ export class ParameterPanel {
             icon: 'chevron-right',
             x: valueWidth / 2 + 26,
             y: -height * 0.2,
-            tone: 'neutral',
             onPress: () => this.guard(() => this.change(
                 definition.key,
                 () => this.controller.cycle(definition.key, 1),
@@ -286,7 +291,6 @@ export class ParameterPanel {
             icon: 'chevron-left',
             x: -54,
             y,
-            tone: 'lilac',
             onPress: () => this.guard(() => {
                 this.page = (this.page - 1 + metrics.pageCount) % metrics.pageCount;
                 this.renderCurrent();
@@ -307,7 +311,6 @@ export class ParameterPanel {
             icon: 'chevron-right',
             x: 54,
             y,
-            tone: 'lilac',
             onPress: () => this.guard(() => {
                 this.page = (this.page + 1) % metrics.pageCount;
                 this.renderCurrent();
@@ -317,11 +320,11 @@ export class ParameterPanel {
         createLabel(
             this.root,
             'PARAMETERS',
-            120,
+            Math.max(1, Math.min(120, width - 24)),
             28,
             10,
             nativeTheme.muted,
-            -width / 2 + 72,
+            -width / 2 + Math.min(72, width / 2),
             y,
             HorizontalTextAlignment.LEFT,
         );
@@ -365,7 +368,7 @@ export class ParameterPanel {
         breakpoint: ViewportBreakpoint,
     ): PanelMetrics {
         const columns = breakpoint === 'compact'
-            ? 2
+            ? width < 420 ? 1 : 2
             : width < 980
                 ? 3
                 : 4;
