@@ -29,14 +29,28 @@ export abstract class ResponsiveModule implements InteractiveModule {
         );
 
         this.onMount();
-        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
-            if (!this.root) {
-                return;
-            }
+        let initializing = true;
 
-            resizeNode(this.root, snapshot.width, snapshot.height);
-            this.render(snapshot);
-        });
+        try {
+            this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+                try {
+                    if (!this.root) {
+                        return;
+                    }
+
+                    resizeNode(this.root, snapshot.width, snapshot.height);
+                    this.render(snapshot);
+                } catch (error) {
+                    if (initializing) {
+                        throw error;
+                    }
+
+                    context.reportError(error);
+                }
+            });
+        } finally {
+            initializing = false;
+        }
     }
 
     async unmount(): Promise<void> {
