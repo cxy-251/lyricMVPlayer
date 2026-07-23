@@ -1,7 +1,24 @@
 import type {
+    LabDefinition,
+    LabId,
     ModuleCategory,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
+
+const laboratories: Record<LabId, LabDefinition> = {
+    mathematics: {
+        id: 'mathematics',
+        title: 'Mathematics Laboratory',
+        description: 'Interactive curves, geometry and mathematical systems.',
+        order: 10,
+    },
+    physics: {
+        id: 'physics',
+        title: 'Physics Laboratory',
+        description: 'Dynamic simulations built from physical models and numerical methods.',
+        order: 20,
+    },
+};
 
 export class ModuleRegistry {
     private readonly definitions = new Map<string, ModuleDefinition>();
@@ -13,6 +30,14 @@ export class ModuleRegistry {
 
         if (this.definitions.has(definition.id)) {
             throw new Error(`Duplicate module id: ${definition.id}`);
+        }
+
+        if (!definition.hidden && !definition.labId) {
+            throw new Error(`Visible module ${definition.id} must belong to a laboratory`);
+        }
+
+        if (definition.labId && !laboratories[definition.labId]) {
+            throw new Error(`Unknown laboratory: ${definition.labId}`);
         }
 
         this.definitions.set(definition.id, definition);
@@ -34,17 +59,48 @@ export class ModuleRegistry {
         return definition;
     }
 
+    getLab(labId: LabId): LabDefinition {
+        const lab = laboratories[labId];
+
+        if (this.listByLab(labId).length === 0) {
+            throw new Error(`Laboratory ${labId} has no visible modules`);
+        }
+
+        return lab;
+    }
+
     list(category?: ModuleCategory): readonly ModuleDefinition[] {
-        return [...this.definitions.values()]
-            .filter((definition) => !definition.hidden)
-            .filter((definition) => !category || definition.category === category)
-            .sort((left, right) => {
-                const orderDifference = (left.order ?? 1000) - (right.order ?? 1000);
-                return orderDifference || left.title.localeCompare(right.title);
-            });
+        return this.sortedVisibleDefinitions()
+            .filter((definition) => !category || definition.category === category);
+    }
+
+    listByLab(labId: LabId): readonly ModuleDefinition[] {
+        return this.sortedVisibleDefinitions()
+            .filter((definition) => definition.labId === labId);
+    }
+
+    labs(): readonly LabDefinition[] {
+        const activeLabIds = new Set(
+            this.sortedVisibleDefinitions()
+                .map((definition) => definition.labId)
+                .filter((labId): labId is LabId => Boolean(labId)),
+        );
+
+        return [...activeLabIds]
+            .map((labId) => laboratories[labId])
+            .sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
     }
 
     categories(): readonly ModuleCategory[] {
         return [...new Set(this.list().map((definition) => definition.category))];
+    }
+
+    private sortedVisibleDefinitions(): readonly ModuleDefinition[] {
+        return [...this.definitions.values()]
+            .filter((definition) => !definition.hidden)
+            .sort((left, right) => {
+                const orderDifference = (left.order ?? 1000) - (right.order ?? 1000);
+                return orderDifference || left.title.localeCompare(right.title);
+            });
     }
 }
