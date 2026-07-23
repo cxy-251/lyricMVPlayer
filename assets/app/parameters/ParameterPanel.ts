@@ -1,13 +1,25 @@
-import { Node } from 'cc';
-import type { ViewportBreakpoint } from '../services/ViewportService';
-import { createUiNode } from '../ui/UiFactory';
-import { createLibraryIconButton } from '../ui/WebIcons';
 import {
-    applyRect,
-    clearWebUiScope,
-    cocosRectToCss,
-    getWebUiScope,
-} from '../ui/WebUiKit';
+    HorizontalTextAlignment,
+    Label,
+    Layout,
+    Node,
+    Size,
+} from 'cc';
+import type { ViewportBreakpoint } from '../services/ViewportService';
+import {
+    createIconButton,
+    createNativeSlider,
+    createNativeToggle,
+    nativeTheme,
+} from '../ui/NativeUiKit';
+import {
+    clearNode,
+    createLabel,
+    createUiNode,
+    fillNode,
+    resizeNode,
+    strokeNode,
+} from '../ui/UiFactory';
 import type { ParameterController } from './ParameterController';
 import type {
     NumberParameter,
@@ -31,8 +43,6 @@ interface PanelMetrics {
     readonly rowHeight: number;
     readonly pagerHeight: number;
 }
-
-const PARAMETER_SCOPE = 'parameters';
 
 export class ParameterPanel {
     private readonly root: Node;
@@ -64,183 +74,259 @@ export class ParameterPanel {
             layout.breakpoint,
         );
         this.page = Math.min(this.page, metrics.pageCount - 1);
-        const parent = getWebUiScope(PARAMETER_SCOPE);
 
-        if (!parent) {
-            return;
-        }
-
-        const card = document.createElement('wa-card') as HTMLElement;
-        card.className = 'cocoslab-parameter-card';
-        card.setAttribute('appearance', 'filled-outlined');
-        applyRect(card, cocosRectToCss(layout.x, layout.y, layout.width, metrics.height));
-
-        const grid = document.createElement('div');
-        grid.className = 'cocoslab-parameter-grid';
-        grid.style.gridTemplateColumns = `repeat(${metrics.columns}, minmax(0, 1fr))`;
+        clearNode(this.root);
+        resizeNode(this.root, layout.width, metrics.height);
+        this.root.setPosition(layout.x, layout.y, 0);
+        fillNode(this.root, layout.width, metrics.height, nativeTheme.sand, 18);
+        strokeNode(this.root, layout.width, metrics.height, nativeTheme.border, 18, 1);
 
         const start = this.page * metrics.pageSize;
         const visible = this.schema.slice(start, start + metrics.pageSize);
+        const contentHeight = metrics.height - metrics.pagerHeight;
+        const content = createUiNode(
+            this.root,
+            'ParameterGrid',
+            layout.width - 24,
+            contentHeight - 8,
+            0,
+            metrics.pagerHeight / 2 + 2,
+        );
+        const cellWidth = (layout.width - 24) / metrics.columns;
+        const grid = content.addComponent(Layout);
+        grid.type = Layout.Type.GRID;
+        grid.resizeMode = Layout.ResizeMode.NONE;
+        grid.startAxis = Layout.AxisDirection.HORIZONTAL;
+        grid.constraint = Layout.Constraint.FIXED_COL;
+        grid.constraintNum = metrics.columns;
+        grid.cellSize = new Size(cellWidth, metrics.rowHeight);
+        grid.spacingX = 0;
+        grid.spacingY = 0;
+        grid.padding = 0;
 
         for (const definition of visible) {
-            grid.appendChild(this.renderControl(definition));
+            this.renderControl(content, definition, cellWidth - 12, metrics.rowHeight - 8);
         }
 
-        card.appendChild(grid);
+        grid.updateLayout(true);
 
         if (metrics.pageCount > 1) {
-            card.appendChild(this.renderPager(metrics.pageCount));
+            this.renderPager(metrics, layout.width);
         }
-
-        parent.appendChild(card);
     }
 
     destroy(): void {
-        clearWebUiScope(PARAMETER_SCOPE);
         this.root.destroy();
         this.layout = null;
     }
 
-    private renderControl(definition: ParameterDefinition): HTMLElement {
-        const group = document.createElement('div');
-        group.className = 'cocoslab-parameter-control';
+    private renderControl(
+        parent: Node,
+        definition: ParameterDefinition,
+        width: number,
+        height: number,
+    ): void {
+        const group = createUiNode(parent, `Parameter:${definition.key}`, width, height);
 
         if (definition.kind === 'number') {
-            this.renderNumber(group, definition);
+            this.renderNumber(group, definition, width, height);
         } else if (definition.kind === 'toggle') {
-            this.renderToggle(group, definition);
+            this.renderToggle(group, definition, width);
         } else {
-            this.renderSelect(group, definition);
+            this.renderSelect(group, definition, width, height);
         }
-
-        return group;
     }
 
-    private renderNumber(group: HTMLElement, definition: NumberParameter): void {
-        const header = document.createElement('div');
-        header.className = 'cocoslab-parameter-header';
-        const label = document.createElement('span');
-        label.textContent = definition.label;
-        const value = document.createElement('span');
-        value.className = 'cocoslab-parameter-value';
-        value.textContent = this.controller.format(definition);
-        header.append(label, value);
+    private renderNumber(
+        group: Node,
+        definition: NumberParameter,
+        width: number,
+        height: number,
+    ): void {
+        const labelY = height / 2 - 18;
+        createLabel(
+            group,
+            definition.label,
+            width * 0.58,
+            24,
+            11,
+            nativeTheme.muted,
+            -width * 0.21,
+            labelY,
+            HorizontalTextAlignment.LEFT,
+        );
+        const valueNode = createLabel(
+            group,
+            this.controller.format(definition),
+            width * 0.4,
+            24,
+            12,
+            nativeTheme.ink,
+            width * 0.28,
+            labelY,
+            HorizontalTextAlignment.RIGHT,
+        );
+        const valueLabel = valueNode.getComponent(Label);
+        const range = Math.max(definition.step, definition.maximum - definition.minimum);
+        const initialProgress = (this.controller.getNumber(definition.key) - definition.minimum) / range;
 
-        const slider = document.createElement('wa-slider') as HTMLElement & {
-            value: number;
-            min: number;
-            max: number;
-            step: number;
-        };
-        slider.setAttribute('aria-label', definition.label);
-        slider.setAttribute('size', 's');
-        slider.min = definition.minimum;
-        slider.max = definition.maximum;
-        slider.step = definition.step;
-        slider.value = this.controller.getNumber(definition.key);
-        slider.addEventListener('input', () => {
-            if (!this.controller.set(definition.key, Number(slider.value))) {
-                return;
-            }
+        createNativeSlider(group, {
+            name: `${definition.key}:slider`,
+            width: Math.max(80, width - 6),
+            progress: initialProgress,
+            y: -height * 0.19,
+            onChange: (progress) => {
+                const next = this.valueFromProgress(definition, progress);
 
-            value.textContent = this.controller.format(definition);
-            this.onChange(definition.key);
+                if (!this.controller.set(definition.key, next)) {
+                    return;
+                }
+
+                if (valueLabel) {
+                    valueLabel.string = this.controller.format(definition);
+                }
+                this.onChange(definition.key);
+            },
         });
-
-        group.append(header, slider);
     }
 
     private renderToggle(
-        group: HTMLElement,
+        group: Node,
         definition: ParameterDefinition & { readonly kind: 'toggle' },
+        width: number,
     ): void {
-        const toggle = document.createElement('wa-switch') as HTMLElement & { checked: boolean };
-        toggle.setAttribute('size', 's');
-        toggle.textContent = definition.label;
-        toggle.checked = this.controller.getBoolean(definition.key);
-        toggle.addEventListener('change', () => {
-            if (!this.controller.set(definition.key, Boolean(toggle.checked))) {
-                return;
-            }
+        createLabel(
+            group,
+            definition.label,
+            width - 74,
+            32,
+            11,
+            nativeTheme.muted,
+            -28,
+            0,
+            HorizontalTextAlignment.LEFT,
+        );
+        createNativeToggle(group, {
+            name: `${definition.key}:toggle`,
+            checked: this.controller.getBoolean(definition.key),
+            x: width / 2 - 30,
+            onChange: (checked) => {
+                if (!this.controller.set(definition.key, checked)) {
+                    return;
+                }
 
-            this.onChange(definition.key);
+                this.onChange(definition.key);
+            },
         });
-        group.appendChild(toggle);
     }
 
     private renderSelect(
-        group: HTMLElement,
+        group: Node,
         definition: ParameterDefinition & { readonly kind: 'select' },
+        width: number,
+        height: number,
     ): void {
-        const header = document.createElement('div');
-        header.className = 'cocoslab-parameter-header';
-        const label = document.createElement('span');
-        label.textContent = definition.label;
-        const value = document.createElement('span');
-        value.className = 'cocoslab-parameter-value';
-        value.textContent = this.controller.format(definition);
-        header.append(label, value);
+        const labelY = height / 2 - 18;
+        createLabel(
+            group,
+            definition.label,
+            width - 8,
+            22,
+            11,
+            nativeTheme.muted,
+            0,
+            labelY,
+        );
+        const valueWidth = Math.max(58, width - 100);
 
-        const controls = document.createElement('div');
-        controls.style.display = 'flex';
-        controls.style.alignItems = 'center';
-        controls.style.justifyContent = 'center';
-        controls.style.gap = '8px';
-
-        createLibraryIconButton({
-            parent: controls,
+        createIconButton(group, {
+            name: `${definition.key}:previous`,
             icon: 'chevron-left',
-            label: `Previous ${definition.label}`,
+            x: -valueWidth / 2 - 26,
+            y: -height * 0.2,
+            tone: 'neutral',
             onPress: () => this.change(definition.key, () => {
                 this.controller.cycle(definition.key, -1);
             }),
         });
-        createLibraryIconButton({
-            parent: controls,
+        createLabel(
+            group,
+            this.controller.format(definition),
+            valueWidth,
+            36,
+            12,
+            nativeTheme.ink,
+            0,
+            -height * 0.2,
+        );
+        createIconButton(group, {
+            name: `${definition.key}:next`,
             icon: 'chevron-right',
-            label: `Next ${definition.label}`,
+            x: valueWidth / 2 + 26,
+            y: -height * 0.2,
+            tone: 'neutral',
             onPress: () => this.change(definition.key, () => {
                 this.controller.cycle(definition.key, 1);
             }),
         });
-
-        group.append(header, controls);
     }
 
-    private renderPager(pageCount: number): HTMLElement {
-        const pager = document.createElement('div');
-        pager.style.display = 'flex';
-        pager.style.alignItems = 'center';
-        pager.style.justifyContent = 'center';
-        pager.style.gap = '8px';
-        pager.style.gridColumn = '1 / -1';
+    private renderPager(metrics: PanelMetrics, width: number): void {
+        const y = -metrics.height / 2 + metrics.pagerHeight / 2 + 3;
 
-        createLibraryIconButton({
-            parent: pager,
-            icon: 'arrow-left',
-            label: 'Previous parameter page',
+        createIconButton(this.root, {
+            name: 'ParameterPagePrevious',
+            icon: 'chevron-left',
+            x: -54,
+            y,
+            tone: 'lilac',
             onPress: () => {
-                this.page = (this.page - 1 + pageCount) % pageCount;
+                this.page = (this.page - 1 + metrics.pageCount) % metrics.pageCount;
+                this.renderCurrent();
+            },
+        });
+        createLabel(
+            this.root,
+            `${this.page + 1} / ${metrics.pageCount}`,
+            58,
+            30,
+            11,
+            nativeTheme.muted,
+            0,
+            y,
+        );
+        createIconButton(this.root, {
+            name: 'ParameterPageNext',
+            icon: 'chevron-right',
+            x: 54,
+            y,
+            tone: 'lilac',
+            onPress: () => {
+                this.page = (this.page + 1) % metrics.pageCount;
                 this.renderCurrent();
             },
         });
 
-        const label = document.createElement('span');
-        label.className = 'cocoslab-navigation-title';
-        label.textContent = `${this.page + 1} / ${pageCount}`;
-        pager.appendChild(label);
+        createLabel(
+            this.root,
+            'PARAMETERS',
+            120,
+            28,
+            10,
+            nativeTheme.muted,
+            -width / 2 + 72,
+            y,
+            HorizontalTextAlignment.LEFT,
+        );
+    }
 
-        createLibraryIconButton({
-            parent: pager,
-            icon: 'arrow-right',
-            label: 'Next parameter page',
-            onPress: () => {
-                this.page = (this.page + 1) % pageCount;
-                this.renderCurrent();
-            },
-        });
-
-        return pager;
+    private valueFromProgress(definition: NumberParameter, progress: number): number {
+        const stepCount = Math.max(
+            1,
+            Math.round((definition.maximum - definition.minimum) / definition.step),
+        );
+        const stepIndex = Math.round(Math.max(0, Math.min(1, progress)) * stepCount);
+        return definition.minimum + stepIndex * definition.step;
     }
 
     private change(key: string, action: () => void): void {
@@ -271,7 +357,7 @@ export class ParameterPanel {
         const visibleCount = Math.min(itemCount, pageSize);
         const rows = Math.max(1, Math.ceil(visibleCount / columns));
         const rowHeight = 78;
-        const pagerHeight = pageCount > 1 ? 48 : 0;
+        const pagerHeight = pageCount > 1 ? 44 : 12;
 
         return {
             columns,
@@ -280,7 +366,7 @@ export class ParameterPanel {
             pageCount,
             rowHeight,
             pagerHeight,
-            height: rows * rowHeight + pagerHeight + 28,
+            height: rows * rowHeight + pagerHeight + 14,
         };
     }
 }
