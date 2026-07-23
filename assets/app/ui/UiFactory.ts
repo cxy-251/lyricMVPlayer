@@ -14,24 +14,24 @@ import {
 } from 'cc';
 
 export const palette = {
-    background: new Color(246, 246, 243, 255),
-    backgroundRaised: new Color(252, 252, 250, 255),
-    surface: new Color(255, 255, 253, 255),
-    surfaceStrong: new Color(232, 232, 228, 255),
-    surfaceSoft: new Color(249, 249, 247, 255),
-    border: new Color(211, 211, 205, 255),
-    borderStrong: new Color(181, 181, 174, 255),
-    hover: new Color(237, 237, 233, 255),
-    primary: new Color(22, 22, 21, 255),
-    primaryMuted: new Color(232, 232, 228, 255),
-    primaryText: new Color(255, 255, 253, 255),
-    text: new Color(24, 24, 23, 255),
-    muted: new Color(91, 91, 87, 255),
-    subtle: new Color(139, 139, 133, 255),
-    accent: new Color(45, 92, 214, 255),
-    accentSoft: new Color(225, 232, 249, 255),
-    warning: new Color(159, 101, 22, 255),
-    danger: new Color(177, 47, 47, 255),
+    background: new Color(242, 240, 234, 255),
+    backgroundRaised: new Color(246, 244, 239, 255),
+    surface: new Color(246, 244, 238, 255),
+    surfaceStrong: new Color(224, 223, 215, 255),
+    surfaceSoft: new Color(236, 233, 225, 255),
+    border: new Color(204, 203, 194, 255),
+    borderStrong: new Color(174, 177, 168, 255),
+    hover: new Color(222, 221, 212, 255),
+    primary: new Color(65, 74, 69, 255),
+    primaryMuted: new Color(218, 225, 219, 255),
+    primaryText: new Color(250, 249, 245, 255),
+    text: new Color(49, 54, 50, 255),
+    muted: new Color(103, 112, 106, 255),
+    subtle: new Color(132, 139, 134, 255),
+    accent: new Color(91, 122, 130, 255),
+    accentSoft: new Color(226, 235, 239, 255),
+    warning: new Color(145, 112, 62, 255),
+    danger: new Color(165, 72, 72, 255),
     clear: new Color(0, 0, 0, 0),
 } as const;
 
@@ -179,9 +179,9 @@ export function createButton(
 
     const paint = (hovered: boolean): void => {
         const background = variant === 'primary'
-            ? hovered ? new Color(42, 42, 40, 255) : palette.primary
+            ? hovered ? new Color(79, 88, 83, 255) : palette.primary
             : variant === 'danger'
-                ? hovered ? new Color(155, 38, 38, 255) : palette.danger
+                ? hovered ? new Color(145, 61, 61, 255) : palette.danger
                 : hovered
                     ? palette.hover
                     : variant === 'secondary'
