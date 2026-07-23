@@ -25,7 +25,7 @@ import {
 import { CursorSpaceModel } from './CursorSpaceModel';
 import type { CursorSpaceBounds } from './CursorSpaceTypes';
 
-const RENDER_STEP = 1 / 45;
+const RENDER_STEP = 1 / 30;
 
 const CURSOR_POINTS: ReadonlyArray<readonly [number, number]> = [
     [18, 0],
