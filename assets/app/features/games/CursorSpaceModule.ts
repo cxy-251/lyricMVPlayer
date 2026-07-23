@@ -25,6 +25,8 @@ import {
 import { CursorSpaceModel } from './CursorSpaceModel';
 import type { CursorSpaceBounds } from './CursorSpaceTypes';
 
+const RENDER_STEP = 1 / 45;
+
 const CURSOR_POINTS: ReadonlyArray<readonly [number, number]> = [
     [18, 0],
     [-7, 10],
@@ -45,7 +47,7 @@ const ENEMY_POINTS: ReadonlyArray<readonly [number, number]> = [
 class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'CursorSpace';
 
-    private readonly clock = new FixedStepClock(1 / 120, 12);
+    private readonly clock = new FixedStepClock(1 / 60, 6);
     private readonly model = new CursorSpaceModel();
     private readonly screenPoint = new Vec3();
     private readonly projectileColor = new Color(
@@ -70,7 +72,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         palette.primaryText.r,
         palette.primaryText.g,
         palette.primaryText.b,
-        255,
+        175,
     );
     private readonly starColor = new Color(
         palette.subtle.r,
@@ -85,11 +87,13 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private effectsGraphics: Graphics | null = null;
     private playerTrailGraphics: Graphics | null = null;
     private playerGraphics: Graphics | null = null;
+    private renderAccumulator = 0;
     private paused = false;
 
     protected onMount(): void {
         this.model.reset();
         this.clock.reset();
+        this.renderAccumulator = 0;
         this.bindPointerInput();
     }
 
@@ -97,6 +101,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.unbindPointerInput();
         this.model.clearTarget();
         this.clock.reset();
+        this.renderAccumulator = 0;
         this.starsGraphics = null;
         this.enemiesGraphics = null;
         this.projectilesGraphics = null;
@@ -110,11 +115,14 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             return;
         }
 
-        const steps = this.clock.advance(dt, 1, (step) => {
+        const frameDelta = Math.max(0, Math.min(0.1, dt));
+        const steps = this.clock.advance(frameDelta, 1, (step) => {
             this.model.step(step);
         });
+        this.renderAccumulator += frameDelta;
 
-        if (steps > 0) {
+        if (steps > 0 && this.renderAccumulator >= RENDER_STEP) {
+            this.renderAccumulator %= RENDER_STEP;
             this.drawFrame();
         }
     }
@@ -126,11 +134,13 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     resume(): void {
         this.paused = false;
+        this.renderAccumulator = RENDER_STEP;
     }
 
     reset(): void {
         this.model.reset();
         this.clock.reset();
+        this.renderAccumulator = 0;
         this.drawFrame();
     }
 
@@ -250,7 +260,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         graphics.fillColor = this.starColor;
         const width = bounds.right - bounds.left;
         const height = bounds.top - bounds.bottom;
-        const count = Math.max(18, Math.min(64, Math.round(width * height / 16_000)));
+        const count = Math.max(16, Math.min(48, Math.round(width * height / 18_000)));
 
         for (let index = 0; index < count; index += 1) {
             const xHash = ((index * 73 + 19) % 101) / 100;
@@ -281,8 +291,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         graphics.clear();
         graphics.fillColor = this.enemyColor;
-        graphics.strokeColor = palette.warning;
-        graphics.lineWidth = 1;
         let visible = false;
 
         for (const enemy of this.model.enemies) {
@@ -302,7 +310,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         if (visible) {
             graphics.fill();
-            graphics.stroke();
         }
     }
 
@@ -346,20 +353,18 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         graphics.clear();
+        graphics.strokeColor = this.effectColor;
         graphics.lineWidth = 1.5;
+        let visible = false;
 
         for (const effect of this.model.effects) {
             if (!effect.active) {
                 continue;
             }
 
-            const progress = Math.max(0, effect.life / Math.max(0.0001, effect.initialLife));
-            this.effectColor.a = Math.round(220 * progress);
-            graphics.strokeColor = this.effectColor;
-
+            visible = true;
             if (effect.kind === 'ring') {
                 graphics.circle(effect.position.x, effect.position.y, effect.radius);
-                graphics.stroke();
                 continue;
             }
 
@@ -377,6 +382,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 effect.position.x + directionX * effect.radius,
                 effect.position.y + directionY * effect.radius,
             );
+        }
+
+        if (visible) {
             graphics.stroke();
         }
     }
