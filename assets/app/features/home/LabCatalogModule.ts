@@ -34,9 +34,23 @@ export class LabCatalogModule implements InteractiveModule {
         this.context = context;
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, `LaboratoryCatalog:${this.labId}`, viewport.width, viewport.height);
-        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
-            this.render(snapshot);
-        });
+        let initializing = true;
+
+        try {
+            this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+                try {
+                    this.render(snapshot);
+                } catch (error) {
+                    if (initializing) {
+                        throw error;
+                    }
+
+                    context.reportError(error);
+                }
+            });
+        } finally {
+            initializing = false;
+        }
     }
 
     unmount(): void {
