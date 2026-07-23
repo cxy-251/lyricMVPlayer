@@ -104,6 +104,7 @@ export class NavigationService {
         this.disposed = true;
         this.disposal = (async () => {
             await this.transition.catch(() => undefined);
+            this.resetPointerCursor();
             this.route = { kind: 'home' };
             await this.moduleHost.dispose();
             this.shell.navigationBar.showHome();
@@ -127,6 +128,7 @@ export class NavigationService {
         module: InteractiveModule,
         destination: NavigationRoute,
     ): Promise<void> {
+        this.resetPointerCursor();
         this.shell.clearOverlay();
 
         try {
@@ -197,5 +199,11 @@ export class NavigationService {
                 throw new Error('Laboratory catalog is created by the application shell');
             },
         };
+    }
+
+    private resetPointerCursor(): void {
+        if (typeof document !== 'undefined' && document.body) {
+            document.body.style.cursor = 'default';
+        }
     }
 }
