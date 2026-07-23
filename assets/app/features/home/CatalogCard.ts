@@ -14,8 +14,6 @@ import {
     fillNode,
     nativeTheme,
     strokeNode,
-    surfaceColor,
-    type SurfaceTone,
 } from '../../ui/UiFactory';
 import {
     drawCatalogCover,
@@ -45,7 +43,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.y,
     );
     const card = createUiNode(hit, '__CardVisual', options.width, options.height);
-    fillNode(card, options.width, options.height, surfaceColor(toneForCover(options.cover)), radius);
+    fillNode(card, options.width, options.height, nativeTheme.card, radius);
     strokeNode(card, options.width, options.height, nativeTheme.border, radius, 1);
 
     const hoverLayer = createUiNode(card, 'HoverLayer', options.width - 2, options.height - 2);
@@ -53,7 +51,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         hoverLayer,
         options.width - 2,
         options.height - 2,
-        nativeTheme.light,
+        nativeTheme.cardHover,
         Math.max(12, radius - 1),
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
@@ -124,7 +122,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
 
         tween(card)
             .to(0.16, {
-                scale: next ? new Vec3(1.01, 1.01, 1) : new Vec3(1, 1, 1),
+                scale: next ? new Vec3(1.008, 1.008, 1) : new Vec3(1, 1, 1),
             })
             .start();
         tween(cover)
@@ -136,7 +134,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
             .to(0.16, { opacity: next ? 255 : 0 })
             .start();
         tween(hoverOpacity)
-            .to(0.16, { opacity: next ? 112 : 0 })
+            .to(0.16, { opacity: next ? 255 : 0 })
             .start();
     };
 
@@ -158,22 +156,6 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
     });
 
     return hit;
-}
-
-function toneForCover(cover: CatalogCoverKind): SurfaceTone {
-    if (cover === 'physics') {
-        return 'green';
-    }
-
-    if (cover === 'double-pendulum') {
-        return 'sand';
-    }
-
-    if (cover === 'parametric-curve') {
-        return 'blue';
-    }
-
-    return 'lilac';
 }
 
 function setPointerCursor(active: boolean): void {
