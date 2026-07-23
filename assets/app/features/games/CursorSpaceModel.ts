@@ -32,6 +32,7 @@ export class CursorSpaceModel {
     private bounds: CursorSpaceBounds = { ...DEFAULT_BOUNDS };
     private readonly target = { x: 0, y: 0 };
     private targetActive = false;
+    private aimTarget: CursorSpaceEnemy | null = null;
     private elapsed = 0;
     private enemySpawnRemaining = 0;
     private fireRemaining = 0;
@@ -104,6 +105,7 @@ export class CursorSpaceModel {
         this.enemySpawnRemaining = 0.45;
         this.fireRemaining = 0;
         this.targetActive = false;
+        this.aimTarget = null;
 
         for (const enemy of this.enemies) {
             enemy.active = false;
@@ -137,6 +139,7 @@ export class CursorSpaceModel {
 
         if (this.player.alive) {
             this.updatePlayer(dt);
+            this.updateAim(dt);
             this.updateAutomaticFire(dt);
         }
 
@@ -162,14 +165,9 @@ export class CursorSpaceModel {
                 const distance = Math.sqrt(distanceSquared);
                 const response = 1 - Math.exp(-this.config.playerFollowResponse * dt);
                 const maximumMovement = this.config.playerMaximumSpeed * dt;
-                const requestedMovement = distance * response;
-                const movement = Math.min(maximumMovement, requestedMovement);
+                const movement = Math.min(maximumMovement, distance * response);
                 player.position.x += dx / distance * movement;
                 player.position.y += dy / distance * movement;
-
-                if (distance > 2) {
-                    player.rotation = Math.atan2(dy, dx);
-                }
             }
         } else {
             const retention = Math.exp(-this.config.playerFollowResponse * dt);
@@ -187,9 +185,39 @@ export class CursorSpaceModel {
         this.clampPlayerToBounds();
     }
 
+    private updateAim(dt: number): void {
+        this.aimTarget = this.findNearestEnemy();
+        let desiredRotation: number | null = null;
+
+        if (this.aimTarget) {
+            desiredRotation = this.interceptRotation(this.aimTarget);
+        } else {
+            const speedSquared = this.player.velocity.x * this.player.velocity.x
+                + this.player.velocity.y * this.player.velocity.y;
+            if (speedSquared > 64) {
+                desiredRotation = Math.atan2(this.player.velocity.y, this.player.velocity.x);
+            }
+        }
+
+        if (desiredRotation === null) {
+            return;
+        }
+
+        const response = 1 - Math.exp(-this.config.playerAimResponse * dt);
+        const difference = this.wrapAngle(desiredRotation - this.player.rotation);
+        this.player.rotation = this.wrapAngle(this.player.rotation + difference * response);
+    }
+
     private updateAutomaticFire(dt: number): void {
         this.fireRemaining = Math.max(0, this.fireRemaining - dt);
-        if (this.fireRemaining > 0 || !this.hasEnemyAhead()) {
+        const target = this.aimTarget;
+        if (this.fireRemaining > 0 || !target?.active) {
+            return;
+        }
+
+        const desiredRotation = this.interceptRotation(target);
+        const error = Math.abs(this.wrapAngle(desiredRotation - this.player.rotation));
+        if (error > this.config.autoFireTolerance) {
             return;
         }
 
@@ -198,11 +226,9 @@ export class CursorSpaceModel {
         }
     }
 
-    private hasEnemyAhead(): boolean {
-        const headingX = Math.cos(this.player.rotation);
-        const headingY = Math.sin(this.player.rotation);
-        const maximumDistanceSquared = this.config.autoFireRange * this.config.autoFireRange;
-        const minimumDot = Math.cos(this.config.autoFireHalfAngle);
+    private findNearestEnemy(): CursorSpaceEnemy | null {
+        let nearest: CursorSpaceEnemy | null = null;
+        let nearestDistanceSquared = this.config.autoAimRange * this.config.autoAimRange;
 
         for (const enemy of this.enemies) {
             if (!enemy.active) {
@@ -212,19 +238,51 @@ export class CursorSpaceModel {
             const dx = enemy.position.x - this.player.position.x;
             const dy = enemy.position.y - this.player.position.y;
             const distanceSquared = dx * dx + dy * dy;
-
-            if (distanceSquared <= 0.0001 || distanceSquared > maximumDistanceSquared) {
-                continue;
-            }
-
-            const inverseDistance = 1 / Math.sqrt(distanceSquared);
-            const dot = (dx * headingX + dy * headingY) * inverseDistance;
-            if (dot >= minimumDot) {
-                return true;
+            if (distanceSquared < nearestDistanceSquared) {
+                nearest = enemy;
+                nearestDistanceSquared = distanceSquared;
             }
         }
 
-        return false;
+        return nearest;
+    }
+
+    private interceptRotation(enemy: CursorSpaceEnemy): number {
+        const relativeX = enemy.position.x - this.player.position.x;
+        const relativeY = enemy.position.y - this.player.position.y;
+        const inheritedX = this.player.velocity.x * this.config.inheritedVelocity;
+        const inheritedY = this.player.velocity.y * this.config.inheritedVelocity;
+        const velocityX = enemy.velocity.x - inheritedX;
+        const velocityY = enemy.velocity.y - inheritedY;
+        const speed = this.config.projectileSpeed;
+        const a = velocityX * velocityX + velocityY * velocityY - speed * speed;
+        const b = 2 * (relativeX * velocityX + relativeY * velocityY);
+        const c = relativeX * relativeX + relativeY * relativeY;
+        let time = 0;
+
+        if (Math.abs(a) < 0.0001) {
+            if (Math.abs(b) > 0.0001) {
+                time = Math.max(0, -c / b);
+            }
+        } else {
+            const discriminant = b * b - 4 * a * c;
+            if (discriminant >= 0) {
+                const root = Math.sqrt(discriminant);
+                const first = (-b - root) / (2 * a);
+                const second = (-b + root) / (2 * a);
+                if (first > 0 && second > 0) {
+                    time = Math.min(first, second);
+                } else {
+                    time = Math.max(first, second, 0);
+                }
+            }
+        }
+
+        time = Math.min(time, this.config.projectileLife);
+        return Math.atan2(
+            relativeY + velocityY * time,
+            relativeX + velocityX * time,
+        );
     }
 
     private spawnProjectile(): boolean {
@@ -334,9 +392,9 @@ export class CursorSpaceModel {
                 targetY - enemy.position.y,
                 targetX - enemy.position.x,
             );
-            const rotationDifference = this.wrapAngle(desiredRotation - enemy.rotation);
+            const difference = this.wrapAngle(desiredRotation - enemy.rotation);
             const maximumTurn = this.config.enemyTurnRate * dt;
-            enemy.rotation += this.clamp(rotationDifference, -maximumTurn, maximumTurn);
+            enemy.rotation += this.clamp(difference, -maximumTurn, maximumTurn);
             enemy.velocity.x = Math.cos(enemy.rotation) * speed;
             enemy.velocity.y = Math.sin(enemy.rotation) * speed;
             enemy.position.x += enemy.velocity.x * dt;
@@ -373,6 +431,9 @@ export class CursorSpaceModel {
 
                 projectile.active = false;
                 enemy.active = false;
+                if (this.aimTarget === enemy) {
+                    this.aimTarget = null;
+                }
                 this.spawnBurst(enemy.position.x, enemy.position.y, false);
                 break;
             }
@@ -404,6 +465,7 @@ export class CursorSpaceModel {
         this.player.respawnRemaining = this.config.respawnDelay;
         this.player.velocity.x = 0;
         this.player.velocity.y = 0;
+        this.aimTarget = null;
         this.spawnBurst(this.player.position.x, this.player.position.y, true);
     }
 
@@ -424,7 +486,6 @@ export class CursorSpaceModel {
         this.player.position.y = spawn.y;
         this.player.velocity.x = 0;
         this.player.velocity.y = 0;
-        this.player.rotation = 0;
         this.player.alive = true;
         this.player.invulnerableRemaining = this.config.invulnerabilityDuration;
         this.clearEnemiesNear(spawn.x, spawn.y, this.config.respawnClearRadius);
@@ -498,7 +559,7 @@ export class CursorSpaceModel {
             ring.radius = playerBurst ? 8 : 5;
         }
 
-        const fragmentCount = playerBurst ? 14 : 7;
+        const fragmentCount = playerBurst ? 10 : 5;
         for (let index = 0; index < fragmentCount; index += 1) {
             const fragment = this.effects.find((effect) => !effect.active);
             if (!fragment) {
