@@ -1,5 +1,4 @@
 import {
-    Color,
     HorizontalTextAlignment,
     Node,
 } from 'cc';
@@ -11,8 +10,8 @@ import type {
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
+    createButton,
     createLabel,
-    createUiNode,
     palette,
     resizeNode,
 } from '../ui/UiFactory';
@@ -105,69 +104,68 @@ export class NavigationBar {
 
         const { width, height, breakpoint, safeInsets } = this.viewport;
         const compact = breakpoint === 'compact';
-        const controlHeight = compact ? 42 : 44;
+        const controlSize = 44;
         const topMargin = compact ? 10 : 14;
         const contentWidth = width - safeInsets.left - safeInsets.right;
         const centerX = (safeInsets.left - safeInsets.right) / 2;
-        const y = height / 2 - safeInsets.top - topMargin - controlHeight / 2;
+        const y = height / 2 - safeInsets.top - topMargin - controlSize / 2;
 
         this.root.setPosition(centerX, y, 0);
-        resizeNode(this.root, contentWidth, controlHeight);
+        resizeNode(this.root, contentWidth, controlSize);
 
         const sidePadding = compact ? 10 : 18;
-        const backWidth = compact ? 42 : 46;
-        const backX = -contentWidth / 2 + sidePadding + backWidth / 2;
+        const backX = -contentWidth / 2 + sidePadding + controlSize / 2;
+        createButton(this.root, {
+            name: 'NavigationBack',
+            text: '←',
+            width: 38,
+            height: 38,
+            x: backX,
+            variant: 'ghost',
+            shape: 'circle',
+            fontSize: 21,
+            onPress: state.handlers.onBack,
+        });
 
-        this.createTextAction(
-            'NavigationBack',
-            '←',
-            backWidth,
-            controlHeight,
-            backX,
-            0,
-            compact ? 22 : 20,
-            state.handlers.onBack,
-        );
-
-        const actionWidth = compact ? 46 : 58;
-        const actionGap = compact ? 4 : 8;
         const hasPause = state.capabilities.includes('pause');
         const hasReset = state.capabilities.includes('reset');
+        const gap = 8;
         let rightCursor = contentWidth / 2 - sidePadding;
 
         if (hasReset && state.handlers.onReset) {
-            rightCursor -= actionWidth / 2;
-            this.createTextAction(
-                'NavigationReset',
-                compact ? 'R' : 'RESET',
-                actionWidth,
-                controlHeight,
-                rightCursor,
-                0,
-                compact ? 12 : 10,
-                state.handlers.onReset,
-            );
-            rightCursor -= actionWidth / 2 + actionGap;
+            rightCursor -= controlSize / 2;
+            createButton(this.root, {
+                name: 'NavigationReset',
+                text: '↺',
+                width: 38,
+                height: 38,
+                x: rightCursor,
+                variant: 'ghost',
+                shape: 'circle',
+                fontSize: 18,
+                onPress: state.handlers.onReset,
+            });
+            rightCursor -= controlSize / 2 + gap;
         }
 
         if (hasPause && state.handlers.onTogglePause) {
-            rightCursor -= actionWidth / 2;
-            this.createTextAction(
-                'NavigationPause',
-                compact ? (state.paused ? '▶' : 'Ⅱ') : (state.paused ? 'PLAY' : 'PAUSE'),
-                actionWidth,
-                controlHeight,
-                rightCursor,
-                0,
-                compact ? 15 : 10,
-                state.handlers.onTogglePause,
-                state.paused ? new Color(45, 92, 214, 255) : palette.muted,
-            );
+            rightCursor -= controlSize / 2;
+            createButton(this.root, {
+                name: 'NavigationPause',
+                text: state.paused ? '▶' : 'Ⅱ',
+                width: 38,
+                height: 38,
+                x: rightCursor,
+                variant: state.paused ? 'secondary' : 'ghost',
+                shape: 'circle',
+                fontSize: state.paused ? 14 : 16,
+                onPress: state.handlers.onTogglePause,
+            });
         }
 
-        const titleLeft = backX + backWidth / 2 + (compact ? 4 : 8);
+        const titleLeft = backX + controlSize / 2 + (compact ? 4 : 8);
         const titleRight = hasPause || hasReset
-            ? rightCursor - actionWidth / 2 - 12
+            ? rightCursor - controlSize / 2 - 12
             : contentWidth / 2 - sidePadding;
         const titleWidth = Math.max(80, titleRight - titleLeft);
 
@@ -175,29 +173,12 @@ export class NavigationBar {
             this.root,
             state.title,
             titleWidth,
-            controlHeight,
+            controlSize,
             compact ? 12 : 13,
             palette.muted,
             titleLeft + titleWidth / 2,
             0,
             HorizontalTextAlignment.LEFT,
         );
-    }
-
-    private createTextAction(
-        name: string,
-        text: string,
-        width: number,
-        height: number,
-        x: number,
-        y: number,
-        fontSize: number,
-        onPress: () => void,
-        color = palette.text,
-    ): Node {
-        const action = createUiNode(this.root, name, width, height, x, y);
-        createLabel(action, text, width, height, fontSize, color);
-        action.on(Node.EventType.TOUCH_END, onPress);
-        return action;
     }
 }
