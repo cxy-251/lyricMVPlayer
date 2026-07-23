@@ -13,8 +13,14 @@ import {
     fillNode,
     palette,
 } from '../../ui/UiFactory';
+import {
+    clearWebUiScope,
+    getWebUiScope,
+} from '../../ui/WebUiKit';
 import { createCatalogCard } from './CatalogCard';
 import type { CatalogCoverKind } from './CatalogCovers';
+
+const HOME_CATALOG_SCOPE = 'home-catalog';
 
 export class HomeModule implements InteractiveModule {
     private root: Node | null = null;
@@ -36,6 +42,7 @@ export class HomeModule implements InteractiveModule {
     unmount(): void {
         this.unsubscribeViewport?.();
         this.unsubscribeViewport = null;
+        clearWebUiScope(HOME_CATALOG_SCOPE);
         this.root?.destroy();
         this.root = null;
         this.context = null;
@@ -50,6 +57,7 @@ export class HomeModule implements InteractiveModule {
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
+        const webParent = getWebUiScope(HOME_CATALOG_SCOPE);
 
         const labs = this.registry.labs();
         const compact = viewport.breakpoint === 'compact';
@@ -112,6 +120,7 @@ export class HomeModule implements InteractiveModule {
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
+                webParent,
                 onOpen: () => {
                     void this.context?.openLab(lab.id);
                 },
