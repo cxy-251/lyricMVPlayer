@@ -1,4 +1,10 @@
-import { BlockInputEvents, Layers, Node } from 'cc';
+import {
+    BlockInputEvents,
+    Canvas,
+    Color,
+    Layers,
+    Node,
+} from 'cc';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
@@ -26,6 +32,7 @@ export class AppShell {
         viewportService: ViewportService,
     ) {
         this.viewport = viewportService.current;
+        this.configureCanvas();
         this.root = this.createRoot();
         this.contentLayer = this.createLayer('ContentLayer', 0);
         this.navigationLayer = this.createLayer('NavigationLayer', 1);
@@ -80,6 +87,15 @@ export class AppShell {
         this.root.destroy();
     }
 
+    private configureCanvas(): void {
+        const canvas = this.canvasNode.getComponent(Canvas);
+        const camera = canvas?.cameraComponent;
+
+        if (camera) {
+            camera.clearColor = new Color(247, 246, 242, 255);
+        }
+    }
+
     private createRoot(): Node {
         const existing = this.canvasNode.getChildByName('AppShell');
         const root = existing ?? new Node('AppShell');
@@ -106,6 +122,11 @@ export class AppShell {
 
     private applyViewport(): void {
         const { width, height } = this.viewport;
+
+        // Boot.scene stores a 1280 x 720 Canvas at (640, 360). Keep the scene
+        // Canvas synchronized with the live design resolution on every resize.
+        resizeNode(this.canvasNode, width, height);
+        this.canvasNode.setPosition(width / 2, height / 2, 0);
         resizeNode(this.root, width, height);
 
         for (const layer of [this.contentLayer, this.navigationLayer, this.overlayLayer]) {
