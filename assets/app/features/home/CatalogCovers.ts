@@ -4,12 +4,15 @@ import { createUiNode, palette } from '../../ui/UiFactory';
 export type CatalogCoverKind =
     | 'mathematics'
     | 'physics'
+    | 'games'
     | 'parametric-curve'
-    | 'double-pendulum';
+    | 'double-pendulum'
+    | 'cursor-space';
 
 const coverAccent = new Color(126, 158, 143, 235);
 const coverAccentSoft = new Color(126, 158, 143, 125);
 const coverAccentStrong = new Color(142, 174, 159, 255);
+const coverWarning = new Color(181, 149, 95, 220);
 
 export function drawCatalogCover(
     parent: Node,
@@ -23,10 +26,14 @@ export function drawCatalogCover(
         drawMathematics(root, width, height);
     } else if (kind === 'physics') {
         drawPhysics(root, width, height);
+    } else if (kind === 'games') {
+        drawCursorSpace(root, width, height, false);
     } else if (kind === 'parametric-curve') {
         drawParametricCurve(root, width, height);
-    } else {
+    } else if (kind === 'double-pendulum') {
         drawDoublePendulum(root, width, height);
+    } else {
+        drawCursorSpace(root, width, height, true);
     }
 
     return root;
@@ -108,6 +115,89 @@ function drawPhysics(parent: Node, width: number, height: number): void {
         Math.max(5.5, unit * 0.021),
     );
     movingPoint.fill();
+}
+
+function drawCursorSpace(
+    parent: Node,
+    width: number,
+    height: number,
+    showProjectiles: boolean,
+): void {
+    const unit = Math.max(1, Math.min(width, height));
+    const scale = unit * 0.018;
+    const shipX = -unit * 0.12;
+    const shipY = -unit * 0.03;
+    const rotation = 0.42;
+    const cosine = Math.cos(rotation);
+    const sine = Math.sin(rotation);
+    const pointer = [
+        [16, 0],
+        [-9, 10],
+        [-5, 2],
+        [-13, -3],
+        [-11, -7],
+        [-3, -2],
+        [-3, -10],
+    ] as const;
+    const ship = createGraphics(parent, 'CursorShip', width, height);
+    ship.fillColor = coverAccentStrong;
+    ship.strokeColor = palette.text;
+    ship.lineWidth = Math.max(1.2, unit * 0.0045);
+
+    for (let index = 0; index < pointer.length; index += 1) {
+        const [localX, localY] = pointer[index];
+        const x = shipX + (localX * cosine - localY * sine) * scale;
+        const y = shipY + (localX * sine + localY * cosine) * scale;
+
+        if (index === 0) {
+            ship.moveTo(x, y);
+        } else {
+            ship.lineTo(x, y);
+        }
+    }
+
+    const [firstX, firstY] = pointer[0];
+    ship.lineTo(
+        shipX + (firstX * cosine - firstY * sine) * scale,
+        shipY + (firstX * sine + firstY * cosine) * scale,
+    );
+    ship.fill();
+    ship.stroke();
+
+    const enemies = createGraphics(parent, 'CursorEnemies', width, height);
+    enemies.fillColor = coverWarning;
+    const enemyRadius = Math.max(4, unit * 0.022);
+    const enemyPositions = [
+        [unit * 0.23, unit * 0.19],
+        [unit * 0.29, -unit * 0.15],
+        [-unit * 0.31, unit * 0.23],
+    ] as const;
+
+    for (const [x, y] of enemyPositions) {
+        enemies.moveTo(x + enemyRadius, y);
+        enemies.lineTo(x - enemyRadius * 0.75, y + enemyRadius * 0.68);
+        enemies.lineTo(x - enemyRadius * 0.42, y);
+        enemies.lineTo(x - enemyRadius * 0.75, y - enemyRadius * 0.68);
+        enemies.lineTo(x + enemyRadius, y);
+    }
+
+    enemies.fill();
+
+    if (!showProjectiles) {
+        return;
+    }
+
+    const projectiles = createGraphics(parent, 'CursorProjectiles', width, height);
+    projectiles.strokeColor = palette.text;
+    projectiles.lineWidth = Math.max(1.4, unit * 0.005);
+
+    for (let index = 0; index < 3; index += 1) {
+        const offset = index * unit * 0.075;
+        projectiles.moveTo(shipX + unit * 0.12 + offset, shipY + unit * 0.075 + offset * 0.22);
+        projectiles.lineTo(shipX + unit * 0.17 + offset, shipY + unit * 0.095 + offset * 0.22);
+    }
+
+    projectiles.stroke();
 }
 
 function drawParametricCurve(parent: Node, width: number, height: number): void {
