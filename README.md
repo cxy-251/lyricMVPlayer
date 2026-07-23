@@ -4,12 +4,33 @@ Cocos Lab is a cross-platform collection of code-generated interactive works bui
 
 Visible content is generated at runtime with TypeScript, geometry and shaders.
 
+## Catalog hierarchy
+
+```text
+Home
+→ Laboratory catalog
+→ Module catalog inside one laboratory
+→ Interactive module
+```
+
+The home page is generated from registered, visible modules. A laboratory appears only when it already contains at least one working module. Internal system modules never appear in the user catalog.
+
+Current visible structure:
+
+```text
+Mathematics Laboratory
+└── Parametric Curve Lab
+
+Physics Laboratory
+└── Double Pendulum Lab
+```
+
 ## Architecture
 
 - `Bootstrap` connects the active scene Canvas to the persistent application core.
 - `AppRoot` owns cross-scene services and module registration.
 - `AppShell` separates content, navigation and overlay layers.
-- `NavigationService` serializes transitions.
+- `NavigationService` manages home, laboratory and module routes.
 - `ModuleHost` owns module update, pause, reset, cleanup and runtime isolation.
 - `ResponsiveModule` is the standard base for full-screen responsive works.
 - `ParameterController` and `ParameterPanel` provide validated, persistent controls.
@@ -27,12 +48,6 @@ Feature Modules
 
 Feature modules depend on application contracts and reusable infrastructure, never on other feature modules.
 
-## Current modules
-
-- **Parametric Curve Lab** — animated Lissajous curves with persistent parameters.
-- **Double Pendulum Lab** — chaotic two-link dynamics using fixed-step RK4 integration.
-- **Architecture Check** — verifies the application shell and lifecycle path.
-
 ## Run
 
 1. Pull the `cocoslab` branch.
@@ -43,7 +58,7 @@ Feature modules depend on application contracts and reusable infrastructure, nev
 
 Keyboard actions:
 
-- `Escape`: return to the catalog
+- `Escape`: return one navigation level
 - `Space`: pause or resume the active module
 - `R`: reset the active module
 
