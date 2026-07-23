@@ -7,21 +7,16 @@ import type {
 } from '../../contracts/InteractiveModule';
 import type { ModuleRegistry } from '../../core/ModuleRegistry';
 import type { ViewportSnapshot } from '../../services/ViewportService';
+import { createIconButton, nativeTheme } from '../../ui/NativeUiKit';
 import {
     clearNode,
+    createLabel,
     createUiNode,
     fillNode,
     palette,
 } from '../../ui/UiFactory';
-import { createLibraryIconButton } from '../../ui/WebIcons';
-import {
-    clearWebUiScope,
-    getWebUiScope,
-} from '../../ui/WebUiKit';
 import { createCatalogCard } from './CatalogCard';
 import type { CatalogCoverKind } from './CatalogCovers';
-
-const LAB_CATALOG_SCOPE = 'lab-catalog';
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -47,7 +42,6 @@ export class LabCatalogModule implements InteractiveModule {
     unmount(): void {
         this.unsubscribeViewport?.();
         this.unsubscribeViewport = null;
-        clearWebUiScope(LAB_CATALOG_SCOPE);
         this.root?.destroy();
         this.root = null;
         this.context = null;
@@ -72,7 +66,6 @@ export class LabCatalogModule implements InteractiveModule {
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
-        const webParent = getWebUiScope(LAB_CATALOG_SCOPE);
 
         const singleModule = modules.length === 1;
         const columns = compact
@@ -127,58 +120,48 @@ export class LabCatalogModule implements InteractiveModule {
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
-                webParent,
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
             });
         }
 
-        if (pageCount > 1 && webParent) {
-            this.renderPager(webParent, viewport, pageCount);
+        if (pageCount > 1) {
+            this.renderPager(root, viewport, centerX, pageCount);
         }
     }
 
     private renderPager(
-        parent: HTMLElement,
+        root: Node,
         viewport: ViewportSnapshot,
+        centerX: number,
         pageCount: number,
     ): void {
-        const pager = document.createElement('div');
-        pager.className = 'cocoslab-navigation';
-        pager.style.left = '50%';
-        pager.style.bottom = `${viewport.safeInsets.bottom + 8}px`;
-        pager.style.width = '156px';
-        pager.style.height = '44px';
-        pager.style.transform = 'translateX(-50%)';
-        pager.style.justifyContent = 'center';
+        const y = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
 
-        createLibraryIconButton({
-            parent: pager,
-            icon: 'arrow-left',
-            label: 'Previous page',
+        createIconButton(root, {
+            name: 'LaboratoryCatalogPrevious',
+            icon: 'chevron-left',
+            x: centerX - 54,
+            y,
+            tone: 'lilac',
             onPress: () => {
                 this.page = (this.page - 1 + pageCount) % pageCount;
                 this.render(viewport);
             },
         });
-
-        const count = document.createElement('span');
-        count.className = 'cocoslab-navigation-title';
-        count.textContent = `${this.page + 1} / ${pageCount}`;
-        pager.appendChild(count);
-
-        createLibraryIconButton({
-            parent: pager,
-            icon: 'arrow-right',
-            label: 'Next page',
+        createLabel(root, `${this.page + 1}/${pageCount}`, 48, 32, 11, nativeTheme.muted, centerX, y);
+        createIconButton(root, {
+            name: 'LaboratoryCatalogNext',
+            icon: 'chevron-right',
+            x: centerX + 54,
+            y,
+            tone: 'lilac',
             onPress: () => {
                 this.page = (this.page + 1) % pageCount;
                 this.render(viewport);
             },
         });
-
-        parent.appendChild(pager);
     }
 
     private coverForModule(definition: ModuleDefinition): CatalogCoverKind {
