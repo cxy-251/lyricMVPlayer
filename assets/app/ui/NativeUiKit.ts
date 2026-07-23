@@ -4,11 +4,12 @@ import {
     Graphics,
     Node,
     Slider,
-    Sprite,
     Toggle,
 } from 'cc';
 import {
     createLabel,
+    createSlider,
+    createToggle,
     createUiNode,
     fillNode,
     strokeNode,
@@ -102,7 +103,12 @@ export function createIconButton(
     };
 
     paint(false);
-    createNativeIcon(visual, options.icon, 18, options.selected ? nativeTheme.accent : nativeTheme.ink);
+    createNativeIcon(
+        visual,
+        options.icon,
+        18,
+        options.selected ? nativeTheme.accent : nativeTheme.ink,
+    );
 
     const button = root.addComponent(Button);
     button.target = visual;
@@ -193,37 +199,13 @@ export function createNativeToggle(
         readonly onChange: (checked: boolean) => void;
     },
 ): Toggle {
-    const root = createUiNode(parent, options.name, 54, 44, options.x ?? 0, options.y ?? 0);
-    const track = createUiNode(root, '__ToggleTrack', 44, 26);
-    const knob = createUiNode(track, '__ToggleKnob', 20, 20);
-
-    const paint = (checked: boolean): void => {
-        fillNode(
-            track,
-            44,
-            26,
-            checked ? nativeTheme.controlSelected : nativeTheme.control,
-            13,
-        );
-        strokeNode(track, 44, 26, nativeTheme.border, 13, 1);
-        fillNode(knob, 20, 20, checked ? nativeTheme.accent : nativeTheme.light, 10);
-        knob.setPosition(checked ? 9 : -9, 0, 0);
-    };
-
-    const toggle = root.addComponent(Toggle);
-    toggle.target = track;
-    toggle.transition = Button.Transition.SCALE;
-    toggle.zoomScale = 0.96;
-    toggle.duration = 0.08;
-    toggle.setIsCheckedWithoutNotify(options.checked);
-    paint(options.checked);
-    root.on('toggle', () => {
-        paint(toggle.isChecked);
-        options.onChange(toggle.isChecked);
+    return createToggle(parent, {
+        name: options.name,
+        checked: options.checked,
+        x: options.x,
+        y: options.y,
+        onChange: options.onChange,
     });
-    root.on(Node.EventType.MOUSE_ENTER, () => setPointerCursor(true));
-    root.on(Node.EventType.MOUSE_LEAVE, () => setPointerCursor(false));
-    return toggle;
 }
 
 export function createNativeSlider(
@@ -237,37 +219,14 @@ export function createNativeSlider(
         readonly onChange: (progress: number) => void;
     },
 ): Slider {
-    const root = createUiNode(parent, options.name, options.width, 44, options.x ?? 0, options.y ?? 0);
-    const trackWidth = Math.max(24, options.width - 20);
-    const track = createUiNode(root, '__SliderTrack', trackWidth, 5);
-    fillNode(track, trackWidth, 5, nativeTheme.control, 2.5);
-    const progress = createUiNode(root, '__SliderProgress', 1, 5, -trackWidth / 2, 0);
-    const handle = createUiNode(root, '__SliderHandle', 22, 22);
-    const handleSprite = handle.addComponent(Sprite);
-    const handleVisual = createUiNode(handle, '__SliderHandleVisual', 22, 22);
-    fillNode(handleVisual, 22, 22, nativeTheme.light, 11);
-    strokeNode(handleVisual, 22, 22, nativeTheme.borderStrong, 11, 1);
-
-    const slider = root.addComponent(Slider);
-    slider.handle = handleSprite;
-    slider.direction = Slider.Direction.Horizontal;
-
-    const paint = (): void => {
-        const value = Math.max(0, Math.min(1, slider.progress));
-        const filledWidth = Math.max(1, trackWidth * value);
-        fillNode(progress, filledWidth, 5, nativeTheme.accent, 2.5);
-        progress.setPosition(-trackWidth / 2 + filledWidth / 2, 0, 0);
-    };
-
-    slider.progress = Math.max(0, Math.min(1, options.progress));
-    paint();
-    root.on('slide', () => {
-        paint();
-        options.onChange(slider.progress);
+    return createSlider(parent, {
+        name: options.name,
+        width: options.width,
+        progress: options.progress,
+        x: options.x,
+        y: options.y,
+        onChange: options.onChange,
     });
-    root.on(Node.EventType.MOUSE_ENTER, () => setPointerCursor(true));
-    root.on(Node.EventType.MOUSE_LEAVE, () => setPointerCursor(false));
-    return slider;
 }
 
 function drawNativeIcon(node: Node, icon: NativeIconName, size: number, color: Color): void {
@@ -277,24 +236,23 @@ function drawNativeIcon(node: Node, icon: NativeIconName, size: number, color: C
     graphics.strokeColor = color;
     graphics.fillColor = color;
     graphics.lineWidth = Math.max(1.5, size * 0.1);
-    graphics.lineCap = Graphics.LineCap.ROUND;
-    graphics.lineJoin = Graphics.LineJoin.ROUND;
 
     if (icon === 'play') {
-        graphics.moveTo(-unit * 0.32, unit * 0.52);
+        const startX = -unit * 0.32;
+        const startY = unit * 0.52;
+        graphics.moveTo(startX, startY);
         graphics.lineTo(unit * 0.5, 0);
-        graphics.lineTo(-unit * 0.32, -unit * 0.52);
-        graphics.close();
+        graphics.lineTo(startX, -unit * 0.52);
+        graphics.lineTo(startX, startY);
         graphics.fill();
         return;
     }
 
     if (icon === 'pause') {
-        const barWidth = size * 0.14;
+        const barWidth = size * 0.15;
         const barHeight = size * 0.68;
-        graphics.roundRect(-unit * 0.34, -barHeight / 2, barWidth, barHeight, barWidth / 2);
-        graphics.roundRect(unit * 0.2, -barHeight / 2, barWidth, barHeight, barWidth / 2);
-        graphics.fill();
+        graphics.fillRect(-unit * 0.34, -barHeight / 2, barWidth, barHeight);
+        graphics.fillRect(unit * 0.19, -barHeight / 2, barWidth, barHeight);
         return;
     }
 
