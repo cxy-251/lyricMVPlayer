@@ -22,7 +22,7 @@ Mathematics Laboratory
 └── Parametric Curve Lab
 
 Physics Laboratory
-└── Double Pendulum Lab
+└── Double Pendulum
 ```
 
 ## Architecture
@@ -48,6 +48,10 @@ Feature Modules
 
 Feature modules depend on application contracts and reusable infrastructure, never on other feature modules.
 
+## Physics modules
+
+Physics experiments separate the physical model from rendering, use SI units, declare their assumptions and expose numerical diagnostics. See [`docs/PHYSICS_LAB_STANDARD.md`](docs/PHYSICS_LAB_STANDARD.md).
+
 ## Run
 
 1. Pull the `cocoslab` branch.
@@ -60,7 +64,7 @@ Keyboard actions:
 
 - `Escape`: return one navigation level
 - `Space`: pause or resume the active module
-- `R`: reset the active module
+- `R`: reset the active module state
 
 Creator-generated `.meta` files must be committed after importing new source files.
 
