@@ -95,7 +95,15 @@ export function normalizeParameterValue(
     }
 
     const clamped = Math.max(definition.minimum, Math.min(definition.maximum, value));
-    const steps = Math.round((clamped - definition.minimum) / definition.step);
-    const snapped = definition.minimum + steps * definition.step;
-    return Number(snapped.toFixed(definition.decimals ?? 6));
+    const maximumStepIndex = Math.max(
+        0,
+        Math.floor((definition.maximum - definition.minimum) / definition.step + 1e-9),
+    );
+    const requestedStepIndex = Math.round(
+        (clamped - definition.minimum) / definition.step,
+    );
+    const stepIndex = Math.max(0, Math.min(maximumStepIndex, requestedStepIndex));
+    const snapped = definition.minimum + stepIndex * definition.step;
+    const bounded = Math.max(definition.minimum, Math.min(definition.maximum, snapped));
+    return Number(bounded.toFixed(definition.decimals ?? 6));
 }
