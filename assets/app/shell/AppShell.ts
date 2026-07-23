@@ -6,6 +6,7 @@ import {
     Node,
 } from 'cc';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
+import { createTextButton, nativeTheme } from '../ui/NativeUiKit';
 import {
     clearNode,
     createLabel,
@@ -14,13 +15,7 @@ import {
     palette,
     resizeNode,
 } from '../ui/UiFactory';
-import {
-    clearWebUiScope,
-    getWebUiScope,
-} from '../ui/WebUiKit';
 import { NavigationBar } from './NavigationBar';
-
-const ERROR_SCOPE = 'error-overlay';
 
 export class AppShell {
     readonly root: Node;
@@ -57,7 +52,6 @@ export class AppShell {
 
     clearOverlay(): void {
         clearNode(this.overlayLayer);
-        clearWebUiScope(ERROR_SCOPE);
         this.overlayLayer.active = false;
     }
 
@@ -68,39 +62,28 @@ export class AppShell {
             ?? this.overlayLayer.addComponent(BlockInputEvents);
 
         const { width, height, safeInsets } = this.viewport;
-        fillNode(this.overlayLayer, width, height, palette.background);
+        fillNode(this.overlayLayer, width, height, nativeTheme.background);
 
         const panelWidth = Math.min(620, width - safeInsets.left - safeInsets.right - 40);
         const panelHeight = 280;
         const panel = createUiNode(this.overlayLayer, 'ErrorPanel', panelWidth, panelHeight);
-        fillNode(panel, panelWidth, panelHeight, palette.surfaceSoft, 20);
+        fillNode(panel, panelWidth, panelHeight, nativeTheme.lilac, 22);
+
         createLabel(panel, 'MODULE ERROR', panelWidth - 48, 44, 26, palette.danger, 0, 82);
-        createLabel(panel, message, panelWidth - 64, 94, 17, palette.text, 0, 12);
-
-        const scope = getWebUiScope(ERROR_SCOPE);
-
-        if (!scope) {
-            return;
-        }
-
-        const button = document.createElement('wa-button') as HTMLElement;
-        button.setAttribute('appearance', 'filled');
-        button.setAttribute('variant', 'brand');
-        button.setAttribute('size', 'm');
-        button.textContent = 'Return home';
-        button.style.position = 'absolute';
-        button.style.left = '50%';
-        button.style.top = `${Math.round(height / 2 + 62)}px`;
-        button.style.transform = 'translateX(-50%)';
-        button.style.pointerEvents = 'auto';
-        button.addEventListener('click', onHome);
-        scope.appendChild(button);
+        createLabel(panel, message, panelWidth - 64, 94, 17, nativeTheme.ink, 0, 12);
+        createTextButton(panel, {
+            name: 'ErrorHome',
+            text: 'Return home',
+            width: 168,
+            y: -82,
+            tone: 'blue',
+            onPress: onHome,
+        });
     }
 
     dispose(): void {
         this.unsubscribeViewport();
         this.navigationBar.dispose();
-        clearWebUiScope(ERROR_SCOPE);
         this.root.destroy();
     }
 
@@ -109,7 +92,7 @@ export class AppShell {
         const camera = canvas?.cameraComponent;
 
         if (camera) {
-            camera.clearColor = new Color(242, 241, 237, 255);
+            camera.clearColor = new Color(242, 240, 234, 255);
         }
     }
 
@@ -140,8 +123,6 @@ export class AppShell {
     private applyViewport(): void {
         const { width, height } = this.viewport;
 
-        // Boot.scene stores a 1280 x 720 Canvas at (640, 360). Keep the scene
-        // Canvas synchronized with the live design resolution on every resize.
         resizeNode(this.canvasNode, width, height);
         this.canvasNode.setPosition(width / 2, height / 2, 0);
         resizeNode(this.root, width, height);
