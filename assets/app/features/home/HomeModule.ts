@@ -73,9 +73,9 @@ export class HomeModule implements InteractiveModule {
         const columns = compact ? 1 : Math.min(2, labs.length);
         const rows = Math.ceil(labs.length / columns);
         const gap = compact ? 14 : 34;
-        const availableHeight = Math.max(240, safeHeight - (compact ? 62 : 82));
+        const availableHeight = Math.max(1, safeHeight - (compact ? 62 : 82));
         const rowHeightLimit = Math.max(
-            170,
+            100,
             (availableHeight - gap * (rows - 1)) / rows,
         );
         const maximumCardWidth = compact ? 460 : 520;
@@ -84,7 +84,7 @@ export class HomeModule implements InteractiveModule {
             (contentWidth - gap * (columns - 1)) / columns,
         ));
         const cardHeight = Math.max(
-            compact ? 190 : 360,
+            120,
             Math.min(
                 compact ? 390 : 620,
                 rowHeightLimit,
