@@ -7,12 +7,13 @@ import type {
 } from '../../contracts/InteractiveModule';
 import type { ModuleRegistry } from '../../core/ModuleRegistry';
 import type { ViewportSnapshot } from '../../services/ViewportService';
-import { createIconButton, nativeTheme } from '../../ui/NativeUiKit';
 import {
     clearNode,
+    createIconButton,
     createLabel,
     createUiNode,
     fillNode,
+    nativeTheme,
     palette,
 } from '../../ui/UiFactory';
 import { createCatalogCard } from './CatalogCard';
