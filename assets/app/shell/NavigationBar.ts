@@ -6,9 +6,9 @@ import type {
 } from '../contracts/InteractiveModule';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import { clearNode } from '../ui/UiFactory';
+import { createLibraryIconButton } from '../ui/WebIcons';
 import {
     clearWebUiScope,
-    createWebIconButton,
     getWebUiScope,
 } from '../ui/WebUiKit';
 
@@ -120,7 +120,7 @@ export class NavigationBar {
         navigation.style.width = `${Math.max(1, width - safeInsets.left - safeInsets.right - sidePadding * 2)}px`;
         navigation.style.height = '44px';
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: navigation,
             icon: 'arrow-left',
             label: 'Back',
@@ -137,7 +137,7 @@ export class NavigationBar {
         navigation.appendChild(spacer);
 
         if (state.capabilities.includes('pause') && state.handlers.onTogglePause) {
-            createWebIconButton({
+            createLibraryIconButton({
                 parent: navigation,
                 icon: state.paused ? 'play' : 'pause',
                 label: state.paused ? 'Resume' : 'Pause',
@@ -147,7 +147,7 @@ export class NavigationBar {
         }
 
         if (state.capabilities.includes('reset') && state.handlers.onReset) {
-            createWebIconButton({
+            createLibraryIconButton({
                 parent: navigation,
                 icon: 'rotate-left',
                 label: 'Reset',
