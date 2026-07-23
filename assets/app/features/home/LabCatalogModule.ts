@@ -57,12 +57,18 @@ export class LabCatalogModule implements InteractiveModule {
         this.registry.getLab(this.labId);
         const modules = this.registry.listByLab(this.labId);
         const compact = viewport.breakpoint === 'compact';
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
         const contentBottom = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
         const availableHeight = Math.max(1, contentTop - contentBottom);
-        const contentWidth = Math.min(1280, safeWidth - (compact ? 24 : 56));
+        const contentWidth = Math.max(
+            1,
+            Math.min(1280, safeWidth - (compact ? 24 : 56)),
+        );
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
@@ -79,7 +85,7 @@ export class LabCatalogModule implements InteractiveModule {
         const maximumCardWidth = singleModule
             ? compact ? 460 : 560
             : compact ? 430 : 440;
-        const cardWidth = Math.max(220, Math.min(
+        const cardWidth = Math.max(1, Math.min(
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
         ));
@@ -87,7 +93,7 @@ export class LabCatalogModule implements InteractiveModule {
             singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
             cardWidth * (singleModule ? 1.14 : 1.08),
         );
-        const cardHeight = Math.max(120, Math.min(preferredCardHeight, availableHeight));
+        const cardHeight = Math.max(1, Math.min(preferredCardHeight, availableHeight));
         const rowsPerPage = Math.max(
             1,
             Math.floor((availableHeight + gap) / (cardHeight + gap)),
@@ -96,7 +102,7 @@ export class LabCatalogModule implements InteractiveModule {
         const pageCount = Math.max(1, Math.ceil(modules.length / pageSize));
         this.page = Math.min(this.page, pageCount - 1);
         const visible = modules.slice(this.page * pageSize, (this.page + 1) * pageSize);
-        const rows = Math.ceil(visible.length / columns);
+        const rows = Math.max(1, Math.ceil(visible.length / columns));
         const gridWidth = columns * cardWidth + gap * (columns - 1);
         const gridHeight = rows * cardHeight + gap * (rows - 1);
         const gridCenterY = (contentTop + contentBottom) / 2 + (pageCount > 1 ? 18 : 0);
