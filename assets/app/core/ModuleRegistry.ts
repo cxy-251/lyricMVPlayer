@@ -20,6 +20,18 @@ const laboratories: Record<LabId, LabDefinition> = {
     },
 };
 
+function inferLabId(category: ModuleCategory): LabId | undefined {
+    if (category === 'mathematics') {
+        return 'mathematics';
+    }
+
+    if (category === 'simulation') {
+        return 'physics';
+    }
+
+    return undefined;
+}
+
 export class ModuleRegistry {
     private readonly definitions = new Map<string, ModuleDefinition>();
 
@@ -32,15 +44,22 @@ export class ModuleRegistry {
             throw new Error(`Duplicate module id: ${definition.id}`);
         }
 
-        if (!definition.hidden && !definition.labId) {
+        const internal = definition.hidden || definition.category === 'system';
+        const labId = definition.labId ?? inferLabId(definition.category);
+
+        if (!internal && !labId) {
             throw new Error(`Visible module ${definition.id} must belong to a laboratory`);
         }
 
-        if (definition.labId && !laboratories[definition.labId]) {
-            throw new Error(`Unknown laboratory: ${definition.labId}`);
+        if (labId && !laboratories[labId]) {
+            throw new Error(`Unknown laboratory: ${labId}`);
         }
 
-        this.definitions.set(definition.id, definition);
+        this.definitions.set(definition.id, {
+            ...definition,
+            labId,
+            hidden: internal,
+        });
     }
 
     registerAll(definitions: readonly ModuleDefinition[]): void {
