@@ -10,21 +10,22 @@ import {
 } from 'cc';
 
 export const palette = {
-    background: new Color(9, 13, 22, 255),
-    backgroundRaised: new Color(14, 20, 32, 255),
-    surface: new Color(24, 32, 48, 255),
-    surfaceStrong: new Color(34, 45, 66, 255),
-    surfaceSoft: new Color(20, 27, 41, 255),
-    border: new Color(58, 75, 105, 210),
-    primary: new Color(54, 221, 184, 255),
-    primaryMuted: new Color(31, 104, 91, 255),
-    primaryText: new Color(7, 39, 33, 255),
-    text: new Color(238, 243, 252, 255),
-    muted: new Color(145, 159, 184, 255),
-    subtle: new Color(93, 107, 133, 255),
-    accent: new Color(255, 92, 142, 255),
-    warning: new Color(255, 190, 74, 255),
-    danger: new Color(255, 101, 111, 255),
+    background: new Color(246, 246, 243, 255),
+    backgroundRaised: new Color(252, 252, 250, 255),
+    surface: new Color(255, 255, 253, 255),
+    surfaceStrong: new Color(232, 232, 228, 255),
+    surfaceSoft: new Color(249, 249, 247, 255),
+    border: new Color(211, 211, 205, 255),
+    primary: new Color(22, 22, 21, 255),
+    primaryMuted: new Color(232, 232, 228, 255),
+    primaryText: new Color(255, 255, 253, 255),
+    text: new Color(24, 24, 23, 255),
+    muted: new Color(91, 91, 87, 255),
+    subtle: new Color(139, 139, 133, 255),
+    accent: new Color(45, 92, 214, 255),
+    warning: new Color(159, 101, 22, 255),
+    danger: new Color(177, 47, 47, 255),
+    clear: new Color(0, 0, 0, 0),
 } as const;
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -163,22 +164,25 @@ export function createButton(
         : variant === 'danger'
             ? palette.danger
             : variant === 'secondary'
-                ? palette.surfaceStrong
-                : palette.surfaceSoft;
-    const textColor = variant === 'primary' ? palette.primaryText : palette.text;
+                ? palette.surfaceSoft
+                : palette.clear;
+    const textColor = variant === 'primary' || variant === 'danger'
+        ? palette.primaryText
+        : palette.text;
+    const radius = Math.min(7, options.height / 5);
 
-    fillNode(button, options.width, options.height, background, Math.min(14, options.height / 3));
+    fillNode(button, options.width, options.height, background, radius);
 
-    if (variant === 'ghost') {
-        strokeNode(button, options.width, options.height, palette.border, Math.min(14, options.height / 3), 1.5);
+    if (variant === 'secondary') {
+        strokeNode(button, options.width, options.height, palette.border, radius, 1);
     }
 
     createLabel(
         button,
         options.text,
-        options.width - 20,
+        options.width - 16,
         options.height,
-        options.fontSize ?? 20,
+        options.fontSize ?? 15,
         textColor,
     );
 
@@ -194,8 +198,20 @@ export function createPill(
     y: number,
     emphasized = false,
 ): Node {
-    const node = createUiNode(parent, `Pill:${text}`, width, 30, x, y);
-    fillNode(node, width, 30, emphasized ? palette.primaryMuted : palette.surfaceStrong, 15);
-    createLabel(node, text.toUpperCase(), width - 12, 30, 12, emphasized ? palette.text : palette.muted);
+    const node = createUiNode(parent, `Pill:${text}`, width, 26, x, y);
+    fillNode(node, width, 26, emphasized ? palette.primary : palette.surfaceSoft, 5);
+
+    if (!emphasized) {
+        strokeNode(node, width, 26, palette.border, 5, 1);
+    }
+
+    createLabel(
+        node,
+        text.toUpperCase(),
+        width - 10,
+        26,
+        10,
+        emphasized ? palette.primaryText : palette.muted,
+    );
     return node;
 }
