@@ -11,7 +11,6 @@ import {
     createLabel,
     createUiNode,
     fillNode,
-    palette,
     strokeNode,
 } from './UiFactory';
 
@@ -309,16 +308,16 @@ function drawNativeIcon(node: Node, icon: NativeIconName, size: number, color: C
         return;
     }
 
-    const direction = icon === 'chevron-right' ? 1 : -1;
-    const innerX = direction * unit * 0.26;
-    const outerX = -direction * unit * 0.26;
-    graphics.moveTo(innerX, unit * 0.56);
-    graphics.lineTo(outerX, 0);
-    graphics.lineTo(innerX, -unit * 0.56);
+    const pointsRight = icon === 'chevron-right';
+    const tipX = (pointsRight ? 1 : -1) * unit * 0.26;
+    const armX = -tipX;
+    graphics.moveTo(armX, unit * 0.56);
+    graphics.lineTo(tipX, 0);
+    graphics.lineTo(armX, -unit * 0.56);
 
     if (icon === 'back') {
-        graphics.moveTo(outerX, 0);
-        graphics.lineTo(direction * unit * 0.66, 0);
+        graphics.moveTo(tipX, 0);
+        graphics.lineTo(unit * 0.66, 0);
     }
 
     graphics.stroke();
