@@ -25,6 +25,8 @@ export interface CursorSpaceEnemy {
     readonly velocity: CursorSpaceVector;
     rotation: number;
     radius: number;
+    dodgeSide: -1 | 1;
+    threat: number;
 }
 
 export interface CursorSpaceProjectile {
@@ -63,6 +65,10 @@ export interface CursorSpaceConfig {
     readonly enemyRadius: number;
     readonly enemySpeed: number;
     readonly enemyTurnRate: number;
+    readonly enemyAvoidanceHorizon: number;
+    readonly enemyAvoidanceRadius: number;
+    readonly enemyAvoidanceWeight: number;
+    readonly enemyAvoidanceTurnBoost: number;
     readonly enemySpawnInterval: number;
     readonly enemyMinimumSpawnInterval: number;
     readonly enemySpawnAcceleration: number;
@@ -90,6 +96,10 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     enemyRadius: 11,
     enemySpeed: 86,
     enemyTurnRate: 2.8,
+    enemyAvoidanceHorizon: 0.72,
+    enemyAvoidanceRadius: 58,
+    enemyAvoidanceWeight: 3.4,
+    enemyAvoidanceTurnBoost: 2.6,
     enemySpawnInterval: 1.05,
     enemyMinimumSpawnInterval: 0.34,
     enemySpawnAcceleration: 0.012,
@@ -98,5 +108,5 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     respawnClearRadius: 150,
     projectileCapacity: 48,
     enemyCapacity: 28,
-    effectCapacity: 48,
+    effectCapacity: 32,
 };
