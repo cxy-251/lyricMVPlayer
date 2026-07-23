@@ -1,5 +1,9 @@
 import { HorizontalTextAlignment, Node } from 'cc';
-import type { ModuleDefinition } from '../contracts/InteractiveModule';
+import type {
+    LabDefinition,
+    ModuleCapability,
+    ModuleDefinition,
+} from '../contracts/InteractiveModule';
 import type { ViewportService, ViewportSnapshot } from '../services/ViewportService';
 import {
     clearNode,
@@ -12,12 +16,15 @@ import {
 
 interface NavigationHandlers {
     readonly onBack: () => void;
-    readonly onTogglePause: () => void;
-    readonly onReset: () => void;
+    readonly onTogglePause?: () => void;
+    readonly onReset?: () => void;
 }
 
 interface NavigationState {
-    readonly definition: ModuleDefinition;
+    readonly title: string;
+    readonly subtitle: string;
+    readonly backLabel: string;
+    readonly capabilities: readonly ModuleCapability[];
     readonly paused: boolean;
     readonly handlers: NavigationHandlers;
 }
@@ -45,12 +52,33 @@ export class NavigationBar {
         this.root.active = false;
     }
 
+    showLab(lab: LabDefinition, onBack: () => void): void {
+        this.state = {
+            title: lab.title,
+            subtitle: 'LABORATORY',
+            backLabel: 'HOME',
+            capabilities: [],
+            paused: false,
+            handlers: { onBack },
+        };
+        this.root.active = true;
+        this.render();
+    }
+
     showModule(
         definition: ModuleDefinition,
+        parentLab: LabDefinition | null,
         handlers: NavigationHandlers,
         paused: boolean,
     ): void {
-        this.state = { definition, handlers, paused };
+        this.state = {
+            title: definition.title,
+            subtitle: parentLab?.title ?? definition.category.toUpperCase(),
+            backLabel: parentLab ? 'LAB' : 'HOME',
+            capabilities: definition.capabilities ?? [],
+            paused,
+            handlers,
+        };
         this.root.active = true;
         this.render();
     }
@@ -91,7 +119,7 @@ export class NavigationBar {
 
         createButton(this.root, {
             name: 'NavigationBack',
-            text: compact ? '←' : '← HOME',
+            text: compact ? '←' : `← ${state.backLabel}`,
             width: compact ? 56 : 118,
             height: 44,
             x: -contentWidth / 2 + (compact ? 38 : 70),
@@ -102,11 +130,11 @@ export class NavigationBar {
 
         const actionWidth = compact ? 52 : 94;
         const actionGap = compact ? 10 : 12;
-        const hasPause = state.definition.capabilities?.includes('pause') ?? false;
-        const hasReset = state.definition.capabilities?.includes('reset') ?? false;
+        const hasPause = state.capabilities.includes('pause');
+        const hasReset = state.capabilities.includes('reset');
         let rightCursor = contentWidth / 2 - 18;
 
-        if (hasReset) {
+        if (hasReset && state.handlers.onReset) {
             rightCursor -= actionWidth / 2;
             createButton(this.root, {
                 name: 'NavigationReset',
@@ -121,7 +149,7 @@ export class NavigationBar {
             rightCursor -= actionWidth / 2 + actionGap;
         }
 
-        if (hasPause) {
+        if (hasPause && state.handlers.onTogglePause) {
             rightCursor -= actionWidth / 2;
             createButton(this.root, {
                 name: 'NavigationPause',
@@ -142,7 +170,7 @@ export class NavigationBar {
 
         createLabel(
             this.root,
-            state.definition.title,
+            state.title,
             titleWidth,
             34,
             compact ? 18 : 22,
@@ -155,7 +183,7 @@ export class NavigationBar {
         if (!compact) {
             createLabel(
                 this.root,
-                state.definition.category.toUpperCase(),
+                state.subtitle.toUpperCase(),
                 titleWidth,
                 22,
                 11,
