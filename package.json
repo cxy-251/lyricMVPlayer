@@ -1,7 +1,21 @@
 {
   "name": "cocoslab",
+  "private": true,
   "uuid": "cfd3925b-a138-4b96-90f5-f5152847aad1",
   "creator": {
     "version": "3.8.8"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.42.2",
+    "leva": "^0.10.1",
+    "lucide-react": "^1.16.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.8.0"
   }
 }
