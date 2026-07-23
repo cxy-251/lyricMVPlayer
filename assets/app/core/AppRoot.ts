@@ -6,6 +6,7 @@ import {
     Game,
     Node,
 } from 'cc';
+import { cursorSpaceDefinition } from '../features/games/CursorSpaceModule';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
 import { parametricCurveDefinition } from '../features/mathematics/ParametricCurveModule';
@@ -125,6 +126,7 @@ export class AppRoot extends Component {
         this.moduleRegistry.registerAll([
             parametricCurveDefinition,
             doublePendulumDefinition,
+            cursorSpaceDefinition,
             systemCheckDefinition,
         ]);
         this.viewportService.start();
