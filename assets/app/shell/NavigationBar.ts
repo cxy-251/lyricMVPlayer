@@ -119,7 +119,6 @@ export class NavigationBar {
             name: 'NavigationBack',
             icon: 'back',
             x: backX,
-            tone: 'blue',
             onPress: state.handlers.onBack,
         });
 
@@ -134,7 +133,6 @@ export class NavigationBar {
                 name: 'NavigationReset',
                 icon: 'reset',
                 x: rightCursor,
-                tone: 'sand',
                 onPress: state.handlers.onReset,
             });
             rightCursor -= controlSize / 2 + gap;
@@ -146,7 +144,6 @@ export class NavigationBar {
                 name: 'NavigationPause',
                 icon: state.paused ? 'play' : 'pause',
                 x: rightCursor,
-                tone: 'green',
                 selected: state.paused,
                 onPress: state.handlers.onTogglePause,
             });
