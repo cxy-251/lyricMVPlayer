@@ -13,9 +13,9 @@ import {
     fillNode,
     palette,
 } from '../../ui/UiFactory';
+import { createLibraryIconButton } from '../../ui/WebIcons';
 import {
     clearWebUiScope,
-    createWebIconButton,
     getWebUiScope,
 } from '../../ui/WebUiKit';
 import { createCatalogCard } from './CatalogCard';
@@ -153,7 +153,7 @@ export class LabCatalogModule implements InteractiveModule {
         pager.style.transform = 'translateX(-50%)';
         pager.style.justifyContent = 'center';
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: pager,
             icon: 'arrow-left',
             label: 'Previous page',
@@ -168,7 +168,7 @@ export class LabCatalogModule implements InteractiveModule {
         count.textContent = `${this.page + 1} / ${pageCount}`;
         pager.appendChild(count);
 
-        createWebIconButton({
+        createLibraryIconButton({
             parent: pager,
             icon: 'arrow-right',
             label: 'Next page',
