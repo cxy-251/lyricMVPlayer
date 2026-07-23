@@ -4,6 +4,15 @@ import type { InputService } from '../services/InputService';
 import type { StorageService } from '../services/StorageService';
 import type { ViewportService } from '../services/ViewportService';
 
+export type LabId = 'mathematics' | 'physics';
+
+export interface LabDefinition {
+    readonly id: LabId;
+    readonly title: string;
+    readonly description: string;
+    readonly order: number;
+}
+
 export type ModuleCategory =
     | 'game'
     | 'simulation'
@@ -21,7 +30,7 @@ export type ModuleCapability =
     | 'fullscreen'
     | 'save-state';
 
-export type ModuleStatus = 'ready' | 'prototype' | 'planned';
+export type ModuleStatus = 'ready' | 'prototype';
 
 export interface ModuleContext {
     readonly host: Node;
@@ -31,6 +40,8 @@ export interface ModuleContext {
     readonly input: InputService;
     readonly appState: AppState;
     open(moduleId: string): Promise<void>;
+    openLab(labId: LabId): Promise<void>;
+    back(): Promise<void>;
     home(): Promise<void>;
 }
 
@@ -57,6 +68,7 @@ export interface ModuleDefinition {
     readonly title: string;
     readonly description: string;
     readonly category: ModuleCategory;
+    readonly labId?: LabId;
     readonly tags?: readonly string[];
     readonly capabilities?: readonly ModuleCapability[];
     readonly status?: ModuleStatus;
