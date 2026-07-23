@@ -12,8 +12,12 @@ import type {
     SelectParameter,
 } from './ParameterSchema';
 
+const PERSIST_DELAY_MS = 160;
+
 export class ParameterController {
     private values: ParameterValues;
+    private persistTimer: ReturnType<typeof setTimeout> | null = null;
+    private persistPending = false;
 
     constructor(
         private readonly storage: StorageService,
@@ -69,7 +73,7 @@ export class ParameterController {
         }
 
         this.values[key] = normalized;
-        this.persist();
+        this.schedulePersist();
         return true;
     }
 
@@ -113,7 +117,25 @@ export class ParameterController {
 
     reset(): void {
         this.values = createDefaultValues(this.schema);
-        this.persist();
+        this.schedulePersist();
+    }
+
+    flush(): void {
+        if (this.persistTimer !== null) {
+            clearTimeout(this.persistTimer);
+            this.persistTimer = null;
+        }
+
+        if (!this.persistPending) {
+            return;
+        }
+
+        this.persistPending = false;
+        this.storage.set(this.storageKey, this.values);
+    }
+
+    dispose(): void {
+        this.flush();
     }
 
     format(definition: ParameterDefinition): string {
@@ -157,7 +179,16 @@ export class ParameterController {
         return decimal < 0 ? 0 : Math.min(4, text.length - decimal - 1);
     }
 
-    private persist(): void {
-        this.storage.set(this.storageKey, this.values);
+    private schedulePersist(): void {
+        this.persistPending = true;
+
+        if (this.persistTimer !== null) {
+            clearTimeout(this.persistTimer);
+        }
+
+        this.persistTimer = setTimeout(() => {
+            this.persistTimer = null;
+            this.flush();
+        }, PERSIST_DELAY_MS);
     }
 }
