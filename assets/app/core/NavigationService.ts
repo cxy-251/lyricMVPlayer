@@ -2,6 +2,7 @@ import type {
     InteractiveModule,
     LabDefinition,
     LabId,
+    ModuleCategory,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
 import type { AppShell } from '../shell/AppShell';
@@ -192,13 +193,21 @@ export class NavigationService {
             id: `lab-${lab.id}`,
             title: lab.title,
             description: lab.description,
-            category: lab.id === 'physics' ? 'simulation' : 'mathematics',
+            category: this.categoryForLab(lab.id),
             labId: lab.id,
             hidden: true,
             create: () => {
                 throw new Error('Laboratory catalog is created by the application shell');
             },
         };
+    }
+
+    private categoryForLab(labId: LabId): ModuleCategory {
+        if (labId === 'physics') {
+            return 'simulation';
+        }
+
+        return labId === 'games' ? 'game' : 'mathematics';
     }
 
     private resetPointerCursor(): void {
