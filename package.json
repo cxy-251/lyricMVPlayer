@@ -1,12 +1,7 @@
 {
   "name": "cocoslab",
-  "private": true,
   "uuid": "cfd3925b-a138-4b96-90f5-f5152847aad1",
   "creator": {
     "version": "3.8.8"
-  },
-  "dependencies": {
-    "@awesome.me/webawesome": "^3.10.0",
-    "lucide": "^1.25.0"
   }
 }
