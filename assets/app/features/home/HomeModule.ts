@@ -27,9 +27,23 @@ export class HomeModule implements InteractiveModule {
         this.context = context;
         const viewport = context.viewport.current;
         this.root = createUiNode(context.host, 'LaboratoryHome', viewport.width, viewport.height);
-        this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
-            this.render(snapshot);
-        });
+        let initializing = true;
+
+        try {
+            this.unsubscribeViewport = context.viewport.subscribe((snapshot) => {
+                try {
+                    this.render(snapshot);
+                } catch (error) {
+                    if (initializing) {
+                        throw error;
+                    }
+
+                    context.reportError(error);
+                }
+            });
+        } finally {
+            initializing = false;
+        }
     }
 
     unmount(): void {
