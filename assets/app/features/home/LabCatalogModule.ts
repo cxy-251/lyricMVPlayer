@@ -9,14 +9,19 @@ import type { ModuleRegistry } from '../../core/ModuleRegistry';
 import type { ViewportSnapshot } from '../../services/ViewportService';
 import {
     clearNode,
-    createButton,
-    createLabel,
     createUiNode,
     fillNode,
     palette,
 } from '../../ui/UiFactory';
+import {
+    clearWebUiScope,
+    createWebIconButton,
+    getWebUiScope,
+} from '../../ui/WebUiKit';
 import { createCatalogCard } from './CatalogCard';
 import type { CatalogCoverKind } from './CatalogCovers';
+
+const LAB_CATALOG_SCOPE = 'lab-catalog';
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -42,6 +47,7 @@ export class LabCatalogModule implements InteractiveModule {
     unmount(): void {
         this.unsubscribeViewport?.();
         this.unsubscribeViewport = null;
+        clearWebUiScope(LAB_CATALOG_SCOPE);
         this.root?.destroy();
         this.root = null;
         this.context = null;
@@ -66,6 +72,7 @@ export class LabCatalogModule implements InteractiveModule {
 
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
+        const webParent = getWebUiScope(LAB_CATALOG_SCOPE);
 
         const singleModule = modules.length === 1;
         const columns = compact
@@ -120,52 +127,58 @@ export class LabCatalogModule implements InteractiveModule {
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
+                webParent,
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
             });
         }
 
-        if (pageCount > 1) {
-            this.renderPager(root, viewport, centerX, pageCount);
+        if (pageCount > 1 && webParent) {
+            this.renderPager(webParent, viewport, pageCount);
         }
     }
 
     private renderPager(
-        root: Node,
+        parent: HTMLElement,
         viewport: ViewportSnapshot,
-        centerX: number,
         pageCount: number,
     ): void {
-        const y = -viewport.height / 2 + viewport.safeInsets.bottom + 24;
+        const pager = document.createElement('div');
+        pager.className = 'cocoslab-navigation';
+        pager.style.left = '50%';
+        pager.style.bottom = `${viewport.safeInsets.bottom + 8}px`;
+        pager.style.width = '156px';
+        pager.style.height = '44px';
+        pager.style.transform = 'translateX(-50%)';
+        pager.style.justifyContent = 'center';
 
-        createButton(root, {
-            name: 'LaboratoryCatalogPrevious',
-            text: '←',
-            width: 38,
-            height: 32,
-            x: centerX - 50,
-            y,
-            variant: 'ghost',
+        createWebIconButton({
+            parent: pager,
+            icon: 'arrow-left',
+            label: 'Previous page',
             onPress: () => {
                 this.page = (this.page - 1 + pageCount) % pageCount;
                 this.render(viewport);
             },
         });
-        createLabel(root, `${this.page + 1}/${pageCount}`, 48, 32, 11, palette.subtle, centerX, y);
-        createButton(root, {
-            name: 'LaboratoryCatalogNext',
-            text: '→',
-            width: 38,
-            height: 32,
-            x: centerX + 50,
-            y,
-            variant: 'ghost',
+
+        const count = document.createElement('span');
+        count.className = 'cocoslab-navigation-title';
+        count.textContent = `${this.page + 1} / ${pageCount}`;
+        pager.appendChild(count);
+
+        createWebIconButton({
+            parent: pager,
+            icon: 'arrow-right',
+            label: 'Next page',
             onPress: () => {
                 this.page = (this.page + 1) % pageCount;
                 this.render(viewport);
             },
         });
+
+        parent.appendChild(pager);
     }
 
     private coverForModule(definition: ModuleDefinition): CatalogCoverKind {
