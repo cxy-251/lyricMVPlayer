@@ -7,13 +7,13 @@ import {
     UITransform,
     Vec3,
 } from 'cc';
-import { FixedStepClock } from '../../animation/FixedStepClock';
 import type {
     Pausable,
     Resettable,
     Updatable,
     VisibleModuleDefinition,
 } from '../../contracts/InteractiveModule';
+import { FixedStepClock } from '../../animation/FixedStepClock';
 import type { ViewportSnapshot } from '../../services/ViewportService';
 import { ResponsiveModule } from '../../templates/ResponsiveModule';
 import {
@@ -26,13 +26,13 @@ import { CursorSpaceModel } from './CursorSpaceModel';
 import type { CursorSpaceBounds } from './CursorSpaceTypes';
 
 const CURSOR_POINTS: ReadonlyArray<readonly [number, number]> = [
-    [16, 0],
-    [-9, 10],
-    [-5, 2],
-    [-13, -3],
-    [-11, -7],
-    [-3, -2],
-    [-3, -10],
+    [18, 0],
+    [-7, 10],
+    [-3, 3],
+    [-12, 3],
+    [-12, -3],
+    [-3, -3],
+    [-7, -10],
 ];
 
 const ENEMY_POINTS: ReadonlyArray<readonly [number, number]> = [
@@ -70,7 +70,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         palette.primaryText.r,
         palette.primaryText.g,
         palette.primaryText.b,
-        180,
+        255,
     );
     private readonly starColor = new Color(
         palette.subtle.r,
@@ -83,6 +83,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private enemiesGraphics: Graphics | null = null;
     private projectilesGraphics: Graphics | null = null;
     private effectsGraphics: Graphics | null = null;
+    private playerTrailGraphics: Graphics | null = null;
     private playerGraphics: Graphics | null = null;
     private paused = false;
 
@@ -93,7 +94,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     }
 
     protected onUnmount(): void {
-        this.setBrowserCursor(false);
         this.unbindPointerInput();
         this.model.clearTarget();
         this.clock.reset();
@@ -101,6 +101,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.enemiesGraphics = null;
         this.projectilesGraphics = null;
         this.effectsGraphics = null;
+        this.playerTrailGraphics = null;
         this.playerGraphics = null;
     }
 
@@ -121,7 +122,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     pause(): void {
         this.paused = true;
         this.model.clearTarget();
-        this.setBrowserCursor(false);
     }
 
     resume(): void {
@@ -141,18 +141,18 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = Math.max(
-            24,
+            2,
             viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
         );
         const safeHeight = Math.max(
-            24,
+            2,
             viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom,
         );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const safeCenterY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2;
         const navigationHeight = compact ? 62 : 72;
-        const playWidth = Math.max(24, safeWidth - (compact ? 20 : 32));
-        const playHeight = Math.max(24, safeHeight - navigationHeight - 20);
+        const playWidth = Math.max(2, safeWidth - (compact ? 20 : 32));
+        const playHeight = Math.max(2, safeHeight - navigationHeight - 20);
         const playCenterY = safeCenterY - navigationHeight / 2 + 4;
         const bounds: CursorSpaceBounds = {
             left: centerX - playWidth / 2,
@@ -162,44 +162,28 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         };
         this.model.setBounds(bounds);
 
-        this.starsGraphics = createUiNode(
-            root,
-            'CursorSpaceStars',
-            viewport.width,
-            viewport.height,
-        ).addComponent(Graphics);
-        this.enemiesGraphics = createUiNode(
-            root,
-            'CursorSpaceEnemies',
-            viewport.width,
-            viewport.height,
-        ).addComponent(Graphics);
-        this.projectilesGraphics = createUiNode(
-            root,
-            'CursorSpaceProjectiles',
-            viewport.width,
-            viewport.height,
-        ).addComponent(Graphics);
-        this.effectsGraphics = createUiNode(
-            root,
-            'CursorSpaceEffects',
-            viewport.width,
-            viewport.height,
-        ).addComponent(Graphics);
-        this.playerGraphics = createUiNode(
-            root,
-            'CursorSpacePlayer',
-            viewport.width,
-            viewport.height,
-        ).addComponent(Graphics);
+        this.starsGraphics = this.createGraphics(root, 'CursorSpaceStars', viewport);
+        this.enemiesGraphics = this.createGraphics(root, 'CursorSpaceEnemies', viewport);
+        this.projectilesGraphics = this.createGraphics(root, 'CursorSpaceProjectiles', viewport);
+        this.effectsGraphics = this.createGraphics(root, 'CursorSpaceEffects', viewport);
+        this.playerTrailGraphics = this.createGraphics(root, 'CursorSpacePlayerTrail', viewport);
+        this.playerGraphics = this.createGraphics(root, 'CursorSpacePlayer', viewport);
 
         this.drawStars(bounds);
         this.drawFrame();
     }
 
+    private createGraphics(parent: Node, name: string, viewport: ViewportSnapshot): Graphics {
+        return createUiNode(
+            parent,
+            name,
+            viewport.width,
+            viewport.height,
+        ).addComponent(Graphics);
+    }
+
     private bindPointerInput(): void {
         const root = this.requireRoot();
-        root.on(Node.EventType.MOUSE_ENTER, this.handleMouseEnter, this);
         root.on(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
         root.on(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
         root.on(Node.EventType.TOUCH_START, this.handleTouch, this);
@@ -210,12 +194,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private unbindPointerInput(): void {
         const root = this.root;
-
         if (!root) {
             return;
         }
 
-        root.off(Node.EventType.MOUSE_ENTER, this.handleMouseEnter, this);
         root.off(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
         root.off(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
         root.off(Node.EventType.TOUCH_START, this.handleTouch, this);
@@ -224,18 +206,11 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         root.off(Node.EventType.TOUCH_CANCEL, this.handlePointerLeave, this);
     }
 
-    private readonly handleMouseEnter = (): void => {
-        if (!this.paused) {
-            this.setBrowserCursor(true);
-        }
-    };
-
     private readonly handleMouseMove = (event: EventMouse): void => {
         if (this.paused) {
             return;
         }
 
-        this.setBrowserCursor(true);
         const location = event.getUILocation();
         this.updateTarget(location.x, location.y);
     };
@@ -251,13 +226,11 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private readonly handlePointerLeave = (): void => {
         this.model.clearTarget();
-        this.setBrowserCursor(false);
     };
 
     private updateTarget(screenX: number, screenY: number): void {
         const root = this.root;
         const transform = root?.getComponent(UITransform);
-
         if (!root || !transform) {
             return;
         }
@@ -269,7 +242,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private drawStars(bounds: Readonly<CursorSpaceBounds>): void {
         const graphics = this.starsGraphics;
-
         if (!graphics) {
             return;
         }
@@ -283,11 +255,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         for (let index = 0; index < count; index += 1) {
             const xHash = ((index * 73 + 19) % 101) / 100;
             const yHash = ((index * 47 + 31) % 97) / 96;
-            const radius = index % 7 === 0 ? 1.4 : 0.8;
             graphics.circle(
                 bounds.left + xHash * width,
                 bounds.bottom + yHash * height,
-                radius,
+                index % 7 === 0 ? 1.4 : 0.8,
             );
         }
 
@@ -298,18 +269,20 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.drawEnemies();
         this.drawProjectiles();
         this.drawEffects();
+        this.drawPlayerTrail();
         this.drawPlayer();
     }
 
     private drawEnemies(): void {
         const graphics = this.enemiesGraphics;
-
         if (!graphics) {
             return;
         }
 
         graphics.clear();
         graphics.fillColor = this.enemyColor;
+        graphics.strokeColor = palette.warning;
+        graphics.lineWidth = 1;
         let visible = false;
 
         for (const enemy of this.model.enemies) {
@@ -329,12 +302,12 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         if (visible) {
             graphics.fill();
+            graphics.stroke();
         }
     }
 
     private drawProjectiles(): void {
         const graphics = this.projectilesGraphics;
-
         if (!graphics) {
             return;
         }
@@ -349,13 +322,14 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 continue;
             }
 
-            const speed = Math.max(0.0001, Math.sqrt(
-                projectile.velocity.x * projectile.velocity.x
-                + projectile.velocity.y * projectile.velocity.y,
+            const speed = Math.max(0.0001, Math.hypot(
+                projectile.velocity.x,
+                projectile.velocity.y,
             ));
-            const tailX = projectile.position.x - projectile.velocity.x / speed * 7;
-            const tailY = projectile.position.y - projectile.velocity.y / speed * 7;
-            graphics.moveTo(tailX, tailY);
+            graphics.moveTo(
+                projectile.position.x - projectile.velocity.x / speed * 7,
+                projectile.position.y - projectile.velocity.y / speed * 7,
+            );
             graphics.lineTo(projectile.position.x, projectile.position.y);
             visible = true;
         }
@@ -367,31 +341,31 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private drawEffects(): void {
         const graphics = this.effectsGraphics;
-
         if (!graphics) {
             return;
         }
 
         graphics.clear();
-        graphics.strokeColor = this.effectColor;
         graphics.lineWidth = 1.5;
-        let visible = false;
 
         for (const effect of this.model.effects) {
             if (!effect.active) {
                 continue;
             }
 
-            visible = true;
+            const progress = Math.max(0, effect.life / Math.max(0.0001, effect.initialLife));
+            this.effectColor.a = Math.round(220 * progress);
+            graphics.strokeColor = this.effectColor;
 
             if (effect.kind === 'ring') {
                 graphics.circle(effect.position.x, effect.position.y, effect.radius);
+                graphics.stroke();
                 continue;
             }
 
-            const speed = Math.max(0.0001, Math.sqrt(
-                effect.velocity.x * effect.velocity.x
-                + effect.velocity.y * effect.velocity.y,
+            const speed = Math.max(0.0001, Math.hypot(
+                effect.velocity.x,
+                effect.velocity.y,
             ));
             const directionX = effect.velocity.x / speed;
             const directionY = effect.velocity.y / speed;
@@ -403,23 +377,51 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 effect.position.x + directionX * effect.radius,
                 effect.position.y + directionY * effect.radius,
             );
-        }
-
-        if (visible) {
             graphics.stroke();
         }
     }
 
-    private drawPlayer(): void {
-        const graphics = this.playerGraphics;
+    private drawPlayerTrail(): void {
+        const graphics = this.playerTrailGraphics;
         const player = this.model.player;
-
         if (!graphics) {
             return;
         }
 
         graphics.clear();
+        if (!player.alive) {
+            return;
+        }
 
+        const speed = Math.hypot(player.velocity.x, player.velocity.y);
+        if (speed <= 18) {
+            return;
+        }
+
+        const directionX = player.velocity.x / speed;
+        const directionY = player.velocity.y / speed;
+        const length = Math.min(25, 9 + speed * 0.032);
+        graphics.strokeColor = this.playerColor;
+        graphics.lineWidth = 1.5;
+        graphics.moveTo(
+            player.position.x - directionX * 12,
+            player.position.y - directionY * 12,
+        );
+        graphics.lineTo(
+            player.position.x - directionX * length,
+            player.position.y - directionY * length,
+        );
+        graphics.stroke();
+    }
+
+    private drawPlayer(): void {
+        const graphics = this.playerGraphics;
+        const player = this.model.player;
+        if (!graphics) {
+            return;
+        }
+
+        graphics.clear();
         if (!player.alive) {
             return;
         }
@@ -434,24 +436,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         graphics.fillColor = this.playerColor;
         graphics.strokeColor = palette.primaryText;
         graphics.lineWidth = 1.25;
-        const speed = Math.sqrt(
-            player.velocity.x * player.velocity.x
-            + player.velocity.y * player.velocity.y,
-        );
-
-        if (speed > 16) {
-            const directionX = player.velocity.x / speed;
-            const directionY = player.velocity.y / speed;
-            graphics.moveTo(
-                player.position.x - directionX * 11,
-                player.position.y - directionY * 11,
-            );
-            graphics.lineTo(
-                player.position.x - directionX * Math.min(26, 11 + speed * 0.035),
-                player.position.y - directionY * Math.min(26, 11 + speed * 0.035),
-            );
-        }
-
         this.appendPolygon(
             graphics,
             player.position.x,
@@ -490,12 +474,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             x + firstX * cosine - firstY * sine,
             y + firstX * sine + firstY * cosine,
         );
-    }
-
-    private setBrowserCursor(hidden: boolean): void {
-        if (typeof document !== 'undefined' && document.body) {
-            document.body.style.cursor = hidden ? 'none' : 'default';
-        }
     }
 }
 
