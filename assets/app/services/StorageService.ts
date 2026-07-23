@@ -4,16 +4,21 @@ export class StorageService {
     constructor(private readonly namespace = 'cocoslab') {}
 
     get<T>(key: string, fallback: T): T {
-        const raw = sys.localStorage.getItem(this.toKey(key));
-
-        if (raw === null) {
-            return fallback;
-        }
-
         try {
-            return JSON.parse(raw) as T;
+            const raw = sys.localStorage.getItem(this.toKey(key));
+
+            if (raw === null) {
+                return fallback;
+            }
+
+            try {
+                return JSON.parse(raw) as T;
+            } catch (error) {
+                console.warn(`[cocoslab] invalid stored value for ${key}`, error);
+                return fallback;
+            }
         } catch (error) {
-            console.warn(`[cocoslab] invalid stored value for ${key}`, error);
+            console.warn(`[cocoslab] failed to read ${key}`, error);
             return fallback;
         }
     }
@@ -27,7 +32,11 @@ export class StorageService {
     }
 
     remove(key: string): void {
-        sys.localStorage.removeItem(this.toKey(key));
+        try {
+            sys.localStorage.removeItem(this.toKey(key));
+        } catch (error) {
+            console.warn(`[cocoslab] failed to remove ${key}`, error);
+        }
     }
 
     private toKey(key: string): string {
