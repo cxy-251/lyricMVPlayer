@@ -31,6 +31,8 @@ import {
     type DoublePendulumParameters,
 } from './DoublePendulumModel';
 
+const PARAMETER_APPLY_DELAY_MS = 140;
+
 const parameterSchema: ParameterSchema = [
     {
         kind: 'number',
@@ -125,6 +127,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
     private parameters: ParameterController | null = null;
     private parameterPanel: ParameterPanel | null = null;
+    private parameterApplyTimer: ReturnType<typeof setTimeout> | null = null;
     private paused = false;
 
     private trailGraphics: Graphics | null = null;
@@ -152,8 +155,10 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
     }
 
     protected onUnmount(): void {
+        this.cancelPendingParameterApply();
         this.parameterPanel?.destroy();
         this.parameterPanel = null;
+        this.parameters?.dispose();
         this.parameters = null;
         this.trailGraphics = null;
         this.rodGraphics = null;
@@ -194,11 +199,10 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
     }
 
     reset(): void {
-        this.paused = false;
-        this.clock.reset();
-        this.model.reset();
-        this.trail.clear();
-        this.pushTrailPoint();
+        this.cancelPendingParameterApply();
+        this.resetModelFromParameters();
+        this.recalculateScale();
+        this.drawReference();
         this.drawSimulation();
     }
 
@@ -206,6 +210,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         const root = this.requireRoot();
         const parameters = this.requireParameters();
 
+        this.parameterPanel?.destroy();
         this.parameterPanel = null;
         this.trailGraphics = null;
         this.rodGraphics = null;
@@ -236,7 +241,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         const plotBottom = panelY + panelHeight / 2 + 12;
 
         this.plotWidth = contentWidth;
-        this.plotHeight = Math.max(180, plotTop - plotBottom);
+        this.plotHeight = Math.max(1, plotTop - plotBottom);
         const plotY = (plotTop + plotBottom) / 2;
 
         const plot = createUiNode(
@@ -293,29 +298,34 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             this.plotHeight,
         ).addComponent(Graphics);
 
-        createLabel(
-            plot,
-            'IDEAL MODEL  ·  POINT MASSES  ·  MASSLESS RIGID RODS  ·  FRICTIONLESS PIVOTS',
-            this.plotWidth - 32,
-            24,
-            compact ? 9 : 10,
-            palette.subtle,
-            0,
-            this.plotHeight / 2 - 20,
-            HorizontalTextAlignment.LEFT,
-        );
-        const diagnosticsNode = createLabel(
-            plot,
-            '',
-            this.plotWidth - 32,
-            28,
-            compact ? 10 : 12,
-            palette.muted,
-            0,
-            -this.plotHeight / 2 + 22,
-            HorizontalTextAlignment.LEFT,
-        );
-        this.diagnosticsLabel = diagnosticsNode.getComponent(Label);
+        if (this.plotHeight >= 100) {
+            createLabel(
+                plot,
+                'IDEAL MODEL  ·  POINT MASSES  ·  MASSLESS RIGID RODS  ·  FRICTIONLESS PIVOTS',
+                this.plotWidth - 32,
+                24,
+                compact ? 9 : 10,
+                palette.subtle,
+                0,
+                this.plotHeight / 2 - 20,
+                HorizontalTextAlignment.LEFT,
+            );
+        }
+
+        if (this.plotHeight >= 70) {
+            const diagnosticsNode = createLabel(
+                plot,
+                '',
+                this.plotWidth - 32,
+                28,
+                compact ? 10 : 12,
+                palette.muted,
+                0,
+                -this.plotHeight / 2 + 22,
+                HorizontalTextAlignment.LEFT,
+            );
+            this.diagnosticsLabel = diagnosticsNode.getComponent(Label);
+        }
 
         this.parameterPanel = new ParameterPanel(
             root,
@@ -339,10 +349,32 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             return;
         }
 
-        this.resetModelFromParameters();
-        this.recalculateScale();
-        this.drawReference();
-        this.drawSimulation();
+        this.scheduleParameterApply();
+    }
+
+    private scheduleParameterApply(): void {
+        this.cancelPendingParameterApply();
+        this.parameterApplyTimer = setTimeout(() => {
+            this.parameterApplyTimer = null;
+
+            if (!this.parameters) {
+                return;
+            }
+
+            this.resetModelFromParameters();
+            this.recalculateScale();
+            this.drawReference();
+            this.drawSimulation();
+        }, PARAMETER_APPLY_DELAY_MS);
+    }
+
+    private cancelPendingParameterApply(): void {
+        if (this.parameterApplyTimer === null) {
+            return;
+        }
+
+        clearTimeout(this.parameterApplyTimer);
+        this.parameterApplyTimer = null;
     }
 
     private resetModelFromParameters(): void {
@@ -422,7 +454,12 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
         if (parameters.getBoolean('showTrail')) {
             const points = this.trail.values;
-            trailGraphics.strokeColor = new Color(45, 92, 214, 150);
+            trailGraphics.strokeColor = new Color(
+                palette.primary.r,
+                palette.primary.g,
+                palette.primary.b,
+                156,
+            );
             trailGraphics.lineWidth = 1.5;
 
             for (let index = 0; index < points.length; index += 1) {
@@ -456,12 +493,12 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         pivotGraphics.fill();
 
         bob1Graphics.clear();
-        bob1Graphics.fillColor = new Color(45, 92, 214, 255);
+        bob1Graphics.fillColor = palette.accent;
         bob1Graphics.circle(x1, y1, 8 + Math.sqrt(mass1) * 4);
         bob1Graphics.fill();
 
         bob2Graphics.clear();
-        bob2Graphics.fillColor = new Color(177, 47, 47, 255);
+        bob2Graphics.fillColor = palette.warning;
         bob2Graphics.circle(x2, y2, 8 + Math.sqrt(mass2) * 4);
         bob2Graphics.fill();
 
@@ -492,6 +529,7 @@ export const doublePendulumDefinition: ModuleDefinition = {
     title: 'Double Pendulum',
     description: 'Study a conservative planar double pendulum with measurable energy and constraint error.',
     category: 'physics',
+    labId: 'physics',
     tags: ['mechanics', 'chaos', 'conservation'],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
