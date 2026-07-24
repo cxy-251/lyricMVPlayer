@@ -27,14 +27,26 @@ export interface CursorSpaceEnemy {
     radius: number;
     dodgeSide: -1 | 1;
     threat: number;
+    spawnLevel: number;
+    movementSpeed: number;
+    turnRate: number;
+    shootingEnabled: boolean;
+    fireRemaining: number;
+    fireInterval: number;
+    projectileSpeed: number;
 }
+
+export type CursorSpaceProjectileOwner = 'player' | 'enemy';
 
 export interface CursorSpaceProjectile {
     active: boolean;
+    owner: CursorSpaceProjectileOwner;
+    sourceEnemyIndex: number;
     readonly position: CursorSpaceVector;
     readonly velocity: CursorSpaceVector;
     life: number;
     radius: number;
+    travelled: number;
 }
 
 export type CursorSpaceEffectKind = 'fragment' | 'ring';
@@ -47,6 +59,13 @@ export interface CursorSpaceEffect {
     life: number;
     initialLife: number;
     radius: number;
+}
+
+export interface CursorSpaceStats {
+    level: number;
+    enemiesDestroyed: number;
+    enemiesDestroyedByPlayer: number;
+    playerDeaths: number;
 }
 
 export interface CursorSpaceConfig {
@@ -71,7 +90,13 @@ export interface CursorSpaceConfig {
     readonly enemyAvoidanceTurnBoost: number;
     readonly enemySpawnInterval: number;
     readonly enemyMinimumSpawnInterval: number;
-    readonly enemySpawnAcceleration: number;
+    readonly enemyProjectileSpeed: number;
+    readonly enemyProjectileLife: number;
+    readonly enemyProjectileRadius: number;
+    readonly enemyProjectileNoseOffset: number;
+    readonly enemyProjectileArmDistance: number;
+    readonly enemyFireRange: number;
+    readonly enemyFireTolerance: number;
     readonly respawnDelay: number;
     readonly invulnerabilityDuration: number;
     readonly respawnClearRadius: number;
@@ -101,12 +126,18 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     enemyAvoidanceWeight: 3.4,
     enemyAvoidanceTurnBoost: 2.6,
     enemySpawnInterval: 1.05,
-    enemyMinimumSpawnInterval: 0.34,
-    enemySpawnAcceleration: 0.012,
+    enemyMinimumSpawnInterval: 0.42,
+    enemyProjectileSpeed: 330,
+    enemyProjectileLife: 2.4,
+    enemyProjectileRadius: 3.5,
+    enemyProjectileNoseOffset: 15,
+    enemyProjectileArmDistance: 30,
+    enemyFireRange: 520,
+    enemyFireTolerance: Math.PI * 0.08,
     respawnDelay: 0.8,
     invulnerabilityDuration: 1,
     respawnClearRadius: 150,
-    projectileCapacity: 48,
-    enemyCapacity: 28,
-    effectCapacity: 32,
+    projectileCapacity: 192,
+    enemyCapacity: 48,
+    effectCapacity: 160,
 };
