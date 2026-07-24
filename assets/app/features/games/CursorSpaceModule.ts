@@ -1,9 +1,13 @@
 import {
     Color,
+    EventMouse,
+    EventTouch,
     Graphics,
     HorizontalTextAlignment,
     Label,
     Node,
+    UITransform,
+    Vec3,
 } from 'cc';
 import type {
     Pausable,
@@ -34,6 +38,7 @@ import type {
 } from './CursorSpaceTypes';
 
 const RENDER_STEP = 1 / 30;
+const AI_TAKEOVER_DELAY = 2.5;
 
 class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'CursorSpace';
@@ -41,6 +46,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private readonly clock = new FixedStepClock(1 / 60, 6);
     private readonly model = new CursorSpaceModel();
     private readonly autopilot = new CursorSpaceAutopilot();
+    private readonly screenPoint = new Vec3();
     private readonly playerProjectileColor = new Color(
         palette.primaryText.r,
         palette.primaryText.g,
@@ -88,16 +94,20 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private playerTrailGraphics: Graphics | null = null;
     private playerGraphics: Graphics | null = null;
     private renderAccumulator = 0;
+    private humanIdleElapsed = AI_TAKEOVER_DELAY;
+    private aiActive = true;
     private paused = false;
 
     protected onMount(): void {
         this.model.reset();
-        this.autopilot.reset();
+        this.resetControlState();
         this.clock.reset();
         this.renderAccumulator = 0;
+        this.bindPointerInput();
     }
 
     protected onUnmount(): void {
+        this.unbindPointerInput();
         this.model.clearTarget();
         this.autopilot.reset();
         this.clock.reset();
@@ -114,7 +124,15 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         const frameDelta = Math.max(0, Math.min(0.1, dt));
         const steps = this.clock.advance(frameDelta, 1, (step) => {
-            this.autopilot.update(this.model, step);
+            if (!this.aiActive) {
+                this.humanIdleElapsed += step;
+                if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
+                    this.activateAutopilot();
+                }
+            }
+            if (this.aiActive) {
+                this.autopilot.update(this.model, step);
+            }
             this.model.step(step);
         });
         this.renderAccumulator += frameDelta;
@@ -137,7 +155,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     reset(): void {
         this.model.reset();
-        this.autopilot.reset();
+        this.resetControlState();
         this.clock.reset();
         this.renderAccumulator = 0;
         this.drawFrame();
@@ -256,6 +274,86 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.playerGraphics = null;
     }
 
+    private bindPointerInput(): void {
+        const root = this.requireRoot();
+        root.on(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
+        root.on(Node.EventType.MOUSE_LEAVE, this.handlePointerRelease, this);
+        root.on(Node.EventType.TOUCH_START, this.handleTouch, this);
+        root.on(Node.EventType.TOUCH_MOVE, this.handleTouch, this);
+        root.on(Node.EventType.TOUCH_END, this.handlePointerRelease, this);
+        root.on(Node.EventType.TOUCH_CANCEL, this.handlePointerRelease, this);
+    }
+
+    private unbindPointerInput(): void {
+        const root = this.root;
+        if (!root) {
+            return;
+        }
+
+        root.off(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
+        root.off(Node.EventType.MOUSE_LEAVE, this.handlePointerRelease, this);
+        root.off(Node.EventType.TOUCH_START, this.handleTouch, this);
+        root.off(Node.EventType.TOUCH_MOVE, this.handleTouch, this);
+        root.off(Node.EventType.TOUCH_END, this.handlePointerRelease, this);
+        root.off(Node.EventType.TOUCH_CANCEL, this.handlePointerRelease, this);
+    }
+
+    private readonly handleMouseMove = (event: EventMouse): void => {
+        if (this.paused) {
+            return;
+        }
+        const location = event.getUILocation();
+        this.activateHumanControl(location.x, location.y);
+    };
+
+    private readonly handleTouch = (event: EventTouch): void => {
+        if (this.paused) {
+            return;
+        }
+        const location = event.getUILocation();
+        this.activateHumanControl(location.x, location.y);
+    };
+
+    private readonly handlePointerRelease = (): void => {
+        if (!this.paused) {
+            this.activateAutopilot();
+        }
+    };
+
+    private activateHumanControl(screenX: number, screenY: number): void {
+        const root = this.root;
+        const transform = root?.getComponent(UITransform);
+        if (!root || !transform) {
+            return;
+        }
+
+        this.screenPoint.set(screenX, screenY, 0);
+        const localPoint = transform.convertToNodeSpaceAR(this.screenPoint);
+        if (this.aiActive) {
+            this.autopilot.reset();
+        }
+        this.aiActive = false;
+        this.humanIdleElapsed = 0;
+        this.model.setTarget(localPoint.x, localPoint.y);
+    }
+
+    private activateAutopilot(): void {
+        if (this.aiActive) {
+            return;
+        }
+        this.aiActive = true;
+        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
+        this.model.clearTarget();
+        this.autopilot.reset();
+    }
+
+    private resetControlState(): void {
+        this.aiActive = true;
+        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
+        this.model.clearTarget();
+        this.autopilot.reset();
+    }
+
     private drawStars(bounds: Readonly<CursorSpaceBounds>): void {
         const graphics = this.starsGraphics;
         if (!graphics) {
@@ -315,7 +413,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         const stats = this.model.stats;
-        this.statsLabel.string = `AUTO   LEVEL ${stats.level}   DESTROYED ${stats.enemiesDestroyed}`
+        const controller = this.aiActive ? 'AI' : 'HUMAN';
+        this.statsLabel.string = `${controller}   LEVEL ${stats.level}`
+            + `   DESTROYED ${stats.enemiesDestroyed}`
             + `   PLAYER ${stats.enemiesDestroyedByPlayer}   DEATHS ${stats.playerDeaths}`;
     }
 
@@ -528,10 +628,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 export const cursorSpaceDefinition: VisibleModuleDefinition = {
     id: 'cursor-space',
     title: 'Cursor Space',
-    description: 'Watch an autonomous cursor ship survive escalating geometric air combat.',
+    description: 'Control a cursor ship directly, with a survival-first AI taking over when idle.',
     category: 'game',
     labId: 'games',
-    tags: ['autonomous', 'simulation', 'combat'],
+    tags: ['hybrid-control', 'simulation', 'combat'],
     capabilities: ['pause', 'reset'],
     status: 'prototype',
     order: 10,
