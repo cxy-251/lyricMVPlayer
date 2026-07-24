@@ -21,6 +21,8 @@ export interface CursorSpacePlayer {
     maximumHealth: number;
     throttle: number;
     escortCount: number;
+    escortSide: -1 | 1;
+    fireSupportLevel: number;
 }
 
 export interface CursorSpaceEnemy {
@@ -86,6 +88,7 @@ export interface CursorSpaceConfig {
     readonly playerDeceleration: number;
     readonly playerMaximumHealth: number;
     readonly playerCollisionDamage: number;
+    readonly playerHitInvulnerabilityDuration: number;
     readonly playerNoseOffset: number;
     readonly playerAimResponse: number;
     readonly projectileSpeed: number;
@@ -94,10 +97,11 @@ export interface CursorSpaceConfig {
     readonly playerProjectileDamage: number;
     readonly fireInterval: number;
     readonly minimumFleetFireInterval: number;
-    readonly escortFireDensityPerFighter: number;
+    readonly fireSupportDensityPerLevel: number;
     readonly escortUnlockLevel: number;
-    readonly escortThreeLaneCount: number;
     readonly escortCapacity: number;
+    readonly escortRadius: number;
+    readonly fireSupportCapacity: number;
     readonly autoAimRange: number;
     readonly autoFireTolerance: number;
     readonly inheritedVelocity: number;
@@ -115,6 +119,7 @@ export interface CursorSpaceConfig {
     readonly enemyProjectileLife: number;
     readonly enemyProjectileRadius: number;
     readonly enemyProjectileDamage: number;
+    readonly enemyTierThreeProjectileDamage: number;
     readonly enemyProjectileNoseOffset: number;
     readonly enemyProjectileArmDistance: number;
     readonly enemyFireRange: number;
@@ -138,49 +143,52 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     playerMaximumSpeed: 540,
     playerAcceleration: 1_050,
     playerDeceleration: 1_360,
-    playerMaximumHealth: 5,
-    playerCollisionDamage: 2,
+    playerMaximumHealth: 3,
+    playerCollisionDamage: 3,
+    playerHitInvulnerabilityDuration: 0.12,
     playerNoseOffset: 19,
     playerAimResponse: 24,
     projectileSpeed: 610,
     projectileLife: 1.7,
     projectileRadius: 2.6,
     playerProjectileDamage: 1,
-    fireInterval: 0.18,
-    minimumFleetFireInterval: 0.06,
-    escortFireDensityPerFighter: 0.075,
+    fireInterval: 0.2,
+    minimumFleetFireInterval: 0.085,
+    fireSupportDensityPerLevel: 0.055,
     escortUnlockLevel: 4,
-    escortThreeLaneCount: 4,
-    escortCapacity: 24,
+    escortCapacity: 2,
+    escortRadius: 7,
+    fireSupportCapacity: 14,
     autoAimRange: 680,
     autoFireTolerance: Math.PI * 0.012,
     inheritedVelocity: 0.16,
     enemyRadius: 11,
-    enemySpeedTiers: [92, 118, 146],
-    enemyHealthTiers: [2, 4, 6],
-    enemyTurnRate: 2.8,
+    enemySpeedTiers: [108, 142, 188],
+    enemyHealthTiers: [3, 6, 10],
+    enemyTurnRate: 3.05,
     enemyAvoidanceHorizon: 0.72,
     enemyAvoidanceRadius: 58,
-    enemyAvoidanceWeight: 3.4,
-    enemyAvoidanceTurnBoost: 2.6,
+    enemyAvoidanceWeight: 3.2,
+    enemyAvoidanceTurnBoost: 2.8,
     enemySpawnInterval: 1.05,
-    enemyMinimumSpawnInterval: 0.42,
-    enemyProjectileSpeed: 340,
-    enemyProjectileLife: 2.6,
-    enemyProjectileRadius: 3.2,
+    enemyMinimumSpawnInterval: 0.26,
+    enemyProjectileSpeed: 370,
+    enemyProjectileLife: 2.8,
+    enemyProjectileRadius: 3.4,
     enemyProjectileDamage: 1,
+    enemyTierThreeProjectileDamage: 2,
     enemyProjectileNoseOffset: 15,
     enemyProjectileArmDistance: 30,
-    enemyFireRange: 560,
-    enemyFireTolerance: Math.PI * 0.1,
-    enemyTierOneFireInterval: 1.45,
-    enemyTierTwoBurstInterval: 0.18,
-    enemyTierTwoBurstSize: 4,
-    enemyTierTwoCooldown: 0.95,
-    enemyTierThreeFireInterval: 0.1,
+    enemyFireRange: 620,
+    enemyFireTolerance: Math.PI * 0.14,
+    enemyTierOneFireInterval: 1.05,
+    enemyTierTwoBurstInterval: 0.13,
+    enemyTierTwoBurstSize: 5,
+    enemyTierTwoCooldown: 0.68,
+    enemyTierThreeFireInterval: 0.09,
     respawnDelay: 0.8,
-    invulnerabilityDuration: 1,
-    respawnClearRadius: 150,
+    invulnerabilityDuration: 0.65,
+    respawnClearRadius: 96,
     projectileCapacity: 512,
     enemyCapacity: 48,
     effectCapacity: 240,
