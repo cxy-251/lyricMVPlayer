@@ -1,4 +1,4 @@
 export {
     CursorSpaceModel,
     type CursorSpaceWall,
-} from './CursorSpaceDynamicWallModel';
+} from './CursorSpaceClosedWallModel';
