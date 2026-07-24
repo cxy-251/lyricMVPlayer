@@ -245,10 +245,11 @@ export class ViewportService {
     }
 
     private hasBrowserDom(): boolean {
-        return typeof window !== 'undefined'
+        return sys.isBrowser
+            && typeof window !== 'undefined'
             && typeof document !== 'undefined'
-            && Boolean(document.documentElement)
-            && Boolean(document.body);
+            && Boolean(document.documentElement?.style)
+            && Boolean(document.body?.style);
     }
 
     private readSnapshot(): ViewportSnapshot {
