@@ -1,13 +1,9 @@
 import {
     Color,
-    EventMouse,
-    EventTouch,
     Graphics,
     HorizontalTextAlignment,
     Label,
     Node,
-    UITransform,
-    Vec3,
 } from 'cc';
 import type {
     Pausable,
@@ -25,6 +21,7 @@ import {
     fillNode,
     palette,
 } from '../../ui/UiFactory';
+import { CursorSpaceAutopilot } from './CursorSpaceAutopilot';
 import {
     CURSOR_SPACE_CURSOR_POINTS,
     CURSOR_SPACE_ENEMY_POINTS,
@@ -43,7 +40,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     private readonly clock = new FixedStepClock(1 / 60, 6);
     private readonly model = new CursorSpaceModel();
-    private readonly screenPoint = new Vec3();
+    private readonly autopilot = new CursorSpaceAutopilot();
     private readonly playerProjectileColor = new Color(
         palette.primaryText.r,
         palette.primaryText.g,
@@ -95,14 +92,14 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     protected onMount(): void {
         this.model.reset();
+        this.autopilot.reset();
         this.clock.reset();
         this.renderAccumulator = 0;
-        this.bindPointerInput();
     }
 
     protected onUnmount(): void {
-        this.unbindPointerInput();
         this.model.clearTarget();
+        this.autopilot.reset();
         this.clock.reset();
         this.renderAccumulator = 0;
         this.instancedRenderer?.dispose();
@@ -117,6 +114,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         const frameDelta = Math.max(0, Math.min(0.1, dt));
         const steps = this.clock.advance(frameDelta, 1, (step) => {
+            this.autopilot.update(this.model, step);
             this.model.step(step);
         });
         this.renderAccumulator += frameDelta;
@@ -139,6 +137,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     reset(): void {
         this.model.reset();
+        this.autopilot.reset();
         this.clock.reset();
         this.renderAccumulator = 0;
         this.drawFrame();
@@ -223,7 +222,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         const statsNode = createLabel(
             root,
             '',
-            Math.min(playWidth, compact ? 390 : 560),
+            Math.min(playWidth, compact ? 390 : 620),
             compact ? 20 : 24,
             compact ? 11 : 13,
             palette.muted,
@@ -255,64 +254,6 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.effectsGraphics = null;
         this.playerTrailGraphics = null;
         this.playerGraphics = null;
-    }
-
-    private bindPointerInput(): void {
-        const root = this.requireRoot();
-        root.on(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
-        root.on(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
-        root.on(Node.EventType.TOUCH_START, this.handleTouch, this);
-        root.on(Node.EventType.TOUCH_MOVE, this.handleTouch, this);
-        root.on(Node.EventType.TOUCH_END, this.handlePointerLeave, this);
-        root.on(Node.EventType.TOUCH_CANCEL, this.handlePointerLeave, this);
-    }
-
-    private unbindPointerInput(): void {
-        const root = this.root;
-        if (!root) {
-            return;
-        }
-
-        root.off(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
-        root.off(Node.EventType.MOUSE_LEAVE, this.handlePointerLeave, this);
-        root.off(Node.EventType.TOUCH_START, this.handleTouch, this);
-        root.off(Node.EventType.TOUCH_MOVE, this.handleTouch, this);
-        root.off(Node.EventType.TOUCH_END, this.handlePointerLeave, this);
-        root.off(Node.EventType.TOUCH_CANCEL, this.handlePointerLeave, this);
-    }
-
-    private readonly handleMouseMove = (event: EventMouse): void => {
-        if (this.paused) {
-            return;
-        }
-
-        const location = event.getUILocation();
-        this.updateTarget(location.x, location.y);
-    };
-
-    private readonly handleTouch = (event: EventTouch): void => {
-        if (this.paused) {
-            return;
-        }
-
-        const location = event.getUILocation();
-        this.updateTarget(location.x, location.y);
-    };
-
-    private readonly handlePointerLeave = (): void => {
-        this.model.clearTarget();
-    };
-
-    private updateTarget(screenX: number, screenY: number): void {
-        const root = this.root;
-        const transform = root?.getComponent(UITransform);
-        if (!root || !transform) {
-            return;
-        }
-
-        this.screenPoint.set(screenX, screenY, 0);
-        const localPoint = transform.convertToNodeSpaceAR(this.screenPoint);
-        this.model.setTarget(localPoint.x, localPoint.y);
     }
 
     private drawStars(bounds: Readonly<CursorSpaceBounds>): void {
@@ -374,7 +315,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         const stats = this.model.stats;
-        this.statsLabel.string = `LEVEL ${stats.level}   DESTROYED ${stats.enemiesDestroyed}`
+        this.statsLabel.string = `AUTO   LEVEL ${stats.level}   DESTROYED ${stats.enemiesDestroyed}`
             + `   PLAYER ${stats.enemiesDestroyedByPlayer}   DEATHS ${stats.playerDeaths}`;
     }
 
@@ -587,10 +528,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 export const cursorSpaceDefinition: VisibleModuleDefinition = {
     id: 'cursor-space',
     title: 'Cursor Space',
-    description: 'Survive escalating combat stages where every aircraft and projectile can become a threat.',
+    description: 'Watch an autonomous cursor ship survive escalating geometric air combat.',
     category: 'game',
     labId: 'games',
-    tags: ['cursor', 'survival', 'combat'],
+    tags: ['autonomous', 'simulation', 'combat'],
     capabilities: ['pause', 'reset'],
     status: 'prototype',
     order: 10,
