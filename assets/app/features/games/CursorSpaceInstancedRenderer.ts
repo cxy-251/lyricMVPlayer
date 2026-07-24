@@ -10,6 +10,7 @@ import {
     utils,
 } from 'cc';
 import type { ViewportSnapshot } from '../../services/ViewportService';
+import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
 import type {
     CursorSpaceBounds,
     CursorSpaceEffect,
@@ -61,8 +62,10 @@ const ENEMY_DEPTH = 10;
 const PROJECTILE_DEPTH = 20;
 const EFFECT_DEPTH = 30;
 const TRAIL_DEPTH = 40;
+const ESCORT_DEPTH = 47;
 const PLAYER_OUTLINE_DEPTH = 49;
 const PLAYER_DEPTH = 50;
+const MAX_ESCORT_INSTANCES = 24;
 const MINIMUM_LENGTH = 0.0001;
 
 export interface CursorSpaceInstancedColors {
@@ -99,6 +102,7 @@ export class CursorSpaceInstancedRenderer {
     private readonly projectileInstances: RenderInstance[];
     private readonly ringInstances: RenderInstance[];
     private readonly fragmentInstances: RenderInstance[];
+    private readonly escortInstances: RenderInstance[];
     private readonly trailInstance: RenderInstance;
     private readonly playerOutlineInstance: RenderInstance;
     private readonly playerInstance: RenderInstance;
@@ -184,6 +188,13 @@ export class CursorSpaceInstancedRenderer {
                 lineMesh,
                 playerMaterial,
                 40,
+            );
+            this.escortInstances = this.createPool(
+                'CursorSpaceEscortInstance',
+                MAX_ESCORT_INSTANCES,
+                cursorMesh,
+                playerMaterial,
+                47,
             );
             this.playerOutlineInstance = this.createInstance(
                 'CursorSpacePlayerOutlineInstance',
@@ -276,14 +287,18 @@ export class CursorSpaceInstancedRenderer {
                 continue;
             }
 
+            const tierScale = 0.92 + (enemy.speedTier - 1) * 0.1;
+            const healthScale = enemy.maximumHealth > 0
+                ? 0.94 + enemy.health / enemy.maximumHealth * 0.06
+                : 0.94;
             this.setTransform(
                 instance.node,
                 enemy.position.x,
                 enemy.position.y,
                 ENEMY_DEPTH,
                 enemy.rotation,
-                1,
-                1,
+                tierScale * healthScale,
+                tierScale * healthScale,
             );
         }
     }
@@ -316,7 +331,7 @@ export class CursorSpaceInstancedRenderer {
             const directionX = projectile.velocity.x / speed;
             const directionY = projectile.velocity.y / speed;
             const length = projectile.owner === 'enemy' ? 9 : 7;
-            const thickness = projectile.owner === 'enemy' ? 2.6 : 2;
+            const thickness = projectile.owner === 'enemy' ? 2.6 : 1.8;
             const centerX = projectile.position.x - directionX * length * 0.5;
             const centerY = projectile.position.y - directionY * length * 0.5;
             this.setTransform(
@@ -376,6 +391,25 @@ export class CursorSpaceInstancedRenderer {
         const blinkHidden = player.invulnerableRemaining > 0
             && Math.floor(player.invulnerableRemaining * 12) % 2 === 0;
         const playerVisible = player.alive && !blinkHidden;
+
+        for (let index = 0; index < this.escortInstances.length; index += 1) {
+            const instance = this.escortInstances[index];
+            if (!playerVisible || index >= player.escortCount) {
+                instance.node.active = false;
+                continue;
+            }
+            const position = cursorSpaceEscortWorldPosition(player, index);
+            this.setTransform(
+                instance.node,
+                position.x,
+                position.y,
+                ESCORT_DEPTH,
+                player.rotation,
+                0.48,
+                0.48,
+            );
+        }
+
         this.playerInstance.node.active = playerVisible;
         this.playerOutlineInstance.node.active = playerVisible;
 
@@ -408,7 +442,7 @@ export class CursorSpaceInstancedRenderer {
 
         const directionX = player.velocity.x / speed;
         const directionY = player.velocity.y / speed;
-        const endDistance = Math.min(25, 9 + speed * 0.032);
+        const endDistance = Math.min(28, 8 + speed * 0.036);
         const startDistance = 12;
         const segmentLength = Math.abs(endDistance - startDistance);
         if (segmentLength < 0.25) {
