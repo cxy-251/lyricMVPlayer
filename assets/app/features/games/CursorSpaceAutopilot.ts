@@ -38,8 +38,12 @@ export class CursorSpaceAutopilot {
     update(model: CursorSpaceModel, deltaTime: number): void {
         const dt = Math.max(0, Math.min(0.05, deltaTime));
         const player = model.player;
-        if (dt === 0 || !player.alive) {
+        if (dt === 0) {
+            return;
+        }
+        if (!player.alive) {
             model.clearTarget();
+            this.initialized = false;
             return;
         }
 
@@ -78,16 +82,17 @@ export class CursorSpaceAutopilot {
         );
 
         const bounds = model.currentBounds;
-        const inset = 18;
+        const insetX = Math.min(18, Math.max(0.5, (bounds.right - bounds.left) * 0.5 - 0.5));
+        const insetY = Math.min(18, Math.max(0.5, (bounds.top - bounds.bottom) * 0.5 - 0.5));
         const targetX = this.clamp(
             player.position.x + Math.cos(this.heading) * LOOK_AHEAD_DISTANCE,
-            bounds.left + inset,
-            bounds.right - inset,
+            bounds.left + insetX,
+            bounds.right - insetX,
         );
         const targetY = this.clamp(
             player.position.y + Math.sin(this.heading) * LOOK_AHEAD_DISTANCE,
-            bounds.bottom + inset,
-            bounds.top - inset,
+            bounds.bottom + insetY,
+            bounds.top - insetY,
         );
         model.setTarget(targetX, targetY);
     }
