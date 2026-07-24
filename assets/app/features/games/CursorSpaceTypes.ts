@@ -164,7 +164,7 @@ export const cursorSpaceConfig: CursorSpaceConfig = {
     inheritedVelocity: 0.16,
     enemyRadius: 11,
     enemySpeedTiers: [108, 142, 188],
-    enemyHealthTiers: [3, 6, 10],
+    enemyHealthTiers: [2, 3, 4],
     enemyTurnRate: 3.05,
     enemyAvoidanceHorizon: 0.72,
     enemyAvoidanceRadius: 58,
