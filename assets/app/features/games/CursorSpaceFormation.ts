@@ -5,25 +5,29 @@ export interface CursorSpaceFormationPoint {
     y: number;
 }
 
-const ESCORTS_PER_ROW = 4;
-const FIRST_ROW_DISTANCE = 31;
-const ROW_SPACING = 18;
-const COLUMN_SPACING = 15;
+const WING_LONGITUDINAL_OFFSET = -3;
+const WING_LATERAL_OFFSET = 25;
 
 export function cursorSpaceEscortOffset(
     index: number,
     count: number,
+    singleSide: -1 | 1 = 1,
 ): CursorSpaceFormationPoint {
-    const safeCount = Math.max(0, Math.floor(count));
-    const safeIndex = Math.max(0, Math.min(safeCount - 1, Math.floor(index)));
-    const row = Math.floor(safeIndex / ESCORTS_PER_ROW);
-    const rowStart = row * ESCORTS_PER_ROW;
-    const rowCount = Math.min(ESCORTS_PER_ROW, safeCount - rowStart);
-    const column = safeIndex - rowStart;
+    const safeCount = Math.max(0, Math.min(2, Math.floor(count)));
+    if (safeCount === 0) {
+        return { x: 0, y: 0 };
+    }
+
+    if (safeCount === 1) {
+        return {
+            x: WING_LONGITUDINAL_OFFSET,
+            y: WING_LATERAL_OFFSET * singleSide,
+        };
+    }
 
     return {
-        x: -(FIRST_ROW_DISTANCE + row * ROW_SPACING),
-        y: (column - (rowCount - 1) * 0.5) * COLUMN_SPACING,
+        x: WING_LONGITUDINAL_OFFSET,
+        y: index <= 0 ? -WING_LATERAL_OFFSET : WING_LATERAL_OFFSET,
     };
 }
 
@@ -31,7 +35,7 @@ export function cursorSpaceEscortWorldPosition(
     player: Readonly<CursorSpacePlayer>,
     index: number,
 ): CursorSpaceFormationPoint {
-    const offset = cursorSpaceEscortOffset(index, player.escortCount);
+    const offset = cursorSpaceEscortOffset(index, player.escortCount, player.escortSide);
     const cosine = Math.cos(player.rotation);
     const sine = Math.sin(player.rotation);
     return {
