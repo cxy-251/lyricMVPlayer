@@ -26,6 +26,7 @@ import {
     palette,
 } from '../../ui/UiFactory';
 import { CursorSpaceAutopilot } from './CursorSpaceAutopilot';
+import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
 import {
     CURSOR_SPACE_CURSOR_POINTS,
     CURSOR_SPACE_ENEMY_POINTS,
@@ -92,6 +93,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private enemyProjectilesGraphics: Graphics | null = null;
     private effectsGraphics: Graphics | null = null;
     private playerTrailGraphics: Graphics | null = null;
+    private escortsGraphics: Graphics | null = null;
     private playerGraphics: Graphics | null = null;
     private renderAccumulator = 0;
     private humanIdleElapsed = AI_TAKEOVER_DELAY;
@@ -233,6 +235,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             );
             this.effectsGraphics = this.createGraphics(root, 'CursorSpaceEffects', viewport);
             this.playerTrailGraphics = this.createGraphics(root, 'CursorSpacePlayerTrail', viewport);
+            this.escortsGraphics = this.createGraphics(root, 'CursorSpaceEscorts', viewport);
             this.playerGraphics = this.createGraphics(root, 'CursorSpacePlayer', viewport);
         }
 
@@ -240,9 +243,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         const statsNode = createLabel(
             root,
             '',
-            Math.min(playWidth, compact ? 390 : 620),
+            Math.min(playWidth, compact ? 420 : 720),
             compact ? 20 : 24,
-            compact ? 11 : 13,
+            compact ? 10 : 12,
             palette.muted,
             centerX,
             statsY,
@@ -271,6 +274,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.enemyProjectilesGraphics = null;
         this.effectsGraphics = null;
         this.playerTrailGraphics = null;
+        this.escortsGraphics = null;
         this.playerGraphics = null;
     }
 
@@ -401,6 +405,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             );
             this.drawEffects();
             this.drawPlayerTrail();
+            this.drawEscorts();
             this.drawPlayer();
         }
 
@@ -413,10 +418,16 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         const stats = this.model.stats;
+        const player = this.model.player;
         const controller = this.aiActive ? 'AI' : 'HUMAN';
-        this.statsLabel.string = `${controller}   LEVEL ${stats.level}`
-            + `   DESTROYED ${stats.enemiesDestroyed}`
-            + `   PLAYER ${stats.enemiesDestroyedByPlayer}   DEATHS ${stats.playerDeaths}`;
+        const speed = Math.round(Math.hypot(player.velocity.x, player.velocity.y));
+        this.statsLabel.string = `${controller} L${stats.level}`
+            + `  HP ${player.health}/${player.maximumHealth}`
+            + `  WING ${player.escortCount}`
+            + `  SPD ${speed}`
+            + `  K ${stats.enemiesDestroyedByPlayer}`
+            + `  ALL ${stats.enemiesDestroyed}`
+            + `  D ${stats.playerDeaths}`;
     }
 
     private drawEnemies(): void {
@@ -441,6 +452,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 enemy.position.y,
                 enemy.rotation,
                 CURSOR_SPACE_ENEMY_POINTS,
+                0.92 + (enemy.speedTier - 1) * 0.1,
             );
         }
 
@@ -460,7 +472,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         graphics.clear();
         graphics.strokeColor = color;
-        graphics.lineWidth = owner === 'enemy' ? 2.6 : 2;
+        graphics.lineWidth = owner === 'enemy' ? 2.6 : 1.8;
         let visible = false;
 
         for (const projectile of this.model.projectiles) {
@@ -548,7 +560,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
         const directionX = player.velocity.x / speed;
         const directionY = player.velocity.y / speed;
-        const length = Math.min(25, 9 + speed * 0.032);
+        const length = Math.min(28, 8 + speed * 0.036);
         graphics.strokeColor = this.playerColor;
         graphics.lineWidth = 1.5;
         graphics.moveTo(
@@ -560,6 +572,33 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             player.position.y - directionY * length,
         );
         graphics.stroke();
+    }
+
+    private drawEscorts(): void {
+        const graphics = this.escortsGraphics;
+        const player = this.model.player;
+        if (!graphics) {
+            return;
+        }
+
+        graphics.clear();
+        if (!player.alive || player.escortCount <= 0) {
+            return;
+        }
+
+        graphics.fillColor = this.playerColor;
+        for (let index = 0; index < player.escortCount; index += 1) {
+            const position = cursorSpaceEscortWorldPosition(player, index);
+            this.appendPolygon(
+                graphics,
+                position.x,
+                position.y,
+                player.rotation,
+                CURSOR_SPACE_CURSOR_POINTS,
+                0.48,
+            );
+        }
+        graphics.fill();
     }
 
     private drawPlayer(): void {
@@ -601,12 +640,15 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         y: number,
         rotation: number,
         points: ReadonlyArray<readonly [number, number]>,
+        scale = 1,
     ): void {
         const cosine = Math.cos(rotation);
         const sine = Math.sin(rotation);
 
         for (let index = 0; index < points.length; index += 1) {
-            const [localX, localY] = points[index];
+            const [rawX, rawY] = points[index];
+            const localX = rawX * scale;
+            const localY = rawY * scale;
             const pointX = x + localX * cosine - localY * sine;
             const pointY = y + localX * sine + localY * cosine;
 
@@ -617,7 +659,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             }
         }
 
-        const [firstX, firstY] = points[0];
+        const [rawFirstX, rawFirstY] = points[0];
+        const firstX = rawFirstX * scale;
+        const firstY = rawFirstY * scale;
         graphics.lineTo(
             x + firstX * cosine - firstY * sine,
             y + firstX * sine + firstY * cosine,
@@ -628,10 +672,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 export const cursorSpaceDefinition: VisibleModuleDefinition = {
     id: 'cursor-space',
     title: 'Cursor Space',
-    description: 'Control a cursor ship directly, with a survival-first AI taking over when idle.',
+    description: 'Build a growing escort fleet through sustained fire while a survival-first AI takes over when idle.',
     category: 'game',
     labId: 'games',
-    tags: ['hybrid-control', 'simulation', 'combat'],
+    tags: ['hybrid-control', 'fleet', 'simulation', 'combat'],
     capabilities: ['pause', 'reset'],
     status: 'prototype',
     order: 10,
