@@ -1,7 +1,6 @@
 import {
     Camera,
     Color,
-    Layers,
     Material,
     Mesh,
     MeshRenderer,
@@ -54,7 +53,7 @@ const QUAD_INDICES = [
 const RING_SEGMENTS = 32;
 const RING_INNER_RADIUS = 0.84;
 const RADIANS_TO_DEGREES = 180 / Math.PI;
-const RENDER_LAYER = Layers.Enum.DEFAULT;
+const RENDER_LAYER = 1 << 18;
 const CAMERA_DEPTH = 1000;
 const CAMERA_PRIORITY = 100;
 const ENEMY_DEPTH = 10;
@@ -65,7 +64,7 @@ const PLAYER_OUTLINE_DEPTH = 49;
 const PLAYER_DEPTH = 50;
 const MINIMUM_LENGTH = 0.0001;
 
-interface CursorSpaceInstancedColors {
+export interface CursorSpaceInstancedColors {
     readonly enemy: Color;
     readonly projectile: Color;
     readonly effect: Color;
@@ -73,7 +72,7 @@ interface CursorSpaceInstancedColors {
     readonly playerOutline: Color;
 }
 
-interface CursorSpaceInstancedRendererOptions {
+export interface CursorSpaceInstancedRendererOptions {
     readonly parent: Node;
     readonly viewport: ViewportSnapshot;
     readonly bounds: Readonly<CursorSpaceBounds>;
@@ -105,88 +104,94 @@ export class CursorSpaceInstancedRenderer {
     constructor(options: CursorSpaceInstancedRendererOptions) {
         this.modelRoot = this.createRoot(options.parent, 'CursorSpaceInstancedModels');
         this.cameraNode = this.createRoot(options.parent, 'CursorSpaceInstancedCamera');
-        this.configureCamera(options.viewport, options.bounds);
 
-        const enemyMesh = this.trackMesh(this.createPolygonMesh(
-            'CursorSpaceEnemyMesh',
-            CURSOR_SPACE_ENEMY_POINTS,
-            ENEMY_INDICES,
-        ));
-        const cursorMesh = this.trackMesh(this.createPolygonMesh(
-            'CursorSpaceCursorMesh',
-            CURSOR_SPACE_CURSOR_POINTS,
-            CURSOR_INDICES,
-        ));
-        const lineMesh = this.trackMesh(this.createQuadMesh('CursorSpaceLineMesh'));
-        const ringMesh = this.trackMesh(this.createRingMesh());
+        try {
+            this.configureCamera(options.viewport, options.bounds);
 
-        const enemyMaterial = this.trackMaterial(this.createMaterial(
-            'CursorSpaceEnemyMaterial',
-            options.colors.enemy,
-        ));
-        const projectileMaterial = this.trackMaterial(this.createMaterial(
-            'CursorSpaceProjectileMaterial',
-            options.colors.projectile,
-        ));
-        const effectMaterial = this.trackMaterial(this.createMaterial(
-            'CursorSpaceEffectMaterial',
-            options.colors.effect,
-        ));
-        const playerMaterial = this.trackMaterial(this.createMaterial(
-            'CursorSpacePlayerMaterial',
-            options.colors.player,
-        ));
-        const playerOutlineMaterial = this.trackMaterial(this.createMaterial(
-            'CursorSpacePlayerOutlineMaterial',
-            options.colors.playerOutline,
-        ));
+            const enemyMesh = this.trackMesh(this.createPolygonMesh(
+                'CursorSpaceEnemyMesh',
+                CURSOR_SPACE_ENEMY_POINTS,
+                ENEMY_INDICES,
+            ));
+            const cursorMesh = this.trackMesh(this.createPolygonMesh(
+                'CursorSpaceCursorMesh',
+                CURSOR_SPACE_CURSOR_POINTS,
+                CURSOR_INDICES,
+            ));
+            const lineMesh = this.trackMesh(this.createQuadMesh('CursorSpaceLineMesh'));
+            const ringMesh = this.trackMesh(this.createRingMesh());
 
-        this.enemyInstances = this.createPool(
-            'CursorSpaceEnemyInstance',
-            options.enemyCapacity,
-            enemyMesh,
-            enemyMaterial,
-            10,
-        );
-        this.projectileInstances = this.createPool(
-            'CursorSpaceProjectileInstance',
-            options.projectileCapacity,
-            lineMesh,
-            projectileMaterial,
-            20,
-        );
-        this.ringInstances = this.createPool(
-            'CursorSpaceRingInstance',
-            options.effectCapacity,
-            ringMesh,
-            effectMaterial,
-            30,
-        );
-        this.fragmentInstances = this.createPool(
-            'CursorSpaceFragmentInstance',
-            options.effectCapacity,
-            lineMesh,
-            effectMaterial,
-            31,
-        );
-        this.trailInstance = this.createInstance(
-            'CursorSpacePlayerTrailInstance',
-            lineMesh,
-            playerMaterial,
-            40,
-        );
-        this.playerOutlineInstance = this.createInstance(
-            'CursorSpacePlayerOutlineInstance',
-            cursorMesh,
-            playerOutlineMaterial,
-            49,
-        );
-        this.playerInstance = this.createInstance(
-            'CursorSpacePlayerInstance',
-            cursorMesh,
-            playerMaterial,
-            50,
-        );
+            const enemyMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpaceEnemyMaterial',
+                options.colors.enemy,
+            ));
+            const projectileMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpaceProjectileMaterial',
+                options.colors.projectile,
+            ));
+            const effectMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpaceEffectMaterial',
+                options.colors.effect,
+            ));
+            const playerMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpacePlayerMaterial',
+                options.colors.player,
+            ));
+            const playerOutlineMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpacePlayerOutlineMaterial',
+                options.colors.playerOutline,
+            ));
+
+            this.enemyInstances = this.createPool(
+                'CursorSpaceEnemyInstance',
+                options.enemyCapacity,
+                enemyMesh,
+                enemyMaterial,
+                10,
+            );
+            this.projectileInstances = this.createPool(
+                'CursorSpaceProjectileInstance',
+                options.projectileCapacity,
+                lineMesh,
+                projectileMaterial,
+                20,
+            );
+            this.ringInstances = this.createPool(
+                'CursorSpaceRingInstance',
+                options.effectCapacity,
+                ringMesh,
+                effectMaterial,
+                30,
+            );
+            this.fragmentInstances = this.createPool(
+                'CursorSpaceFragmentInstance',
+                options.effectCapacity,
+                lineMesh,
+                effectMaterial,
+                31,
+            );
+            this.trailInstance = this.createInstance(
+                'CursorSpacePlayerTrailInstance',
+                lineMesh,
+                playerMaterial,
+                40,
+            );
+            this.playerOutlineInstance = this.createInstance(
+                'CursorSpacePlayerOutlineInstance',
+                cursorMesh,
+                playerOutlineMaterial,
+                49,
+            );
+            this.playerInstance = this.createInstance(
+                'CursorSpacePlayerInstance',
+                cursorMesh,
+                playerMaterial,
+                50,
+            );
+        } catch (error) {
+            this.dispose();
+            throw error;
+        }
     }
 
     sync(
@@ -445,17 +450,23 @@ export class CursorSpaceInstancedRenderer {
     private createMaterial(name: string, color: Readonly<Color>): Material {
         const material = new Material();
         material.name = name;
-        material.initialize({
-            effectName: 'builtin-unlit',
-            technique: 1,
-            defines: {
-                USE_INSTANCING: true,
-                USE_TEXTURE: false,
-                USE_VERTEX_COLOR: false,
-            },
-        });
-        material.setProperty('mainColor', new Color(color.r, color.g, color.b, color.a));
-        return material;
+
+        try {
+            material.initialize({
+                effectName: 'builtin-unlit',
+                technique: 1,
+                defines: {
+                    USE_INSTANCING: true,
+                    USE_TEXTURE: false,
+                    USE_VERTEX_COLOR: false,
+                },
+            });
+            material.setProperty('mainColor', new Color(color.r, color.g, color.b, color.a));
+            return material;
+        } catch (error) {
+            material.destroy();
+            throw error;
+        }
     }
 
     private createPolygonMesh(
