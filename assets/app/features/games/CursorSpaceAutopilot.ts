@@ -5,21 +5,30 @@ import type {
     CursorSpaceProjectile,
 } from './CursorSpaceTypes';
 
-const CANDIDATE_COUNT = 24;
-const LOOK_AHEAD_DISTANCE = 148;
-const PLAYER_PREDICTED_SPEED = 360;
-const ENEMY_HORIZON = 0.62;
-const PROJECTILE_HORIZON = 0.78;
-const ENEMY_SAFETY_PADDING = 54;
-const PROJECTILE_SAFETY_RADIUS = 76;
-const BOUNDARY_MARGIN = 82;
-const ENGAGEMENT_RADIUS = 178;
-const MAXIMUM_TURN_RATE = 3.4;
+const CANDIDATE_COUNT = 36;
+const LOOK_AHEAD_DISTANCE = 190;
+const PLAYER_PREDICTED_SPEED = 430;
+const PLAYER_RADIUS = 10;
+const ENEMY_HORIZON = 1.05;
+const PROJECTILE_HORIZON = 1.2;
+const ENEMY_SAFETY_PADDING = 72;
+const PROJECTILE_SAFETY_PADDING = 64;
+const BOUNDARY_MARGIN = 96;
+const ENGAGEMENT_RADIUS = 230;
+const NORMAL_TURN_RATE = 4.4;
+const EMERGENCY_TURN_RATE = 9.5;
+const SURVIVAL_TIE_WINDOW = 42;
 const MINIMUM_LENGTH = 0.0001;
 
 interface Direction {
     x: number;
     y: number;
+}
+
+interface CandidateEvaluation {
+    heading: number;
+    survival: number;
+    tactical: number;
 }
 
 export class CursorSpaceAutopilot {
@@ -56,27 +65,35 @@ export class CursorSpaceAutopilot {
             this.initialized = true;
         }
 
-        if (Math.floor((this.elapsed - dt) / 7.5) !== Math.floor(this.elapsed / 7.5)) {
+        if (Math.floor((this.elapsed - dt) / 8.5) !== Math.floor(this.elapsed / 8.5)) {
             this.orbitSide = this.orbitSide === 1 ? -1 : 1;
         }
 
         const preferred = this.preferredEngagementDirection(model);
-        let bestHeading = this.heading;
-        let bestScore = Number.NEGATIVE_INFINITY;
+        let best: CandidateEvaluation | null = null;
 
         for (let index = 0; index < CANDIDATE_COUNT; index += 1) {
             const angle = Math.PI * 2 * index / CANDIDATE_COUNT;
             const directionX = Math.cos(angle);
             const directionY = Math.sin(angle);
-            const score = this.scoreDirection(model, directionX, directionY, preferred);
-            if (score > bestScore) {
-                bestScore = score;
-                bestHeading = angle;
+            const candidate = this.evaluateDirection(
+                model,
+                angle,
+                directionX,
+                directionY,
+                preferred,
+            );
+            if (!best || this.isBetterCandidate(candidate, best)) {
+                best = candidate;
             }
         }
 
+        const bestHeading = best?.heading ?? this.heading;
+        const danger = this.immediateDanger(model);
+        const turnRate = NORMAL_TURN_RATE
+            + (EMERGENCY_TURN_RATE - NORMAL_TURN_RATE) * danger;
         const difference = this.wrapAngle(bestHeading - this.heading);
-        const maximumTurn = MAXIMUM_TURN_RATE * dt;
+        const maximumTurn = turnRate * dt;
         this.heading = this.wrapAngle(
             this.heading + this.clamp(difference, -maximumTurn, maximumTurn),
         );
@@ -97,36 +114,29 @@ export class CursorSpaceAutopilot {
         model.setTarget(targetX, targetY);
     }
 
-    private scoreDirection(
+    private evaluateDirection(
         model: CursorSpaceModel,
+        heading: number,
         directionX: number,
         directionY: number,
         preferred: Direction,
-    ): number {
+    ): CandidateEvaluation {
         const player = model.player;
         const candidateVelocityX = directionX * PLAYER_PREDICTED_SPEED;
         const candidateVelocityY = directionY * PLAYER_PREDICTED_SPEED;
         const candidateX = player.position.x + directionX * LOOK_AHEAD_DISTANCE;
         const candidateY = player.position.y + directionY * LOOK_AHEAD_DISTANCE;
-        let score = 0;
-
-        score += (directionX * preferred.x + directionY * preferred.y) * 52;
-
-        const playerSpeed = Math.hypot(player.velocity.x, player.velocity.y);
-        if (playerSpeed > 12) {
-            score += (
-                directionX * player.velocity.x / playerSpeed
-                + directionY * player.velocity.y / playerSpeed
-            ) * 26;
-        }
-
-        score += this.boundaryScore(model.currentBounds, candidateX, candidateY);
+        let survival = this.boundarySurvival(
+            model.currentBounds,
+            candidateX,
+            candidateY,
+        );
 
         for (const enemy of model.enemies) {
             if (!enemy.active) {
                 continue;
             }
-            score += this.enemyThreatScore(
+            survival += this.enemySurvivalScore(
                 player.position.x,
                 player.position.y,
                 candidateVelocityX,
@@ -139,7 +149,7 @@ export class CursorSpaceAutopilot {
             if (!projectile.active || projectile.owner !== 'enemy') {
                 continue;
             }
-            score += this.projectileThreatScore(
+            survival += this.projectileSurvivalScore(
                 player.position.x,
                 player.position.y,
                 candidateVelocityX,
@@ -148,11 +158,36 @@ export class CursorSpaceAutopilot {
             );
         }
 
-        score += Math.sin(this.elapsed * 0.72 + directionX * 2.3 + directionY * 3.1) * 1.8;
-        return score;
+        let tactical = (directionX * preferred.x + directionY * preferred.y) * 34;
+        const playerSpeed = Math.hypot(player.velocity.x, player.velocity.y);
+        if (playerSpeed > 12) {
+            tactical += (
+                directionX * player.velocity.x / playerSpeed
+                + directionY * player.velocity.y / playerSpeed
+            ) * 14;
+        }
+        tactical += Math.cos(this.wrapAngle(heading - this.heading)) * 10;
+        tactical += Math.sin(this.elapsed * 0.61 + directionX * 2.1 + directionY * 2.7) * 1.2;
+
+        return { heading, survival, tactical };
     }
 
-    private boundaryScore(bounds: Readonly<CursorSpaceBounds>, x: number, y: number): number {
+    private isBetterCandidate(
+        candidate: Readonly<CandidateEvaluation>,
+        current: Readonly<CandidateEvaluation>,
+    ): boolean {
+        const survivalDifference = candidate.survival - current.survival;
+        if (Math.abs(survivalDifference) > SURVIVAL_TIE_WINDOW) {
+            return survivalDifference > 0;
+        }
+        return candidate.tactical > current.tactical;
+    }
+
+    private boundarySurvival(
+        bounds: Readonly<CursorSpaceBounds>,
+        x: number,
+        y: number,
+    ): number {
         const left = x - bounds.left;
         const right = bounds.right - x;
         const bottom = y - bounds.bottom;
@@ -160,16 +195,16 @@ export class CursorSpaceAutopilot {
         const clearance = Math.min(left, right, bottom, top);
 
         if (clearance <= 0) {
-            return -1000 - Math.abs(clearance) * 12;
+            return -24_000 - Math.abs(clearance) * 120;
         }
         if (clearance < BOUNDARY_MARGIN) {
             const pressure = 1 - clearance / BOUNDARY_MARGIN;
-            return -240 * pressure * pressure;
+            return -4_600 * pressure * pressure * pressure;
         }
-        return Math.min(18, clearance * 0.045);
+        return Math.min(36, clearance * 0.08);
     }
 
-    private enemyThreatScore(
+    private enemySurvivalScore(
         playerX: number,
         playerY: number,
         candidateVelocityX: number,
@@ -187,20 +222,27 @@ export class CursorSpaceAutopilot {
             relativeVelocityY,
             ENEMY_HORIZON,
         );
-        const safetyRadius = enemy.radius + ENEMY_SAFETY_PADDING;
+        const collisionRadius = PLAYER_RADIUS + enemy.radius;
+        const safetyRadius = collisionRadius + ENEMY_SAFETY_PADDING;
+
+        if (closest.distance <= collisionRadius) {
+            const penetration = 1 - closest.distance / Math.max(1, collisionRadius);
+            return -18_000 - penetration * 8_000;
+        }
         if (closest.distance >= safetyRadius) {
-            return Math.min(8, closest.distance * 0.012);
+            return 0;
         }
 
-        const spatialThreat = 1 - closest.distance / safetyRadius;
-        const temporalThreat = 1 - closest.time / ENEMY_HORIZON;
+        const pressure = 1 - (closest.distance - collisionRadius)
+            / (safetyRadius - collisionRadius);
+        const urgency = 1 - closest.time / ENEMY_HORIZON;
         return -(
-            spatialThreat * spatialThreat * 310
-            + temporalThreat * spatialThreat * 120
+            pressure * pressure * 3_800
+            + pressure * urgency * 1_500
         );
     }
 
-    private projectileThreatScore(
+    private projectileSurvivalScore(
         playerX: number,
         playerY: number,
         candidateVelocityX: number,
@@ -218,17 +260,63 @@ export class CursorSpaceAutopilot {
             relativeVelocityY,
             PROJECTILE_HORIZON,
         );
-        const safetyRadius = PROJECTILE_SAFETY_RADIUS + projectile.radius;
+        const collisionRadius = PLAYER_RADIUS + projectile.radius;
+        const safetyRadius = collisionRadius + PROJECTILE_SAFETY_PADDING;
+
+        if (closest.distance <= collisionRadius) {
+            const penetration = 1 - closest.distance / Math.max(1, collisionRadius);
+            return -28_000 - penetration * 12_000;
+        }
         if (closest.distance >= safetyRadius) {
             return 0;
         }
 
-        const spatialThreat = 1 - closest.distance / safetyRadius;
-        const temporalThreat = 1 - closest.time / PROJECTILE_HORIZON;
+        const pressure = 1 - (closest.distance - collisionRadius)
+            / (safetyRadius - collisionRadius);
+        const urgency = 1 - closest.time / PROJECTILE_HORIZON;
         return -(
-            spatialThreat * spatialThreat * 460
-            + temporalThreat * spatialThreat * 210
+            pressure * pressure * 7_600
+            + pressure * urgency * 3_400
         );
+    }
+
+    private immediateDanger(model: CursorSpaceModel): number {
+        const player = model.player;
+        let danger = 0;
+
+        const left = player.position.x - model.currentBounds.left;
+        const right = model.currentBounds.right - player.position.x;
+        const bottom = player.position.y - model.currentBounds.bottom;
+        const top = model.currentBounds.top - player.position.y;
+        const boundaryClearance = Math.min(left, right, bottom, top);
+        danger = Math.max(danger, this.clamp(1 - boundaryClearance / 74, 0, 1));
+
+        for (const enemy of model.enemies) {
+            if (!enemy.active) {
+                continue;
+            }
+            const distance = Math.hypot(
+                enemy.position.x - player.position.x,
+                enemy.position.y - player.position.y,
+            );
+            danger = Math.max(danger, this.clamp(1 - distance / 125, 0, 1));
+        }
+
+        for (const projectile of model.projectiles) {
+            if (!projectile.active || projectile.owner !== 'enemy') {
+                continue;
+            }
+            const closest = this.closestApproach(
+                projectile.position.x - player.position.x,
+                projectile.position.y - player.position.y,
+                projectile.velocity.x - player.velocity.x,
+                projectile.velocity.y - player.velocity.y,
+                0.72,
+            );
+            danger = Math.max(danger, this.clamp(1 - closest.distance / 82, 0, 1));
+        }
+
+        return danger;
     }
 
     private preferredEngagementDirection(model: CursorSpaceModel): Direction {
@@ -253,8 +341,8 @@ export class CursorSpaceAutopilot {
             const centerX = (model.currentBounds.left + model.currentBounds.right) / 2;
             const centerY = (model.currentBounds.bottom + model.currentBounds.top) / 2;
             return this.normalized(
-                centerX - player.position.x + Math.cos(this.elapsed * 0.43) * 60,
-                centerY - player.position.y + Math.sin(this.elapsed * 0.37) * 60,
+                centerX - player.position.x + Math.cos(this.elapsed * 0.41) * 54,
+                centerY - player.position.y + Math.sin(this.elapsed * 0.34) * 54,
             );
         }
 
@@ -265,13 +353,13 @@ export class CursorSpaceAutopilot {
         const tangentY = radialX * this.orbitSide;
         const radialWeight = this.clamp(
             (ENGAGEMENT_RADIUS - distance) / ENGAGEMENT_RADIUS,
-            -0.9,
-            1.2,
+            -0.55,
+            1.35,
         );
 
         return this.normalized(
-            tangentX * 0.92 + radialX * radialWeight,
-            tangentY * 0.92 + radialY * radialWeight,
+            tangentX * 0.72 + radialX * radialWeight,
+            tangentY * 0.72 + radialY * radialWeight,
         );
     }
 
