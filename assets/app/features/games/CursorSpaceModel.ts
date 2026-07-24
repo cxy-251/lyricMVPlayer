@@ -1,3 +1,4 @@
+import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
 import { CursorSpaceModel as CursorSpaceCombatModel } from './CursorSpaceCombatModel';
 import {
     cursorSpaceConfig,
@@ -17,12 +18,14 @@ const DODGE_TRIGGER = 0.035;
 const DODGE_FIRE_DELAY = 0.28;
 
 /**
- * Public model facade.
+ * Public gameplay model.
  *
  * The combat core owns spawning, collisions, firing and progression. This
- * facade adds two player-facing rules without exposing core internals:
- * - every player kill restores one life, capped at three;
- * - enemies perform an early, visible lateral dodge before the core step.
+ * facade enforces the player-facing combat rules:
+ * - every enemy is destroyed by one projectile hit;
+ * - the player body has one life and up to two escorts absorb body-bound shots;
+ * - player kills replenish missing escorts;
+ * - enemy dodges change heading only and never change movement speed.
  */
 export class CursorSpaceModel {
     readonly player: CursorSpacePlayer;
@@ -32,14 +35,28 @@ export class CursorSpaceModel {
     readonly effects: CursorSpaceEffect[];
 
     private readonly core: CursorSpaceCombatModel;
+    private readonly config: CursorSpaceConfig;
 
     constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
-        this.core = new CursorSpaceCombatModel(config);
+        this.config = config;
+        this.core = new CursorSpaceCombatModel({
+            ...config,
+            playerMaximumHealth: 1,
+            playerCollisionDamage: 1,
+            playerHitInvulnerabilityDuration: 0,
+            enemyHealthTiers: [1, 1, 1],
+            enemyProjectileDamage: 1,
+            enemyTierThreeProjectileDamage: 1,
+            // Escort restoration is handled here for every level.
+            escortUnlockLevel: Number.MAX_SAFE_INTEGER,
+        });
         this.player = this.core.player;
         this.stats = this.core.stats;
         this.enemies = this.core.enemies;
         this.projectiles = this.core.projectiles;
         this.effects = this.core.effects;
+        this.refillEscortLives();
+        this.normalizeOneHitEnemies();
     }
 
     get currentBounds(): Readonly<CursorSpaceBounds> {
@@ -60,6 +77,8 @@ export class CursorSpaceModel {
 
     reset(): void {
         this.core.reset();
+        this.refillEscortLives();
+        this.normalizeOneHitEnemies();
     }
 
     step(deltaTime: number): void {
@@ -68,27 +87,170 @@ export class CursorSpaceModel {
             return;
         }
 
+        const wasAlive = this.player.alive;
+        const previousPlayerKills = this.stats.enemiesDestroyedByPlayer;
+
+        this.normalizeOneHitEnemies();
         if (this.player.alive) {
             this.applyVisibleEnemyDodges(dt);
+            this.interceptBodyBoundShots(dt);
         }
 
-        const previousPlayerKills = this.stats.enemiesDestroyedByPlayer;
         this.core.step(dt);
-        const restoredLives = this.stats.enemiesDestroyedByPlayer - previousPlayerKills;
+        this.normalizeOneHitEnemies();
 
-        if (this.player.alive && restoredLives > 0) {
-            this.player.health = Math.min(
-                this.player.maximumHealth,
-                this.player.health + restoredLives,
+        if (!wasAlive && this.player.alive) {
+            this.refillEscortLives();
+        }
+
+        const newPlayerKills = this.stats.enemiesDestroyedByPlayer - previousPlayerKills;
+        if (this.player.alive && newPlayerKills > 0) {
+            this.restoreEscortLives(newPlayerKills);
+        }
+
+        this.player.maximumHealth = 1;
+        if (this.player.alive) {
+            this.player.health = 1;
+        }
+    }
+
+    private normalizeOneHitEnemies(): void {
+        for (const enemy of this.enemies) {
+            if (!enemy.active) {
+                continue;
+            }
+            enemy.maximumHealth = 1;
+            enemy.health = 1;
+        }
+    }
+
+    private refillEscortLives(): void {
+        this.player.maximumHealth = 1;
+        this.player.health = this.player.alive ? 1 : 0;
+        this.player.escortCount = this.config.escortCapacity;
+        this.player.escortSide = 1;
+        this.player.fireSupportLevel = 0;
+    }
+
+    private restoreEscortLives(kills: number): void {
+        for (let index = 0; index < kills; index += 1) {
+            if (this.player.escortCount < this.config.escortCapacity) {
+                if (this.player.escortCount === 0) {
+                    this.player.escortSide = this.stats.enemiesDestroyedByPlayer % 2 === 0 ? -1 : 1;
+                }
+                this.player.escortCount += 1;
+                continue;
+            }
+
+            this.player.fireSupportLevel = Math.min(
+                this.config.fireSupportCapacity,
+                this.player.fireSupportLevel + 1,
             );
+        }
+    }
+
+    private interceptBodyBoundShots(dt: number): void {
+        if (
+            !this.player.alive
+            || this.player.escortCount <= 0
+            || this.player.invulnerableRemaining > 0
+        ) {
+            return;
+        }
+
+        const predictedPlayerX = this.player.position.x + this.player.velocity.x * dt;
+        const predictedPlayerY = this.player.position.y + this.player.velocity.y * dt;
+
+        for (const projectile of this.projectiles) {
+            if (
+                this.player.escortCount <= 0
+                || !projectile.active
+                || projectile.owner !== 'enemy'
+            ) {
+                continue;
+            }
+
+            const nextX = projectile.position.x + projectile.velocity.x * dt;
+            const nextY = projectile.position.y + projectile.velocity.y * dt;
+            const hitRadius = this.config.playerRadius + projectile.radius;
+            const distanceSquared = this.pointToSegmentDistanceSquared(
+                predictedPlayerX,
+                predictedPlayerY,
+                projectile.position.x,
+                projectile.position.y,
+                nextX,
+                nextY,
+            );
+
+            if (distanceSquared > hitRadius * hitRadius) {
+                continue;
+            }
+
+            projectile.active = false;
+            this.consumeEscortLife(projectile.position.x, projectile.position.y);
+        }
+    }
+
+    private consumeEscortLife(impactX: number, impactY: number): void {
+        if (this.player.escortCount <= 0) {
+            return;
+        }
+
+        let escortIndex = 0;
+        if (this.player.escortCount === 2) {
+            const lateralX = -Math.sin(this.player.rotation);
+            const lateralY = Math.cos(this.player.rotation);
+            const lateralPosition = (impactX - this.player.position.x) * lateralX
+                + (impactY - this.player.position.y) * lateralY;
+            escortIndex = lateralPosition >= 0 ? 1 : 0;
+        }
+
+        const escortPosition = cursorSpaceEscortWorldPosition(this.player, escortIndex);
+        if (this.player.escortCount === 2) {
+            this.player.escortSide = escortIndex === 0 ? 1 : -1;
+            this.player.escortCount = 1;
+        } else {
+            this.player.escortCount = 0;
+        }
+        this.spawnEscortBurst(escortPosition.x, escortPosition.y);
+    }
+
+    private spawnEscortBurst(x: number, y: number): void {
+        const ring = this.effects.find((effect) => !effect.active);
+        if (ring) {
+            ring.active = true;
+            ring.kind = 'ring';
+            ring.position.x = x;
+            ring.position.y = y;
+            ring.velocity.x = 0;
+            ring.velocity.y = 0;
+            ring.life = 0.3;
+            ring.initialLife = ring.life;
+            ring.radius = 4;
+        }
+
+        for (let index = 0; index < 6; index += 1) {
+            const fragment = this.effects.find((effect) => !effect.active);
+            if (!fragment) {
+                return;
+            }
+            const angle = Math.PI * 2 * index / 6;
+            fragment.active = true;
+            fragment.kind = 'fragment';
+            fragment.position.x = x;
+            fragment.position.y = y;
+            fragment.velocity.x = Math.cos(angle) * 120;
+            fragment.velocity.y = Math.sin(angle) * 120;
+            fragment.life = 0.3;
+            fragment.initialLife = fragment.life;
+            fragment.radius = 3.4;
         }
     }
 
     private applyVisibleEnemyDodges(dt: number): void {
         const bounds = this.currentBounds;
 
-        for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex += 1) {
-            const enemy = this.enemies[enemyIndex];
+        for (const enemy of this.enemies) {
             if (!enemy.active || !this.isInsidePlayArea(enemy, bounds)) {
                 continue;
             }
@@ -182,24 +344,36 @@ export class CursorSpaceModel {
                     + this.clamp(rotationDifference, -maximumTurn, maximumTurn),
             );
 
-            const lateralStep = enemy.movementSpeed
-                * (0.72 + bestThreat * 1.05)
-                * dt;
-            enemy.position.x = this.clamp(
-                enemy.position.x + dodgeX * lateralStep,
-                bounds.left + enemy.radius,
-                bounds.right - enemy.radius,
-            );
-            enemy.position.y = this.clamp(
-                enemy.position.y + dodgeY * lateralStep,
-                bounds.bottom + enemy.radius,
-                bounds.top - enemy.radius,
-            );
-
-            const burstSpeed = enemy.movementSpeed * (1 + bestThreat * 0.42);
-            enemy.velocity.x = Math.cos(enemy.rotation) * burstSpeed;
-            enemy.velocity.y = Math.sin(enemy.rotation) * burstSpeed;
+            // Enemy aircraft may turn quickly, but their scalar speed never changes.
+            enemy.velocity.x = Math.cos(enemy.rotation) * enemy.movementSpeed;
+            enemy.velocity.y = Math.sin(enemy.rotation) * enemy.movementSpeed;
         }
+    }
+
+    private pointToSegmentDistanceSquared(
+        pointX: number,
+        pointY: number,
+        startX: number,
+        startY: number,
+        endX: number,
+        endY: number,
+    ): number {
+        const segmentX = endX - startX;
+        const segmentY = endY - startY;
+        const lengthSquared = segmentX * segmentX + segmentY * segmentY;
+        if (lengthSquared < MINIMUM_VECTOR_LENGTH) {
+            return (pointX - startX) ** 2 + (pointY - startY) ** 2;
+        }
+
+        const projection = this.clamp(
+            ((pointX - startX) * segmentX + (pointY - startY) * segmentY)
+                / lengthSquared,
+            0,
+            1,
+        );
+        const closestX = startX + segmentX * projection;
+        const closestY = startY + segmentY * projection;
+        return (pointX - closestX) ** 2 + (pointY - closestY) ** 2;
     }
 
     private isInsidePlayArea(
