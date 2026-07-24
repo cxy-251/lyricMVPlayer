@@ -16,6 +16,7 @@ import type {
     CursorSpaceEnemy,
     CursorSpacePlayer,
     CursorSpaceProjectile,
+    CursorSpaceProjectileOwner,
 } from './CursorSpaceTypes';
 
 export const CURSOR_SPACE_CURSOR_POINTS: ReadonlyArray<readonly [number, number]> = [
@@ -66,7 +67,8 @@ const MINIMUM_LENGTH = 0.0001;
 
 export interface CursorSpaceInstancedColors {
     readonly enemy: Color;
-    readonly projectile: Color;
+    readonly playerProjectile: Color;
+    readonly enemyProjectile: Color;
     readonly effect: Color;
     readonly player: Color;
     readonly playerOutline: Color;
@@ -85,6 +87,7 @@ export interface CursorSpaceInstancedRendererOptions {
 interface RenderInstance {
     readonly node: Node;
     readonly renderer: MeshRenderer;
+    projectileOwner: CursorSpaceProjectileOwner | null;
 }
 
 export class CursorSpaceInstancedRenderer {
@@ -99,6 +102,8 @@ export class CursorSpaceInstancedRenderer {
     private readonly trailInstance: RenderInstance;
     private readonly playerOutlineInstance: RenderInstance;
     private readonly playerInstance: RenderInstance;
+    private readonly playerProjectileMaterial: Material;
+    private readonly enemyProjectileMaterial: Material;
     private disposed = false;
 
     constructor(options: CursorSpaceInstancedRendererOptions) {
@@ -125,9 +130,13 @@ export class CursorSpaceInstancedRenderer {
                 'CursorSpaceEnemyMaterial',
                 options.colors.enemy,
             ));
-            const projectileMaterial = this.trackMaterial(this.createMaterial(
-                'CursorSpaceProjectileMaterial',
-                options.colors.projectile,
+            this.playerProjectileMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpacePlayerProjectileMaterial',
+                options.colors.playerProjectile,
+            ));
+            this.enemyProjectileMaterial = this.trackMaterial(this.createMaterial(
+                'CursorSpaceEnemyProjectileMaterial',
+                options.colors.enemyProjectile,
             ));
             const effectMaterial = this.trackMaterial(this.createMaterial(
                 'CursorSpaceEffectMaterial',
@@ -153,7 +162,7 @@ export class CursorSpaceInstancedRenderer {
                 'CursorSpaceProjectileInstance',
                 options.projectileCapacity,
                 lineMesh,
-                projectileMaterial,
+                this.playerProjectileMaterial,
                 20,
             );
             this.ringInstances = this.createPool(
@@ -288,6 +297,16 @@ export class CursorSpaceInstancedRenderer {
                 continue;
             }
 
+            if (instance.projectileOwner !== projectile.owner) {
+                instance.renderer.setSharedMaterial(
+                    projectile.owner === 'enemy'
+                        ? this.enemyProjectileMaterial
+                        : this.playerProjectileMaterial,
+                    0,
+                );
+                instance.projectileOwner = projectile.owner;
+            }
+
             const speed = Math.hypot(projectile.velocity.x, projectile.velocity.y);
             if (!Number.isFinite(speed) || speed < MINIMUM_LENGTH) {
                 instance.node.active = false;
@@ -296,7 +315,8 @@ export class CursorSpaceInstancedRenderer {
 
             const directionX = projectile.velocity.x / speed;
             const directionY = projectile.velocity.y / speed;
-            const length = 7;
+            const length = projectile.owner === 'enemy' ? 9 : 7;
+            const thickness = projectile.owner === 'enemy' ? 2.6 : 2;
             const centerX = projectile.position.x - directionX * length * 0.5;
             const centerY = projectile.position.y - directionY * length * 0.5;
             this.setTransform(
@@ -306,7 +326,7 @@ export class CursorSpaceInstancedRenderer {
                 PROJECTILE_DEPTH,
                 Math.atan2(directionY, directionX),
                 length,
-                2,
+                thickness,
             );
         }
     }
@@ -444,7 +464,7 @@ export class CursorSpaceInstancedRenderer {
         renderer.setSharedMaterial(material, 0);
         renderer.priority = priority;
         node.active = false;
-        return { node, renderer };
+        return { node, renderer, projectileOwner: null };
     }
 
     private createMaterial(name: string, color: Readonly<Color>): Material {
