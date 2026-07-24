@@ -40,6 +40,15 @@ import type {
 
 const RENDER_STEP = 1 / 30;
 const AI_TAKEOVER_DELAY = 2.5;
+const ENEMY_HIT_EXPLOSION_DURATION = 0.24;
+const MAX_VISIBLE_HIT_EXPLOSIONS = 32;
+
+interface CursorSpaceHitExplosion {
+    x: number;
+    y: number;
+    life: number;
+    angle: number;
+}
 
 class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'CursorSpace';
@@ -48,6 +57,8 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private readonly model = new CursorSpaceModel();
     private readonly autopilot = new CursorSpaceAutopilot();
     private readonly screenPoint = new Vec3();
+    private readonly enemyHealthSnapshot = new Array<number>(this.model.enemies.length).fill(0);
+    private readonly hitExplosions: CursorSpaceHitExplosion[] = [];
     private readonly playerProjectileColor = new Color(
         palette.primaryText.r,
         palette.primaryText.g,
@@ -76,7 +87,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         palette.primaryText.r,
         palette.primaryText.g,
         palette.primaryText.b,
-        175,
+        215,
     );
     private readonly starColor = new Color(
         palette.subtle.r,
@@ -88,6 +99,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private instancedRenderer: CursorSpaceInstancedRenderer | null = null;
     private statsLabel: Label | null = null;
     private starsGraphics: Graphics | null = null;
+    private hitExplosionsGraphics: Graphics | null = null;
     private enemiesGraphics: Graphics | null = null;
     private playerProjectilesGraphics: Graphics | null = null;
     private enemyProjectilesGraphics: Graphics | null = null;
@@ -102,6 +114,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     protected onMount(): void {
         this.model.reset();
+        this.resetHitFeedback();
         this.resetControlState();
         this.clock.reset();
         this.renderAccumulator = 0;
@@ -112,6 +125,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.unbindPointerInput();
         this.model.clearTarget();
         this.autopilot.reset();
+        this.resetHitFeedback();
         this.clock.reset();
         this.renderAccumulator = 0;
         this.instancedRenderer?.dispose();
@@ -136,6 +150,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 this.autopilot.update(this.model, step);
             }
             this.model.step(step);
+            this.updateHitFeedback(step);
         });
         this.renderAccumulator += frameDelta;
 
@@ -157,6 +172,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     reset(): void {
         this.model.reset();
+        this.resetHitFeedback();
         this.resetControlState();
         this.clock.reset();
         this.renderAccumulator = 0;
@@ -221,6 +237,11 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
 
         this.starsGraphics = this.createGraphics(root, 'CursorSpaceStars', viewport);
+        this.hitExplosionsGraphics = this.createGraphics(
+            root,
+            'CursorSpaceHitExplosions',
+            viewport,
+        );
         if (!this.instancedRenderer) {
             this.enemiesGraphics = this.createGraphics(root, 'CursorSpaceEnemies', viewport);
             this.playerProjectilesGraphics = this.createGraphics(
@@ -269,6 +290,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private clearGraphicsReferences(): void {
         this.statsLabel = null;
         this.starsGraphics = null;
+        this.hitExplosionsGraphics = null;
         this.enemiesGraphics = null;
         this.playerProjectilesGraphics = null;
         this.enemyProjectilesGraphics = null;
@@ -358,6 +380,41 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.autopilot.reset();
     }
 
+    private resetHitFeedback(): void {
+        this.hitExplosions.length = 0;
+        for (let index = 0; index < this.enemyHealthSnapshot.length; index += 1) {
+            const enemy = this.model.enemies[index];
+            this.enemyHealthSnapshot[index] = enemy?.active ? enemy.health : 0;
+        }
+    }
+
+    private updateHitFeedback(dt: number): void {
+        for (let index = this.hitExplosions.length - 1; index >= 0; index -= 1) {
+            const explosion = this.hitExplosions[index];
+            explosion.life -= dt;
+            if (explosion.life <= 0) {
+                this.hitExplosions.splice(index, 1);
+            }
+        }
+
+        for (let index = 0; index < this.model.enemies.length; index += 1) {
+            const enemy = this.model.enemies[index];
+            const previousHealth = this.enemyHealthSnapshot[index] ?? 0;
+            if (enemy.active && enemy.health > 0 && previousHealth > enemy.health) {
+                if (this.hitExplosions.length >= MAX_VISIBLE_HIT_EXPLOSIONS) {
+                    this.hitExplosions.shift();
+                }
+                this.hitExplosions.push({
+                    x: enemy.position.x,
+                    y: enemy.position.y,
+                    life: ENEMY_HIT_EXPLOSION_DURATION,
+                    angle: (index * 2.399963229728653) % (Math.PI * 2),
+                });
+            }
+            this.enemyHealthSnapshot[index] = enemy.active ? enemy.health : 0;
+        }
+    }
+
     private drawStars(bounds: Readonly<CursorSpaceBounds>): void {
         const graphics = this.starsGraphics;
         if (!graphics) {
@@ -409,7 +466,41 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             this.drawPlayer();
         }
 
+        this.drawHitExplosions();
         this.updateStatsLabel();
+    }
+
+    private drawHitExplosions(): void {
+        const graphics = this.hitExplosionsGraphics;
+        if (!graphics) {
+            return;
+        }
+
+        graphics.clear();
+        if (this.hitExplosions.length === 0) {
+            return;
+        }
+
+        graphics.strokeColor = this.effectColor;
+        graphics.lineWidth = 2.1;
+        for (const explosion of this.hitExplosions) {
+            const progress = 1 - explosion.life / ENEMY_HIT_EXPLOSION_DURATION;
+            const outerRadius = 4 + progress * 15;
+            const innerRadius = Math.max(1.5, outerRadius * 0.42);
+            graphics.circle(explosion.x, explosion.y, outerRadius);
+            graphics.circle(explosion.x, explosion.y, innerRadius);
+
+            for (let ray = 0; ray < 6; ray += 1) {
+                const angle = explosion.angle + ray * Math.PI / 3;
+                const innerX = explosion.x + Math.cos(angle) * innerRadius;
+                const innerY = explosion.y + Math.sin(angle) * innerRadius;
+                const outerX = explosion.x + Math.cos(angle) * (outerRadius + 5);
+                const outerY = explosion.y + Math.sin(angle) * (outerRadius + 5);
+                graphics.moveTo(innerX, innerY);
+                graphics.lineTo(outerX, outerY);
+            }
+        }
+        graphics.stroke();
     }
 
     private updateStatsLabel(): void {
@@ -422,7 +513,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         const controller = this.aiActive ? 'AI' : 'HUMAN';
         const speed = Math.round(Math.hypot(player.velocity.x, player.velocity.y));
         this.statsLabel.string = `${controller} L${stats.level}`
-            + `  HP ${player.health}/${player.maximumHealth}`
+            + `  HULL ${player.health}/${player.maximumHealth}`
             + `  WING ${player.escortCount}`
             + `  SPD ${speed}`
             + `  K ${stats.enemiesDestroyedByPlayer}`
@@ -672,7 +763,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 export const cursorSpaceDefinition: VisibleModuleDefinition = {
     id: 'cursor-space',
     title: 'Cursor Space',
-    description: 'Build a growing escort fleet through sustained fire while a survival-first AI takes over when idle.',
+    description: 'Sustained hull combat with visible hit explosions and survival-first AI takeover.',
     category: 'game',
     labId: 'games',
     tags: ['hybrid-control', 'fleet', 'simulation', 'combat'],
