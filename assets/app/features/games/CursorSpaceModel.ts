@@ -22,9 +22,9 @@ const ATTACK_CIRCLE_RADIUS = 112;
 const APPROACH_LANE_RADIUS = 92;
 const APPROACH_LANE_HALF_ANGLE = Math.PI * 0.22;
 const NORMAL_PURSUIT_HALF_ANGLE = Math.PI * 0.18;
-const AVOIDANCE_HALF_ANGLE = Math.PI * 0.38;
-const FRIENDLY_AVOIDANCE_DISTANCE = 42;
-const FRIENDLY_AVOIDANCE_WEIGHT = 1.8;
+const AVOIDANCE_HALF_ANGLE = Math.PI * 0.4;
+const FRIENDLY_AVOIDANCE_DISTANCE = 44;
+const FRIENDLY_AVOIDANCE_WEIGHT = 1.85;
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 const MINIMUM_VECTOR_LENGTH = 0.0001;
 
@@ -39,6 +39,7 @@ interface CursorSpaceLevelProfile {
     readonly maximumFireTier: 0 | 1 | 2 | 3;
     readonly continuousFireChance: number;
     readonly projectileSpeedMultiplier: number;
+    readonly healthMultiplier: number;
 }
 
 type EnemyDestroyCause =
@@ -57,95 +58,103 @@ const BASE_LEVELS: readonly CursorSpaceLevelProfile[] = [
         spawnInterval: 1.05,
         maximumSpeedTier: 1,
         fastTierChance: 0,
-        turnMultiplier: 0.9,
+        turnMultiplier: 0.92,
         shootingChance: 0,
         maximumFireTier: 0,
         continuousFireChance: 0,
-        projectileSpeedMultiplier: 0.9,
+        projectileSpeedMultiplier: 0.92,
+        healthMultiplier: 1,
     },
     {
         level: 2,
         maxActiveEnemies: 10,
-        spawnInterval: 0.96,
+        spawnInterval: 0.88,
         maximumSpeedTier: 1,
         fastTierChance: 0,
-        turnMultiplier: 0.95,
-        shootingChance: 0,
-        maximumFireTier: 0,
+        turnMultiplier: 0.98,
+        shootingChance: 0.2,
+        maximumFireTier: 1,
         continuousFireChance: 0,
-        projectileSpeedMultiplier: 0.94,
+        projectileSpeedMultiplier: 0.98,
+        healthMultiplier: 1,
     },
     {
         level: 3,
-        maxActiveEnemies: 12,
-        spawnInterval: 0.88,
+        maxActiveEnemies: 13,
+        spawnInterval: 0.72,
         maximumSpeedTier: 2,
-        fastTierChance: 0.24,
-        turnMultiplier: 1,
-        shootingChance: 0.38,
-        maximumFireTier: 1,
-        continuousFireChance: 0,
-        projectileSpeedMultiplier: 1,
-    },
-    {
-        level: 4,
-        maxActiveEnemies: 14,
-        spawnInterval: 0.82,
-        maximumSpeedTier: 2,
-        fastTierChance: 0.46,
+        fastTierChance: 0.35,
         turnMultiplier: 1.04,
-        shootingChance: 0.52,
+        shootingChance: 0.55,
         maximumFireTier: 1,
         continuousFireChance: 0,
         projectileSpeedMultiplier: 1.04,
+        healthMultiplier: 1.1,
     },
     {
-        level: 5,
-        maxActiveEnemies: 16,
-        spawnInterval: 0.76,
+        level: 4,
+        maxActiveEnemies: 17,
+        spawnInterval: 0.54,
         maximumSpeedTier: 2,
-        fastTierChance: 0.68,
-        turnMultiplier: 1.08,
-        shootingChance: 0.7,
-        maximumFireTier: 2,
-        continuousFireChance: 0,
-        projectileSpeedMultiplier: 1.08,
-    },
-    {
-        level: 6,
-        maxActiveEnemies: 18,
-        spawnInterval: 0.7,
-        maximumSpeedTier: 3,
-        fastTierChance: 0.26,
+        fastTierChance: 0.75,
         turnMultiplier: 1.12,
-        shootingChance: 0.8,
+        shootingChance: 0.85,
         maximumFireTier: 2,
         continuousFireChance: 0,
         projectileSpeedMultiplier: 1.12,
+        healthMultiplier: 1.25,
+    },
+    {
+        level: 5,
+        maxActiveEnemies: 20,
+        spawnInterval: 0.44,
+        maximumSpeedTier: 3,
+        fastTierChance: 0.28,
+        turnMultiplier: 1.2,
+        shootingChance: 0.92,
+        maximumFireTier: 2,
+        continuousFireChance: 0,
+        projectileSpeedMultiplier: 1.2,
+        healthMultiplier: 1.4,
+    },
+    {
+        level: 6,
+        maxActiveEnemies: 23,
+        spawnInterval: 0.36,
+        maximumSpeedTier: 3,
+        fastTierChance: 0.5,
+        turnMultiplier: 1.28,
+        shootingChance: 0.96,
+        maximumFireTier: 3,
+        continuousFireChance: 0.28,
+        projectileSpeedMultiplier: 1.28,
+        healthMultiplier: 1.55,
     },
     {
         level: 7,
-        maxActiveEnemies: 20,
-        spawnInterval: 0.64,
+        maxActiveEnemies: 26,
+        spawnInterval: 0.31,
         maximumSpeedTier: 3,
-        fastTierChance: 0.5,
-        turnMultiplier: 1.16,
-        shootingChance: 0.9,
+        fastTierChance: 0.68,
+        turnMultiplier: 1.36,
+        shootingChance: 0.98,
         maximumFireTier: 3,
-        continuousFireChance: 0.25,
-        projectileSpeedMultiplier: 1.16,
+        continuousFireChance: 0.52,
+        projectileSpeedMultiplier: 1.34,
+        healthMultiplier: 1.7,
     },
     {
         level: 8,
-        maxActiveEnemies: 22,
-        spawnInterval: 0.58,
+        maxActiveEnemies: 30,
+        spawnInterval: 0.27,
         maximumSpeedTier: 3,
-        fastTierChance: 0.72,
-        turnMultiplier: 1.2,
-        shootingChance: 0.96,
+        fastTierChance: 0.82,
+        turnMultiplier: 1.44,
+        shootingChance: 1,
         maximumFireTier: 3,
-        continuousFireChance: 0.56,
-        projectileSpeedMultiplier: 1.2,
+        continuousFireChance: 0.75,
+        projectileSpeedMultiplier: 1.4,
+        healthMultiplier: 1.85,
     },
 ];
 
@@ -161,6 +170,8 @@ export class CursorSpaceModel {
         maximumHealth: cursorSpaceConfig.playerMaximumHealth,
         throttle: 0.45,
         escortCount: 0,
+        escortSide: 1,
+        fireSupportLevel: 0,
     };
 
     readonly stats: CursorSpaceStats = {
@@ -177,11 +188,11 @@ export class CursorSpaceModel {
     private bounds: CursorSpaceBounds = { ...DEFAULT_BOUNDS };
     private readonly target = { x: 0, y: 0 };
     private targetActive = false;
+    private directControl = false;
     private aimTarget: CursorSpaceEnemy | null = null;
     private enemySpawnRemaining = 0;
     private fireRemaining = 0;
     private spawnSerial = 0;
-    private escortFireCursor = 0;
     private readonly enemyApproachAngle: number[];
 
     constructor(private readonly config: CursorSpaceConfig = cursorSpaceConfig) {
@@ -254,27 +265,35 @@ export class CursorSpaceModel {
         this.target.y = this.clamp(this.target.y, bounds.bottom, bounds.top);
     }
 
-    setTarget(x: number, y: number, throttle = 1): void {
-        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(throttle)) {
+    setTarget(x: number, y: number, throttle?: number): void {
+        if (
+            !Number.isFinite(x)
+            || !Number.isFinite(y)
+            || (throttle !== undefined && !Number.isFinite(throttle))
+        ) {
             return;
         }
 
         this.target.x = this.clamp(x, this.bounds.left, this.bounds.right);
         this.target.y = this.clamp(y, this.bounds.bottom, this.bounds.top);
-        this.player.throttle = this.clamp(throttle, 0.08, 1);
+        this.directControl = throttle === undefined;
+        this.player.throttle = this.directControl
+            ? 1
+            : this.clamp(throttle ?? 1, 0.08, 1);
         this.targetActive = true;
     }
 
     clearTarget(): void {
         this.targetActive = false;
+        this.directControl = false;
     }
 
     reset(): void {
         this.enemySpawnRemaining = 0.45;
         this.fireRemaining = 0;
         this.spawnSerial = 0;
-        this.escortFireCursor = 0;
         this.targetActive = false;
+        this.directControl = false;
         this.aimTarget = null;
         this.stats.level = 1;
         this.stats.enemiesDestroyed = 0;
@@ -283,6 +302,7 @@ export class CursorSpaceModel {
 
         for (const enemy of this.enemies) {
             enemy.active = false;
+            enemy.health = 0;
             enemy.threat = 0;
             enemy.shootingEnabled = false;
             enemy.fireRemaining = 0;
@@ -308,6 +328,8 @@ export class CursorSpaceModel {
         this.player.health = this.player.maximumHealth;
         this.player.throttle = 0.45;
         this.player.escortCount = 0;
+        this.player.escortSide = 1;
+        this.player.fireSupportLevel = 0;
     }
 
     step(deltaTime: number): void {
@@ -337,9 +359,30 @@ export class CursorSpaceModel {
     private updatePlayer(dt: number): void {
         const player = this.player;
         player.invulnerableRemaining = Math.max(0, player.invulnerableRemaining - dt);
+
+        if (this.directControl) {
+            const previousX = player.position.x;
+            const previousY = player.position.y;
+
+            if (this.targetActive) {
+                const dx = this.target.x - player.position.x;
+                const dy = this.target.y - player.position.y;
+                const distance = Math.hypot(dx, dy);
+                if (distance > 0.25) {
+                    const movement = Math.min(this.config.playerMaximumSpeed * dt, distance);
+                    player.position.x += dx / distance * movement;
+                    player.position.y += dy / distance * movement;
+                }
+            }
+
+            player.velocity.x = (player.position.x - previousX) / dt;
+            player.velocity.y = (player.position.y - previousY) / dt;
+            this.clampPlayerToBounds();
+            return;
+        }
+
         let desiredVelocityX = 0;
         let desiredVelocityY = 0;
-
         if (this.targetActive) {
             const dx = this.target.x - player.position.x;
             const dy = this.target.y - player.position.y;
@@ -429,15 +472,7 @@ export class CursorSpaceModel {
             return;
         }
 
-        const escortCount = this.player.escortCount;
-        const laneCount = escortCount >= this.config.escortThreeLaneCount
-            ? 3
-            : escortCount > 0
-                ? 2
-                : 1;
-        let fired = false;
-
-        fired = this.spawnProjectile(
+        let fired = this.spawnProjectile(
             'player',
             -1,
             this.player.position.x,
@@ -451,11 +486,10 @@ export class CursorSpaceModel {
             this.config.playerProjectileDamage,
             this.config.playerNoseOffset,
             this.config.inheritedVelocity,
-        ) || fired;
+        );
 
-        for (let lane = 1; lane < laneCount; lane += 1) {
-            const escortIndex = (this.escortFireCursor + lane - 1) % escortCount;
-            const source = cursorSpaceEscortWorldPosition(this.player, escortIndex);
+        for (let index = 0; index < this.player.escortCount; index += 1) {
+            const source = cursorSpaceEscortWorldPosition(this.player, index);
             fired = this.spawnProjectile(
                 'player',
                 -1,
@@ -474,13 +508,14 @@ export class CursorSpaceModel {
         }
 
         if (fired) {
-            this.escortFireCursor = escortCount > 0
-                ? (this.escortFireCursor + Math.max(1, laneCount - 1)) % escortCount
-                : 0;
             this.fireRemaining = Math.max(
                 this.config.minimumFleetFireInterval,
                 this.config.fireInterval
-                    / (1 + escortCount * this.config.escortFireDensityPerFighter),
+                    / (
+                        1
+                        + this.player.fireSupportLevel
+                            * this.config.fireSupportDensityPerLevel
+                    ),
             );
         }
     }
@@ -501,8 +536,9 @@ export class CursorSpaceModel {
                 continue;
             }
 
-            const dx = this.player.position.x - enemy.position.x;
-            const dy = this.player.position.y - enemy.position.y;
+            const aimPoint = this.enemyAimPoint(enemy);
+            const dx = aimPoint.x - enemy.position.x;
+            const dy = aimPoint.y - enemy.position.y;
             if (dx * dx + dy * dy > this.config.enemyFireRange * this.config.enemyFireRange) {
                 continue;
             }
@@ -512,8 +548,8 @@ export class CursorSpaceModel {
                 enemy.position.y,
                 enemy.velocity.x,
                 enemy.velocity.y,
-                this.player.position.x,
-                this.player.position.y,
+                aimPoint.x,
+                aimPoint.y,
                 this.player.velocity.x,
                 this.player.velocity.y,
                 enemy.projectileSpeed,
@@ -524,6 +560,9 @@ export class CursorSpaceModel {
                 continue;
             }
 
+            const damage = enemy.fireTier === 3 && enemy.spawnLevel >= 6
+                ? this.config.enemyTierThreeProjectileDamage
+                : this.config.enemyProjectileDamage;
             if (!this.spawnProjectile(
                 'enemy',
                 enemyIndex,
@@ -535,7 +574,7 @@ export class CursorSpaceModel {
                 enemy.projectileSpeed,
                 this.config.enemyProjectileLife,
                 this.config.enemyProjectileRadius,
-                this.config.enemyProjectileDamage,
+                damage,
                 this.config.enemyProjectileNoseOffset,
                 0.12,
             )) {
@@ -544,23 +583,44 @@ export class CursorSpaceModel {
 
             if (enemy.fireTier === 1) {
                 enemy.fireRemaining = this.config.enemyTierOneFireInterval
-                    * (0.85 + Math.random() * 0.3);
+                    * (0.82 + Math.random() * 0.28);
             } else if (enemy.fireTier === 2) {
                 if (enemy.burstRemaining <= 0) {
                     enemy.burstRemaining = this.config.enemyTierTwoBurstSize;
                 }
                 enemy.burstRemaining -= 1;
-                if (enemy.burstRemaining > 0) {
-                    enemy.fireRemaining = this.config.enemyTierTwoBurstInterval;
-                } else {
-                    enemy.fireRemaining = this.config.enemyTierTwoCooldown
-                        * (0.85 + Math.random() * 0.3);
-                }
+                enemy.fireRemaining = enemy.burstRemaining > 0
+                    ? this.config.enemyTierTwoBurstInterval
+                    : this.config.enemyTierTwoCooldown * (0.82 + Math.random() * 0.26);
             } else {
                 enemy.fireRemaining = this.config.enemyTierThreeFireInterval
-                    * (0.9 + Math.random() * 0.2);
+                    * (0.88 + Math.random() * 0.18);
             }
         }
+    }
+
+    private enemyAimPoint(enemy: Readonly<CursorSpaceEnemy>): { x: number; y: number } {
+        let bestX = this.player.position.x;
+        let bestY = this.player.position.y;
+        let bestDistanceSquared = (
+            bestX - enemy.position.x
+        ) ** 2 + (
+            bestY - enemy.position.y
+        ) ** 2;
+
+        for (let index = 0; index < this.player.escortCount; index += 1) {
+            const escort = cursorSpaceEscortWorldPosition(this.player, index);
+            const dx = escort.x - enemy.position.x;
+            const dy = escort.y - enemy.position.y;
+            const distanceSquared = dx * dx + dy * dy;
+            if (distanceSquared < bestDistanceSquared) {
+                bestDistanceSquared = distanceSquared;
+                bestX = escort.x;
+                bestY = escort.y;
+            }
+        }
+
+        return { x: bestX, y: bestY };
     }
 
     private findNearestEnemy(): CursorSpaceEnemy | null {
@@ -692,6 +752,10 @@ export class CursorSpaceModel {
     }
 
     private updateEnemySpawning(dt: number): void {
+        if (!this.player.alive) {
+            return;
+        }
+
         this.enemySpawnRemaining -= dt;
         if (this.enemySpawnRemaining > 0) {
             return;
@@ -699,7 +763,7 @@ export class CursorSpaceModel {
 
         const profile = this.levelProfile(this.stats.level);
         if (this.countActiveEnemies() >= profile.maxActiveEnemies) {
-            this.enemySpawnRemaining = 0.15;
+            this.enemySpawnRemaining = 0.1;
             return;
         }
 
@@ -740,21 +804,25 @@ export class CursorSpaceModel {
         const dy = this.player.position.y - enemy.position.y;
         const speedTier = this.chooseSpeedTier(profile);
         const fireTier = this.chooseFireTier(profile);
+        const baseHealth = this.config.enemyHealthTiers[speedTier - 1];
+
         enemy.rotation = Math.atan2(dy, dx);
         enemy.spawnLevel = profile.level;
         enemy.speedTier = speedTier;
         enemy.fireTier = fireTier;
         enemy.movementSpeed = this.config.enemySpeedTiers[speedTier - 1];
         enemy.turnRate = this.config.enemyTurnRate * profile.turnMultiplier;
-        enemy.maximumHealth = this.config.enemyHealthTiers[speedTier - 1];
+        enemy.maximumHealth = Math.max(1, Math.round(baseHealth * profile.healthMultiplier));
         enemy.health = enemy.maximumHealth;
         enemy.velocity.x = Math.cos(enemy.rotation) * enemy.movementSpeed;
         enemy.velocity.y = Math.sin(enemy.rotation) * enemy.movementSpeed;
-        enemy.radius = this.config.enemyRadius + (speedTier - 1) * 1.4;
+        enemy.radius = this.config.enemyRadius + (speedTier - 1) * 1.5;
         enemy.dodgeSide = this.stableSide(enemyIndex, this.spawnSerial);
         enemy.shootingEnabled = fireTier > 0;
         enemy.fireInterval = this.fireIntervalForTier(fireTier);
-        enemy.fireRemaining = enemy.fireInterval * (0.65 + Math.random() * 0.75);
+        enemy.fireRemaining = Number.isFinite(enemy.fireInterval)
+            ? enemy.fireInterval * (0.45 + Math.random() * 0.65)
+            : Number.POSITIVE_INFINITY;
         enemy.burstRemaining = 0;
         enemy.projectileSpeed = this.config.enemyProjectileSpeed
             * profile.projectileSpeedMultiplier;
@@ -776,7 +844,12 @@ export class CursorSpaceModel {
         if (profile.maximumSpeedTier === 2) {
             return Math.random() < profile.fastTierChance ? 2 : 1;
         }
-        return Math.random() < profile.fastTierChance ? 3 : 2;
+
+        const roll = Math.random();
+        if (roll < profile.fastTierChance) {
+            return 3;
+        }
+        return roll < profile.fastTierChance + 0.55 ? 2 : 1;
     }
 
     private chooseFireTier(profile: CursorSpaceLevelProfile): 0 | 1 | 2 | 3 {
@@ -787,12 +860,12 @@ export class CursorSpaceModel {
             return 1;
         }
         if (profile.maximumFireTier === 2) {
-            return Math.random() < 0.58 ? 2 : 1;
+            return Math.random() < 0.72 ? 2 : 1;
         }
         if (Math.random() < profile.continuousFireChance) {
             return 3;
         }
-        return Math.random() < 0.72 ? 2 : 1;
+        return Math.random() < 0.78 ? 2 : 1;
     }
 
     private fireIntervalForTier(tier: 0 | 1 | 2 | 3): number {
@@ -809,7 +882,7 @@ export class CursorSpaceModel {
     }
 
     private updateEnemies(dt: number): void {
-        const removalMargin = 180;
+        const removalMargin = 190;
 
         for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex += 1) {
             const enemy = this.enemies[enemyIndex];
@@ -858,8 +931,9 @@ export class CursorSpaceModel {
                 enemy.rotation + this.clamp(difference, -maximumTurn, maximumTurn),
             );
             enemy.threat += (combinedThreat - enemy.threat) * (1 - Math.exp(-12 * dt));
-            enemy.velocity.x = Math.cos(enemy.rotation) * enemy.movementSpeed;
-            enemy.velocity.y = Math.sin(enemy.rotation) * enemy.movementSpeed;
+            const movementSpeed = enemy.movementSpeed * (1 + combinedThreat * 0.1);
+            enemy.velocity.x = Math.cos(enemy.rotation) * movementSpeed;
+            enemy.velocity.y = Math.sin(enemy.rotation) * movementSpeed;
             enemy.position.x += enemy.velocity.x * dt;
             enemy.position.y += enemy.velocity.y * dt;
 
@@ -872,6 +946,7 @@ export class CursorSpaceModel {
                 || enemy.position.y > this.bounds.top + removalMargin
             ) {
                 enemy.active = false;
+                enemy.health = 0;
                 enemy.threat = 0;
             }
         }
@@ -948,6 +1023,7 @@ export class CursorSpaceModel {
             if (!projectile.active || projectile.owner !== 'player') {
                 continue;
             }
+
             const relativeX = projectile.position.x - enemy.position.x;
             const relativeY = projectile.position.y - enemy.position.y;
             const relativeVelocityX = projectile.velocity.x - enemy.velocity.x;
@@ -957,10 +1033,12 @@ export class CursorSpaceModel {
             if (speedSquared < 1) {
                 continue;
             }
+
             const approach = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
             if (approach >= 0) {
                 continue;
             }
+
             const time = Math.min(horizon, -approach / speedSquared);
             const closestX = relativeX + relativeVelocityX * time;
             const closestY = relativeY + relativeVelocityY * time;
@@ -970,6 +1048,7 @@ export class CursorSpaceModel {
             if (distance >= dangerRadius) {
                 continue;
             }
+
             const pressure = 1 - distance / dangerRadius;
             const dodgeLength = Math.max(MINIMUM_VECTOR_LENGTH, distance);
             avoidanceX -= closestX / dodgeLength * pressure;
@@ -987,11 +1066,17 @@ export class CursorSpaceModel {
             if (!first.active) {
                 continue;
             }
-            for (let secondIndex = firstIndex + 1; secondIndex < this.enemies.length; secondIndex += 1) {
+
+            for (
+                let secondIndex = firstIndex + 1;
+                secondIndex < this.enemies.length;
+                secondIndex += 1
+            ) {
                 const second = this.enemies[secondIndex];
                 if (!second.active) {
                     continue;
                 }
+
                 const dx = second.position.x - first.position.x;
                 const dy = second.position.y - first.position.y;
                 const contactDistance = first.radius + second.radius;
@@ -1022,6 +1107,7 @@ export class CursorSpaceModel {
             if (!enemy.active || !this.projectileHitsEnemy(projectile, enemy)) {
                 continue;
             }
+
             projectile.active = false;
             this.damageEnemy(enemy, projectile.damage, 'player-projectile');
             return;
@@ -1050,6 +1136,18 @@ export class CursorSpaceModel {
         if (!projectile.active || !this.player.alive) {
             return;
         }
+
+        const escortIndex = this.findEscortHit(
+            projectile.position.x,
+            projectile.position.y,
+            projectile.radius,
+        );
+        if (escortIndex >= 0) {
+            projectile.active = false;
+            this.destroyEscort(escortIndex);
+            return;
+        }
+
         const dx = projectile.position.x - this.player.position.x;
         const dy = projectile.position.y - this.player.position.y;
         const radius = projectile.radius + this.config.playerRadius;
@@ -1074,6 +1172,19 @@ export class CursorSpaceModel {
         return dx * dx + dy * dy <= radius * radius;
     }
 
+    private findEscortHit(x: number, y: number, radius: number): number {
+        for (let index = 0; index < this.player.escortCount; index += 1) {
+            const escort = cursorSpaceEscortWorldPosition(this.player, index);
+            const dx = x - escort.x;
+            const dy = y - escort.y;
+            const contactRadius = radius + this.config.escortRadius;
+            if (dx * dx + dy * dy <= contactRadius * contactRadius) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
     private resolvePlayerCollisions(): void {
         if (!this.player.alive) {
             return;
@@ -1083,6 +1194,25 @@ export class CursorSpaceModel {
             if (!enemy.active) {
                 continue;
             }
+
+            let escortCollision = -1;
+            for (let index = 0; index < this.player.escortCount; index += 1) {
+                const escort = cursorSpaceEscortWorldPosition(this.player, index);
+                const dx = escort.x - enemy.position.x;
+                const dy = escort.y - enemy.position.y;
+                const radius = this.config.escortRadius + enemy.radius;
+                if (dx * dx + dy * dy <= radius * radius) {
+                    escortCollision = index;
+                    break;
+                }
+            }
+
+            if (escortCollision >= 0) {
+                this.destroyEscort(escortCollision);
+                this.destroyEnemy(enemy, 'player-collision');
+                continue;
+            }
+
             const dx = this.player.position.x - enemy.position.x;
             const dy = this.player.position.y - enemy.position.y;
             const radius = this.config.playerRadius + enemy.radius;
@@ -1103,6 +1233,21 @@ export class CursorSpaceModel {
         }
     }
 
+    private destroyEscort(index: number): void {
+        if (index < 0 || index >= this.player.escortCount) {
+            return;
+        }
+
+        const position = cursorSpaceEscortWorldPosition(this.player, index);
+        if (this.player.escortCount === 2) {
+            this.player.escortSide = index === 0 ? 1 : -1;
+            this.player.escortCount = 1;
+        } else {
+            this.player.escortCount = 0;
+        }
+        this.spawnBurst(position.x, position.y, false);
+    }
+
     private damageEnemy(
         enemy: CursorSpaceEnemy,
         damage: number,
@@ -1111,6 +1256,7 @@ export class CursorSpaceModel {
         if (!enemy.active || damage <= 0) {
             return;
         }
+
         enemy.health = Math.max(0, enemy.health - damage);
         if (enemy.health === 0) {
             this.destroyEnemy(enemy, cause);
@@ -1129,20 +1275,14 @@ export class CursorSpaceModel {
             return;
         }
 
-        if (this.player.escortCount > 0) {
-            const escortIndex = this.player.escortCount - 1;
-            const escort = cursorSpaceEscortWorldPosition(this.player, escortIndex);
-            this.player.escortCount -= 1;
-            this.spawnBurst(escort.x, escort.y, false);
-            return;
-        }
-
         this.player.health = Math.max(0, this.player.health - damage);
         if (this.player.health === 0) {
             this.killPlayer(cause);
-        } else {
-            this.spawnImpact(impactX, impactY, true);
+            return;
         }
+
+        this.player.invulnerableRemaining = this.config.playerHitInvulnerabilityDuration;
+        this.spawnImpact(impactX, impactY, true);
     }
 
     private destroyEnemy(enemy: CursorSpaceEnemy, cause: EnemyDestroyCause): boolean {
@@ -1166,16 +1306,30 @@ export class CursorSpaceModel {
         const playerKill = cause === 'player-projectile' || cause === 'player-collision';
         if (playerKill) {
             this.stats.enemiesDestroyedByPlayer += 1;
-            if (
-                this.player.alive
-                && this.stats.level >= this.config.escortUnlockLevel
-                && this.player.escortCount < this.config.escortCapacity
-            ) {
-                this.player.escortCount += 1;
-            }
+            this.rewardPlayerKill();
         }
+
         this.spawnBurst(x, y, false);
         return true;
+    }
+
+    private rewardPlayerKill(): void {
+        if (!this.player.alive || this.stats.level < this.config.escortUnlockLevel) {
+            return;
+        }
+
+        if (this.player.escortCount < this.config.escortCapacity) {
+            if (this.player.escortCount === 0) {
+                this.player.escortSide = this.stats.enemiesDestroyedByPlayer % 2 === 0 ? -1 : 1;
+            }
+            this.player.escortCount += 1;
+            return;
+        }
+
+        this.player.fireSupportLevel = Math.min(
+            this.config.fireSupportCapacity,
+            this.player.fireSupportLevel + 1,
+        );
     }
 
     private killPlayer(_cause: PlayerDamageCause): void {
@@ -1188,6 +1342,7 @@ export class CursorSpaceModel {
         this.player.velocity.x = 0;
         this.player.velocity.y = 0;
         this.player.escortCount = 0;
+        this.player.fireSupportLevel = 0;
         this.aimTarget = null;
         this.stats.playerDeaths += 1;
         this.stats.level = this.stats.playerDeaths + 1;
@@ -1202,6 +1357,7 @@ export class CursorSpaceModel {
         if (this.player.alive) {
             return;
         }
+
         this.player.respawnRemaining = Math.max(0, this.player.respawnRemaining - dt);
         if (this.player.respawnRemaining === 0) {
             this.respawnPlayer();
@@ -1217,6 +1373,9 @@ export class CursorSpaceModel {
         this.player.alive = true;
         this.player.health = this.player.maximumHealth;
         this.player.throttle = 0.45;
+        this.player.escortCount = 0;
+        this.player.escortSide = 1;
+        this.player.fireSupportLevel = 0;
         this.player.invulnerableRemaining = this.config.invulnerabilityDuration;
         this.clearEnemiesNear(spawn.x, spawn.y, this.config.respawnClearRadius);
     }
@@ -1228,31 +1387,43 @@ export class CursorSpaceModel {
         const insetY = (this.bounds.top - this.bounds.bottom) * 0.26;
         let bestX = centerX;
         let bestY = centerY;
-        let bestDistanceSquared = -1;
+        let bestScore = Number.NEGATIVE_INFINITY;
 
         for (let index = 0; index < 9; index += 1) {
             const column = index % 3 - 1;
             const row = Math.floor(index / 3) - 1;
             const x = centerX + column * insetX;
             const y = centerY + row * insetY;
-            let nearestDistanceSquared = Number.POSITIVE_INFINITY;
+            let nearestEnemy = Number.POSITIVE_INFINITY;
+            let nearestProjectile = Number.POSITIVE_INFINITY;
+
             for (const enemy of this.enemies) {
                 if (!enemy.active) {
                     continue;
                 }
-                const dx = x - enemy.position.x;
-                const dy = y - enemy.position.y;
-                nearestDistanceSquared = Math.min(
-                    nearestDistanceSquared,
-                    dx * dx + dy * dy,
+                nearestEnemy = Math.min(
+                    nearestEnemy,
+                    (x - enemy.position.x) ** 2 + (y - enemy.position.y) ** 2,
                 );
             }
-            if (nearestDistanceSquared > bestDistanceSquared) {
-                bestDistanceSquared = nearestDistanceSquared;
+            for (const projectile of this.projectiles) {
+                if (!projectile.active || projectile.owner !== 'enemy') {
+                    continue;
+                }
+                nearestProjectile = Math.min(
+                    nearestProjectile,
+                    (x - projectile.position.x) ** 2 + (y - projectile.position.y) ** 2,
+                );
+            }
+
+            const score = Math.min(nearestEnemy, nearestProjectile * 0.72);
+            if (score > bestScore) {
+                bestScore = score;
                 bestX = x;
                 bestY = y;
             }
         }
+
         return { x: bestX, y: bestY };
     }
 
@@ -1268,22 +1439,35 @@ export class CursorSpaceModel {
                 this.destroyEnemy(enemy, 'respawn-clear');
             }
         }
+
+        for (const projectile of this.projectiles) {
+            if (!projectile.active || projectile.owner !== 'enemy') {
+                continue;
+            }
+            const dx = x - projectile.position.x;
+            const dy = y - projectile.position.y;
+            if (dx * dx + dy * dy <= radiusSquared) {
+                projectile.active = false;
+            }
+        }
     }
 
     private spawnImpact(x: number, y: number, playerImpact: boolean): void {
-        const ring = this.effects.find((effect) => !effect.active);
-        if (!ring) {
+        const effect = this.effects.find((candidate) => !candidate.active);
+        if (!effect) {
             return;
         }
-        ring.active = true;
-        ring.kind = 'ring';
-        ring.position.x = x;
-        ring.position.y = y;
-        ring.velocity.x = 0;
-        ring.velocity.y = 0;
-        ring.life = playerImpact ? 0.18 : 0.12;
-        ring.initialLife = ring.life;
-        ring.radius = playerImpact ? 4 : 2.5;
+
+        const angle = Math.random() * Math.PI * 2;
+        effect.active = true;
+        effect.kind = 'fragment';
+        effect.position.x = x;
+        effect.position.y = y;
+        effect.velocity.x = Math.cos(angle) * (playerImpact ? 125 : 95);
+        effect.velocity.y = Math.sin(angle) * (playerImpact ? 125 : 95);
+        effect.life = playerImpact ? 0.2 : 0.16;
+        effect.initialLife = effect.life;
+        effect.radius = playerImpact ? 4.5 : 3.5;
     }
 
     private spawnBurst(x: number, y: number, playerBurst: boolean): void {
@@ -1300,12 +1484,13 @@ export class CursorSpaceModel {
             ring.radius = playerBurst ? 8 : 5;
         }
 
-        const fragmentCount = playerBurst ? 6 : 3;
+        const fragmentCount = playerBurst ? 7 : 4;
         for (let index = 0; index < fragmentCount; index += 1) {
             const fragment = this.effects.find((effect) => !effect.active);
             if (!fragment) {
                 return;
             }
+
             const angle = Math.random() * Math.PI * 2;
             const speed = (playerBurst ? 110 : 75)
                 + Math.random() * (playerBurst ? 95 : 65);
@@ -1327,15 +1512,18 @@ export class CursorSpaceModel {
             if (!effect.active) {
                 continue;
             }
+
             effect.life -= dt;
             if (effect.life <= 0) {
                 effect.active = false;
                 continue;
             }
+
             if (effect.kind === 'ring') {
                 effect.radius += 125 * dt;
                 continue;
             }
+
             effect.position.x += effect.velocity.x * dt;
             effect.position.y += effect.velocity.y * dt;
             effect.velocity.x *= drag;
@@ -1359,21 +1547,22 @@ export class CursorSpaceModel {
             ),
             spawnInterval: Math.max(
                 this.config.enemyMinimumSpawnInterval,
-                last.spawnInterval - extra * 0.025,
+                last.spawnInterval - extra * 0.015,
             ),
             maximumSpeedTier: 3,
-            fastTierChance: Math.min(0.96, last.fastTierChance + extra * 0.035),
-            turnMultiplier: Math.min(1.48, last.turnMultiplier + extra * 0.025),
-            shootingChance: Math.min(1, last.shootingChance + extra * 0.012),
+            fastTierChance: Math.min(0.96, last.fastTierChance + extra * 0.025),
+            turnMultiplier: Math.min(1.62, last.turnMultiplier + extra * 0.035),
+            shootingChance: 1,
             maximumFireTier: 3,
             continuousFireChance: Math.min(
                 0.96,
-                last.continuousFireChance + extra * 0.045,
+                last.continuousFireChance + extra * 0.04,
             ),
             projectileSpeedMultiplier: Math.min(
-                1.42,
-                last.projectileSpeedMultiplier + extra * 0.02,
+                1.68,
+                last.projectileSpeedMultiplier + extra * 0.035,
             ),
+            healthMultiplier: Math.min(2.6, last.healthMultiplier + extra * 0.1),
         };
     }
 
@@ -1388,13 +1577,8 @@ export class CursorSpaceModel {
     }
 
     private approachLaneOffset(enemyIndex: number): number {
-        const lane = enemyIndex % 7 - 3;
-        return lane * GOLDEN_ANGLE * 0.005;
-    }
-
-    private stableSide(first: number, second: number): -1 | 1 {
-        const hash = ((first + 1) * 73856093) ^ ((second + 1) * 19349663);
-        return (hash & 1) === 0 ? -1 : 1;
+        const lane = enemyIndex % 9 - 4;
+        return lane * GOLDEN_ANGLE * 0.008;
     }
 
     private constrainPursuitRotation(
@@ -1409,6 +1593,7 @@ export class CursorSpaceModel {
         if (!Number.isFinite(desiredLengthSquared) || desiredLengthSquared < MINIMUM_VECTOR_LENGTH) {
             return pursuitRotation;
         }
+
         const desiredRotation = Math.atan2(desiredY, desiredX);
         const deviation = this.wrapAngle(desiredRotation - pursuitRotation);
         return this.wrapAngle(
@@ -1424,8 +1609,13 @@ export class CursorSpaceModel {
         return { x: x / length, y: y / length };
     }
 
+    private stableSide(first: number, second: number): -1 | 1 {
+        const hash = ((first + 1) * 73856093) ^ ((second + 1) * 19349663);
+        return (hash & 1) === 0 ? -1 : 1;
+    }
+
     private clampPlayerToBounds(): void {
-        const radius = this.config.playerRadius;
+        const radius = this.config.playerRadius + this.config.escortRadius + 19;
         const minimumX = this.bounds.left + radius;
         const maximumX = this.bounds.right - radius;
         const minimumY = this.bounds.bottom + radius;
