@@ -3,6 +3,8 @@ import {
     EventMouse,
     EventTouch,
     Graphics,
+    HorizontalTextAlignment,
+    Label,
     Node,
     UITransform,
     Vec3,
@@ -18,6 +20,7 @@ import type { ViewportSnapshot } from '../../services/ViewportService';
 import { ResponsiveModule } from '../../templates/ResponsiveModule';
 import {
     clearNode,
+    createLabel,
     createUiNode,
     fillNode,
     palette,
@@ -28,7 +31,10 @@ import {
     CursorSpaceInstancedRenderer,
 } from './CursorSpaceInstancedRenderer';
 import { CursorSpaceModel } from './CursorSpaceModel';
-import type { CursorSpaceBounds } from './CursorSpaceTypes';
+import type {
+    CursorSpaceBounds,
+    CursorSpaceProjectileOwner,
+} from './CursorSpaceTypes';
 
 const RENDER_STEP = 1 / 30;
 
@@ -38,11 +44,17 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     private readonly clock = new FixedStepClock(1 / 60, 6);
     private readonly model = new CursorSpaceModel();
     private readonly screenPoint = new Vec3();
-    private readonly projectileColor = new Color(
+    private readonly playerProjectileColor = new Color(
         palette.primaryText.r,
         palette.primaryText.g,
         palette.primaryText.b,
-        220,
+        225,
+    );
+    private readonly enemyProjectileColor = new Color(
+        palette.danger.r,
+        palette.danger.g,
+        palette.danger.b,
+        235,
     );
     private readonly enemyColor = new Color(
         palette.warning.r,
@@ -70,9 +82,11 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     );
 
     private instancedRenderer: CursorSpaceInstancedRenderer | null = null;
+    private statsLabel: Label | null = null;
     private starsGraphics: Graphics | null = null;
     private enemiesGraphics: Graphics | null = null;
-    private projectilesGraphics: Graphics | null = null;
+    private playerProjectilesGraphics: Graphics | null = null;
+    private enemyProjectilesGraphics: Graphics | null = null;
     private effectsGraphics: Graphics | null = null;
     private playerTrailGraphics: Graphics | null = null;
     private playerGraphics: Graphics | null = null;
@@ -171,7 +185,8 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 effectCapacity: this.model.effects.length,
                 colors: {
                     enemy: this.enemyColor,
-                    projectile: this.projectileColor,
+                    playerProjectile: this.playerProjectileColor,
+                    enemyProjectile: this.enemyProjectileColor,
                     effect: this.effectColor,
                     player: this.playerColor,
                     playerOutline: palette.primaryText,
@@ -189,11 +204,34 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.starsGraphics = this.createGraphics(root, 'CursorSpaceStars', viewport);
         if (!this.instancedRenderer) {
             this.enemiesGraphics = this.createGraphics(root, 'CursorSpaceEnemies', viewport);
-            this.projectilesGraphics = this.createGraphics(root, 'CursorSpaceProjectiles', viewport);
+            this.playerProjectilesGraphics = this.createGraphics(
+                root,
+                'CursorSpacePlayerProjectiles',
+                viewport,
+            );
+            this.enemyProjectilesGraphics = this.createGraphics(
+                root,
+                'CursorSpaceEnemyProjectiles',
+                viewport,
+            );
             this.effectsGraphics = this.createGraphics(root, 'CursorSpaceEffects', viewport);
             this.playerTrailGraphics = this.createGraphics(root, 'CursorSpacePlayerTrail', viewport);
             this.playerGraphics = this.createGraphics(root, 'CursorSpacePlayer', viewport);
         }
+
+        const statsY = bounds.top + Math.max(12, (navigationHeight - 12) * 0.45);
+        const statsNode = createLabel(
+            root,
+            '',
+            Math.min(playWidth, compact ? 390 : 560),
+            compact ? 20 : 24,
+            compact ? 11 : 13,
+            palette.muted,
+            centerX,
+            statsY,
+            HorizontalTextAlignment.CENTER,
+        );
+        this.statsLabel = statsNode.getComponent(Label);
 
         this.drawStars(bounds);
         this.drawFrame();
@@ -209,9 +247,11 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     }
 
     private clearGraphicsReferences(): void {
+        this.statsLabel = null;
         this.starsGraphics = null;
         this.enemiesGraphics = null;
-        this.projectilesGraphics = null;
+        this.playerProjectilesGraphics = null;
+        this.enemyProjectilesGraphics = null;
         this.effectsGraphics = null;
         this.playerTrailGraphics = null;
         this.playerGraphics = null;
@@ -308,14 +348,34 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 this.model.projectiles,
                 this.model.effects,
             );
+        } else {
+            this.drawEnemies();
+            this.drawProjectiles(
+                'player',
+                this.playerProjectilesGraphics,
+                this.playerProjectileColor,
+            );
+            this.drawProjectiles(
+                'enemy',
+                this.enemyProjectilesGraphics,
+                this.enemyProjectileColor,
+            );
+            this.drawEffects();
+            this.drawPlayerTrail();
+            this.drawPlayer();
+        }
+
+        this.updateStatsLabel();
+    }
+
+    private updateStatsLabel(): void {
+        if (!this.statsLabel) {
             return;
         }
 
-        this.drawEnemies();
-        this.drawProjectiles();
-        this.drawEffects();
-        this.drawPlayerTrail();
-        this.drawPlayer();
+        const stats = this.model.stats;
+        this.statsLabel.string = `LEVEL ${stats.level}   DESTROYED ${stats.enemiesDestroyed}`
+            + `   PLAYER ${stats.enemiesDestroyedByPlayer}   DEATHS ${stats.playerDeaths}`;
     }
 
     private drawEnemies(): void {
@@ -348,19 +408,22 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         }
     }
 
-    private drawProjectiles(): void {
-        const graphics = this.projectilesGraphics;
+    private drawProjectiles(
+        owner: CursorSpaceProjectileOwner,
+        graphics: Graphics | null,
+        color: Readonly<Color>,
+    ): void {
         if (!graphics) {
             return;
         }
 
         graphics.clear();
-        graphics.strokeColor = this.projectileColor;
-        graphics.lineWidth = 2;
+        graphics.strokeColor = color;
+        graphics.lineWidth = owner === 'enemy' ? 2.6 : 2;
         let visible = false;
 
         for (const projectile of this.model.projectiles) {
-            if (!projectile.active) {
+            if (!projectile.active || projectile.owner !== owner) {
                 continue;
             }
 
@@ -368,9 +431,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 projectile.velocity.x,
                 projectile.velocity.y,
             ));
+            const length = owner === 'enemy' ? 9 : 7;
             graphics.moveTo(
-                projectile.position.x - projectile.velocity.x / speed * 7,
-                projectile.position.y - projectile.velocity.y / speed * 7,
+                projectile.position.x - projectile.velocity.x / speed * length,
+                projectile.position.y - projectile.velocity.y / speed * length,
             );
             graphics.lineTo(projectile.position.x, projectile.position.y);
             visible = true;
@@ -523,10 +587,10 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 export const cursorSpaceDefinition: VisibleModuleDefinition = {
     id: 'cursor-space',
     title: 'Cursor Space',
-    description: 'Guide a cursor-shaped ship through an endless field of geometric pursuers.',
+    description: 'Survive escalating combat stages where every aircraft and projectile can become a threat.',
     category: 'game',
     labId: 'games',
-    tags: ['cursor', 'survival', 'minimal'],
+    tags: ['cursor', 'survival', 'combat'],
     capabilities: ['pause', 'reset'],
     status: 'prototype',
     order: 10,
