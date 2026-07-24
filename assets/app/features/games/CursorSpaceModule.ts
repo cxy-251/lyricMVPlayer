@@ -22,27 +22,15 @@ import {
     fillNode,
     palette,
 } from '../../ui/UiFactory';
+import {
+    CURSOR_SPACE_CURSOR_POINTS,
+    CURSOR_SPACE_ENEMY_POINTS,
+    CursorSpaceInstancedRenderer,
+} from './CursorSpaceInstancedRenderer';
 import { CursorSpaceModel } from './CursorSpaceModel';
 import type { CursorSpaceBounds } from './CursorSpaceTypes';
 
 const RENDER_STEP = 1 / 30;
-
-const CURSOR_POINTS: ReadonlyArray<readonly [number, number]> = [
-    [18, 0],
-    [-7, 10],
-    [-3, 3],
-    [-12, 3],
-    [-12, -3],
-    [-3, -3],
-    [-7, -10],
-];
-
-const ENEMY_POINTS: ReadonlyArray<readonly [number, number]> = [
-    [12, 0],
-    [-8, 7],
-    [-5, 0],
-    [-8, -7],
-];
 
 class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'CursorSpace';
@@ -81,6 +69,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         72,
     );
 
+    private instancedRenderer: CursorSpaceInstancedRenderer | null = null;
     private starsGraphics: Graphics | null = null;
     private enemiesGraphics: Graphics | null = null;
     private projectilesGraphics: Graphics | null = null;
@@ -102,12 +91,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         this.model.clearTarget();
         this.clock.reset();
         this.renderAccumulator = 0;
-        this.starsGraphics = null;
-        this.enemiesGraphics = null;
-        this.projectilesGraphics = null;
-        this.effectsGraphics = null;
-        this.playerTrailGraphics = null;
-        this.playerGraphics = null;
+        this.instancedRenderer?.dispose();
+        this.instancedRenderer = null;
+        this.clearGraphicsReferences();
     }
 
     update(dt: number): void {
@@ -146,6 +132,9 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
 
     protected render(viewport: ViewportSnapshot): void {
         const root = this.requireRoot();
+        this.instancedRenderer?.dispose();
+        this.instancedRenderer = null;
+        this.clearGraphicsReferences();
         clearNode(root);
         fillNode(root, viewport.width, viewport.height, palette.background);
 
@@ -172,12 +161,39 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
         };
         this.model.setBounds(bounds);
 
+        try {
+            this.instancedRenderer = new CursorSpaceInstancedRenderer({
+                parent: root,
+                viewport,
+                bounds,
+                enemyCapacity: this.model.enemies.length,
+                projectileCapacity: this.model.projectiles.length,
+                effectCapacity: this.model.effects.length,
+                colors: {
+                    enemy: this.enemyColor,
+                    projectile: this.projectileColor,
+                    effect: this.effectColor,
+                    player: this.playerColor,
+                    playerOutline: palette.primaryText,
+                },
+            });
+        } catch (error) {
+            console.warn(
+                '[cocoslab] Cursor Space GPU instancing unavailable; using Graphics fallback',
+                error,
+            );
+            this.instancedRenderer = null;
+            clearNode(root);
+        }
+
         this.starsGraphics = this.createGraphics(root, 'CursorSpaceStars', viewport);
-        this.enemiesGraphics = this.createGraphics(root, 'CursorSpaceEnemies', viewport);
-        this.projectilesGraphics = this.createGraphics(root, 'CursorSpaceProjectiles', viewport);
-        this.effectsGraphics = this.createGraphics(root, 'CursorSpaceEffects', viewport);
-        this.playerTrailGraphics = this.createGraphics(root, 'CursorSpacePlayerTrail', viewport);
-        this.playerGraphics = this.createGraphics(root, 'CursorSpacePlayer', viewport);
+        if (!this.instancedRenderer) {
+            this.enemiesGraphics = this.createGraphics(root, 'CursorSpaceEnemies', viewport);
+            this.projectilesGraphics = this.createGraphics(root, 'CursorSpaceProjectiles', viewport);
+            this.effectsGraphics = this.createGraphics(root, 'CursorSpaceEffects', viewport);
+            this.playerTrailGraphics = this.createGraphics(root, 'CursorSpacePlayerTrail', viewport);
+            this.playerGraphics = this.createGraphics(root, 'CursorSpacePlayer', viewport);
+        }
 
         this.drawStars(bounds);
         this.drawFrame();
@@ -190,6 +206,15 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             viewport.width,
             viewport.height,
         ).addComponent(Graphics);
+    }
+
+    private clearGraphicsReferences(): void {
+        this.starsGraphics = null;
+        this.enemiesGraphics = null;
+        this.projectilesGraphics = null;
+        this.effectsGraphics = null;
+        this.playerTrailGraphics = null;
+        this.playerGraphics = null;
     }
 
     private bindPointerInput(): void {
@@ -276,6 +301,16 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
     }
 
     private drawFrame(): void {
+        if (this.instancedRenderer) {
+            this.instancedRenderer.sync(
+                this.model.player,
+                this.model.enemies,
+                this.model.projectiles,
+                this.model.effects,
+            );
+            return;
+        }
+
         this.drawEnemies();
         this.drawProjectiles();
         this.drawEffects();
@@ -304,7 +339,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
                 enemy.position.x,
                 enemy.position.y,
                 enemy.rotation,
-                ENEMY_POINTS,
+                CURSOR_SPACE_ENEMY_POINTS,
             );
         }
 
@@ -449,7 +484,7 @@ class CursorSpaceModule extends ResponsiveModule implements Updatable, Pausable,
             player.position.x,
             player.position.y,
             player.rotation,
-            CURSOR_POINTS,
+            CURSOR_SPACE_CURSOR_POINTS,
         );
         graphics.fill();
         graphics.stroke();
