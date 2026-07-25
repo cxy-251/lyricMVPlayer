@@ -1,10 +1,61 @@
 # Module authoring
 
-Every interactive work is registered as a `ModuleDefinition` and runs inside `ModuleHost`. The host supplies an isolated root node, viewport updates, storage, input, application state and navigation.
+Every interactive demo belongs to exactly one of the three CocosLab laboratories and runs inside `ModuleHost`. The host supplies an isolated root node, viewport updates, storage, input, application state and navigation.
 
-## Standard feature directory
+## Standard Lab directory
 
-Each visible feature uses one domain name and one directory:
+Each Lab owns one manifest and any number of independent demo directories:
+
+```text
+laboratory-name/
+├── LaboratoryNameLab.ts
+├── demo-one/
+├── demo-two/
+└── shared/                     # optional
+```
+
+The Lab manifest contains:
+
+- Lab id, title, description, order and catalog cover
+- the ordered list of visible demo Definitions
+
+Example:
+
+```ts
+export const mathematicsLab: LabManifest = {
+    definition: {
+        id: 'mathematics',
+        title: 'Mathematics Laboratory',
+        description: 'Interactive curves, geometry and mathematical systems.',
+        order: 10,
+        cover: 'mathematics',
+    },
+    modules: [
+        lissajousDefinition,
+        fourierEpicycleDefinition,
+    ],
+};
+```
+
+`AppRoot` registers Lab manifests. It does not import individual demo Definitions.
+
+## Lab shared code
+
+Demos inside one Lab do not import each other. Code moves into the Lab's `shared/` directory only when at least two demos use the same stable abstraction.
+
+Examples:
+
+```text
+mathematics/shared/Plot2D.ts
+physics/shared/SimulationDiagnostics.ts
+games/shared/ProjectilePool.ts
+```
+
+Keep one-demo helpers inside that demo. This prevents speculative frameworks and keeps ownership clear.
+
+## Standard demo directory
+
+Each visible demo uses one domain name and one directory:
 
 ```text
 feature-name/
@@ -19,9 +70,9 @@ feature-name/
 └── index.ts
 ```
 
-Use the real domain name in every file and class. A Lissajous feature uses `LissajousModule`, not a broader name such as `ParametricCurveModule`.
+Use the real domain name in every file and class. A Lissajous demo uses `LissajousModule`, not a broader name such as `ParametricCurveModule`.
 
-Read a feature in this order:
+Read a demo in this order:
 
 ```text
 Definition → Module → ViewModel → Model → View
@@ -33,9 +84,19 @@ Definition → Module → ViewModel → Model → View
 
 Contains catalog metadata and creates the Module. It does not contain runtime state, drawing or domain calculations.
 
+Every visible Definition provides:
+
+- stable demo id
+- title and description
+- owning `labId`
+- catalog subtitle and cover
+- tags, capabilities, status and order
+
+The Lab catalog reads this metadata directly. Catalog UI must not branch on demo ids.
+
 ### Module
 
-Adapts the feature to CocosLab lifecycle methods:
+Adapts the demo to CocosLab lifecycle methods:
 
 - mount and unmount
 - viewport layout
@@ -53,19 +114,21 @@ Owns user parameters, persisted settings, animation state, presets and derived V
 
 Contains pure domain rules: mathematics, physics, game rules or numerical integration. Models do not import Cocos Engine types, UI factories, storage or navigation.
 
-A large feature may compose several internal domain implementations. Keep one feature-local `FeatureModel.ts` as the public boundary so the ViewModel does not depend on internal implementation filenames.
+A large demo may compose several internal domain implementations. Keep one demo-local `FeatureModel.ts` as the public boundary so the ViewModel does not depend on internal implementation filenames.
 
 ### View
 
 Owns Cocos nodes, responsive layout, labels, controls and drawing. It receives prepared View state and forwards user actions to the ViewModel through the Module.
 
+A View owns only the active demo screen. Lab navigation, demo cards and pagination remain in the shared application catalog UI.
+
 ### Renderer
 
-An optional Renderer owns a specialized GPU, mesh or shader backend used by the View. It does not own feature lifecycle, navigation or game state.
+An optional Renderer owns a specialized GPU, mesh or shader backend used by the View. It does not own demo lifecycle, navigation or game state.
 
 ### Types
 
-Contains feature-specific contracts shared between Model, ViewModel and View. Keep types close to the feature rather than adding unrelated global interfaces.
+Contains demo-specific contracts shared between Model, ViewModel and View. Keep types close to the demo rather than adding unrelated global interfaces.
 
 ## Lifecycle template
 
@@ -129,23 +192,30 @@ The clock caps frame delta and simulation substeps so a delayed frame does not c
 
 ## Registration
 
-Export the definition from the feature directory `index.ts`, import it in `AppRoot.ts`, and add it to `moduleRegistry.registerAll()`.
+1. Export the Definition from the demo directory `index.ts`.
+2. Import that Definition into the owning Lab manifest.
+3. Add it to the manifest's `modules` array in display order.
+
+Adding a demo does not modify `AppRoot`, `HomeModule`, `LabCatalogModule` or another demo.
 
 ## Dependency rules
 
+- AppRoot imports the three Lab manifests and internal system modules.
+- A Lab manifest imports Definitions from demos in that Lab.
 - Definition imports Module.
 - Module imports ViewModel and View.
-- ViewModel imports the feature-local Model boundary, Types, presets and application services.
+- ViewModel imports the demo-local Model boundary, Types, presets and application services.
 - View imports Types, ViewModel contracts and Cocos UI infrastructure.
 - Renderer imports Cocos rendering infrastructure and domain display types.
-- Model imports only feature Types or other pure domain utilities.
-- Feature modules do not import other feature modules.
+- Model imports only demo Types or other pure domain utilities.
+- Demos do not import other demos.
+- Lab `shared/` code does not depend on a specific demo.
 
 ## Cleanup rules
 
 - Create visible nodes below the supplied module root.
 - Release controllers, timers and subscriptions during unmount.
-- Store user parameters with a feature-specific storage key.
+- Store user parameters with a demo-specific storage key.
 - Use `update(dt)` only for active frame work; `ModuleHost` stops it while paused or in the background.
 - Remove superseded files and compatibility names after a migration.
 - Commit TypeScript files and their Cocos Creator `.meta` files together.
