@@ -18,7 +18,10 @@ import {
     type CursorSpaceStats,
 } from './CursorSpaceTypes';
 
-const ESCORT_TURN_RATE = 8.5;
+const PLAYER_MAXIMUM_TURN_RATE = 2.2;
+const ESCORT_MAXIMUM_TURN_RATE = 4.8;
+const ENEMY_MAXIMUM_TURN_RATES: readonly [number, number, number] = [1.4, 1.7, 2.0];
+const AGGRESSIVE_STEERING_MULTIPLIER_CEILING = 2.7;
 const MINIMUM_LENGTH = 0.0001;
 const MAXIMUM_ESCORTS = 2;
 
@@ -33,13 +36,11 @@ interface WeaponSource {
  * Public Cursor Space gameplay boundary.
  *
  * The combat core continues to own movement, progression, collisions and fire
- * cadence. This boundary gives every aircraft a physically consistent weapon
- * axis:
- * - the main gun fires only along the main aircraft nose;
- * - each escort independently tracks targets in its own 180-degree hemisphere;
- * - escort shots leave and travel along that escort's current nose direction;
- * - inherited carrier velocity cannot visually bend a projectile away from the
- *   aircraft that fired it.
+ * cadence. This boundary owns fleet handling and weapon-axis consistency:
+ * - the main aircraft has a strict angular-velocity limit;
+ * - enemy angular velocity is limited by speed tier and remains below the escort;
+ * - escorts turn faster than every other aircraft and cover separate hemispheres;
+ * - every projectile leaves and travels along the aircraft nose that fired it.
  */
 export class CursorSpaceModel {
     readonly player: CursorSpacePlayer;
@@ -52,6 +53,8 @@ export class CursorSpaceModel {
     private readonly core: CursorSpaceCoreModel;
     private readonly config: CursorSpaceConfig;
     private readonly projectileActiveSnapshot: boolean[];
+    private readonly previousEnemyRotations: number[];
+    private readonly previousEnemyActive: boolean[];
     private readonly escortRotations: [number, number] = [0, 0];
     private pendingEscortRotation: number | null = null;
 
@@ -64,6 +67,8 @@ export class CursorSpaceModel {
         this.effects = this.core.effects;
         this.walls = this.core.walls;
         this.projectileActiveSnapshot = new Array<boolean>(this.projectiles.length).fill(false);
+        this.previousEnemyRotations = new Array<number>(this.enemies.length).fill(0);
+        this.previousEnemyActive = new Array<boolean>(this.enemies.length).fill(false);
         this.player = this.createPlayerRenderView(this.core.player);
         this.resetEscortRotations();
     }
@@ -91,14 +96,27 @@ export class CursorSpaceModel {
     reset(): void {
         this.core.reset();
         this.projectileActiveSnapshot.fill(false);
+        this.previousEnemyRotations.fill(0);
+        this.previousEnemyActive.fill(false);
         this.pendingEscortRotation = null;
         this.resetEscortRotations();
     }
 
     step(deltaTime: number): void {
         const dt = Math.max(0, Math.min(0.05, deltaTime));
+        if (dt === 0) {
+            return;
+        }
+
         this.captureProjectileActivity();
-        this.core.step(deltaTime);
+        this.prepareEnemyTurnRates();
+        const previousPlayerRotation = this.core.player.rotation;
+        this.captureEnemyRotations();
+
+        this.core.step(dt);
+
+        this.limitPlayerRotation(previousPlayerRotation, dt);
+        this.limitEnemyRotations(dt);
         this.updateEscortRotations(dt);
         this.alignNewPlayerProjectiles();
     }
@@ -129,6 +147,50 @@ export class CursorSpaceModel {
                 receiver,
             ),
         });
+    }
+
+    private prepareEnemyTurnRates(): void {
+        for (const enemy of this.enemies) {
+            const maximumRate = this.enemyMaximumTurnRate(enemy.speedTier);
+            enemy.turnRate = maximumRate / AGGRESSIVE_STEERING_MULTIPLIER_CEILING;
+        }
+    }
+
+    private captureEnemyRotations(): void {
+        for (let index = 0; index < this.enemies.length; index += 1) {
+            const enemy = this.enemies[index];
+            this.previousEnemyActive[index] = enemy.active;
+            this.previousEnemyRotations[index] = enemy.rotation;
+        }
+    }
+
+    private limitPlayerRotation(previousRotation: number, dt: number): void {
+        this.core.player.rotation = this.limitAngularStep(
+            previousRotation,
+            this.core.player.rotation,
+            PLAYER_MAXIMUM_TURN_RATE * dt,
+        );
+    }
+
+    private limitEnemyRotations(dt: number): void {
+        for (let index = 0; index < this.enemies.length; index += 1) {
+            const enemy = this.enemies[index];
+            if (!enemy.active || !this.previousEnemyActive[index]) {
+                continue;
+            }
+
+            enemy.rotation = this.limitAngularStep(
+                this.previousEnemyRotations[index],
+                enemy.rotation,
+                this.enemyMaximumTurnRate(enemy.speedTier) * dt,
+            );
+            enemy.velocity.x = Math.cos(enemy.rotation) * enemy.movementSpeed;
+            enemy.velocity.y = Math.sin(enemy.rotation) * enemy.movementSpeed;
+        }
+    }
+
+    private enemyMaximumTurnRate(speedTier: 1 | 2 | 3): number {
+        return ENEMY_MAXIMUM_TURN_RATES[speedTier - 1];
     }
 
     private resetEscortRotations(): void {
@@ -165,10 +227,10 @@ export class CursorSpaceModel {
                 player.rotation,
                 side,
             );
-            const difference = this.wrapAngle(sectorRotation - currentRotation);
-            const maximumTurn = ESCORT_TURN_RATE * dt;
-            const nextRotation = this.wrapAngle(
-                currentRotation + this.clamp(difference, -maximumTurn, maximumTurn),
+            const nextRotation = this.limitAngularStep(
+                currentRotation,
+                sectorRotation,
+                ESCORT_MAXIMUM_TURN_RATE * dt,
             );
             this.escortRotations[index] = this.clampToEscortHemisphere(
                 nextRotation,
@@ -339,6 +401,17 @@ export class CursorSpaceModel {
             }
         }
         return best;
+    }
+
+    private limitAngularStep(
+        currentRotation: number,
+        desiredRotation: number,
+        maximumStep: number,
+    ): number {
+        const difference = this.wrapAngle(desiredRotation - currentRotation);
+        return this.wrapAngle(
+            currentRotation + this.clamp(difference, -maximumStep, maximumStep),
+        );
     }
 
     private clampEscortIndex(index: number): number {
