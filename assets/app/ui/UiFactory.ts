@@ -8,6 +8,7 @@ import {
     Node,
     Slider,
     Sprite,
+    sys,
     Toggle,
     UITransform,
     VerticalTextAlignment,
@@ -233,7 +234,6 @@ export function createButton(
                         : palette.clear;
 
         fillNode(visual, options.width, options.height, background, radius);
-
         if (variant === 'secondary') {
             strokeNode(
                 visual,
@@ -533,7 +533,13 @@ function drawNativeIcon(node: Node, icon: NativeIconName, size: number, color: C
 }
 
 function setPointerCursor(active: boolean): void {
-    if (typeof document !== 'undefined') {
-        document.body.style.cursor = active ? 'pointer' : 'default';
+    if (
+        !sys.isBrowser
+        || typeof document === 'undefined'
+        || !document.body?.style
+    ) {
+        return;
     }
+
+    document.body.style.cursor = active ? 'pointer' : 'default';
 }
