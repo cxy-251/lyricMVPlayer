@@ -14,6 +14,7 @@ feature-name/
 ├── FeatureModel.ts
 ├── FeatureView.ts
 ├── FeatureTypes.ts
+├── FeatureRenderer.ts     # optional
 ├── FeaturePresets.ts      # optional
 └── index.ts
 ```
@@ -52,9 +53,15 @@ Owns user parameters, persisted settings, animation state, presets and derived V
 
 Contains pure domain rules: mathematics, physics, game rules or numerical integration. Models do not import Cocos Engine types, UI factories, storage or navigation.
 
+A large feature may compose several internal domain implementations. Keep one feature-local `FeatureModel.ts` as the public boundary so the ViewModel does not depend on internal implementation filenames.
+
 ### View
 
 Owns Cocos nodes, responsive layout, labels, controls and drawing. It receives prepared View state and forwards user actions to the ViewModel through the Module.
+
+### Renderer
+
+An optional Renderer owns a specialized GPU, mesh or shader backend used by the View. It does not own feature lifecycle, navigation or game state.
 
 ### Types
 
@@ -128,8 +135,9 @@ Export the definition from the feature directory `index.ts`, import it in `AppRo
 
 - Definition imports Module.
 - Module imports ViewModel and View.
-- ViewModel imports Model, Types, presets and application services.
+- ViewModel imports the feature-local Model boundary, Types, presets and application services.
 - View imports Types, ViewModel contracts and Cocos UI infrastructure.
+- Renderer imports Cocos rendering infrastructure and domain display types.
 - Model imports only feature Types or other pure domain utilities.
 - Feature modules do not import other feature modules.
 
