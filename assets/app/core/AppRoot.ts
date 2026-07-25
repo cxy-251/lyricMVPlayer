@@ -6,11 +6,11 @@ import {
     Game,
     Node,
 } from 'cc';
-import { cursorSpaceDefinition } from '../features/games/cursor-space';
+import { gamesLab } from '../features/games/GamesLab';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
-import { lissajousDefinition } from '../features/mathematics/lissajous';
-import { doublePendulumDefinition } from '../features/physics/double-pendulum';
+import { mathematicsLab } from '../features/mathematics/MathematicsLab';
+import { physicsLab } from '../features/physics/PhysicsLab';
 import { systemCheckDefinition } from '../features/system/SystemCheckModule';
 import { InputService } from '../services/InputService';
 import { StorageService } from '../services/StorageService';
@@ -47,7 +47,6 @@ export class AppRoot extends Component {
         }
 
         const scene = director.getScene();
-
         if (!scene) {
             throw new Error('Cannot create AppRoot before a scene is running');
         }
@@ -123,12 +122,12 @@ export class AppRoot extends Component {
             return;
         }
 
-        this.moduleRegistry.registerAll([
-            lissajousDefinition,
-            doublePendulumDefinition,
-            cursorSpaceDefinition,
-            systemCheckDefinition,
+        this.moduleRegistry.registerLabs([
+            mathematicsLab,
+            physicsLab,
+            gamesLab,
         ]);
+        this.moduleRegistry.register(systemCheckDefinition);
         this.viewportService.start();
         this.inputService.start();
         game.on(Game.EVENT_HIDE, this.handleAppHide, this);
@@ -142,7 +141,6 @@ export class AppRoot extends Component {
         }
 
         this.initialize();
-
         if (this.shell?.belongsTo(canvasNode) && this.navigationService) {
             return this.navigationService;
         }
@@ -173,7 +171,6 @@ export class AppRoot extends Component {
 
     private async detachCanvasNow(canvasNode?: Node): Promise<void> {
         const shell = this.shell;
-
         if (!shell || (canvasNode && !shell.belongsTo(canvasNode))) {
             return;
         }
@@ -219,7 +216,6 @@ export class AppRoot extends Component {
         for (const dispose of this.inputDisposers) {
             dispose();
         }
-
         this.inputDisposers = [];
     }
 
