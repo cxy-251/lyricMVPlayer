@@ -115,7 +115,6 @@ export class CursorSpaceViewModel {
         this.resetControlState();
         this.clock.reset();
         this.renderAccumulator = 0;
-        this.paused = false;
     }
 
     dispose(): void {
