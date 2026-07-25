@@ -10,7 +10,7 @@ export type CatalogCoverKind =
     | 'mathematics'
     | 'physics'
     | 'games'
-    | 'lissajous'
+    | 'parametric-curve'
     | 'double-pendulum'
     | 'cursor-space';
 
