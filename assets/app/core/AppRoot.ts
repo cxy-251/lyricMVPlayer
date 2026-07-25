@@ -6,7 +6,7 @@ import {
     Game,
     Node,
 } from 'cc';
-import { cursorSpaceDefinition } from '../features/games/CursorSpaceModule';
+import { cursorSpaceDefinition } from '../features/games/cursor-space';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
 import { lissajousDefinition } from '../features/mathematics/lissajous';
