@@ -51,10 +51,6 @@ export const LISSAJOUS_PRESETS: readonly LissajousPreset[] = [
     },
 ];
 
-export function findLissajousPreset(id: string): LissajousPreset | null {
-    return LISSAJOUS_PRESETS.find((preset) => preset.id === id) ?? null;
-}
-
 export function matchLissajousPreset(
     frequencyX: number,
     frequencyY: number,
