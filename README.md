@@ -1,6 +1,6 @@
 # Cocos Lab
 
-Cocos Lab is a cross-platform collection of code-generated interactive works built with Cocos Creator 3.8.8. Games, simulations, mathematical visualizations, generative art, shaders, music interactions and tools share one application shell while remaining isolated feature modules.
+Cocos Lab is a cross-platform collection of code-generated interactive works built with Cocos Creator 3.8.8. Mathematics, physics and games share one application shell while remaining isolated feature modules.
 
 Visible content is generated at runtime with TypeScript, geometry and shaders.
 
@@ -19,10 +19,13 @@ Current visible structure:
 
 ```text
 Mathematics Laboratory
-└── Parametric Curve Lab
+└── Lissajous Curves
 
 Physics Laboratory
 └── Double Pendulum
+
+Games Laboratory
+└── Cursor Space
 ```
 
 ## Architecture
@@ -32,9 +35,21 @@ Physics Laboratory
 - `AppShell` separates content, navigation and overlay layers.
 - `NavigationService` manages home, laboratory and module routes.
 - `ModuleHost` owns module update, pause, reset, cleanup and runtime isolation.
-- `ResponsiveModule` is the standard base for full-screen responsive works.
+- `ResponsiveModule` adapts a feature to the CocosLab lifecycle and viewport.
 - `ParameterController` and `ParameterPanel` provide validated, persistent controls.
 - `FixedStepClock` provides bounded fixed-step simulation updates.
+
+New and migrated feature modules use one readable layer order:
+
+```text
+Definition
+→ Module
+→ ViewModel
+→ Model
+→ View
+```
+
+The Lissajous feature under `assets/app/features/mathematics/lissajous/` is the reference implementation. Other existing modules can migrate to the same shape without changing the three-laboratory catalog.
 
 Dependency direction:
 
@@ -43,10 +58,14 @@ Cocos Engine
     ↑
 Application Core
     ↑
-Feature Modules
+Feature Views and Modules
+    ↑
+ViewModels
+    ↑
+Domain Models
 ```
 
-Feature modules depend on application contracts and reusable infrastructure, never on other feature modules.
+Domain models do not import Cocos Engine types. Views own nodes, layout and drawing. ViewModels own parameters, interaction state and derived view state. Modules only connect lifecycle events between the application shell, ViewModel and View.
 
 ## Physics modules
 
@@ -70,7 +89,7 @@ Creator-generated `.meta` files must be committed after importing new source fil
 
 ## Module development
 
-See [`docs/MODULE_AUTHORING.md`](docs/MODULE_AUTHORING.md) for the module template, parameters, fixed-step simulation and registration process.
+See [`docs/MODULE_AUTHORING.md`](docs/MODULE_AUTHORING.md) for the standard feature structure, responsibilities, parameters, lifecycle and registration process.
 
 ## Version control
 
