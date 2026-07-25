@@ -9,7 +9,7 @@ import {
 import { cursorSpaceDefinition } from '../features/games/CursorSpaceModule';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
-import { parametricCurveDefinition } from '../features/mathematics/ParametricCurveModule';
+import { lissajousDefinition } from '../features/mathematics/lissajous';
 import { doublePendulumDefinition } from '../features/simulation/DoublePendulumModule';
 import { systemCheckDefinition } from '../features/system/SystemCheckModule';
 import { InputService } from '../services/InputService';
@@ -124,7 +124,7 @@ export class AppRoot extends Component {
         }
 
         this.moduleRegistry.registerAll([
-            parametricCurveDefinition,
+            lissajousDefinition,
             doublePendulumDefinition,
             cursorSpaceDefinition,
             systemCheckDefinition,
