@@ -7,6 +7,10 @@ export const lissajousDefinition: VisibleModuleDefinition = {
     description: 'Explore frequency ratios, traced motion, phase morphing and classic Lissajous presets.',
     category: 'mathematics',
     labId: 'mathematics',
+    catalog: {
+        subtitle: 'frequency ratios and phase motion',
+        cover: 'parametric-curve',
+    },
     tags: ['lissajous', 'curves', 'graphics', 'animation'],
     capabilities: ['pause', 'reset', 'settings', 'save-state'],
     status: 'ready',
