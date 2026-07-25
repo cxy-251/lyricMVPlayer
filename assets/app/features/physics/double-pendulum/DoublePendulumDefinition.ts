@@ -7,6 +7,10 @@ export const doublePendulumDefinition: VisibleModuleDefinition = {
     description: 'Explore chaotic initial conditions with a fixed-step RK4 model and energy diagnostics.',
     category: 'physics',
     labId: 'physics',
+    catalog: {
+        subtitle: 'chaos and energy conservation',
+        cover: 'double-pendulum',
+    },
     tags: ['mechanics', 'chaos', 'conservation', 'rk4'],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
