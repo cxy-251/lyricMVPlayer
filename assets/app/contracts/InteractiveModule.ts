@@ -6,11 +6,25 @@ import type { ViewportService } from '../services/ViewportService';
 
 export type LabId = 'mathematics' | 'physics' | 'games';
 
+export type CatalogCoverKind =
+    | 'mathematics'
+    | 'physics'
+    | 'games'
+    | 'lissajous'
+    | 'double-pendulum'
+    | 'cursor-space';
+
+export interface CatalogMetadata {
+    readonly subtitle: string;
+    readonly cover: CatalogCoverKind;
+}
+
 export interface LabDefinition {
     readonly id: LabId;
     readonly title: string;
     readonly description: string;
     readonly order: number;
+    readonly cover: CatalogCoverKind;
 }
 
 export type ModuleCategory =
@@ -71,6 +85,7 @@ export interface ModuleDefinition {
     readonly description: string;
     readonly category: ModuleCategory;
     readonly labId?: LabId;
+    readonly catalog?: CatalogMetadata;
     readonly tags?: readonly string[];
     readonly capabilities?: readonly ModuleCapability[];
     readonly status?: ModuleStatus;
@@ -82,7 +97,13 @@ export interface ModuleDefinition {
 export interface VisibleModuleDefinition extends ModuleDefinition {
     readonly category: Exclude<ModuleCategory, 'system'>;
     readonly labId: LabId;
+    readonly catalog: CatalogMetadata;
     readonly hidden?: false;
+}
+
+export interface LabManifest {
+    readonly definition: LabDefinition;
+    readonly modules: readonly VisibleModuleDefinition[];
 }
 
 export function isUpdatable(module: InteractiveModule): module is InteractiveModule & Updatable {
