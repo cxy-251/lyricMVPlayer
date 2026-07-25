@@ -1,0 +1,1 @@
+export { doublePendulumDefinition } from './DoublePendulumDefinition';
