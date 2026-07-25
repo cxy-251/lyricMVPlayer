@@ -3,7 +3,6 @@ import {
     Graphics,
     HorizontalTextAlignment,
     Label,
-    Node,
 } from 'cc';
 import type {
     Pausable,
@@ -29,6 +28,7 @@ import {
 import {
     DoublePendulumModel,
     type DoublePendulumParameters,
+    type DoublePendulumState,
 } from './DoublePendulumModel';
 
 const PARAMETER_APPLY_DELAY_MS = 140;
@@ -97,6 +97,50 @@ const parameterSchema: ParameterSchema = [
     },
     {
         kind: 'number',
+        key: 'initialAngle1',
+        label: 'Upper angle',
+        defaultValue: 100,
+        minimum: -170,
+        maximum: 170,
+        step: 1,
+        decimals: 0,
+        unit: '°',
+    },
+    {
+        kind: 'number',
+        key: 'initialAngle2',
+        label: 'Lower angle',
+        defaultValue: 65,
+        minimum: -170,
+        maximum: 170,
+        step: 1,
+        decimals: 0,
+        unit: '°',
+    },
+    {
+        kind: 'number',
+        key: 'initialOmega1',
+        label: 'Upper angular speed',
+        defaultValue: 0,
+        minimum: -6,
+        maximum: 6,
+        step: 0.1,
+        decimals: 1,
+        unit: ' rad/s',
+    },
+    {
+        kind: 'number',
+        key: 'initialOmega2',
+        label: 'Lower angular speed',
+        defaultValue: 0,
+        minimum: -6,
+        maximum: 6,
+        step: 0.1,
+        decimals: 1,
+        unit: ' rad/s',
+    },
+    {
+        kind: 'number',
         key: 'speed',
         label: 'Time scale',
         defaultValue: 0.75,
@@ -154,9 +198,10 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         const context = this.requireContext();
         this.parameters = new ParameterController(
             context.storage,
-            'module:double-pendulum:parameters-v2',
+            'module:double-pendulum:parameters-v3',
             parameterSchema,
         );
+        this.paused = false;
         this.resetModelFromParameters();
     }
 
@@ -278,8 +323,6 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             this.plotWidth,
             this.plotHeight,
         ).addComponent(Graphics);
-        this.drawReference();
-
         this.trailGraphics = createUiNode(
             plot,
             'Trajectory',
@@ -314,7 +357,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         if (this.plotHeight >= 100 && this.plotWidth >= 160) {
             createLabel(
                 plot,
-                'IDEAL MODEL  ·  POINT MASSES  ·  MASSLESS RIGID RODS  ·  FRICTIONLESS PIVOTS',
+                'RK4  ·  FIXED STEP 1/240 s  ·  POINT MASSES  ·  MASSLESS RIGID RODS',
                 Math.max(1, this.plotWidth - 32),
                 24,
                 compact ? 9 : 10,
@@ -354,6 +397,7 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             breakpoint: viewport.breakpoint,
         });
 
+        this.drawReference();
         this.drawSimulation();
     }
 
@@ -370,7 +414,6 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         this.cancelPendingParameterApply();
         this.parameterApplyTimer = setTimeout(() => {
             this.parameterApplyTimer = null;
-
             if (!this.parameters) {
                 return;
             }
@@ -390,13 +433,13 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         if (this.parameterApplyTimer === null) {
             return;
         }
-
         clearTimeout(this.parameterApplyTimer);
         this.parameterApplyTimer = null;
     }
 
     private resetModelFromParameters(): void {
         this.model.setParameters(this.modelParameters());
+        this.model.reset(this.initialState());
         this.clock.reset();
         this.trail.clear();
         this.pushTrailPoint();
@@ -410,6 +453,16 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
             mass2: parameters.getNumber('mass2'),
             length1: parameters.getNumber('length1'),
             length2: parameters.getNumber('length2'),
+        };
+    }
+
+    private initialState(): DoublePendulumState {
+        const parameters = this.requireParameters();
+        return {
+            theta1: parameters.getNumber('initialAngle1') * Math.PI / 180,
+            theta2: parameters.getNumber('initialAngle2') * Math.PI / 180,
+            omega1: parameters.getNumber('initialOmega1'),
+            omega2: parameters.getNumber('initialOmega2'),
         };
     }
 
@@ -429,7 +482,6 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 
     private drawReference(): void {
         const graphics = this.referenceGraphics;
-
         if (!graphics) {
             return;
         }
@@ -469,24 +521,20 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         const y2 = this.pivotY + positions.second.y * this.scale;
 
         trailGraphics.clear();
-
         if (parameters.getBoolean('showTrail')) {
             const points = this.trail.values;
             trailGraphics.strokeColor = TRAIL_COLOR;
             trailGraphics.lineWidth = 1.5;
-
             for (let index = 0; index < points.length; index += 1) {
                 const point = points[index];
                 const x = this.pivotX + point.x * this.scale;
                 const y = this.pivotY + point.y * this.scale;
-
                 if (index === 0) {
                     trailGraphics.moveTo(x, y);
                 } else {
                     trailGraphics.lineTo(x, y);
                 }
             }
-
             if (points.length > 1) {
                 trailGraphics.stroke();
             }
@@ -516,14 +564,12 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         bob2Graphics.fill();
 
         const diagnostics = this.model.diagnostics();
-        const constraintMicrometers = diagnostics.constraintError * 1_000_000;
-
         if (this.diagnosticsLabel) {
             this.diagnosticsLabel.string = [
                 `t ${diagnostics.elapsedTime.toFixed(2)} s`,
                 `E ${diagnostics.totalEnergy.toFixed(5)} J`,
-                `ΔE ${(diagnostics.relativeEnergyDrift * 1_000_000).toFixed(1)} ppm`,
-                `constraint ${constraintMicrometers.toFixed(3)} µm`,
+                `ΔE ${diagnostics.absoluteEnergyDrift.toExponential(2)} J`,
+                `rel ${(diagnostics.normalizedEnergyDrift * 1_000_000).toFixed(1)} ppm`,
             ].join('   ·   ');
         }
     }
@@ -532,7 +578,6 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
         if (!this.parameters) {
             throw new Error('Double pendulum parameters are unavailable');
         }
-
         return this.parameters;
     }
 }
@@ -540,10 +585,10 @@ class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausab
 export const doublePendulumDefinition: VisibleModuleDefinition = {
     id: 'double-pendulum-lab',
     title: 'Double Pendulum',
-    description: 'Study a conservative planar double pendulum with measurable energy and constraint error.',
+    description: 'Explore chaotic initial conditions with a fixed-step RK4 model and energy diagnostics.',
     category: 'physics',
     labId: 'physics',
-    tags: ['mechanics', 'chaos', 'conservation'],
+    tags: ['mechanics', 'chaos', 'conservation', 'rk4'],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
     order: 10,
