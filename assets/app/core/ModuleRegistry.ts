@@ -1,39 +1,52 @@
 import type {
     LabDefinition,
     LabId,
+    LabManifest,
     ModuleCategory,
     ModuleDefinition,
 } from '../contracts/InteractiveModule';
 
-const laboratories: Record<LabId, LabDefinition> = {
-    mathematics: {
-        id: 'mathematics',
-        title: 'Mathematics Laboratory',
-        description: 'Interactive curves, geometry and mathematical systems.',
-        order: 10,
-    },
-    physics: {
-        id: 'physics',
-        title: 'Physics Laboratory',
-        description: 'Dynamic simulations built from physical models and numerical methods.',
-        order: 20,
-    },
-    games: {
-        id: 'games',
-        title: 'Games Laboratory',
-        description: 'Minimal playable systems built from reusable Cocos runtime primitives.',
-        order: 30,
-    },
-};
-
 export class ModuleRegistry {
+    private readonly labDefinitions = new Map<LabId, LabDefinition>();
     private readonly definitions = new Map<string, ModuleDefinition>();
 
-    register(definition: ModuleDefinition): void {
-        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(definition.id)) {
-            throw new Error(`Invalid module id: ${definition.id}`);
+    registerLab(manifest: LabManifest): void {
+        const { definition, modules } = manifest;
+        if (this.labDefinitions.has(definition.id)) {
+            throw new Error(`Duplicate laboratory id: ${definition.id}`);
+        }
+        if (modules.length === 0) {
+            throw new Error(`Laboratory ${definition.id} must register at least one visible module`);
         }
 
+        const manifestModuleIds = new Set<string>();
+        for (const module of modules) {
+            if (module.labId !== definition.id) {
+                throw new Error(
+                    `Module ${module.id} belongs to ${module.labId}, not ${definition.id}`,
+                );
+            }
+            if (manifestModuleIds.has(module.id) || this.definitions.has(module.id)) {
+                throw new Error(`Duplicate module id: ${module.id}`);
+            }
+            this.validateModuleId(module.id);
+            manifestModuleIds.add(module.id);
+        }
+
+        this.labDefinitions.set(definition.id, { ...definition });
+        for (const module of modules) {
+            this.register(module);
+        }
+    }
+
+    registerLabs(manifests: readonly LabManifest[]): void {
+        for (const manifest of manifests) {
+            this.registerLab(manifest);
+        }
+    }
+
+    register(definition: ModuleDefinition): void {
+        this.validateModuleId(definition.id);
         if (this.definitions.has(definition.id)) {
             throw new Error(`Duplicate module id: ${definition.id}`);
         }
@@ -44,8 +57,10 @@ export class ModuleRegistry {
         if (!internal && !labId) {
             throw new Error(`Visible module ${definition.id} must belong to a laboratory`);
         }
-
-        if (labId && !laboratories[labId]) {
+        if (!internal && !definition.catalog) {
+            throw new Error(`Visible module ${definition.id} must define catalog metadata`);
+        }
+        if (labId && !this.labDefinitions.has(labId)) {
             throw new Error(`Unknown laboratory: ${labId}`);
         }
 
@@ -63,21 +78,20 @@ export class ModuleRegistry {
 
     get(moduleId: string): ModuleDefinition {
         const definition = this.definitions.get(moduleId);
-
         if (!definition) {
             throw new Error(`Unknown module: ${moduleId}`);
         }
-
         return definition;
     }
 
     getLab(labId: LabId): LabDefinition {
-        const lab = laboratories[labId];
-
+        const lab = this.labDefinitions.get(labId);
+        if (!lab) {
+            throw new Error(`Unknown laboratory: ${labId}`);
+        }
         if (this.listByLab(labId).length === 0) {
             throw new Error(`Laboratory ${labId} has no visible modules`);
         }
-
         return lab;
     }
 
@@ -92,14 +106,8 @@ export class ModuleRegistry {
     }
 
     labs(): readonly LabDefinition[] {
-        const activeLabIds = new Set(
-            this.sortedVisibleDefinitions()
-                .map((definition) => definition.labId)
-                .filter((labId): labId is LabId => Boolean(labId)),
-        );
-
-        return [...activeLabIds]
-            .map((labId) => laboratories[labId])
+        return [...this.labDefinitions.values()]
+            .filter((lab) => this.listByLab(lab.id).length > 0)
             .sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
     }
 
@@ -107,10 +115,20 @@ export class ModuleRegistry {
         return [...new Set(this.list().map((definition) => definition.category))];
     }
 
+    private validateModuleId(moduleId: string): void {
+        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(moduleId)) {
+            throw new Error(`Invalid module id: ${moduleId}`);
+        }
+    }
+
     private sortedVisibleDefinitions(): readonly ModuleDefinition[] {
         return [...this.definitions.values()]
             .filter((definition) => !definition.hidden)
             .sort((left, right) => {
+                const labDifference = (left.labId ?? '').localeCompare(right.labId ?? '');
+                if (labDifference !== 0) {
+                    return labDifference;
+                }
                 const orderDifference = (left.order ?? 1000) - (right.order ?? 1000);
                 return orderDifference || left.title.localeCompare(right.title);
             });
