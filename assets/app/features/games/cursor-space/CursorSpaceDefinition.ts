@@ -7,6 +7,10 @@ export const cursorSpaceDefinition: VisibleModuleDefinition = {
     description: 'Sustained hull combat with visible hit explosions and survival-first AI takeover.',
     category: 'game',
     labId: 'games',
+    catalog: {
+        subtitle: 'hybrid-control survival combat',
+        cover: 'cursor-space',
+    },
     tags: ['hybrid-control', 'fleet', 'simulation', 'combat'],
     capabilities: ['pause', 'reset'],
     status: 'prototype',
