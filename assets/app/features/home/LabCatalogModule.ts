@@ -3,7 +3,6 @@ import type {
     InteractiveModule,
     LabId,
     ModuleContext,
-    ModuleDefinition,
 } from '../../contracts/InteractiveModule';
 import type { ModuleRegistry } from '../../core/ModuleRegistry';
 import type { ViewportSnapshot } from '../../services/ViewportService';
@@ -17,7 +16,6 @@ import {
     palette,
 } from '../../ui/UiFactory';
 import { createCatalogCard } from './CatalogCard';
-import type { CatalogCoverKind } from './CatalogCovers';
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -44,7 +42,6 @@ export class LabCatalogModule implements InteractiveModule {
                     if (initializing) {
                         throw error;
                     }
-
                     context.reportError(error);
                 }
             });
@@ -63,7 +60,6 @@ export class LabCatalogModule implements InteractiveModule {
 
     private render(viewport: ViewportSnapshot): void {
         const root = this.root;
-
         if (!root) {
             return;
         }
@@ -125,14 +121,18 @@ export class LabCatalogModule implements InteractiveModule {
 
         for (let index = 0; index < visible.length; index += 1) {
             const definition = visible[index];
+            const catalog = definition.catalog;
+            if (!catalog) {
+                throw new Error(`Visible module ${definition.id} has no catalog metadata`);
+            }
             const row = Math.floor(index / columns);
             const column = index % columns;
 
             createCatalogCard(root, {
                 name: `ModuleCard:${definition.id}`,
                 title: definition.title,
-                subtitle: this.subtitleForModule(definition),
-                cover: this.coverForModule(definition),
+                subtitle: catalog.subtitle,
+                cover: catalog.cover,
                 width: cardWidth,
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
@@ -180,25 +180,5 @@ export class LabCatalogModule implements InteractiveModule {
                 this.render(viewport);
             },
         });
-    }
-
-    private coverForModule(definition: ModuleDefinition): CatalogCoverKind {
-        if (definition.id === 'double-pendulum-lab') {
-            return 'double-pendulum';
-        }
-
-        return definition.id === 'cursor-space'
-            ? 'cursor-space'
-            : 'parametric-curve';
-    }
-
-    private subtitleForModule(definition: ModuleDefinition): string {
-        if (definition.id === 'double-pendulum-lab') {
-            return 'ideal conservative system';
-        }
-
-        return definition.id === 'cursor-space'
-            ? 'minimal cursor survival'
-            : 'code generated curve system';
     }
 }
