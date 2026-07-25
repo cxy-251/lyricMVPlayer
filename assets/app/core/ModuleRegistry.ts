@@ -4,6 +4,7 @@ import type {
     LabManifest,
     ModuleCategory,
     ModuleDefinition,
+    VisibleModuleDefinition,
 } from '../contracts/InteractiveModule';
 
 export class ModuleRegistry {
@@ -21,21 +22,16 @@ export class ModuleRegistry {
 
         const manifestModuleIds = new Set<string>();
         for (const module of modules) {
-            if (module.labId !== definition.id) {
-                throw new Error(
-                    `Module ${module.id} belongs to ${module.labId}, not ${definition.id}`,
-                );
-            }
+            this.validateVisibleModule(module, definition.id);
             if (manifestModuleIds.has(module.id) || this.definitions.has(module.id)) {
                 throw new Error(`Duplicate module id: ${module.id}`);
             }
-            this.validateModuleId(module.id);
             manifestModuleIds.add(module.id);
         }
 
         this.labDefinitions.set(definition.id, { ...definition });
         for (const module of modules) {
-            this.register(module);
+            this.definitions.set(module.id, { ...module, hidden: false });
         }
     }
 
@@ -53,7 +49,6 @@ export class ModuleRegistry {
 
         const internal = definition.hidden === true || definition.category === 'system';
         const labId = definition.labId;
-
         if (!internal && !labId) {
             throw new Error(`Visible module ${definition.id} must belong to a laboratory`);
         }
@@ -95,12 +90,12 @@ export class ModuleRegistry {
         return lab;
     }
 
-    list(category?: ModuleCategory): readonly ModuleDefinition[] {
+    list(category?: ModuleCategory): readonly VisibleModuleDefinition[] {
         return this.sortedVisibleDefinitions()
             .filter((definition) => !category || definition.category === category);
     }
 
-    listByLab(labId: LabId): readonly ModuleDefinition[] {
+    listByLab(labId: LabId): readonly VisibleModuleDefinition[] {
         return this.sortedVisibleDefinitions()
             .filter((definition) => definition.labId === labId);
     }
@@ -115,17 +110,46 @@ export class ModuleRegistry {
         return [...new Set(this.list().map((definition) => definition.category))];
     }
 
+    private validateVisibleModule(
+        definition: VisibleModuleDefinition,
+        expectedLabId: LabId,
+    ): void {
+        this.validateModuleId(definition.id);
+        if (definition.labId !== expectedLabId) {
+            throw new Error(
+                `Module ${definition.id} belongs to ${definition.labId}, not ${expectedLabId}`,
+            );
+        }
+        if (definition.hidden === true || definition.category === 'system') {
+            throw new Error(`Laboratory module ${definition.id} must be visible`);
+        }
+        if (!definition.catalog.subtitle.trim()) {
+            throw new Error(`Module ${definition.id} must define a catalog subtitle`);
+        }
+    }
+
     private validateModuleId(moduleId: string): void {
         if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(moduleId)) {
             throw new Error(`Invalid module id: ${moduleId}`);
         }
     }
 
-    private sortedVisibleDefinitions(): readonly ModuleDefinition[] {
+    private isVisibleDefinition(
+        definition: ModuleDefinition,
+    ): definition is VisibleModuleDefinition {
+        return definition.hidden !== true
+            && definition.category !== 'system'
+            && Boolean(definition.labId)
+            && Boolean(definition.catalog);
+    }
+
+    private sortedVisibleDefinitions(): readonly VisibleModuleDefinition[] {
         return [...this.definitions.values()]
-            .filter((definition) => !definition.hidden)
+            .filter((definition): definition is VisibleModuleDefinition => (
+                this.isVisibleDefinition(definition)
+            ))
             .sort((left, right) => {
-                const labDifference = (left.labId ?? '').localeCompare(right.labId ?? '');
+                const labDifference = left.labId.localeCompare(right.labId);
                 if (labDifference !== 0) {
                     return labDifference;
                 }
