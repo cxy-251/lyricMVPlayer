@@ -64,7 +64,7 @@ export class LabCatalogModule implements InteractiveModule {
             return;
         }
 
-        this.registry.getLab(this.labId);
+        const lab = this.registry.getLab(this.labId);
         const modules = this.registry.listByLab(this.labId);
         const compact = viewport.breakpoint === 'compact';
         const safeWidth = Math.max(
@@ -121,18 +121,14 @@ export class LabCatalogModule implements InteractiveModule {
 
         for (let index = 0; index < visible.length; index += 1) {
             const definition = visible[index];
-            const catalog = definition.catalog;
-            if (!catalog) {
-                throw new Error(`Visible module ${definition.id} has no catalog metadata`);
-            }
             const row = Math.floor(index / columns);
             const column = index % columns;
 
             createCatalogCard(root, {
                 name: `ModuleCard:${definition.id}`,
                 title: definition.title,
-                subtitle: catalog.subtitle,
-                cover: catalog.cover,
+                subtitle: definition.catalog.subtitle,
+                cover: definition.catalog.cover ?? lab.cover,
                 width: cardWidth,
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
