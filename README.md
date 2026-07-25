@@ -39,7 +39,7 @@ Games Laboratory
 - `ParameterController` and `ParameterPanel` provide validated, persistent controls.
 - `FixedStepClock` provides bounded fixed-step simulation updates.
 
-New and migrated feature modules use one readable layer order:
+Every visible feature uses one readable layer order:
 
 ```text
 Definition
@@ -49,7 +49,7 @@ Definition
 → View
 ```
 
-The Lissajous feature under `assets/app/features/mathematics/lissajous/` is the reference implementation. Other existing modules can migrate to the same shape without changing the three-laboratory catalog.
+All three current visible features use this entry structure. Large features may keep additional domain files below the Model layer, while Definition, Module, ViewModel and View retain the same responsibilities.
 
 Dependency direction:
 
