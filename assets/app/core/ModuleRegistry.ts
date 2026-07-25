@@ -48,20 +48,15 @@ export class ModuleRegistry {
         }
 
         const internal = definition.hidden === true || definition.category === 'system';
-        const labId = definition.labId;
-        if (!internal && !labId) {
-            throw new Error(`Visible module ${definition.id} must belong to a laboratory`);
-        }
-        if (!internal && !definition.catalog) {
-            throw new Error(`Visible module ${definition.id} must define catalog metadata`);
-        }
-        if (labId && !this.labDefinitions.has(labId)) {
-            throw new Error(`Unknown laboratory: ${labId}`);
+        if (!internal) {
+            throw new Error(
+                `Visible module ${definition.id} must be registered through a LabManifest`,
+            );
         }
 
         this.definitions.set(definition.id, {
             ...definition,
-            hidden: internal,
+            hidden: true,
         });
     }
 
@@ -120,7 +115,9 @@ export class ModuleRegistry {
                 `Module ${definition.id} belongs to ${definition.labId}, not ${expectedLabId}`,
             );
         }
-        if (definition.hidden === true || definition.category === 'system') {
+
+        const rawDefinition = definition as ModuleDefinition;
+        if (rawDefinition.hidden === true || rawDefinition.category === 'system') {
             throw new Error(`Laboratory module ${definition.id} must be visible`);
         }
         if (!definition.catalog.subtitle.trim()) {
