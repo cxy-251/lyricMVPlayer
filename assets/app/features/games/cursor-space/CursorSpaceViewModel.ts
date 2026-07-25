@@ -1,7 +1,9 @@
 import { FixedStepClock } from '../../../animation/FixedStepClock';
-import { CursorSpaceAutopilot } from '../CursorSpaceAutopilot';
-import { CursorSpaceModel } from '../CursorSpaceModel';
 import type { CursorSpaceBounds } from '../CursorSpaceTypes';
+import {
+    CursorSpaceAutopilot,
+    CursorSpaceModel,
+} from './CursorSpaceModel';
 import type {
     CursorSpaceRenderCapacity,
     CursorSpaceViewState,
