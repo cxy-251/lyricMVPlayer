@@ -5,7 +5,6 @@ import {
     Label,
     Node,
 } from 'cc';
-import type { ParameterController } from '../../../parameters/ParameterController';
 import {
     ParameterPanel,
     type ParameterPanelLayout,
@@ -25,6 +24,7 @@ import type {
     LissajousRenderRequest,
     LissajousViewState,
 } from './LissajousTypes';
+import type { LissajousViewModel } from './LissajousViewModel';
 
 interface CurveGraphicsLayer {
     readonly echo: number;
@@ -32,7 +32,7 @@ interface CurveGraphicsLayer {
 }
 
 export interface LissajousViewActions {
-    parameterChanged(key: string): void;
+    parameterChanged(): void;
     cyclePreset(direction: -1 | 1): void;
     reportError(error: unknown): void;
 }
@@ -60,7 +60,7 @@ export class LissajousView {
     constructor(
         private readonly root: Node,
         private readonly parameterSchema: ParameterSchema,
-        private readonly parameterBinding: ParameterController,
+        private readonly viewModel: LissajousViewModel,
         private readonly actions: LissajousViewActions,
     ) {}
 
@@ -223,8 +223,8 @@ export class LissajousView {
         this.parameterPanel = new ParameterPanel(
             this.root,
             this.parameterSchema,
-            this.parameterBinding,
-            (key) => this.actions.parameterChanged(key),
+            this.viewModel,
+            () => this.actions.parameterChanged(),
             (error) => this.actions.reportError(error),
         );
         this.parameterPanel.render(layout);
