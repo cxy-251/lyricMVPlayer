@@ -1,6 +1,7 @@
 import type { StorageService } from '../../../services/StorageService';
 import { ParameterController } from '../../../parameters/ParameterController';
 import type {
+    ParameterDefinition,
     ParameterSchema,
 } from '../../../parameters/ParameterSchema';
 import { LissajousModel } from './LissajousModel';
@@ -10,6 +11,7 @@ import {
 } from './LissajousPresets';
 import type {
     LissajousAnimationMode,
+    LissajousCurve,
     LissajousParameters,
     LissajousRenderRequest,
     LissajousViewState,
@@ -127,10 +129,6 @@ export class LissajousViewModel extends ParameterController {
         this.redrawAccumulator = 0;
     }
 
-    dispose(): void {
-        super.dispose();
-    }
-
     cyclePreset(direction: -1 | 1): void {
         const currentParameters = this.readParameters();
         const currentPreset = matchLissajousPreset(
@@ -153,7 +151,7 @@ export class LissajousViewModel extends ParameterController {
         const echoLayerCount = parameters.showEchoes
             ? Math.max(1, request.maximumEchoLayers)
             : 1;
-        const curves = [];
+        const curves: LissajousCurve[] = [];
 
         for (let echo = echoLayerCount - 1; echo >= 0; echo -= 1) {
             curves.push({
@@ -187,7 +185,7 @@ export class LissajousViewModel extends ParameterController {
             formula: `x=sin(${parameters.frequencyX}t+${this.model.wrapAngle(currentPhase).toFixed(2)})`
                 + ` · y=sin(${parameters.frequencyY}t)`,
             diagnostics: `ratio ${diagnostics.ratioX}:${diagnostics.ratioY}`
-                + ` · period ${diagnostics.period.toFixed(3)}`
+                + ` · T=${diagnostics.period.toFixed(3)} rad`
                 + ` · ${this.formatMode(parameters.animationMode)}`,
             curves,
             marker,
