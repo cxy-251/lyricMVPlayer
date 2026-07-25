@@ -26,8 +26,8 @@ export interface DoublePendulumPositions {
 export interface DoublePendulumDiagnostics {
     readonly elapsedTime: number;
     readonly totalEnergy: number;
-    readonly relativeEnergyDrift: number;
-    readonly constraintError: number;
+    readonly absoluteEnergyDrift: number;
+    readonly normalizedEnergyDrift: number;
 }
 
 interface StateDerivative {
@@ -45,8 +45,8 @@ const DEFAULT_STATE: DoublePendulumState = {
 };
 
 export class DoublePendulumModel {
-    private currentState: DoublePendulumState = DEFAULT_STATE;
-    private initialState: DoublePendulumState = DEFAULT_STATE;
+    private currentState: DoublePendulumState = { ...DEFAULT_STATE };
+    private initialState: DoublePendulumState = { ...DEFAULT_STATE };
     private currentParameters: DoublePendulumParameters;
     private referenceEnergy = 0;
     private time = 0;
@@ -66,12 +66,12 @@ export class DoublePendulumModel {
 
     setParameters(parameters: DoublePendulumParameters): void {
         this.currentParameters = this.validateParameters(parameters);
-        this.reset();
+        this.reset(this.initialState);
     }
 
     reset(state: DoublePendulumState = this.initialState): void {
         this.initialState = this.validateState(state);
-        this.currentState = this.initialState;
+        this.currentState = { ...this.initialState };
         this.time = 0;
         this.referenceEnergy = this.energy(this.currentState);
     }
@@ -130,23 +130,18 @@ export class DoublePendulumModel {
     }
 
     diagnostics(): DoublePendulumDiagnostics {
-        const positions = this.positions();
-        const { length1, length2 } = this.currentParameters;
-        const firstLength = Math.hypot(positions.first.x, positions.first.y);
-        const secondLength = Math.hypot(
-            positions.second.x - positions.first.x,
-            positions.second.y - positions.first.y,
-        );
         const totalEnergy = this.energy();
+        const absoluteEnergyDrift = Math.abs(totalEnergy - this.referenceEnergy);
+        const energyScale = this.characteristicEnergyScale();
 
         return {
             elapsedTime: this.time,
             totalEnergy,
-            relativeEnergyDrift: Math.abs(totalEnergy - this.referenceEnergy)
-                / Math.max(1e-9, Math.abs(this.referenceEnergy)),
-            constraintError: Math.max(
-                Math.abs(firstLength - length1),
-                Math.abs(secondLength - length2),
+            absoluteEnergyDrift,
+            normalizedEnergyDrift: absoluteEnergyDrift / Math.max(
+                1e-9,
+                Math.abs(this.referenceEnergy),
+                energyScale,
             ),
         };
     }
@@ -194,6 +189,11 @@ export class DoublePendulumModel {
             omega1: state.omega1 + derivative.omega1 * scale,
             omega2: state.omega2 + derivative.omega2 * scale,
         };
+    }
+
+    private characteristicEnergyScale(): number {
+        const { gravity, mass1, mass2, length1, length2 } = this.currentParameters;
+        return (mass1 + mass2) * gravity * length1 + mass2 * gravity * length2;
     }
 
     private validateParameters(parameters: DoublePendulumParameters): DoublePendulumParameters {
