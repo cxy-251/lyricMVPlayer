@@ -10,7 +10,7 @@ import { cursorSpaceDefinition } from '../features/games/CursorSpaceModule';
 import { HomeModule } from '../features/home/HomeModule';
 import { LabCatalogModule } from '../features/home/LabCatalogModule';
 import { lissajousDefinition } from '../features/mathematics/lissajous';
-import { doublePendulumDefinition } from '../features/simulation/DoublePendulumModule';
+import { doublePendulumDefinition } from '../features/physics/double-pendulum';
 import { systemCheckDefinition } from '../features/system/SystemCheckModule';
 import { InputService } from '../services/InputService';
 import { StorageService } from '../services/StorageService';
