@@ -1,7 +1,6 @@
 import { HorizontalTextAlignment, Node } from 'cc';
 import type {
     InteractiveModule,
-    LabDefinition,
     ModuleContext,
 } from '../../contracts/InteractiveModule';
 import type { ModuleRegistry } from '../../core/ModuleRegistry';
@@ -14,7 +13,6 @@ import {
     palette,
 } from '../../ui/UiFactory';
 import { createCatalogCard } from './CatalogCard';
-import type { CatalogCoverKind } from './CatalogCovers';
 
 export class HomeModule implements InteractiveModule {
     private root: Node | null = null;
@@ -37,7 +35,6 @@ export class HomeModule implements InteractiveModule {
                     if (initializing) {
                         throw error;
                     }
-
                     context.reportError(error);
                 }
             });
@@ -56,7 +53,6 @@ export class HomeModule implements InteractiveModule {
 
     private render(viewport: ViewportSnapshot): void {
         const root = this.root;
-
         if (!root) {
             return;
         }
@@ -133,7 +129,7 @@ export class HomeModule implements InteractiveModule {
                 name: `LaboratoryCard:${lab.id}`,
                 title: lab.title,
                 subtitle: `${modules.length} ${modules.length === 1 ? 'experiment' : 'experiments'}`,
-                cover: this.coverForLab(lab),
+                cover: lab.cover,
                 width: cardWidth,
                 height: cardHeight,
                 x: startX + column * (cardWidth + gap),
@@ -144,13 +140,5 @@ export class HomeModule implements InteractiveModule {
                 },
             });
         }
-    }
-
-    private coverForLab(lab: LabDefinition): CatalogCoverKind {
-        if (lab.id === 'physics') {
-            return 'physics';
-        }
-
-        return lab.id === 'games' ? 'games' : 'mathematics';
     }
 }
