@@ -24,6 +24,20 @@ import {
     palette,
     strokeNode,
 } from '../../ui/UiFactory';
+import {
+    lissajousCurrentPhase,
+    lissajousDiagnostics,
+    lissajousMarkerParameter,
+    lissajousPoint,
+    wrapPositiveAngle,
+    type LissajousAnimationMode,
+} from './LissajousModel';
+import {
+    CUSTOM_LISSAJOUS_PRESET_ID,
+    LISSAJOUS_PRESETS,
+    findLissajousPreset,
+    matchLissajousPreset,
+} from './LissajousPresets';
 
 interface CurveLayer {
     readonly echo: number;
@@ -34,6 +48,33 @@ const CURVE_FRAME_INTERVAL = 1 / 30;
 const MAXIMUM_ECHO_LAYERS = 4;
 
 const parameterSchema: ParameterSchema = [
+    {
+        kind: 'select',
+        key: 'preset',
+        label: 'Preset',
+        defaultValue: 'classic-3-2',
+        options: [
+            ...LISSAJOUS_PRESETS.map((preset) => ({
+                value: preset.id,
+                label: preset.label,
+            })),
+            {
+                value: CUSTOM_LISSAJOUS_PRESET_ID,
+                label: 'Custom',
+            },
+        ],
+    },
+    {
+        kind: 'select',
+        key: 'animationMode',
+        label: 'Animation mode',
+        defaultValue: 'trace',
+        options: [
+            { value: 'trace', label: 'Trace' },
+            { value: 'phase-morph', label: 'Phase Morph' },
+            { value: 'combined', label: 'Combined' },
+        ],
+    },
     {
         kind: 'number',
         key: 'frequencyX',
@@ -78,14 +119,6 @@ const parameterSchema: ParameterSchema = [
     },
     {
         kind: 'toggle',
-        key: 'animatePhase',
-        label: 'Phase motion',
-        defaultValue: true,
-        onLabel: 'MOVING',
-        offLabel: 'FIXED',
-    },
-    {
-        kind: 'toggle',
         key: 'showEchoes',
         label: 'Phase echoes',
         defaultValue: true,
@@ -99,6 +132,7 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
 
     private curveLayers: CurveLayer[] = [];
     private markerGraphics: Graphics | null = null;
+    private formulaLabel: Label | null = null;
     private diagnosticsLabel: Label | null = null;
     private parameters: ParameterController | null = null;
     private parameterPanel: ParameterPanel | null = null;
@@ -114,9 +148,10 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
         const context = this.requireContext();
         this.parameters = new ParameterController(
             context.storage,
-            'module:parametric-curve:parameters-v3',
+            'module:parametric-curve:parameters-v4',
             parameterSchema,
         );
+        this.synchronizePresetSelection();
         this.elapsed = 0;
         this.redrawAccumulator = 0;
         this.paused = false;
@@ -129,6 +164,7 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
         this.parameters = null;
         this.curveLayers = [];
         this.markerGraphics = null;
+        this.formulaLabel = null;
         this.diagnosticsLabel = null;
     }
 
@@ -138,8 +174,9 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
             return;
         }
 
-        this.elapsed += Math.max(0, dt) * parameters.getNumber('speed');
-        this.redrawAccumulator += Math.max(0, dt);
+        const frameTime = Math.max(0, dt);
+        this.elapsed += frameTime * parameters.getNumber('speed');
+        this.redrawAccumulator += frameTime;
 
         if (this.redrawAccumulator < CURVE_FRAME_INTERVAL) {
             return;
@@ -172,6 +209,7 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
         this.parameterPanel = null;
         this.curveLayers = [];
         this.markerGraphics = null;
+        this.formulaLabel = null;
         this.diagnosticsLabel = null;
         clearNode(root);
         root.setPosition(0, 0, 0);
@@ -223,17 +261,19 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
         this.createCurveLayers(plot);
 
         if (this.plotHeight >= 90 && this.plotWidth >= 180) {
-            createLabel(
+            const formulaWidth = Math.max(1, Math.min(this.plotWidth - 40, 660));
+            const formulaNode = createLabel(
                 plot,
-                'x = sin(at + φ)   ·   y = sin(bt)',
-                Math.max(1, Math.min(this.plotWidth - 40, 520)),
+                '',
+                formulaWidth,
                 28,
                 compact ? 11 : 13,
                 palette.muted,
-                -this.plotWidth / 2 + Math.min(this.plotWidth / 2, 270),
+                -this.plotWidth / 2 + formulaWidth / 2 + 20,
                 this.plotHeight / 2 - 22,
                 HorizontalTextAlignment.LEFT,
             );
+            this.formulaLabel = formulaNode.getComponent(Label);
         }
 
         if (this.plotHeight >= 80 && this.plotWidth >= 220) {
@@ -268,12 +308,52 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
     }
 
     private handleParameterChange(key: string): void {
+        if (key === 'preset') {
+            this.applySelectedPreset();
+            return;
+        }
+
+        if (key === 'frequencyX' || key === 'frequencyY' || key === 'phase') {
+            this.synchronizePresetSelection();
+        }
+
         if (key === 'showEchoes') {
             this.render(this.requireContext().viewport.current);
             return;
         }
 
         this.drawCurve();
+    }
+
+    private applySelectedPreset(): void {
+        const parameters = this.requireParameters();
+        const preset = findLissajousPreset(parameters.getString('preset'));
+        if (!preset) {
+            return;
+        }
+
+        parameters.set('frequencyX', preset.frequencyX);
+        parameters.set('frequencyY', preset.frequencyY);
+        parameters.set('phase', preset.phase);
+        this.elapsed = 0;
+        this.redrawAccumulator = 0;
+        this.drawCurve();
+    }
+
+    private synchronizePresetSelection(): void {
+        const parameters = this.parameters;
+        if (!parameters) {
+            return;
+        }
+
+        parameters.set(
+            'preset',
+            matchLissajousPreset(
+                parameters.getNumber('frequencyX'),
+                parameters.getNumber('frequencyY'),
+                parameters.getNumber('phase'),
+            ),
+        );
     }
 
     private drawGrid(plot: Node): void {
@@ -339,8 +419,8 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
         const frequencyX = Math.round(parameters.getNumber('frequencyX'));
         const frequencyY = Math.round(parameters.getNumber('frequencyY'));
         const basePhase = parameters.getNumber('phase');
-        const animatePhase = parameters.getBoolean('animatePhase');
-        const currentPhase = basePhase + (animatePhase ? this.elapsed : 0);
+        const mode = this.getAnimationMode(parameters.getString('animationMode'));
+        const currentPhase = lissajousCurrentPhase(basePhase, this.elapsed, mode);
         const scaleX = this.plotWidth * 0.42;
         const scaleY = this.plotHeight * 0.40;
         const maximumEcho = Math.max(1, this.echoLayerCount - 1);
@@ -356,62 +436,100 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
             const phase = currentPhase - echo * 0.08;
 
             for (let index = 0; index <= this.sampleCount; index += 1) {
-                const t = (Math.PI * 2 * index) / this.sampleCount;
-                const x = Math.sin(frequencyX * t + phase) * scaleX;
-                const y = Math.sin(frequencyY * t) * scaleY;
+                const parameter = (Math.PI * 2 * index) / this.sampleCount;
+                const point = lissajousPoint(
+                    frequencyX,
+                    frequencyY,
+                    phase,
+                    parameter,
+                    scaleX,
+                    scaleY,
+                );
                 if (index === 0) {
-                    graphics.moveTo(x, y);
+                    graphics.moveTo(point.x, point.y);
                 } else {
-                    graphics.lineTo(x, y);
+                    graphics.lineTo(point.x, point.y);
                 }
             }
             graphics.stroke();
         }
 
-        const markerT = this.elapsed % (Math.PI * 2);
-        const markerX = Math.sin(frequencyX * markerT + currentPhase) * scaleX;
-        const markerY = Math.sin(frequencyY * markerT) * scaleY;
-        this.markerGraphics.clear();
-        this.markerGraphics.fillColor = palette.warning;
-        this.markerGraphics.circle(markerX, markerY, 5);
-        this.markerGraphics.fill();
-        this.updateDiagnostics(frequencyX, frequencyY, currentPhase, animatePhase);
+        this.drawMarker(frequencyX, frequencyY, currentPhase, mode, scaleX, scaleY);
+        this.updateInformation(frequencyX, frequencyY, currentPhase, mode);
     }
 
-    private updateDiagnostics(
+    private drawMarker(
         frequencyX: number,
         frequencyY: number,
         phase: number,
-        animatePhase: boolean,
+        mode: LissajousAnimationMode,
+        scaleX: number,
+        scaleY: number,
     ): void {
+        const markerGraphics = this.markerGraphics;
+        if (!markerGraphics) {
+            return;
+        }
+
+        markerGraphics.clear();
+        const markerParameter = lissajousMarkerParameter(this.elapsed, mode);
+        if (markerParameter === null) {
+            return;
+        }
+
+        const point = lissajousPoint(
+            frequencyX,
+            frequencyY,
+            phase,
+            markerParameter,
+            scaleX,
+            scaleY,
+        );
+        markerGraphics.fillColor = palette.warning;
+        markerGraphics.circle(point.x, point.y, 5);
+        markerGraphics.fill();
+    }
+
+    private updateInformation(
+        frequencyX: number,
+        frequencyY: number,
+        phase: number,
+        mode: LissajousAnimationMode,
+    ): void {
+        const wrappedPhase = wrapPositiveAngle(phase);
+        if (this.formulaLabel) {
+            this.formulaLabel.string = `x = sin(${frequencyX}t + ${wrappedPhase.toFixed(2)})`
+                + `   ·   y = sin(${frequencyY}t)`;
+        }
+
         if (!this.diagnosticsLabel) {
             return;
         }
 
-        const divisor = this.greatestCommonDivisor(frequencyX, frequencyY);
-        const ratioX = frequencyX / divisor;
-        const ratioY = frequencyY / divisor;
-        const period = Math.PI * 2 / divisor;
-        this.diagnosticsLabel.string = `ratio ${ratioX}:${ratioY}`
-            + `   ·   period ${period.toFixed(3)} rad`
-            + `   ·   φ ${this.wrapPositive(phase).toFixed(2)} rad`
-            + `   ·   ${animatePhase ? 'moving phase' : 'fixed phase'}`;
+        const diagnostics = lissajousDiagnostics(frequencyX, frequencyY);
+        this.diagnosticsLabel.string = `ratio ${diagnostics.ratioX}:${diagnostics.ratioY}`
+            + `   ·   period ${diagnostics.period.toFixed(3)} rad`
+            + `   ·   closed ${diagnostics.closed ? 'yes' : 'no'}`
+            + `   ·   ${this.formatMode(mode)}`;
     }
 
-    private greatestCommonDivisor(left: number, right: number): number {
-        let a = Math.max(1, Math.abs(Math.round(left)));
-        let b = Math.max(1, Math.abs(Math.round(right)));
-        while (b !== 0) {
-            const remainder = a % b;
-            a = b;
-            b = remainder;
+    private getAnimationMode(value: string): LissajousAnimationMode {
+        if (value === 'phase-morph' || value === 'combined') {
+            return value;
         }
-        return a;
+
+        return 'trace';
     }
 
-    private wrapPositive(value: number): number {
-        const period = Math.PI * 2;
-        return ((value % period) + period) % period;
+    private formatMode(mode: LissajousAnimationMode): string {
+        if (mode === 'phase-morph') {
+            return 'phase morph';
+        }
+        if (mode === 'combined') {
+            return 'combined motion';
+        }
+
+        return 'curve trace';
     }
 
     private requireParameters(): ParameterController {
@@ -425,7 +543,7 @@ class ParametricCurveModule extends ResponsiveModule implements Updatable, Pausa
 export const parametricCurveDefinition: VisibleModuleDefinition = {
     id: 'parametric-curve-lab',
     title: 'Lissajous Curve Lab',
-    description: 'Explore closed Lissajous figures, frequency ratios, phase motion and echo layers.',
+    description: 'Explore Lissajous presets, frequency ratios, phase morphing and traced motion.',
     category: 'mathematics',
     labId: 'mathematics',
     tags: ['lissajous', 'curves', 'graphics', 'animation'],
