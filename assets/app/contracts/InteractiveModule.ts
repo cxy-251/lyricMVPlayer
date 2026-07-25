@@ -16,7 +16,7 @@ export type CatalogCoverKind =
 
 export interface CatalogMetadata {
     readonly subtitle: string;
-    readonly cover: CatalogCoverKind;
+    readonly cover?: CatalogCoverKind;
 }
 
 export interface LabDefinition {
