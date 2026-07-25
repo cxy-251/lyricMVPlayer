@@ -1,9 +1,6 @@
 import type { StorageService } from '../../../services/StorageService';
 import { ParameterController } from '../../../parameters/ParameterController';
-import type {
-    ParameterDefinition,
-    ParameterSchema,
-} from '../../../parameters/ParameterSchema';
+import type { ParameterSchema } from '../../../parameters/ParameterSchema';
 import { LissajousModel } from './LissajousModel';
 import {
     cycleLissajousPreset,
