@@ -23,12 +23,20 @@ const ENEMY_MAXIMUM_TURN_RATES: readonly [number, number, number] = [1.4, 1.7, 2
 const AGGRESSIVE_STEERING_MULTIPLIER_CEILING = 2.7;
 const MINIMUM_LENGTH = 0.0001;
 const MAXIMUM_ESCORTS = 2;
+const WALL_FIRE_PADDING = 3;
+const TARGET_CORRIDOR_PADDING = 5;
 
 interface WeaponSource {
     readonly escortIndex: number;
     readonly x: number;
     readonly y: number;
     readonly noseOffset: number;
+}
+
+interface EscortAim {
+    readonly rotation: number;
+    readonly targetX: number;
+    readonly targetY: number;
 }
 
 export interface CursorSpaceEscortPoseTarget {
@@ -46,7 +54,8 @@ export interface CursorSpaceEscortPoseTarget {
  * - the main aircraft has a strict angular-velocity limit;
  * - enemy angular velocity is limited by speed tier and remains below the escort;
  * - escorts turn faster than every other aircraft and cover separate hemispheres;
- * - every projectile leaves and travels along the aircraft nose that fired it.
+ * - every projectile leaves and travels along the aircraft nose that fired it;
+ * - the final player-projectile axis is rejected when a wall precedes every target.
  */
 export class CursorSpaceModel {
     readonly player: CursorSpacePlayer;
@@ -122,7 +131,7 @@ export class CursorSpaceModel {
         this.limitPlayerRotation(previousPlayerRotation, dt);
         this.limitEnemyRotations(dt);
         this.updateEscortRotations(dt);
-        this.alignNewPlayerProjectiles();
+        this.finalizeNewPlayerProjectiles();
     }
 
     writeEscortPose(index: number, target: CursorSpaceEscortPoseTarget): void {
@@ -214,7 +223,7 @@ export class CursorSpaceModel {
             const side = cursorSpaceEscortLateralSide(player, index);
             const target = this.selectEscortTarget(index, side);
             const desiredRotation = target
-                ? this.predictEscortAim(index, target)
+                ? this.predictEscortAim(index, target).rotation
                 : player.rotation;
             const sectorRotation = this.clampToEscortHemisphere(
                 desiredRotation,
@@ -265,6 +274,17 @@ export class CursorSpaceModel {
                 continue;
             }
 
+            const aim = this.predictEscortAim(escortIndex, enemy);
+            if (!this.segmentClearOfWalls(
+                escort.x,
+                escort.y,
+                aim.targetX,
+                aim.targetY,
+                this.config.projectileRadius + WALL_FIRE_PADDING,
+            )) {
+                continue;
+            }
+
             const score = distance + Math.abs(relative) * 28;
             if (score < bestScore) {
                 bestScore = score;
@@ -278,7 +298,7 @@ export class CursorSpaceModel {
     private predictEscortAim(
         escortIndex: number,
         enemy: Readonly<CursorSpaceEnemy>,
-    ): number {
+    ): EscortAim {
         const escort = cursorSpaceEscortWorldPosition(this.core.player, escortIndex);
         const relativeX = enemy.position.x - escort.x;
         const relativeY = enemy.position.y - escort.y;
@@ -287,10 +307,13 @@ export class CursorSpaceModel {
             this.config.projectileLife,
             distance / Math.max(MINIMUM_LENGTH, this.config.projectileSpeed),
         );
-        return Math.atan2(
-            relativeY + enemy.velocity.y * time,
-            relativeX + enemy.velocity.x * time,
-        );
+        const targetX = enemy.position.x + enemy.velocity.x * time;
+        const targetY = enemy.position.y + enemy.velocity.y * time;
+        return {
+            rotation: Math.atan2(targetY - escort.y, targetX - escort.x),
+            targetX,
+            targetY,
+        };
     }
 
     private clampToEscortHemisphere(
@@ -313,7 +336,7 @@ export class CursorSpaceModel {
         }
     }
 
-    private alignNewPlayerProjectiles(): void {
+    private finalizeNewPlayerProjectiles(): void {
         for (let index = 0; index < this.projectiles.length; index += 1) {
             const projectile = this.projectiles[index];
             if (
@@ -338,7 +361,176 @@ export class CursorSpaceModel {
                 + directionY * (source.noseOffset + travelled);
             projectile.velocity.x = directionX * this.config.projectileSpeed;
             projectile.velocity.y = directionY * this.config.projectileSpeed;
+
+            if (!this.projectileCanReachEnemyBeforeWall(
+                projectile.position.x,
+                projectile.position.y,
+                directionX,
+                directionY,
+                this.config.projectileSpeed * Math.max(0, projectile.life),
+                projectile.radius,
+            )) {
+                projectile.active = false;
+            }
         }
+    }
+
+    private projectileCanReachEnemyBeforeWall(
+        originX: number,
+        originY: number,
+        directionX: number,
+        directionY: number,
+        maximumDistance: number,
+        projectileRadius: number,
+    ): boolean {
+        if (!this.wallActive || maximumDistance <= 0) {
+            return true;
+        }
+
+        const wallDistance = this.nearestWallDistanceAlongRay(
+            originX,
+            originY,
+            directionX,
+            directionY,
+            maximumDistance,
+            projectileRadius + WALL_FIRE_PADDING,
+        );
+        if (!Number.isFinite(wallDistance)) {
+            return true;
+        }
+
+        const enemyDistance = this.nearestEnemyDistanceAlongRay(
+            originX,
+            originY,
+            directionX,
+            directionY,
+            wallDistance,
+            projectileRadius + TARGET_CORRIDOR_PADDING,
+        );
+        return enemyDistance < wallDistance;
+    }
+
+    private nearestWallDistanceAlongRay(
+        originX: number,
+        originY: number,
+        directionX: number,
+        directionY: number,
+        maximumDistance: number,
+        padding: number,
+    ): number {
+        let nearest = Number.POSITIVE_INFINITY;
+        for (const wall of this.walls) {
+            const distance = this.rayWallEntryDistance(
+                originX,
+                originY,
+                directionX,
+                directionY,
+                wall,
+                padding,
+            );
+            if (distance >= 0 && distance <= maximumDistance) {
+                nearest = Math.min(nearest, distance);
+            }
+        }
+        return nearest;
+    }
+
+    private nearestEnemyDistanceAlongRay(
+        originX: number,
+        originY: number,
+        directionX: number,
+        directionY: number,
+        maximumDistance: number,
+        padding: number,
+    ): number {
+        let nearest = Number.POSITIVE_INFINITY;
+        for (const enemy of this.enemies) {
+            if (!enemy.active) {
+                continue;
+            }
+
+            const relativeX = enemy.position.x - originX;
+            const relativeY = enemy.position.y - originY;
+            const projection = relativeX * directionX + relativeY * directionY;
+            if (projection < 0 || projection > maximumDistance) {
+                continue;
+            }
+
+            const perpendicularSquared = relativeX * relativeX + relativeY * relativeY
+                - projection * projection;
+            const radius = enemy.radius + padding;
+            if (perpendicularSquared > radius * radius) {
+                continue;
+            }
+
+            const halfChord = Math.sqrt(Math.max(0, radius * radius - perpendicularSquared));
+            nearest = Math.min(nearest, Math.max(0, projection - halfChord));
+        }
+        return nearest;
+    }
+
+    private rayWallEntryDistance(
+        originX: number,
+        originY: number,
+        directionX: number,
+        directionY: number,
+        wall: Readonly<CursorSpaceWall>,
+        padding: number,
+    ): number {
+        const left = wall.x - padding;
+        const right = wall.x + wall.width + padding;
+        const bottom = wall.y - padding;
+        const top = wall.y + wall.height + padding;
+        let entry = 0;
+        let exit = Number.POSITIVE_INFINITY;
+
+        const clip = (origin: number, direction: number, minimum: number, maximum: number): boolean => {
+            if (Math.abs(direction) < MINIMUM_LENGTH) {
+                return origin >= minimum && origin <= maximum;
+            }
+            const first = (minimum - origin) / direction;
+            const second = (maximum - origin) / direction;
+            entry = Math.max(entry, Math.min(first, second));
+            exit = Math.min(exit, Math.max(first, second));
+            return entry <= exit;
+        };
+
+        if (
+            !clip(originX, directionX, left, right)
+            || !clip(originY, directionY, bottom, top)
+            || exit < 0
+        ) {
+            return Number.POSITIVE_INFINITY;
+        }
+        return Math.max(0, entry);
+    }
+
+    private segmentClearOfWalls(
+        startX: number,
+        startY: number,
+        endX: number,
+        endY: number,
+        padding: number,
+    ): boolean {
+        if (!this.wallActive) {
+            return true;
+        }
+
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        const distance = Math.hypot(deltaX, deltaY);
+        if (distance < MINIMUM_LENGTH) {
+            return true;
+        }
+
+        return !Number.isFinite(this.nearestWallDistanceAlongRay(
+            startX,
+            startY,
+            deltaX / distance,
+            deltaY / distance,
+            distance,
+            padding,
+        ));
     }
 
     private identifyWeaponSource(
