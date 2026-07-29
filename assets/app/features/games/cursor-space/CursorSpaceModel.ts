@@ -5,5 +5,5 @@
  * Combat → Dynamic Wall → Closed Wall → Aggressive Enemy → Fleet Handling.
  * Those implementation layers remain hidden behind the public CursorSpaceModel.
  */
-export { CursorSpaceAutopilot } from '../CursorSpaceAutopilot';
+export { CursorSpaceAutopilot } from './ai/CursorSpaceAutopilot';
 export { CursorSpaceModel } from '../CursorSpaceModel';
