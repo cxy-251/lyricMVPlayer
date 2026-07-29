@@ -1,5 +1,4 @@
 import {
-    CURSOR_SPACE_QUEUE_ESCORT_ROTATION,
     cursorSpaceEscortLateralSide,
     cursorSpaceEscortWorldPosition,
 } from './CursorSpaceFormation';
@@ -32,6 +31,13 @@ interface WeaponSource {
     readonly noseOffset: number;
 }
 
+export interface CursorSpaceEscortPoseTarget {
+    active: boolean;
+    x: number;
+    y: number;
+    rotation: number;
+}
+
 /**
  * Public Cursor Space gameplay boundary.
  *
@@ -56,11 +62,11 @@ export class CursorSpaceModel {
     private readonly previousEnemyRotations: number[];
     private readonly previousEnemyActive: boolean[];
     private readonly escortRotations: [number, number] = [0, 0];
-    private pendingEscortRotation: number | null = null;
 
     constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
         this.config = config;
         this.core = new CursorSpaceCoreModel(config);
+        this.player = this.core.player;
         this.stats = this.core.stats;
         this.enemies = this.core.enemies;
         this.projectiles = this.core.projectiles;
@@ -69,7 +75,6 @@ export class CursorSpaceModel {
         this.projectileActiveSnapshot = new Array<boolean>(this.projectiles.length).fill(false);
         this.previousEnemyRotations = new Array<number>(this.enemies.length).fill(0);
         this.previousEnemyActive = new Array<boolean>(this.enemies.length).fill(false);
-        this.player = this.createPlayerRenderView(this.core.player);
         this.resetEscortRotations();
     }
 
@@ -98,7 +103,6 @@ export class CursorSpaceModel {
         this.projectileActiveSnapshot.fill(false);
         this.previousEnemyRotations.fill(0);
         this.previousEnemyActive.fill(false);
-        this.pendingEscortRotation = null;
         this.resetEscortRotations();
     }
 
@@ -121,32 +125,27 @@ export class CursorSpaceModel {
         this.alignNewPlayerProjectiles();
     }
 
-    private createPlayerRenderView(player: CursorSpacePlayer): CursorSpacePlayer {
-        return new Proxy(player, {
-            get: (target, property, receiver) => {
-                if (property === CURSOR_SPACE_QUEUE_ESCORT_ROTATION) {
-                    return (index: number): void => {
-                        this.pendingEscortRotation = this.clampEscortIndex(index);
-                    };
-                }
+    writeEscortPose(index: number, target: CursorSpaceEscortPoseTarget): void {
+        const escortIndex = Math.floor(index);
+        const player = this.core.player;
+        if (
+            !player.alive
+            || escortIndex < 0
+            || escortIndex >= player.escortCount
+            || escortIndex >= MAXIMUM_ESCORTS
+        ) {
+            target.active = false;
+            target.x = player.position.x;
+            target.y = player.position.y;
+            target.rotation = player.rotation;
+            return;
+        }
 
-                if (property === 'rotation') {
-                    const escortIndex = this.pendingEscortRotation;
-                    this.pendingEscortRotation = null;
-                    return escortIndex === null
-                        ? target.rotation
-                        : this.escortRotations[escortIndex];
-                }
-
-                return Reflect.get(target, property, receiver);
-            },
-            set: (target, property, value, receiver) => Reflect.set(
-                target,
-                property,
-                value,
-                receiver,
-            ),
-        });
+        const position = cursorSpaceEscortWorldPosition(player, escortIndex);
+        target.active = true;
+        target.x = position.x;
+        target.y = position.y;
+        target.rotation = this.escortRotations[escortIndex];
     }
 
     private prepareEnemyTurnRates(): void {
@@ -412,10 +411,6 @@ export class CursorSpaceModel {
         return this.wrapAngle(
             currentRotation + this.clamp(difference, -maximumStep, maximumStep),
         );
-    }
-
-    private clampEscortIndex(index: number): number {
-        return Math.max(0, Math.min(MAXIMUM_ESCORTS - 1, Math.floor(index)));
     }
 
     private wrapAngle(value: number): number {
