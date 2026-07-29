@@ -9,7 +9,7 @@ export const lissajousDefinition: VisibleModuleDefinition = {
     labId: 'mathematics',
     catalog: {
         subtitle: 'frequency ratios and phase motion',
-        cover: 'parametric-curve',
+        cover: 'lissajous',
     },
     tags: ['lissajous', 'curves', 'graphics', 'animation'],
     capabilities: ['pause', 'reset', 'settings', 'save-state'],

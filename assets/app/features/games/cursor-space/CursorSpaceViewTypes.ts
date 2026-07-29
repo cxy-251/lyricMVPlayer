@@ -1,22 +1,54 @@
-import type {
-    CursorSpaceEffect,
-    CursorSpaceEnemy,
-    CursorSpacePlayer,
-    CursorSpaceProjectile,
-} from '../CursorSpaceTypes';
+export interface CursorSpaceVectorRenderState {
+    readonly x: number;
+    readonly y: number;
+}
 
-type DeepReadonly<T> = T extends (...args: never[]) => unknown
-    ? T
-    : T extends readonly (infer Item)[]
-        ? readonly DeepReadonly<Item>[]
-        : T extends object
-            ? { readonly [Key in keyof T]: DeepReadonly<T[Key]> }
-            : T;
+export interface CursorSpacePlayerRenderState {
+    readonly position: CursorSpaceVectorRenderState;
+    readonly velocity: CursorSpaceVectorRenderState;
+    readonly rotation: number;
+    readonly alive: boolean;
+    readonly invulnerableRemaining: number;
+    readonly health: number;
+    readonly maximumHealth: number;
+    readonly escortCount: number;
+    readonly escortSide: -1 | 1;
+}
 
-export type CursorSpacePlayerRenderState = DeepReadonly<CursorSpacePlayer>;
-export type CursorSpaceEnemyRenderState = DeepReadonly<CursorSpaceEnemy>;
-export type CursorSpaceProjectileRenderState = DeepReadonly<CursorSpaceProjectile>;
-export type CursorSpaceEffectRenderState = DeepReadonly<CursorSpaceEffect>;
+export interface CursorSpaceEscortRenderState {
+    readonly active: boolean;
+    readonly x: number;
+    readonly y: number;
+    readonly rotation: number;
+}
+
+export interface CursorSpaceEnemyRenderState {
+    readonly active: boolean;
+    readonly position: CursorSpaceVectorRenderState;
+    readonly rotation: number;
+    readonly speedTier: 1 | 2 | 3;
+    readonly health: number;
+    readonly maximumHealth: number;
+}
+
+export type CursorSpaceProjectileOwner = 'player' | 'enemy';
+
+export interface CursorSpaceProjectileRenderState {
+    readonly active: boolean;
+    readonly owner: CursorSpaceProjectileOwner;
+    readonly position: CursorSpaceVectorRenderState;
+    readonly velocity: CursorSpaceVectorRenderState;
+}
+
+export type CursorSpaceEffectKind = 'fragment' | 'ring';
+
+export interface CursorSpaceEffectRenderState {
+    readonly active: boolean;
+    readonly kind: CursorSpaceEffectKind;
+    readonly position: CursorSpaceVectorRenderState;
+    readonly velocity: CursorSpaceVectorRenderState;
+    readonly radius: number;
+}
 
 export interface CursorSpaceHitExplosion {
     readonly x: number;
@@ -33,6 +65,7 @@ export interface CursorSpaceRenderCapacity {
 
 export interface CursorSpaceViewState {
     readonly player: CursorSpacePlayerRenderState;
+    readonly escorts: readonly CursorSpaceEscortRenderState[];
     readonly enemies: readonly CursorSpaceEnemyRenderState[];
     readonly projectiles: readonly CursorSpaceProjectileRenderState[];
     readonly effects: readonly CursorSpaceEffectRenderState[];

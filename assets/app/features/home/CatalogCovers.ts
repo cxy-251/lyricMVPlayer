@@ -1,42 +1,60 @@
 import { Color, Graphics, Node } from 'cc';
+import type { CatalogCoverId } from '../../contracts/InteractiveModule';
 import { createUiNode, palette } from '../../ui/UiFactory';
 
-export type CatalogCoverKind =
-    | 'mathematics'
-    | 'physics'
-    | 'games'
-    | 'parametric-curve'
-    | 'double-pendulum'
-    | 'cursor-space';
+export type CatalogCoverKind = CatalogCoverId;
+export type CatalogCoverRenderer = (
+    parent: Node,
+    width: number,
+    height: number,
+) => void;
 
+const coverRenderers = new Map<CatalogCoverId, CatalogCoverRenderer>();
 const coverAccent = new Color(126, 158, 143, 235);
 const coverAccentSoft = new Color(126, 158, 143, 125);
 const coverAccentStrong = new Color(142, 174, 159, 255);
 const coverWarning = new Color(181, 149, 95, 220);
 
+export function registerCatalogCover(
+    id: CatalogCoverId,
+    renderer: CatalogCoverRenderer,
+): void {
+    const normalizedId = id.trim();
+    if (!normalizedId) {
+        throw new Error('Catalog cover id must be a non-empty string.');
+    }
+    if (coverRenderers.has(normalizedId)) {
+        throw new Error(`Catalog cover already registered: ${normalizedId}`);
+    }
+    coverRenderers.set(normalizedId, renderer);
+}
+
 export function drawCatalogCover(
     parent: Node,
-    kind: CatalogCoverKind,
+    kind: CatalogCoverId,
     width: number,
     height: number,
 ): Node {
     const root = createUiNode(parent, `Cover:${kind}`, width, height);
-
-    if (kind === 'mathematics') {
-        drawMathematics(root, width, height);
-    } else if (kind === 'physics') {
-        drawPhysics(root, width, height);
-    } else if (kind === 'games') {
-        drawCursorSpace(root, width, height, false);
-    } else if (kind === 'parametric-curve') {
-        drawParametricCurve(root, width, height);
-    } else if (kind === 'double-pendulum') {
-        drawDoublePendulum(root, width, height);
-    } else {
-        drawCursorSpace(root, width, height, true);
+    const renderer = coverRenderers.get(kind) ?? coverRenderers.get('games');
+    if (!renderer) {
+        throw new Error(`No catalog cover renderer registered for: ${kind}`);
     }
-
+    renderer(root, width, height);
     return root;
+}
+
+function registerBuiltInCatalogCovers(): void {
+    registerCatalogCover('mathematics', drawMathematics);
+    registerCatalogCover('physics', drawPhysics);
+    registerCatalogCover('games', (parent, width, height) => {
+        drawCursorSpace(parent, width, height, false);
+    });
+    registerCatalogCover('lissajous', drawLissajous);
+    registerCatalogCover('double-pendulum', drawDoublePendulum);
+    registerCatalogCover('cursor-space', (parent, width, height) => {
+        drawCursorSpace(parent, width, height, true);
+    });
 }
 
 function drawMathematics(parent: Node, width: number, height: number): void {
@@ -57,19 +75,16 @@ function drawMathematics(parent: Node, width: number, height: number): void {
     const curve = createGraphics(parent, 'MathematicsCurve', width, height);
     curve.strokeColor = coverAccent;
     curve.lineWidth = Math.max(1.75, unit * 0.0065);
-
     for (let index = 0; index <= 128; index += 1) {
         const t = index / 128 * Math.PI * 2;
         const x = Math.sin(3 * t + 0.7) * radius * 0.94;
         const y = centerY + Math.sin(2 * t) * radius * 0.94;
-
         if (index === 0) {
             curve.moveTo(x, y);
         } else {
             curve.lineTo(x, y);
         }
     }
-
     curve.stroke();
 
     const marker = createGraphics(parent, 'MathematicsMarker', width, height);
@@ -92,14 +107,12 @@ function drawPhysics(parent: Node, width: number, height: number): void {
     const trail = createGraphics(parent, 'PhysicsTrail', width, height);
     trail.strokeColor = coverAccentSoft;
     trail.lineWidth = Math.max(1.25, unit * 0.0045);
-
     for (let index = 0; index < 9; index += 1) {
         const start = -0.24 + index * 0.115;
         const end = start + 0.065;
         trail.moveTo(Math.cos(start) * radius, centerY + Math.sin(start) * radius);
         trail.lineTo(Math.cos(end) * radius, centerY + Math.sin(end) * radius);
     }
-
     trail.stroke();
 
     const center = createGraphics(parent, 'PhysicsCenter', width, height);
@@ -148,7 +161,6 @@ function drawCursorSpace(
         const [localX, localY] = pointer[index];
         const x = shipX + (localX * cosine - localY * sine) * scale;
         const y = shipY + (localX * sine + localY * cosine) * scale;
-
         if (index === 0) {
             ship.moveTo(x, y);
         } else {
@@ -172,7 +184,6 @@ function drawCursorSpace(
         [unit * 0.29, -unit * 0.15],
         [-unit * 0.31, unit * 0.23],
     ] as const;
-
     for (const [x, y] of enemyPositions) {
         enemies.moveTo(x + enemyRadius, y);
         enemies.lineTo(x - enemyRadius * 0.75, y + enemyRadius * 0.68);
@@ -180,32 +191,28 @@ function drawCursorSpace(
         enemies.lineTo(x - enemyRadius * 0.75, y - enemyRadius * 0.68);
         enemies.lineTo(x + enemyRadius, y);
     }
-
     enemies.fill();
 
     if (!showProjectiles) {
         return;
     }
-
     const projectiles = createGraphics(parent, 'CursorProjectiles', width, height);
     projectiles.strokeColor = palette.text;
     projectiles.lineWidth = Math.max(1.4, unit * 0.005);
-
     for (let index = 0; index < 3; index += 1) {
         const offset = index * unit * 0.075;
         projectiles.moveTo(shipX + unit * 0.12 + offset, shipY + unit * 0.075 + offset * 0.22);
         projectiles.lineTo(shipX + unit * 0.17 + offset, shipY + unit * 0.095 + offset * 0.22);
     }
-
     projectiles.stroke();
 }
 
-function drawParametricCurve(parent: Node, width: number, height: number): void {
+function drawLissajous(parent: Node, width: number, height: number): void {
     const unit = Math.min(width, height);
     const scaleX = unit * 0.34;
     const scaleY = unit * 0.29;
 
-    const axes = createGraphics(parent, 'ParametricAxes', width, height);
+    const axes = createGraphics(parent, 'LissajousAxes', width, height);
     axes.strokeColor = palette.border;
     axes.lineWidth = Math.max(1.25, unit * 0.004);
     axes.moveTo(-scaleX * 1.16, 0);
@@ -214,22 +221,19 @@ function drawParametricCurve(parent: Node, width: number, height: number): void 
     axes.lineTo(0, scaleY * 1.16);
     axes.stroke();
 
-    const curve = createGraphics(parent, 'ParametricLine', width, height);
+    const curve = createGraphics(parent, 'LissajousLine', width, height);
     curve.strokeColor = coverAccent;
     curve.lineWidth = Math.max(1.75, unit * 0.0065);
-
     for (let index = 0; index <= 160; index += 1) {
         const t = index / 160 * Math.PI * 2;
         const x = Math.sin(3 * t + 0.65) * scaleX;
         const y = Math.sin(2 * t) * scaleY;
-
         if (index === 0) {
             curve.moveTo(x, y);
         } else {
             curve.lineTo(x, y);
         }
     }
-
     curve.stroke();
 }
 
@@ -248,7 +252,6 @@ function drawDoublePendulum(parent: Node, width: number, height: number): void {
     const path = createGraphics(parent, 'PendulumPath', width, height);
     path.strokeColor = coverAccentSoft;
     path.lineWidth = Math.max(1.25, unit * 0.004);
-
     for (let index = 0; index < 8; index += 1) {
         const angleA = -1.36 + index * 0.115;
         const angleB = angleA + 0.064;
@@ -256,7 +259,6 @@ function drawDoublePendulum(parent: Node, width: number, height: number): void {
         path.moveTo(x1 + Math.sin(angleA) * radius, y1 - Math.cos(angleA) * radius);
         path.lineTo(x1 + Math.sin(angleB) * radius, y1 - Math.cos(angleB) * radius);
     }
-
     path.stroke();
 
     const rods = createGraphics(parent, 'PendulumRods', width, height);
@@ -292,3 +294,5 @@ function drawDoublePendulum(parent: Node, width: number, height: number): void {
 function createGraphics(parent: Node, name: string, width: number, height: number): Graphics {
     return createUiNode(parent, name, width, height).addComponent(Graphics);
 }
+
+registerBuiltInCatalogCovers();

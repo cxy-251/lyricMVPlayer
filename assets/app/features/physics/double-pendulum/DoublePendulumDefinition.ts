@@ -2,7 +2,7 @@ import type { VisibleModuleDefinition } from '../../../contracts/InteractiveModu
 import { DoublePendulumModule } from './DoublePendulumModule';
 
 export const doublePendulumDefinition: VisibleModuleDefinition = {
-    id: 'double-pendulum-lab',
+    id: 'double-pendulum',
     title: 'Double Pendulum',
     description: 'Explore chaotic initial conditions with a fixed-step RK4 model and energy diagnostics.',
     category: 'physics',

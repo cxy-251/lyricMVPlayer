@@ -6,17 +6,15 @@ import type { ViewportService } from '../services/ViewportService';
 
 export type LabId = 'mathematics' | 'physics' | 'games';
 
-export type CatalogCoverKind =
-    | 'mathematics'
-    | 'physics'
-    | 'games'
-    | 'parametric-curve'
-    | 'double-pendulum'
-    | 'cursor-space';
+/**
+ * Catalog covers are registered by feature code. Core contracts only carry the
+ * stable string identifier and do not enumerate every demo-specific artwork.
+ */
+export type CatalogCoverId = string;
 
 export interface CatalogMetadata {
     readonly subtitle: string;
-    readonly cover?: CatalogCoverKind;
+    readonly cover?: CatalogCoverId;
 }
 
 export interface LabDefinition {
@@ -24,7 +22,7 @@ export interface LabDefinition {
     readonly title: string;
     readonly description: string;
     readonly order: number;
-    readonly cover: CatalogCoverKind;
+    readonly cover: CatalogCoverId;
 }
 
 export type ModuleCategory =
