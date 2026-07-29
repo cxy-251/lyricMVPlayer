@@ -5,6 +5,19 @@ import type {
     CursorSpaceProjectile,
 } from '../CursorSpaceTypes';
 
+type DeepReadonly<T> = T extends (...args: never[]) => unknown
+    ? T
+    : T extends readonly (infer Item)[]
+        ? readonly DeepReadonly<Item>[]
+        : T extends object
+            ? { readonly [Key in keyof T]: DeepReadonly<T[Key]> }
+            : T;
+
+export type CursorSpacePlayerRenderState = DeepReadonly<CursorSpacePlayer>;
+export type CursorSpaceEnemyRenderState = DeepReadonly<CursorSpaceEnemy>;
+export type CursorSpaceProjectileRenderState = DeepReadonly<CursorSpaceProjectile>;
+export type CursorSpaceEffectRenderState = DeepReadonly<CursorSpaceEffect>;
+
 export interface CursorSpaceHitExplosion {
     readonly x: number;
     readonly y: number;
@@ -19,10 +32,10 @@ export interface CursorSpaceRenderCapacity {
 }
 
 export interface CursorSpaceViewState {
-    readonly player: CursorSpacePlayer;
-    readonly enemies: readonly CursorSpaceEnemy[];
-    readonly projectiles: readonly CursorSpaceProjectile[];
-    readonly effects: readonly CursorSpaceEffect[];
+    readonly player: CursorSpacePlayerRenderState;
+    readonly enemies: readonly CursorSpaceEnemyRenderState[];
+    readonly projectiles: readonly CursorSpaceProjectileRenderState[];
+    readonly effects: readonly CursorSpaceEffectRenderState[];
     readonly hitExplosions: readonly CursorSpaceHitExplosion[];
     readonly stats: string;
 }
