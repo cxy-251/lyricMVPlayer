@@ -1,3 +1,7 @@
+import type {
+    CursorSpaceEnemyBehavior,
+    CursorSpaceEnemyBehaviorContext,
+} from './CursorSpaceCombatModel';
 import { CursorSpaceModel as CursorSpaceClosedWallModel } from './CursorSpaceClosedWallModel';
 import type { CursorSpaceWall } from './CursorSpaceClosedWallModel';
 import {
@@ -20,39 +24,9 @@ const MAXIMUM_FRIENDLY_WEIGHT = 0.62;
 const WALL_ROUTE_CLEARANCE = 28;
 const FIRE_THREAT_CEILING = 0.18;
 
-interface ThreatVector {
-    readonly x: number;
-    readonly y: number;
-    readonly threat: number;
-}
-
 interface Direction {
     readonly x: number;
     readonly y: number;
-}
-
-interface ClosedWallInternals {
-    readonly core: DynamicWallInternals;
-}
-
-interface DynamicWallInternals {
-    readonly core: CombatInternals;
-}
-
-interface CombatInternals {
-    readonly config: CursorSpaceConfig;
-    readonly bounds: CursorSpaceBounds;
-    readonly player: CursorSpacePlayer;
-    readonly enemies: CursorSpaceEnemy[];
-    readonly projectiles: CursorSpaceProjectile[];
-
-    updateEnemies(dt: number): void;
-    playerProjectileThreat(enemy: Readonly<CursorSpaceEnemy>): ThreatVector;
-    enemyCollisionThreat(enemyIndex: number, enemy: Readonly<CursorSpaceEnemy>): ThreatVector;
-    boundaryThreat(enemy: Readonly<CursorSpaceEnemy>): ThreatVector;
-    friendlySeparationThreat(enemyIndex: number, enemy: Readonly<CursorSpaceEnemy>): ThreatVector;
-    clearProjectilesFromEnemy(enemyIndex: number): void;
-    hasFriendlyInFireLane(enemyIndex: number, rotation: number): boolean;
 }
 
 /**
@@ -79,14 +53,24 @@ export class CursorSpaceModel {
     private readonly core: CursorSpaceClosedWallModel;
 
     constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
-        this.core = new CursorSpaceClosedWallModel(config);
+        const enemyBehavior: CursorSpaceEnemyBehavior = {
+            updateEnemies: (context, dt): void => {
+                this.updateAggressiveEnemies(context, dt);
+            },
+            // Enemy projectiles do not damage enemy aircraft in the combat model,
+            // so overlapping aircraft must not turn friendly fire into a hard veto.
+            blocksFriendlyFireLane: (): boolean => false,
+        };
+        this.core = new CursorSpaceClosedWallModel({
+            ...config,
+            enemyBehavior,
+        });
         this.player = this.core.player;
         this.stats = this.core.stats;
         this.enemies = this.core.enemies;
         this.projectiles = this.core.projectiles;
         this.effects = this.core.effects;
         this.walls = this.core.walls;
-        this.installAggressiveEnemyPriorities();
     }
 
     get currentBounds(): Readonly<CursorSpaceBounds> {
@@ -117,32 +101,25 @@ export class CursorSpaceModel {
         this.core.step(deltaTime);
     }
 
-    private installAggressiveEnemyPriorities(): void {
-        const dynamic = (this.core as unknown as ClosedWallInternals).core;
-        const combat = dynamic.core;
-
-        combat.updateEnemies = (dt: number): void => {
-            this.updateAggressiveEnemies(combat, dt);
-        };
-
-        // Friendly-fire avoidance is no longer a hard veto. Enemy projectiles
-        // do not damage enemy aircraft in the combat model, so blocking the shot
-        // here only made the fleet passive when aircraft overlapped visually.
-        combat.hasFriendlyInFireLane = (): boolean => false;
-    }
-
-    private updateAggressiveEnemies(combat: CombatInternals, dt: number): void {
-        for (let enemyIndex = 0; enemyIndex < combat.enemies.length; enemyIndex += 1) {
-            const enemy = combat.enemies[enemyIndex];
+    private updateAggressiveEnemies(
+        context: CursorSpaceEnemyBehaviorContext,
+        dt: number,
+    ): void {
+        for (let enemyIndex = 0; enemyIndex < context.enemies.length; enemyIndex += 1) {
+            const enemy = context.enemies[enemyIndex];
             if (!enemy.active) {
                 continue;
             }
 
-            const pursuit = this.aggressivePursuitDirection(enemy, combat.player, combat.bounds);
-            const projectileThreat = combat.playerProjectileThreat(enemy);
-            const boundaryThreat = combat.boundaryThreat(enemy);
-            const collisionThreat = combat.enemyCollisionThreat(enemyIndex, enemy);
-            const friendlyThreat = combat.friendlySeparationThreat(enemyIndex, enemy);
+            const pursuit = this.aggressivePursuitDirection(
+                enemy,
+                context.player,
+                context.bounds,
+            );
+            const projectileThreat = context.playerProjectileThreat(enemy);
+            const boundaryThreat = context.boundaryThreat(enemy);
+            const collisionThreat = context.enemyCollisionThreat(enemyIndex, enemy);
+            const friendlyThreat = context.friendlySeparationThreat(enemyIndex, enemy);
 
             const survivalThreat = Math.max(
                 projectileThreat.threat,
@@ -215,13 +192,13 @@ export class CursorSpaceModel {
             if (
                 !Number.isFinite(enemy.position.x)
                 || !Number.isFinite(enemy.position.y)
-                || enemy.position.x < combat.bounds.left - ENEMY_REMOVAL_MARGIN
-                || enemy.position.x > combat.bounds.right + ENEMY_REMOVAL_MARGIN
-                || enemy.position.y < combat.bounds.bottom - ENEMY_REMOVAL_MARGIN
-                || enemy.position.y > combat.bounds.top + ENEMY_REMOVAL_MARGIN
+                || enemy.position.x < context.bounds.left - ENEMY_REMOVAL_MARGIN
+                || enemy.position.x > context.bounds.right + ENEMY_REMOVAL_MARGIN
+                || enemy.position.y < context.bounds.bottom - ENEMY_REMOVAL_MARGIN
+                || enemy.position.y > context.bounds.top + ENEMY_REMOVAL_MARGIN
             ) {
                 enemy.active = false;
-                combat.clearProjectilesFromEnemy(enemyIndex);
+                context.clearProjectilesFromEnemy(enemyIndex);
             }
         }
     }

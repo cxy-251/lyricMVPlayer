@@ -48,10 +48,41 @@ interface CursorSpaceLevelProfile {
     readonly globalFireInterval: number;
 }
 
-interface ThreatVector {
+export interface CursorSpaceEnemyThreat {
     readonly x: number;
     readonly y: number;
     readonly threat: number;
+}
+
+type ThreatVector = CursorSpaceEnemyThreat;
+
+export interface CursorSpaceEnemyBehaviorContext {
+    readonly config: Readonly<CursorSpaceConfig>;
+    readonly bounds: Readonly<CursorSpaceBounds>;
+    readonly player: CursorSpacePlayer;
+    readonly enemies: CursorSpaceEnemy[];
+    readonly projectiles: CursorSpaceProjectile[];
+
+    playerProjectileThreat(enemy: Readonly<CursorSpaceEnemy>): CursorSpaceEnemyThreat;
+    enemyCollisionThreat(
+        enemyIndex: number,
+        enemy: Readonly<CursorSpaceEnemy>,
+    ): CursorSpaceEnemyThreat;
+    boundaryThreat(enemy: Readonly<CursorSpaceEnemy>): CursorSpaceEnemyThreat;
+    friendlySeparationThreat(
+        enemyIndex: number,
+        enemy: Readonly<CursorSpaceEnemy>,
+    ): CursorSpaceEnemyThreat;
+    clearProjectilesFromEnemy(enemyIndex: number): void;
+}
+
+export interface CursorSpaceEnemyBehavior {
+    updateEnemies(context: CursorSpaceEnemyBehaviorContext, dt: number): void;
+    blocksFriendlyFireLane?(
+        context: CursorSpaceEnemyBehaviorContext,
+        enemyIndex: number,
+        rotation: number,
+    ): boolean;
 }
 
 interface EnemyFireCandidate {
@@ -219,6 +250,8 @@ export class CursorSpaceModel {
 
     private bounds: CursorSpaceBounds = { ...DEFAULT_BOUNDS };
     private readonly target = { x: 0, y: 0 };
+    private readonly enemyBehaviorContext: CursorSpaceEnemyBehaviorContext;
+    private enemyBehavior: CursorSpaceEnemyBehavior | null = null;
     private targetActive = false;
     private directControl = false;
     private aimTarget: CursorSpaceEnemy | null = null;
@@ -274,6 +307,29 @@ export class CursorSpaceModel {
             initialLife: 0,
             radius: 0,
         }));
+
+        const model = this;
+        this.enemyBehaviorContext = {
+            config: this.config,
+            get bounds(): Readonly<CursorSpaceBounds> {
+                return model.bounds;
+            },
+            player: this.player,
+            enemies: this.enemies,
+            projectiles: this.projectiles,
+            playerProjectileThreat: (enemy) => this.playerProjectileThreat(enemy),
+            enemyCollisionThreat: (enemyIndex, enemy) => (
+                this.enemyCollisionThreat(enemyIndex, enemy)
+            ),
+            boundaryThreat: (enemy) => this.boundaryThreat(enemy),
+            friendlySeparationThreat: (enemyIndex, enemy) => (
+                this.friendlySeparationThreat(enemyIndex, enemy)
+            ),
+            clearProjectilesFromEnemy: (enemyIndex) => {
+                this.clearProjectilesFromEnemy(enemyIndex);
+            },
+        };
+        this.enemyBehavior = config.enemyBehavior ?? null;
         this.reset();
     }
 
@@ -320,6 +376,10 @@ export class CursorSpaceModel {
     clearTarget(): void {
         this.targetActive = false;
         this.directControl = false;
+    }
+
+    setEnemyBehavior(behavior: CursorSpaceEnemyBehavior | null): void {
+        this.enemyBehavior = behavior;
     }
 
     reset(): void {
@@ -388,7 +448,11 @@ export class CursorSpaceModel {
             this.updatePlayerAutomaticFire(dt);
         }
 
-        this.updateEnemies(dt);
+        if (this.enemyBehavior) {
+            this.enemyBehavior.updateEnemies(this.enemyBehaviorContext, dt);
+        } else {
+            this.updateEnemies(dt);
+        }
         this.updateEnemyAutomaticFire(dt);
         this.updateProjectiles(dt);
         this.resolveEnemyContacts();
@@ -947,6 +1011,11 @@ export class CursorSpaceModel {
     }
 
     private hasFriendlyInFireLane(enemyIndex: number, rotation: number): boolean {
+        const override = this.enemyBehavior?.blocksFriendlyFireLane;
+        if (override) {
+            return override(this.enemyBehaviorContext, enemyIndex, rotation);
+        }
+
         const shooter = this.enemies[enemyIndex];
         const directionX = Math.cos(rotation);
         const directionY = Math.sin(rotation);
