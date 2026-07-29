@@ -8,41 +8,52 @@ import type {
     CursorSpaceProjectile,
 } from '../../CursorSpaceTypes';
 
-const CANDIDATE_COUNT = 36;
-const LOOK_AHEAD_DISTANCE = 188;
+const CANDIDATE_COUNT = 48;
+const LOOK_AHEAD_DISTANCE = 212;
 const PLAYER_MAXIMUM_SPEED = 540;
 const PLAYER_RADIUS = 10;
-const ENEMY_HORIZON = 1.08;
-const PROJECTILE_HORIZON = 1.24;
-const ENEMY_SAFETY_PADDING = 78;
-const PROJECTILE_SAFETY_PADDING = 68;
-const BOUNDARY_MARGIN = 104;
-const ENGAGEMENT_RADIUS = 248;
-const NORMAL_TURN_RATE = 4.4;
-const EMERGENCY_TURN_RATE = 9.8;
-const SURVIVAL_TIE_WINDOW = 42;
+const ENEMY_HORIZON = 1.38;
+const PROJECTILE_HORIZON = 1.72;
+const ENEMY_SAFETY_PADDING = 104;
+const PROJECTILE_SAFETY_PADDING = 96;
+const BOUNDARY_MARGIN = 122;
+const ENGAGEMENT_RADIUS = 304;
+const NORMAL_TURN_RATE = 4.8;
+const EMERGENCY_TURN_RATE = 12.4;
+const SURVIVAL_TIE_WINDOW = 8;
 const MINIMUM_LENGTH = 0.0001;
 
 const WALL_ROUTE_CLEARANCE = 30;
 const WALL_PATH_CLEARANCE = PLAYER_RADIUS + 2;
-const WALL_SAFETY_MARGIN = 82;
-const WALL_BLOCKED_PENALTY = 60_000;
-const WALL_NEAR_PENALTY = 9_600;
+const WALL_SAFETY_MARGIN = 96;
+const WALL_BLOCKED_PENALTY = 80_000;
+const WALL_NEAR_PENALTY = 12_800;
+
+const SURVIVAL_HOLD_DURATION = 1.65;
+const RESPAWN_SURVIVAL_DURATION = 2.8;
+const SAFE_RELEASE_DELAY = 0.95;
+const ENEMY_FIRE_LANE_RANGE = 640;
+const ENEMY_FIRE_LANE_PADDING = 92;
+const PROJECTILE_RELEVANCE_PADDING = 4;
 
 interface Direction {
-    x: number;
-    y: number;
+    readonly x: number;
+    readonly y: number;
+}
+
+interface EmergencyDirection extends Direction {
+    readonly strength: number;
 }
 
 interface CandidateEvaluation {
-    heading: number;
-    survival: number;
-    tactical: number;
+    readonly heading: number;
+    readonly survival: number;
+    readonly tactical: number;
 }
 
 interface TargetPoint {
-    x: number;
-    y: number;
+    readonly x: number;
+    readonly y: number;
 }
 
 export class CursorSpaceAutopilot {
@@ -50,12 +61,18 @@ export class CursorSpaceAutopilot {
     private heading = 0;
     private orbitSide: -1 | 1 = 1;
     private initialized = false;
+    private wasAlive = false;
+    private survivalRemaining = 0;
+    private safeElapsed = 0;
 
     reset(): void {
         this.elapsed = 0;
         this.heading = 0;
         this.orbitSide = 1;
         this.initialized = false;
+        this.wasAlive = false;
+        this.survivalRemaining = RESPAWN_SURVIVAL_DURATION;
+        this.safeElapsed = 0;
     }
 
     update(model: CursorSpaceModel, deltaTime: number): void {
@@ -67,9 +84,14 @@ export class CursorSpaceAutopilot {
         if (!player.alive) {
             model.clearTarget();
             this.initialized = false;
+            this.wasAlive = false;
+            this.survivalRemaining = RESPAWN_SURVIVAL_DURATION;
+            this.safeElapsed = 0;
             return;
         }
 
+        const respawned = !this.wasAlive;
+        this.wasAlive = true;
         this.elapsed += dt;
         if (!this.initialized) {
             const speed = Math.hypot(player.velocity.x, player.velocity.y);
@@ -78,35 +100,72 @@ export class CursorSpaceAutopilot {
                 : this.initialHeading(model.currentBounds, player.position.x, player.position.y);
             this.initialized = true;
         }
+        if (respawned) {
+            this.survivalRemaining = Math.max(
+                this.survivalRemaining,
+                RESPAWN_SURVIVAL_DURATION,
+            );
+            this.safeElapsed = 0;
+        }
 
-        if (Math.floor((this.elapsed - dt) / 8.5) !== Math.floor(this.elapsed / 8.5)) {
+        if (Math.floor((this.elapsed - dt) / 9.5) !== Math.floor(this.elapsed / 9.5)) {
             this.orbitSide = this.orbitSide === 1 ? -1 : 1;
         }
 
-        const danger = this.immediateDanger(model);
+        const projectileDanger = this.immediateProjectileDanger(model);
+        const enemyDanger = this.immediateEnemyDanger(model);
         const wallDanger = this.wallDanger(model);
         const boundaryDanger = this.boundaryDanger(model);
-        const activeEnemies = this.activeEnemyCount(model);
-        const hullRatio = player.maximumHealth > 0
-            ? player.health / player.maximumHealth
-            : 0;
-        let throttle = 0.3
-            + Math.min(0.16, activeEnemies * 0.009)
-            + danger * 0.7;
-        if (hullRatio < 0.5) {
-            throttle += 0.08;
+        const danger = Math.max(
+            projectileDanger,
+            enemyDanger,
+            wallDanger * 0.78,
+            boundaryDanger * 0.72,
+        );
+
+        if (
+            projectileDanger > 0.08
+            || enemyDanger > 0.34
+            || wallDanger > 0.72
+            || boundaryDanger > 0.78
+        ) {
+            this.survivalRemaining = Math.max(
+                this.survivalRemaining,
+                SURVIVAL_HOLD_DURATION + danger * 0.9,
+            );
+            this.safeElapsed = 0;
+        } else {
+            this.safeElapsed += dt;
+            if (this.safeElapsed >= SAFE_RELEASE_DELAY) {
+                this.survivalRemaining = Math.max(0, this.survivalRemaining - dt);
+            }
         }
-        if (boundaryDanger > 0.35) {
-            throttle *= 1 - boundaryDanger * 0.42;
+
+        const survivalMode = this.survivalRemaining > 0;
+        const emergency = this.emergencyDodgeDirection(model);
+        const activeEnemies = this.activeEnemyCount(model);
+        let throttle = survivalMode
+            ? 0.76 + danger * 0.24
+            : 0.34 + Math.min(0.14, activeEnemies * 0.008) + danger * 0.58;
+        if (boundaryDanger > 0.45) {
+            throttle *= 1 - boundaryDanger * 0.25;
         }
         if (wallDanger > 0.55) {
-            throttle = Math.max(throttle, 0.58 + wallDanger * 0.16);
+            throttle = Math.max(throttle, 0.68 + wallDanger * 0.18);
         }
-        throttle = this.clamp(throttle, 0.28, 1);
+        throttle = this.clamp(throttle, survivalMode ? 0.62 : 0.3, 1);
 
-        const preferred = this.preferredEngagementDirection(model);
+        const engagement = this.preferredEngagementDirection(model);
+        const survival = this.preferredSurvivalDirection(model);
+        const survivalBlend = survivalMode
+            ? this.clamp(0.76 + danger * 0.24, 0.76, 1)
+            : this.clamp(danger * 0.7, 0, 0.58);
+        const preferred = this.normalized(
+            engagement.x * (1 - survivalBlend) + survival.x * survivalBlend,
+            engagement.y * (1 - survivalBlend) + survival.y * survivalBlend,
+        );
+
         let best: CandidateEvaluation | null = null;
-
         for (let index = 0; index < CANDIDATE_COUNT; index += 1) {
             const angle = Math.PI * 2 * index / CANDIDATE_COUNT;
             const directionX = Math.cos(angle);
@@ -117,15 +176,17 @@ export class CursorSpaceAutopilot {
                 directionX,
                 directionY,
                 preferred,
+                emergency,
                 throttle,
+                survivalMode,
             );
-            if (!best || this.isBetterCandidate(candidate, best)) {
+            if (!best || this.isBetterCandidate(candidate, best, survivalMode)) {
                 best = candidate;
             }
         }
 
         const bestHeading = best?.heading ?? this.heading;
-        const maneuverDanger = Math.max(danger, wallDanger * 0.9);
+        const maneuverDanger = Math.max(danger, emergency.strength, survivalMode ? 0.48 : 0);
         const turnRate = NORMAL_TURN_RATE
             + (EMERGENCY_TURN_RATE - NORMAL_TURN_RATE) * maneuverDanger;
         const difference = this.wrapAngle(bestHeading - this.heading);
@@ -149,7 +210,13 @@ export class CursorSpaceAutopilot {
                 bounds.top - insetY,
             ),
         };
-        const target = this.resolveWallAwareTarget(model, desiredTarget, throttle);
+        const target = this.resolveWallAwareTarget(
+            model,
+            desiredTarget,
+            emergency,
+            throttle,
+            survivalMode,
+        );
         model.setTarget(target.x, target.y, throttle);
     }
 
@@ -158,8 +225,10 @@ export class CursorSpaceAutopilot {
         heading: number,
         directionX: number,
         directionY: number,
-        preferred: Direction,
+        preferred: Readonly<Direction>,
+        emergency: Readonly<EmergencyDirection>,
         throttle: number,
+        survivalMode: boolean,
     ): CandidateEvaluation {
         const player = model.player;
         const predictedSpeed = PLAYER_MAXIMUM_SPEED * throttle;
@@ -191,10 +260,22 @@ export class CursorSpaceAutopilot {
                 candidateVelocityY,
                 enemy,
             );
+            survival += this.enemyFireLaneSurvivalScore(
+                model,
+                player.position.x,
+                player.position.y,
+                candidateVelocityX,
+                candidateVelocityY,
+                enemy,
+            );
         }
 
         for (const projectile of model.projectiles) {
-            if (!projectile.active || projectile.owner !== 'enemy') {
+            if (
+                !projectile.active
+                || projectile.owner !== 'enemy'
+                || !this.projectileRelevantToPlayer(model, projectile)
+            ) {
                 continue;
             }
             survival += this.projectileSurvivalScore(
@@ -206,16 +287,27 @@ export class CursorSpaceAutopilot {
             );
         }
 
-        let tactical = (directionX * preferred.x + directionY * preferred.y) * 30;
+        survival += (
+            directionX * emergency.x + directionY * emergency.y
+        ) * emergency.strength * 4_600;
+        survival += (
+            directionX * preferred.x + directionY * preferred.y
+        ) * (survivalMode ? 780 : 110);
+
+        const tacticalScale = survivalMode ? 0.18 : 1;
+        let tactical = (
+            directionX * preferred.x + directionY * preferred.y
+        ) * 30 * tacticalScale;
         const playerSpeed = Math.hypot(player.velocity.x, player.velocity.y);
         if (playerSpeed > 12) {
             tactical += (
                 directionX * player.velocity.x / playerSpeed
                 + directionY * player.velocity.y / playerSpeed
-            ) * 12;
+            ) * (survivalMode ? 3 : 12);
         }
-        tactical += Math.cos(this.wrapAngle(heading - this.heading)) * 9;
-        tactical += Math.sin(this.elapsed * 0.61 + directionX * 2.1 + directionY * 2.7) * 1.2;
+        tactical += Math.cos(this.wrapAngle(heading - this.heading)) * (survivalMode ? 2 : 9);
+        tactical += Math.sin(this.elapsed * 0.61 + directionX * 2.1 + directionY * 2.7)
+            * (survivalMode ? 0.15 : 1.2);
 
         return { heading, survival, tactical };
     }
@@ -223,7 +315,9 @@ export class CursorSpaceAutopilot {
     private resolveWallAwareTarget(
         model: CursorSpaceModel,
         desiredTarget: Readonly<TargetPoint>,
+        emergency: Readonly<EmergencyDirection>,
         throttle: number,
+        survivalMode: boolean,
     ): TargetPoint {
         if (
             !model.wallActive
@@ -274,66 +368,44 @@ export class CursorSpaceAutopilot {
                 if (distance < MINIMUM_LENGTH) {
                     continue;
                 }
-
                 const directionX = dx / distance;
                 const directionY = dy / distance;
-                const predictedSpeed = PLAYER_MAXIMUM_SPEED * throttle;
-                const candidateVelocityX = directionX * predictedSpeed;
-                const candidateVelocityY = directionY * predictedSpeed;
-                let survival = this.boundarySurvival(bounds, candidate.x, candidate.y);
-                survival += this.wallWaypointSurvival(
-                    candidate.x,
-                    candidate.y,
-                    model.walls,
+                const evaluation = this.evaluateDirection(
+                    model,
+                    Math.atan2(dy, dx),
+                    directionX,
+                    directionY,
+                    directionX === 0 && directionY === 0
+                        ? { x: Math.cos(this.heading), y: Math.sin(this.heading) }
+                        : { x: directionX, y: directionY },
+                    emergency,
+                    throttle,
+                    survivalMode,
                 );
-
-                for (const enemy of model.enemies) {
-                    if (!enemy.active) {
-                        continue;
-                    }
-                    survival += this.enemySurvivalScore(
-                        player.position.x,
-                        player.position.y,
-                        candidateVelocityX,
-                        candidateVelocityY,
-                        enemy,
-                    );
-                }
-
-                for (const projectile of model.projectiles) {
-                    if (!projectile.active || projectile.owner !== 'enemy') {
-                        continue;
-                    }
-                    survival += this.projectileSurvivalScore(
-                        player.position.x,
-                        player.position.y,
-                        candidateVelocityX,
-                        candidateVelocityY,
-                        projectile,
-                    );
-                }
-
                 const desiredDistance = Math.hypot(
                     desiredTarget.x - candidate.x,
                     desiredTarget.y - candidate.y,
                 );
-                const heading = Math.atan2(dy, dx);
-                const tactical = -desiredDistance * 0.18
-                    - distance * 0.025
-                    + Math.cos(this.wrapAngle(heading - this.heading)) * 8;
-                const evaluation = { heading, survival, tactical };
-                if (!bestEvaluation || this.isBetterCandidate(evaluation, bestEvaluation)) {
-                    bestEvaluation = evaluation;
+                const adjusted = {
+                    heading: evaluation.heading,
+                    survival: evaluation.survival
+                        + this.wallWaypointSurvival(candidate.x, candidate.y, model.walls),
+                    tactical: evaluation.tactical - desiredDistance * (survivalMode ? 0.02 : 0.14),
+                };
+                if (!bestEvaluation || this.isBetterCandidate(
+                    adjusted,
+                    bestEvaluation,
+                    survivalMode,
+                )) {
+                    bestEvaluation = adjusted;
                     bestTarget = candidate;
                 }
             }
         }
 
         if (!bestTarget) {
-            return { x: desiredTarget.x, y: desiredTarget.y };
+            return this.nearestOpenEscapeTarget(model);
         }
-
-        this.heading = bestEvaluation?.heading ?? this.heading;
         return {
             x: this.clamp(
                 bestTarget.x,
@@ -346,6 +418,156 @@ export class CursorSpaceAutopilot {
                 bounds.top - PLAYER_RADIUS,
             ),
         };
+    }
+
+    private nearestOpenEscapeTarget(model: CursorSpaceModel): TargetPoint {
+        const player = model.player;
+        let escapeX = 0;
+        let escapeY = 0;
+        let pressure = 0;
+        for (const wall of model.walls) {
+            const geometry = this.wallEscapeGeometry(
+                player.position.x,
+                player.position.y,
+                wall,
+                WALL_ROUTE_CLEARANCE,
+            );
+            if (geometry.distance >= WALL_SAFETY_MARGIN) {
+                continue;
+            }
+            const weight = 1 - geometry.distance / WALL_SAFETY_MARGIN;
+            escapeX += geometry.x * weight;
+            escapeY += geometry.y * weight;
+            pressure += weight;
+        }
+        if (pressure <= 0) {
+            const centerX = (model.currentBounds.left + model.currentBounds.right) * 0.5;
+            const centerY = (model.currentBounds.bottom + model.currentBounds.top) * 0.5;
+            escapeX = centerX - player.position.x;
+            escapeY = centerY - player.position.y;
+        }
+        const direction = this.normalized(escapeX, escapeY);
+        return {
+            x: this.clamp(
+                player.position.x + direction.x * LOOK_AHEAD_DISTANCE * 0.72,
+                model.currentBounds.left + PLAYER_RADIUS,
+                model.currentBounds.right - PLAYER_RADIUS,
+            ),
+            y: this.clamp(
+                player.position.y + direction.y * LOOK_AHEAD_DISTANCE * 0.72,
+                model.currentBounds.bottom + PLAYER_RADIUS,
+                model.currentBounds.top - PLAYER_RADIUS,
+            ),
+        };
+    }
+
+    private preferredSurvivalDirection(model: CursorSpaceModel): Direction {
+        const player = model.player;
+        const centerX = (model.currentBounds.left + model.currentBounds.right) * 0.5;
+        const centerY = (model.currentBounds.bottom + model.currentBounds.top) * 0.5;
+        let x = (centerX - player.position.x) * 0.0025;
+        let y = (centerY - player.position.y) * 0.0025;
+
+        for (const enemy of model.enemies) {
+            if (!enemy.active) {
+                continue;
+            }
+            const dx = player.position.x - enemy.position.x;
+            const dy = player.position.y - enemy.position.y;
+            const distance = Math.max(1, Math.hypot(dx, dy));
+            const weight = this.clamp((420 - distance) / 420, 0, 1);
+            x += dx / distance * weight * weight * 2.2;
+            y += dy / distance * weight * weight * 2.2;
+        }
+
+        for (const projectile of model.projectiles) {
+            if (
+                !projectile.active
+                || projectile.owner !== 'enemy'
+                || !this.projectileRelevantToPlayer(model, projectile)
+            ) {
+                continue;
+            }
+            const speed = Math.hypot(projectile.velocity.x, projectile.velocity.y);
+            if (speed < MINIMUM_LENGTH) {
+                continue;
+            }
+            const directionX = projectile.velocity.x / speed;
+            const directionY = projectile.velocity.y / speed;
+            const relativeX = player.position.x - projectile.position.x;
+            const relativeY = player.position.y - projectile.position.y;
+            const side = relativeX * (-directionY) + relativeY * directionX >= 0 ? 1 : -1;
+            const distance = Math.max(1, Math.hypot(relativeX, relativeY));
+            const weight = this.clamp((360 - distance) / 360, 0, 1);
+            x += -directionY * side * weight * 3.4;
+            y += directionX * side * weight * 3.4;
+        }
+
+        if (model.wallActive) {
+            for (const wall of model.walls) {
+                const geometry = this.wallEscapeGeometry(
+                    player.position.x,
+                    player.position.y,
+                    wall,
+                    WALL_PATH_CLEARANCE,
+                );
+                if (geometry.distance >= WALL_SAFETY_MARGIN) {
+                    continue;
+                }
+                const weight = 1 - geometry.distance / WALL_SAFETY_MARGIN;
+                x += geometry.x * weight * 2.8;
+                y += geometry.y * weight * 2.8;
+            }
+        }
+        return this.normalized(x, y);
+    }
+
+    private emergencyDodgeDirection(model: CursorSpaceModel): EmergencyDirection {
+        const player = model.player;
+        let bestStrength = 0;
+        let bestX = Math.cos(this.heading);
+        let bestY = Math.sin(this.heading);
+
+        for (const projectile of model.projectiles) {
+            if (
+                !projectile.active
+                || projectile.owner !== 'enemy'
+                || !this.projectileRelevantToPlayer(model, projectile)
+            ) {
+                continue;
+            }
+            const closest = this.closestApproach(
+                projectile.position.x - player.position.x,
+                projectile.position.y - player.position.y,
+                projectile.velocity.x - player.velocity.x,
+                projectile.velocity.y - player.velocity.y,
+                PROJECTILE_HORIZON,
+            );
+            const dangerRadius = PLAYER_RADIUS + projectile.radius + PROJECTILE_SAFETY_PADDING;
+            const strength = this.clamp(
+                (1 - closest.distance / dangerRadius)
+                    * (1 - closest.time / PROJECTILE_HORIZON * 0.35),
+                0,
+                1,
+            );
+            if (strength <= bestStrength) {
+                continue;
+            }
+            const speed = Math.hypot(projectile.velocity.x, projectile.velocity.y);
+            if (speed < MINIMUM_LENGTH) {
+                continue;
+            }
+            const directionX = projectile.velocity.x / speed;
+            const directionY = projectile.velocity.y / speed;
+            const relativeX = player.position.x - projectile.position.x;
+            const relativeY = player.position.y - projectile.position.y;
+            const side = relativeX * (-directionY) + relativeY * directionX >= 0 ? 1 : -1;
+            bestStrength = strength;
+            bestX = -directionY * side;
+            bestY = directionX * side;
+        }
+        const direction = this.normalized(bestX, bestY);
+        return { x: direction.x, y: direction.y, strength: bestStrength };
     }
 
     private wallPathSurvival(
@@ -370,8 +592,8 @@ export class CursorSpaceAutopilot {
         }
 
         let minimumClearance = Number.POSITIVE_INFINITY;
-        for (let sample = 1; sample <= 4; sample += 1) {
-            const progress = sample / 4;
+        for (let sample = 1; sample <= 5; sample += 1) {
+            const progress = sample / 5;
             const x = startX + (endX - startX) * progress;
             const y = startY + (endY - startY) * progress;
             minimumClearance = Math.min(
@@ -379,7 +601,6 @@ export class CursorSpaceAutopilot {
                 this.wallClearanceAt(x, y, model.walls, WALL_PATH_CLEARANCE),
             );
         }
-
         if (!Number.isFinite(minimumClearance)) {
             return 0;
         }
@@ -387,7 +608,7 @@ export class CursorSpaceAutopilot {
             const pressure = 1 - minimumClearance / WALL_SAFETY_MARGIN;
             return -WALL_NEAR_PENALTY * pressure * pressure * pressure;
         }
-        return Math.min(28, minimumClearance * 0.08);
+        return Math.min(36, minimumClearance * 0.09);
     }
 
     private wallWaypointSurvival(
@@ -401,9 +622,9 @@ export class CursorSpaceAutopilot {
         }
         if (clearance < WALL_SAFETY_MARGIN) {
             const pressure = 1 - clearance / WALL_SAFETY_MARGIN;
-            return -WALL_NEAR_PENALTY * 0.45 * pressure * pressure;
+            return -WALL_NEAR_PENALTY * 0.52 * pressure * pressure;
         }
-        return Math.min(18, clearance * 0.05);
+        return Math.min(22, clearance * 0.06);
     }
 
     private wallDanger(model: CursorSpaceModel): number {
@@ -430,15 +651,38 @@ export class CursorSpaceAutopilot {
     ): number {
         let clearance = Number.POSITIVE_INFINITY;
         for (const wall of walls) {
-            const left = wall.x - padding;
-            const right = wall.x + wall.width + padding;
-            const bottom = wall.y - padding;
-            const top = wall.y + wall.height + padding;
-            const dx = Math.max(left - x, 0, x - right);
-            const dy = Math.max(bottom - y, 0, y - top);
-            clearance = Math.min(clearance, Math.hypot(dx, dy));
+            const geometry = this.wallEscapeGeometry(x, y, wall, padding);
+            clearance = Math.min(clearance, geometry.distance);
         }
         return clearance;
+    }
+
+    private wallEscapeGeometry(
+        x: number,
+        y: number,
+        wall: Readonly<CursorSpaceWall>,
+        padding: number,
+    ): { distance: number; x: number; y: number } {
+        const left = wall.x - padding;
+        const right = wall.x + wall.width + padding;
+        const bottom = wall.y - padding;
+        const top = wall.y + wall.height + padding;
+        const nearestX = this.clamp(x, left, right);
+        const nearestY = this.clamp(y, bottom, top);
+        const dx = x - nearestX;
+        const dy = y - nearestY;
+        const distance = Math.hypot(dx, dy);
+        if (distance > MINIMUM_LENGTH) {
+            return { distance, x: dx / distance, y: dy / distance };
+        }
+        const exits = [
+            { distance: Math.abs(x - left), x: -1, y: 0 },
+            { distance: Math.abs(right - x), x: 1, y: 0 },
+            { distance: Math.abs(y - bottom), x: 0, y: -1 },
+            { distance: Math.abs(top - y), x: 0, y: 1 },
+        ];
+        exits.sort((first, second) => first.distance - second.distance);
+        return { distance: 0, x: exits[0].x, y: exits[0].y };
     }
 
     private segmentTraversableFromCurrent(
@@ -460,14 +704,12 @@ export class CursorSpaceAutopilot {
             )) {
                 continue;
             }
-
             if (!this.pointInsideExpandedWall(startX, startY, wall, padding)) {
                 return false;
             }
             if (this.pointInsideExpandedWall(endX, endY, wall, padding)) {
                 return false;
             }
-
             const escape = this.nearestWallEscapeNormal(startX, startY, wall, padding);
             const movementX = endX - startX;
             const movementY = endY - startY;
@@ -496,18 +738,8 @@ export class CursorSpaceAutopilot {
         wall: Readonly<CursorSpaceWall>,
         padding: number,
     ): Direction {
-        const left = wall.x - padding;
-        const right = wall.x + wall.width + padding;
-        const bottom = wall.y - padding;
-        const top = wall.y + wall.height + padding;
-        const exits = [
-            { distance: Math.abs(x - left), x: -1, y: 0 },
-            { distance: Math.abs(right - x), x: 1, y: 0 },
-            { distance: Math.abs(y - bottom), x: 0, y: -1 },
-            { distance: Math.abs(top - y), x: 0, y: 1 },
-        ];
-        exits.sort((first, second) => first.distance - second.distance);
-        return { x: exits[0].x, y: exits[0].y };
+        const geometry = this.wallEscapeGeometry(x, y, wall, padding);
+        return { x: geometry.x, y: geometry.y };
     }
 
     private segmentClearOfWalls(
@@ -561,10 +793,8 @@ export class CursorSpaceAutopilot {
             }
             const first = (minimum - start) / delta;
             const second = (maximum - start) / delta;
-            const entry = Math.min(first, second);
-            const exit = Math.max(first, second);
-            minimumTime = Math.max(minimumTime, entry);
-            maximumTime = Math.min(maximumTime, exit);
+            minimumTime = Math.max(minimumTime, Math.min(first, second));
+            maximumTime = Math.min(maximumTime, Math.max(first, second));
             return minimumTime <= maximumTime;
         };
 
@@ -572,38 +802,6 @@ export class CursorSpaceAutopilot {
             && clip(startY, deltaY, bottom, top)
             && maximumTime >= 0
             && minimumTime <= 1;
-    }
-
-    private isBetterCandidate(
-        candidate: Readonly<CandidateEvaluation>,
-        current: Readonly<CandidateEvaluation>,
-    ): boolean {
-        const survivalDifference = candidate.survival - current.survival;
-        if (Math.abs(survivalDifference) > SURVIVAL_TIE_WINDOW) {
-            return survivalDifference > 0;
-        }
-        return candidate.tactical > current.tactical;
-    }
-
-    private boundarySurvival(
-        bounds: Readonly<CursorSpaceBounds>,
-        x: number,
-        y: number,
-    ): number {
-        const left = x - bounds.left;
-        const right = bounds.right - x;
-        const bottom = y - bounds.bottom;
-        const top = bounds.top - y;
-        const clearance = Math.min(left, right, bottom, top);
-
-        if (clearance <= 0) {
-            return -24_000 - Math.abs(clearance) * 120;
-        }
-        if (clearance < BOUNDARY_MARGIN) {
-            const pressure = 1 - clearance / BOUNDARY_MARGIN;
-            return -4_800 * pressure * pressure * pressure;
-        }
-        return Math.min(36, clearance * 0.08);
     }
 
     private enemySurvivalScore(
@@ -626,22 +824,63 @@ export class CursorSpaceAutopilot {
         );
         const collisionRadius = PLAYER_RADIUS + enemy.radius;
         const safetyRadius = collisionRadius + ENEMY_SAFETY_PADDING;
-
         if (closest.distance <= collisionRadius) {
             const penetration = 1 - closest.distance / Math.max(1, collisionRadius);
-            return -18_000 - penetration * 8_000;
+            return -24_000 - penetration * 12_000;
         }
         if (closest.distance >= safetyRadius) {
             return 0;
         }
-
         const pressure = 1 - (closest.distance - collisionRadius)
             / (safetyRadius - collisionRadius);
         const urgency = 1 - closest.time / ENEMY_HORIZON;
         return -(
-            pressure * pressure * 4_000
-            + pressure * urgency * 1_650
+            pressure * pressure * 6_200
+            + pressure * urgency * 2_900
         );
+    }
+
+    private enemyFireLaneSurvivalScore(
+        model: CursorSpaceModel,
+        playerX: number,
+        playerY: number,
+        candidateVelocityX: number,
+        candidateVelocityY: number,
+        enemy: Readonly<CursorSpaceEnemy>,
+    ): number {
+        if (!enemy.shootingEnabled || enemy.fireTier === 0) {
+            return 0;
+        }
+        const horizon = 0.62;
+        const candidateX = playerX + candidateVelocityX * horizon;
+        const candidateY = playerY + candidateVelocityY * horizon;
+        if (model.wallActive && !this.segmentClearOfWalls(
+            enemy.position.x,
+            enemy.position.y,
+            candidateX,
+            candidateY,
+            model.walls,
+            PLAYER_RADIUS + PROJECTILE_RELEVANCE_PADDING,
+        )) {
+            return 0;
+        }
+        const directionX = Math.cos(enemy.rotation);
+        const directionY = Math.sin(enemy.rotation);
+        const relativeX = candidateX - enemy.position.x;
+        const relativeY = candidateY - enemy.position.y;
+        const projection = relativeX * directionX + relativeY * directionY;
+        if (projection <= 0 || projection >= ENEMY_FIRE_LANE_RANGE) {
+            return 0;
+        }
+        const perpendicular = Math.abs(relativeX * directionY - relativeY * directionX);
+        if (perpendicular >= ENEMY_FIRE_LANE_PADDING) {
+            return 0;
+        }
+        const lanePressure = 1 - perpendicular / ENEMY_FIRE_LANE_PADDING;
+        const rangePressure = 1 - projection / ENEMY_FIRE_LANE_RANGE;
+        const readiness = enemy.fireRemaining <= 0.16 ? 1 : 0.38;
+        const tierPressure = 0.7 + enemy.fireTier * 0.18;
+        return -lanePressure * lanePressure * rangePressure * readiness * tierPressure * 5_800;
     }
 
     private projectileSurvivalScore(
@@ -664,28 +903,93 @@ export class CursorSpaceAutopilot {
         );
         const collisionRadius = PLAYER_RADIUS + projectile.radius;
         const safetyRadius = collisionRadius + PROJECTILE_SAFETY_PADDING;
-
         if (closest.distance <= collisionRadius) {
             const penetration = 1 - closest.distance / Math.max(1, collisionRadius);
-            return -28_000 - penetration * 12_000;
+            return -42_000 - penetration * 18_000;
         }
         if (closest.distance >= safetyRadius) {
             return 0;
         }
-
         const pressure = 1 - (closest.distance - collisionRadius)
             / (safetyRadius - collisionRadius);
         const urgency = 1 - closest.time / PROJECTILE_HORIZON;
         return -(
-            pressure * pressure * 7_800
-            + pressure * urgency * 3_600
+            pressure * pressure * 13_600
+            + pressure * urgency * 7_200
         );
     }
 
-    private immediateDanger(model: CursorSpaceModel): number {
+    private projectileRelevantToPlayer(
+        model: CursorSpaceModel,
+        projectile: Readonly<CursorSpaceProjectile>,
+    ): boolean {
         const player = model.player;
-        let danger = this.boundaryDanger(model) * 0.65;
+        const speed = Math.hypot(projectile.velocity.x, projectile.velocity.y);
+        if (speed < MINIMUM_LENGTH) {
+            return false;
+        }
+        const toPlayerX = player.position.x - projectile.position.x;
+        const toPlayerY = player.position.y - projectile.position.y;
+        const projection = (
+            toPlayerX * projectile.velocity.x + toPlayerY * projectile.velocity.y
+        ) / speed;
+        if (projection < -PLAYER_RADIUS * 2) {
+            return false;
+        }
+        const remainingDistance = speed * Math.max(
+            0,
+            Math.min(projectile.life, PROJECTILE_HORIZON),
+        );
+        if (projection > remainingDistance + PROJECTILE_SAFETY_PADDING) {
+            return false;
+        }
+        if (model.wallActive && !this.segmentClearOfWalls(
+            projectile.position.x,
+            projectile.position.y,
+            player.position.x,
+            player.position.y,
+            model.walls,
+            projectile.radius + PROJECTILE_RELEVANCE_PADDING,
+        )) {
+            return false;
+        }
+        return true;
+    }
 
+    private immediateProjectileDanger(model: CursorSpaceModel): number {
+        const player = model.player;
+        let danger = 0;
+        for (const projectile of model.projectiles) {
+            if (
+                !projectile.active
+                || projectile.owner !== 'enemy'
+                || !this.projectileRelevantToPlayer(model, projectile)
+            ) {
+                continue;
+            }
+            const closest = this.closestApproach(
+                projectile.position.x - player.position.x,
+                projectile.position.y - player.position.y,
+                projectile.velocity.x - player.velocity.x,
+                projectile.velocity.y - player.velocity.y,
+                PROJECTILE_HORIZON,
+            );
+            danger = Math.max(
+                danger,
+                this.clamp(
+                    (1 - closest.distance / 126)
+                        * (1 - closest.time / PROJECTILE_HORIZON * 0.38),
+                    0,
+                    1,
+                ),
+            );
+        }
+        return danger;
+    }
+
+    private immediateEnemyDanger(model: CursorSpaceModel): number {
+        const player = model.player;
+        let danger = 0;
         for (const enemy of model.enemies) {
             if (!enemy.active) {
                 continue;
@@ -694,23 +998,17 @@ export class CursorSpaceAutopilot {
                 enemy.position.x - player.position.x,
                 enemy.position.y - player.position.y,
             );
-            danger = Math.max(danger, this.clamp(1 - distance / 138, 0, 1));
-        }
-
-        for (const projectile of model.projectiles) {
-            if (!projectile.active || projectile.owner !== 'enemy') {
-                continue;
-            }
-            const closest = this.closestApproach(
-                projectile.position.x - player.position.x,
-                projectile.position.y - player.position.y,
-                projectile.velocity.x - player.velocity.x,
-                projectile.velocity.y - player.velocity.y,
-                0.78,
+            danger = Math.max(danger, this.clamp(1 - distance / 190, 0, 1));
+            const laneScore = -this.enemyFireLaneSurvivalScore(
+                model,
+                player.position.x,
+                player.position.y,
+                player.velocity.x,
+                player.velocity.y,
+                enemy,
             );
-            danger = Math.max(danger, this.clamp(1 - closest.distance / 90, 0, 1));
+            danger = Math.max(danger, this.clamp(laneScore / 5_800, 0, 1));
         }
-
         return danger;
     }
 
@@ -721,14 +1019,33 @@ export class CursorSpaceAutopilot {
         const bottom = player.position.y - model.currentBounds.bottom;
         const top = model.currentBounds.top - player.position.y;
         const clearance = Math.min(left, right, bottom, top);
-        return this.clamp(1 - clearance / 92, 0, 1);
+        return this.clamp(1 - clearance / 110, 0, 1);
+    }
+
+    private boundarySurvival(
+        bounds: Readonly<CursorSpaceBounds>,
+        x: number,
+        y: number,
+    ): number {
+        const left = x - bounds.left;
+        const right = bounds.right - x;
+        const bottom = y - bounds.bottom;
+        const top = bounds.top - y;
+        const clearance = Math.min(left, right, bottom, top);
+        if (clearance <= 0) {
+            return -36_000 - Math.abs(clearance) * 180;
+        }
+        if (clearance < BOUNDARY_MARGIN) {
+            const pressure = 1 - clearance / BOUNDARY_MARGIN;
+            return -8_200 * pressure * pressure * pressure;
+        }
+        return Math.min(42, clearance * 0.09);
     }
 
     private preferredEngagementDirection(model: CursorSpaceModel): Direction {
         const player = model.player;
         let nearest: CursorSpaceEnemy | null = null;
         let nearestDistanceSquared = Number.POSITIVE_INFINITY;
-
         for (const enemy of model.enemies) {
             if (!enemy.active) {
                 continue;
@@ -741,7 +1058,6 @@ export class CursorSpaceAutopilot {
                 nearestDistanceSquared = distanceSquared;
             }
         }
-
         if (!nearest) {
             const centerX = (model.currentBounds.left + model.currentBounds.right) / 2;
             const centerY = (model.currentBounds.bottom + model.currentBounds.top) / 2;
@@ -750,25 +1066,19 @@ export class CursorSpaceAutopilot {
                 centerY - player.position.y + Math.sin(this.elapsed * 0.34) * 54,
             );
         }
-
         const distance = Math.sqrt(Math.max(MINIMUM_LENGTH, nearestDistanceSquared));
         const radialX = (player.position.x - nearest.position.x) / distance;
         const radialY = (player.position.y - nearest.position.y) / distance;
         const tangentX = -radialY * this.orbitSide;
         const tangentY = radialX * this.orbitSide;
-        const hullRatio = player.maximumHealth > 0
-            ? player.health / player.maximumHealth
-            : 0;
-        const desiredRadius = ENGAGEMENT_RADIUS + (1 - hullRatio) * 90;
         const radialWeight = this.clamp(
-            (desiredRadius - distance) / desiredRadius,
-            -0.45,
-            1.45,
+            (ENGAGEMENT_RADIUS - distance) / ENGAGEMENT_RADIUS,
+            -0.35,
+            1.55,
         );
-
         return this.normalized(
-            tangentX * 0.62 + radialX * radialWeight,
-            tangentY * 0.62 + radialY * radialWeight,
+            tangentX * 0.72 + radialX * radialWeight,
+            tangentY * 0.72 + radialY * radialWeight,
         );
     }
 
@@ -780,6 +1090,19 @@ export class CursorSpaceAutopilot {
             }
         }
         return count;
+    }
+
+    private isBetterCandidate(
+        candidate: Readonly<CandidateEvaluation>,
+        current: Readonly<CandidateEvaluation>,
+        survivalMode: boolean,
+    ): boolean {
+        const survivalDifference = candidate.survival - current.survival;
+        const tieWindow = survivalMode ? 1.5 : SURVIVAL_TIE_WINDOW;
+        if (Math.abs(survivalDifference) > tieWindow) {
+            return survivalDifference > 0;
+        }
+        return candidate.tactical > current.tactical;
     }
 
     private closestApproach(
