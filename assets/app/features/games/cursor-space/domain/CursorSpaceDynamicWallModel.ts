@@ -17,8 +17,8 @@ const DODGE_PADDING = 92;
 const DODGE_TRIGGER = 0.035;
 const DODGE_FIRE_DELAY = 0.28;
 
-const WALL_UNLOCK_LEVEL = 40;
-const WALL_CHANGE_INTERVAL = 10;
+const DEFAULT_WALL_UNLOCK_LEVEL = 40;
+const DEFAULT_WALL_CHANGE_INTERVAL = 10;
 const WALL_PROJECTILE_THICKNESS = 32;
 const WALL_AIRCRAFT_CLEARANCE = 1.5;
 const WALL_AI_CLEARANCE = 30;
@@ -30,6 +30,11 @@ export interface CursorSpaceWall {
     readonly y: number;
     readonly width: number;
     readonly height: number;
+}
+
+export interface CursorSpaceWallProgression {
+    readonly unlockLevel: number;
+    readonly changeInterval: number;
 }
 
 interface WallSample {
@@ -54,6 +59,11 @@ interface SeededRandom {
     integer(minimum: number, maximumInclusive: number): number;
 }
 
+const DEFAULT_WALL_PROGRESSION: CursorSpaceWallProgression = {
+    unlockLevel: DEFAULT_WALL_UNLOCK_LEVEL,
+    changeInterval: DEFAULT_WALL_CHANGE_INTERVAL,
+};
+
 /**
  * Public Cursor Space gameplay model.
  *
@@ -61,7 +71,7 @@ interface SeededRandom {
  * - every player kill restores one missing escort, capped at two;
  * - every enemy is destroyed by one player projectile;
  * - enemy dodges change heading only and preserve scalar speed;
- * - walls unlock at level 40 and deterministically change every ten levels.
+ * - wall progression is supplied explicitly and defaults to level 40 / ten levels.
  */
 export class CursorSpaceModel {
     readonly player: CursorSpacePlayer;
@@ -73,6 +83,7 @@ export class CursorSpaceModel {
 
     private readonly core: CursorSpaceCombatModel;
     private readonly config: CursorSpaceConfig;
+    private readonly wallProgression: CursorSpaceWallProgression;
     private readonly previousEnemyX: number[];
     private readonly previousEnemyY: number[];
     private readonly wallSamples: WallSample[] = [];
@@ -83,8 +94,15 @@ export class CursorSpaceModel {
     private wallEffectCount = 0;
     private wallPhase = -1;
 
-    constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
+    constructor(
+        config: CursorSpaceConfig = cursorSpaceConfig,
+        wallProgression: CursorSpaceWallProgression = DEFAULT_WALL_PROGRESSION,
+    ) {
         this.config = config;
+        this.wallProgression = {
+            unlockLevel: Math.max(1, Math.floor(wallProgression.unlockLevel)),
+            changeInterval: Math.max(1, Math.floor(wallProgression.changeInterval)),
+        };
         this.core = new CursorSpaceCombatModel({
             ...config,
             playerMaximumHealth: 1,
@@ -458,10 +476,10 @@ export class CursorSpaceModel {
     }
 
     private wallPhaseForLevel(level: number): number {
-        if (level < WALL_UNLOCK_LEVEL) {
+        if (level < this.wallProgression.unlockLevel) {
             return -1;
         }
-        return Math.floor(level / WALL_CHANGE_INTERVAL);
+        return Math.floor(level / this.wallProgression.changeInterval);
     }
 
     private rebuildWalls(phase: number): void {

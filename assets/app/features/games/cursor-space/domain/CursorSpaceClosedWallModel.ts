@@ -1,6 +1,9 @@
 import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
-import { CursorSpaceModel as CursorSpaceDynamicWallModel } from './CursorSpaceDynamicWallModel';
-import type { CursorSpaceWall } from './CursorSpaceDynamicWallModel';
+import {
+    CursorSpaceModel as CursorSpaceDynamicWallModel,
+    type CursorSpaceWall,
+    type CursorSpaceWallProgression,
+} from './CursorSpaceDynamicWallModel';
 import {
     cursorSpaceConfig,
     type CursorSpaceBounds,
@@ -22,16 +25,17 @@ const TARGET_LOCK_DURATION = 0.85;
 const TARGET_CORRIDOR_PADDING = 5;
 const WALL_FIRE_PADDING = 3;
 
+const CLOSED_WALL_PROGRESSION: CursorSpaceWallProgression = {
+    unlockLevel: WALL_UNLOCK_LEVEL,
+    changeInterval: WALL_CHANGE_INTERVAL,
+};
+
 interface WallLine {
     readonly x: number;
     readonly y: number;
     readonly directionX: number;
     readonly directionY: number;
     readonly radius: number;
-}
-
-interface DynamicWallInternals {
-    wallPhaseForLevel(level: number): number;
 }
 
 /**
@@ -61,8 +65,7 @@ export class CursorSpaceModel {
 
     constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
         this.config = config;
-        this.core = new CursorSpaceDynamicWallModel(config);
-        this.overrideWallProgression();
+        this.core = new CursorSpaceDynamicWallModel(config, CLOSED_WALL_PROGRESSION);
         this.player = this.core.player;
         this.stats = this.core.stats;
         this.enemies = this.core.enemies;
@@ -123,16 +126,6 @@ export class CursorSpaceModel {
             this.targetLockRemaining = 0;
         }
         this.rewriteWallVisuals();
-    }
-
-    private overrideWallProgression(): void {
-        const internals = this.core as unknown as DynamicWallInternals;
-        internals.wallPhaseForLevel = (level: number): number => {
-            if (level < WALL_UNLOCK_LEVEL) {
-                return -1;
-            }
-            return Math.floor(level / WALL_CHANGE_INTERVAL);
-        };
     }
 
     private captureProjectileActivity(): void {
