@@ -1,4 +1,4 @@
-import type { CursorSpaceEnemyBehavior } from '../domain/CursorSpaceCombatModel';
+import type { CursorSpaceEnemyBehavior } from '../domain/CursorSpaceEnemyBehavior';
 
 export interface CursorSpaceConfig {
     readonly enemyBehavior?: CursorSpaceEnemyBehavior;

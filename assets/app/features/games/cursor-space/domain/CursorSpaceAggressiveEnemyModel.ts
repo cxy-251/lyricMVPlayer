@@ -1,7 +1,7 @@
 import type {
     CursorSpaceEnemyBehavior,
     CursorSpaceEnemyBehaviorContext,
-} from './CursorSpaceCombatModel';
+} from './CursorSpaceEnemyBehavior';
 import { CursorSpaceModel as CursorSpaceClosedWallModel } from './CursorSpaceClosedWallModel';
 import type { CursorSpaceWall } from './CursorSpaceClosedWallModel';
 import {

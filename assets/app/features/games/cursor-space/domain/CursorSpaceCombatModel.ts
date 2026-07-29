@@ -1,3 +1,8 @@
+import type {
+    CursorSpaceEnemyBehavior,
+    CursorSpaceEnemyBehaviorContext,
+    CursorSpaceEnemyThreat,
+} from './CursorSpaceEnemyBehavior';
 import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
 import {
     cursorSpaceConfig,
@@ -10,6 +15,12 @@ import {
     type CursorSpaceProjectileOwner,
     type CursorSpaceStats,
 } from './CursorSpaceTypes';
+
+export type {
+    CursorSpaceEnemyBehavior,
+    CursorSpaceEnemyBehaviorContext,
+    CursorSpaceEnemyThreat,
+} from './CursorSpaceEnemyBehavior';
 
 const DEFAULT_BOUNDS: CursorSpaceBounds = {
     left: -320,
@@ -48,42 +59,7 @@ interface CursorSpaceLevelProfile {
     readonly globalFireInterval: number;
 }
 
-export interface CursorSpaceEnemyThreat {
-    readonly x: number;
-    readonly y: number;
-    readonly threat: number;
-}
-
 type ThreatVector = CursorSpaceEnemyThreat;
-
-export interface CursorSpaceEnemyBehaviorContext {
-    readonly config: Readonly<CursorSpaceConfig>;
-    readonly bounds: Readonly<CursorSpaceBounds>;
-    readonly player: CursorSpacePlayer;
-    readonly enemies: CursorSpaceEnemy[];
-    readonly projectiles: CursorSpaceProjectile[];
-
-    playerProjectileThreat(enemy: Readonly<CursorSpaceEnemy>): CursorSpaceEnemyThreat;
-    enemyCollisionThreat(
-        enemyIndex: number,
-        enemy: Readonly<CursorSpaceEnemy>,
-    ): CursorSpaceEnemyThreat;
-    boundaryThreat(enemy: Readonly<CursorSpaceEnemy>): CursorSpaceEnemyThreat;
-    friendlySeparationThreat(
-        enemyIndex: number,
-        enemy: Readonly<CursorSpaceEnemy>,
-    ): CursorSpaceEnemyThreat;
-    clearProjectilesFromEnemy(enemyIndex: number): void;
-}
-
-export interface CursorSpaceEnemyBehavior {
-    updateEnemies(context: CursorSpaceEnemyBehaviorContext, dt: number): void;
-    blocksFriendlyFireLane?(
-        context: CursorSpaceEnemyBehaviorContext,
-        enemyIndex: number,
-        rotation: number,
-    ): boolean;
-}
 
 interface EnemyFireCandidate {
     readonly enemyIndex: number;
@@ -310,7 +286,6 @@ export class CursorSpaceModel {
 
         const model = this;
         this.enemyBehaviorContext = {
-            config: this.config,
             get bounds(): Readonly<CursorSpaceBounds> {
                 return model.bounds;
             },
