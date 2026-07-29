@@ -1,4 +1,5 @@
 import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
+import type { CursorSpaceFireControlPolicy } from './CursorSpaceFireControl';
 import {
     CursorSpaceModel as CursorSpaceDynamicWallModel,
     type CursorSpaceWall,
@@ -44,7 +45,8 @@ interface WallLine {
  * Dynamic walls own collision and progression. This layer keeps their visual
  * rectangles closed and adds wall-aware fire control:
  * - walls unlock at level 20 and change every ten levels;
- * - wall-occluded enemies cannot consume player shots;
+ * - wall-occluded aircraft are excluded before either side aims or fires;
+ * - projectile-wall rejection remains the final trajectory safety check;
  * - a short target lock prevents late-game aim thrashing;
  * - assisted fire is decoupled from evasive movement when the core cannot fire.
  */
@@ -58,6 +60,7 @@ export class CursorSpaceModel {
 
     private readonly core: CursorSpaceDynamicWallModel;
     private readonly config: CursorSpaceConfig;
+    private readonly fireControlPolicy: CursorSpaceFireControlPolicy;
     private readonly projectileActiveSnapshot: boolean[];
     private assistFireRemaining = 0;
     private lockedTargetIndex = -1;
@@ -65,7 +68,38 @@ export class CursorSpaceModel {
 
     constructor(config: CursorSpaceConfig = cursorSpaceConfig) {
         this.config = config;
-        this.core = new CursorSpaceDynamicWallModel(config, CLOSED_WALL_PROGRESSION);
+        const upstreamPolicy = config.fireControlPolicy;
+        this.fireControlPolicy = {
+            canEngage: (
+                sourceX,
+                sourceY,
+                targetX,
+                targetY,
+                projectileRadius,
+            ): boolean => (
+                (upstreamPolicy?.canEngage(
+                    sourceX,
+                    sourceY,
+                    targetX,
+                    targetY,
+                    projectileRadius,
+                ) ?? true)
+                && this.segmentClearOfWalls(
+                    sourceX,
+                    sourceY,
+                    targetX,
+                    targetY,
+                    projectileRadius + WALL_FIRE_PADDING,
+                )
+            ),
+        };
+        this.core = new CursorSpaceDynamicWallModel(
+            {
+                ...config,
+                fireControlPolicy: this.fireControlPolicy,
+            },
+            CLOSED_WALL_PROGRESSION,
+        );
         this.player = this.core.player;
         this.stats = this.core.stats;
         this.enemies = this.core.enemies;
@@ -275,12 +309,12 @@ export class CursorSpaceModel {
     }
 
     private enemyVisibleFromPlayer(enemy: Readonly<CursorSpaceEnemy>): boolean {
-        return this.segmentClearOfWalls(
+        return this.fireControlPolicy.canEngage(
             this.player.position.x,
             this.player.position.y,
             enemy.position.x,
             enemy.position.y,
-            this.config.projectileRadius + WALL_FIRE_PADDING,
+            this.config.projectileRadius,
         );
     }
 
@@ -321,12 +355,12 @@ export class CursorSpaceModel {
     ): boolean {
         const muzzleX = originX + directionX * noseOffset;
         const muzzleY = originY + directionY * noseOffset;
-        if (!this.segmentClearOfWalls(
+        if (!this.fireControlPolicy.canEngage(
             muzzleX,
             muzzleY,
             target.position.x,
             target.position.y,
-            this.config.projectileRadius + WALL_FIRE_PADDING,
+            this.config.projectileRadius,
         )) {
             return false;
         }

@@ -1,7 +1,9 @@
 import type { CursorSpaceEnemyBehavior } from '../domain/CursorSpaceEnemyBehavior';
+import type { CursorSpaceFireControlPolicy } from '../domain/CursorSpaceFireControl';
 
 export interface CursorSpaceConfig {
     readonly enemyBehavior?: CursorSpaceEnemyBehavior;
+    readonly fireControlPolicy?: CursorSpaceFireControlPolicy;
     readonly playerRadius: number;
     readonly playerFollowResponse: number;
     readonly playerMaximumSpeed: number;

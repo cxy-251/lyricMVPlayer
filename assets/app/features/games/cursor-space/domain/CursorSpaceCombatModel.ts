@@ -3,6 +3,7 @@ import type {
     CursorSpaceEnemyBehaviorContext,
     CursorSpaceEnemyThreat,
 } from './CursorSpaceEnemyBehavior';
+import type { CursorSpaceFireControlPolicy } from './CursorSpaceFireControl';
 import { cursorSpaceEscortWorldPosition } from './CursorSpaceFormation';
 import {
     cursorSpaceConfig,
@@ -21,6 +22,7 @@ export type {
     CursorSpaceEnemyBehaviorContext,
     CursorSpaceEnemyThreat,
 } from './CursorSpaceEnemyBehavior';
+export type { CursorSpaceFireControlPolicy } from './CursorSpaceFireControl';
 
 const DEFAULT_BOUNDS: CursorSpaceBounds = {
     left: -320,
@@ -228,6 +230,7 @@ export class CursorSpaceModel {
     private readonly target = { x: 0, y: 0 };
     private readonly enemyBehaviorContext: CursorSpaceEnemyBehaviorContext;
     private enemyBehavior: CursorSpaceEnemyBehavior | null = null;
+    private fireControlPolicy: CursorSpaceFireControlPolicy | null = null;
     private targetActive = false;
     private directControl = false;
     private aimTarget: CursorSpaceEnemy | null = null;
@@ -305,6 +308,7 @@ export class CursorSpaceModel {
             },
         };
         this.enemyBehavior = config.enemyBehavior ?? null;
+        this.fireControlPolicy = config.fireControlPolicy ?? null;
         this.reset();
     }
 
@@ -355,6 +359,10 @@ export class CursorSpaceModel {
 
     setEnemyBehavior(behavior: CursorSpaceEnemyBehavior | null): void {
         this.enemyBehavior = behavior;
+    }
+
+    setFireControlPolicy(policy: CursorSpaceFireControlPolicy | null): void {
+        this.fireControlPolicy = policy;
     }
 
     reset(): void {
@@ -555,24 +563,42 @@ export class CursorSpaceModel {
             return;
         }
 
-        let fired = this.spawnProjectile(
-            'player',
-            -1,
+        let fired = false;
+        if (this.canEngage(
             this.player.position.x,
             this.player.position.y,
-            this.player.rotation,
-            this.player.velocity.x,
-            this.player.velocity.y,
-            this.config.projectileSpeed,
-            this.config.projectileLife,
+            target.position.x,
+            target.position.y,
             this.config.projectileRadius,
-            this.config.playerProjectileDamage,
-            this.config.playerNoseOffset,
-            this.config.inheritedVelocity,
-        );
+        )) {
+            fired = this.spawnProjectile(
+                'player',
+                -1,
+                this.player.position.x,
+                this.player.position.y,
+                this.player.rotation,
+                this.player.velocity.x,
+                this.player.velocity.y,
+                this.config.projectileSpeed,
+                this.config.projectileLife,
+                this.config.projectileRadius,
+                this.config.playerProjectileDamage,
+                this.config.playerNoseOffset,
+                this.config.inheritedVelocity,
+            );
+        }
 
         for (let index = 0; index < this.player.escortCount; index += 1) {
             const escort = cursorSpaceEscortWorldPosition(this.player, index);
+            if (!this.canEngage(
+                escort.x,
+                escort.y,
+                target.position.x,
+                target.position.y,
+                this.config.projectileRadius,
+            )) {
+                continue;
+            }
             fired = this.spawnProjectile(
                 'player',
                 -1,
@@ -894,6 +920,13 @@ export class CursorSpaceModel {
                 || enemy.fireRemaining > 0
                 || enemy.threat > 0.2
                 || this.countEnemyProjectilesFrom(enemyIndex) >= this.projectileLimitForTier(enemy.fireTier)
+                || !this.canEngage(
+                    enemy.position.x,
+                    enemy.position.y,
+                    this.player.position.x,
+                    this.player.position.y,
+                    this.config.enemyProjectileRadius,
+                )
             ) {
                 continue;
             }
@@ -1711,7 +1744,16 @@ export class CursorSpaceModel {
         let nearest: CursorSpaceEnemy | null = null;
         let nearestDistanceSquared = this.config.autoAimRange * this.config.autoAimRange;
         for (const enemy of this.enemies) {
-            if (!enemy.active) {
+            if (
+                !enemy.active
+                || !this.canEngage(
+                    this.player.position.x,
+                    this.player.position.y,
+                    enemy.position.x,
+                    enemy.position.y,
+                    this.config.projectileRadius,
+                )
+            ) {
                 continue;
             }
             const dx = enemy.position.x - this.player.position.x;
@@ -1723,6 +1765,22 @@ export class CursorSpaceModel {
             }
         }
         return nearest;
+    }
+
+    private canEngage(
+        sourceX: number,
+        sourceY: number,
+        targetX: number,
+        targetY: number,
+        projectileRadius: number,
+    ): boolean {
+        return this.fireControlPolicy?.canEngage(
+            sourceX,
+            sourceY,
+            targetX,
+            targetY,
+            projectileRadius,
+        ) ?? true;
     }
 
     private interceptRotation(
