@@ -5,14 +5,13 @@ import {
     EventTouch,
     Graphics,
     HorizontalTextAlignment,
-    input,
-    Input,
     KeyCode,
     Label,
     Node,
     UITransform,
     Vec3,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { ViewportSnapshot } from '../../../services/ViewportService';
 import {
     clearNode,
@@ -20,8 +19,8 @@ import {
     createLabel,
     createUiNode,
     fillNode,
-    palette,
-} from '../../../ui/UiFactory';
+} from '../../../ui/primitives';
+import { palette } from '../../../ui/theme';
 import type {
     MatchThreeBoardLayout,
     MatchThreeCell,
@@ -42,6 +41,7 @@ const TILE_COLORS = [
 const SWIPE_THRESHOLD = 22;
 
 export class MatchThreeView {
+    private readonly unbindKeyboard: () => void;
     private graphics: Graphics | null = null;
     private statusLabel: Label | null = null;
     private statsLabel: Label | null = null;
@@ -56,7 +56,10 @@ export class MatchThreeView {
         private readonly root: Node,
         private readonly actions: MatchThreeViewActions,
     ) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
         root.on(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
@@ -219,7 +222,7 @@ export class MatchThreeView {
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
         this.root.off(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
@@ -328,33 +331,33 @@ export class MatchThreeView {
         graphics.stroke();
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_W:
                 this.actions.moveFocus(1, 0);
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.actions.moveFocus(-1, 0);
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.actions.moveFocus(0, -1);
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.actions.moveFocus(0, 1);
-                break;
+                return true;
             case KeyCode.ENTER:
             case KeyCode.SPACE:
                 this.actions.activateFocused();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 
