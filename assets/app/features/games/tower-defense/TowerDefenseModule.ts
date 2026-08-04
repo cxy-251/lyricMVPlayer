@@ -1,25 +1,25 @@
-import type {
-    Pausable,
-    Resettable,
-    Updatable,
-} from '../../../contracts/InteractiveModule';
-import type { ViewportSnapshot } from '../../../services/ViewportService';
-import { ResponsiveModule } from '../../../templates/ResponsiveModule';
-import { TowerDefenseInputController } from './TowerDefenseInputController';
+import type { Node } from 'cc';
+import { ViewModelGameModule } from '../../../templates/ViewModelGameModule';
 import { TowerDefenseView } from './TowerDefenseView';
 import { TowerDefenseViewModel } from './TowerDefenseViewModel';
+import type { TowerDefenseViewState } from './TowerDefenseTypes';
 
-export class TowerDefenseModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
+export class TowerDefenseModule extends ViewModelGameModule<
+    TowerDefenseViewState,
+    TowerDefenseViewModel,
+    TowerDefenseView
+> {
     protected readonly rootName = 'TowerDefenseModuleRoot';
 
-    private viewModel: TowerDefenseViewModel | null = null;
-    private view: TowerDefenseView | null = null;
-    private input: TowerDefenseInputController | null = null;
+    protected createViewModel(): TowerDefenseViewModel {
+        return new TowerDefenseViewModel();
+    }
 
-    protected onMount(): void {
-        this.viewModel = new TowerDefenseViewModel();
-        const viewModel = this.viewModel;
-        this.view = new TowerDefenseView(this.requireRoot(), {
+    protected createView(
+        root: Node,
+        viewModel: TowerDefenseViewModel,
+    ): TowerDefenseView {
+        return new TowerDefenseView(root, {
             selectSlot: (slotId) => {
                 viewModel.selectSlotFromHuman(slotId);
                 this.renderCurrentState();
@@ -49,72 +49,5 @@ export class TowerDefenseModule extends ResponsiveModule implements Updatable, P
                 this.renderCurrentState();
             },
         });
-        this.input = new TowerDefenseInputController({
-            moveSelection: (direction) => {
-                viewModel.moveSelectionFromHuman(direction);
-                this.renderCurrentState();
-            },
-            selectKind: (kind) => {
-                viewModel.selectKindFromHuman(kind);
-                this.renderCurrentState();
-            },
-            build: () => {
-                viewModel.buildSelectedFromHuman();
-                this.renderCurrentState();
-            },
-            upgrade: () => {
-                viewModel.upgradeSelectedFromHuman();
-                this.renderCurrentState();
-            },
-            startWave: () => {
-                viewModel.startWaveFromHuman();
-                this.renderCurrentState();
-            },
-            restart: () => {
-                viewModel.restartFromHuman();
-                this.renderCurrentState();
-            },
-        });
-    }
-
-    protected onUnmount(): void {
-        this.input?.destroy();
-        this.input = null;
-        this.view?.destroy();
-        this.view = null;
-        this.viewModel?.dispose();
-        this.viewModel = null;
-    }
-
-    update(dt: number): void {
-        if (this.viewModel?.update(dt)) {
-            this.renderCurrentState();
-        }
-    }
-
-    pause(): void {
-        this.viewModel?.pause();
-        this.renderCurrentState();
-    }
-
-    resume(): void {
-        this.viewModel?.resume();
-        this.renderCurrentState();
-    }
-
-    reset(): void {
-        this.viewModel?.reset();
-        this.renderCurrentState();
-    }
-
-    protected render(viewport: ViewportSnapshot): void {
-        this.view?.layout(viewport);
-        this.renderCurrentState();
-    }
-
-    private renderCurrentState(): void {
-        if (this.view && this.viewModel) {
-            this.view.render(this.viewModel.createViewState());
-        }
     }
 }
