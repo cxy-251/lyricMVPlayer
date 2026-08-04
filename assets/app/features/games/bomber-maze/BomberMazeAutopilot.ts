@@ -16,6 +16,7 @@ const OFFSETS: Record<BomberMazeDirection, readonly [number, number]> = {
 };
 const STEP_TIME = 0.15;
 const SAFETY_MARGIN = 0.18;
+const SHELTER_ENEMY_DISTANCE = 2;
 
 interface SearchNode extends BomberMazePoint {
     readonly firstDirection: BomberMazeDirection | null;
@@ -29,10 +30,15 @@ export class BomberMazeAutopilot {
         }
 
         const danger = this.buildDangerMap(observation, null);
-        const currentDanger = danger.get(this.key(observation.player));
-        if (currentDanger !== undefined && currentDanger < 1.05) {
-            const escape = this.findSafeDirection(observation, danger);
-            return escape ? { kind: 'move', direction: escape } : null;
+        if (observation.bombs.length > 0 || observation.explosions.length > 0) {
+            const currentDanger = danger.get(this.key(observation.player));
+            if (currentDanger !== undefined) {
+                const escape = this.findSafeDirection(observation, danger);
+                return escape ? { kind: 'move', direction: escape } : null;
+            }
+
+            const shelterMove = this.findShelterDirection(observation, danger);
+            return shelterMove ? { kind: 'move', direction: shelterMove } : null;
         }
 
         const enemyDistance = Math.min(
@@ -135,6 +141,47 @@ export class BomberMazeAutopilot {
             }
         }
         return null;
+    }
+
+    private findShelterDirection(
+        observation: BomberMazeObservation,
+        danger: ReadonlyMap<string, number>,
+    ): BomberMazeDirection | null {
+        const currentEnemyDistance = Math.min(
+            ...observation.enemies.map((enemy) => this.manhattan(observation.player, enemy)),
+            Number.POSITIVE_INFINITY,
+        );
+        if (currentEnemyDistance > SHELTER_ENEMY_DISTANCE) {
+            return null;
+        }
+
+        let best: BomberMazeDirection | null = null;
+        let bestScore = currentEnemyDistance * 10;
+        for (const direction of DIRECTIONS) {
+            const point = this.offset(observation.player, direction);
+            if (
+                !this.canTraverse(observation, point)
+                || danger.has(this.key(point))
+                || observation.enemies.some((enemy) => this.same(enemy, point))
+            ) {
+                continue;
+            }
+            const nearestEnemy = Math.min(
+                ...observation.enemies.map((enemy) => this.manhattan(point, enemy)),
+                20,
+            );
+            const openNeighbors = DIRECTIONS.filter((candidate) => {
+                const neighbor = this.offset(point, candidate);
+                return this.canTraverse(observation, neighbor)
+                    && !danger.has(this.key(neighbor));
+            }).length;
+            const score = nearestEnemy * 10 + openNeighbors * 2;
+            if (score > bestScore) {
+                bestScore = score;
+                best = direction;
+            }
+        }
+        return best;
     }
 
     private findPathDirection(

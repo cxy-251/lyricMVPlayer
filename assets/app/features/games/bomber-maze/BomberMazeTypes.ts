@@ -3,7 +3,7 @@ export type BomberMazeAction =
     | { readonly kind: 'move'; readonly direction: BomberMazeDirection }
     | { readonly kind: 'bomb' };
 export type BomberMazePhase = 'playing' | 'won' | 'lost';
-export type BomberMazeDisplayPhase = BomberMazePhase | 'paused';
+export type BomberMazeDisplayPhase = BomberMazePhase | 'paused' | 'respawning';
 export type BomberMazeControllerMode = 'human' | 'autopilot';
 export type BomberMazeCellKind = 'floor' | 'hard-wall' | 'soft-wall';
 export type BomberMazePowerupKind = 'range' | 'capacity';
