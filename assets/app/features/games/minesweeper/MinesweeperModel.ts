@@ -137,6 +137,9 @@ export class MinesweeperModel {
         if (cell.state === 'revealed') {
             return false;
         }
+        if (cell.state === 'hidden' && this.remainingMines <= 0) {
+            return false;
+        }
         cell.state = cell.state === 'flagged' ? 'hidden' : 'flagged';
         return true;
     }

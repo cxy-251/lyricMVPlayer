@@ -59,16 +59,19 @@ export class TowerDefenseView {
         this.hintLabel = null;
 
         const compact = viewport.breakpoint === 'compact';
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const safeWidth = Math.max(
+            2,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
         const safeTop = viewport.height / 2 - viewport.safeInsets.top;
         const safeBottom = -viewport.height / 2 + viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = safeTop - (compact ? 64 : 72);
-        const contentBottom = safeBottom + (compact ? 104 : 116);
+        const contentBottom = safeBottom + (compact ? 142 : 116);
         const hudHeight = compact ? 72 : 82;
-        const boardAreaHeight = Math.max(120, contentTop - contentBottom - hudHeight);
-        const cellSize = Math.max(10, Math.floor(Math.min(
-            (safeWidth - (compact ? 18 : 36)) / 12,
+        const boardAreaHeight = Math.max(1, contentTop - contentBottom - hudHeight);
+        const cellSize = Math.max(1, Math.floor(Math.min(
+            Math.max(1, safeWidth - (compact ? 18 : 36)) / 12,
             boardAreaHeight / 8,
         )));
         const boardWidth = cellSize * 12;
@@ -88,7 +91,7 @@ export class TowerDefenseView {
         this.statusLabel = createLabel(
             this.root,
             '',
-            Math.min(safeWidth - 24, 620),
+            Math.max(1, Math.min(safeWidth - 24, 620)),
             compact ? 22 : 28,
             compact ? 13 : 16,
             palette.text,
@@ -99,7 +102,7 @@ export class TowerDefenseView {
         this.statsLabel = createLabel(
             this.root,
             '',
-            Math.min(safeWidth - 24, 720),
+            Math.max(1, Math.min(safeWidth - 24, 720)),
             compact ? 18 : 22,
             compact ? 9 : 11,
             palette.muted,
@@ -109,7 +112,7 @@ export class TowerDefenseView {
         this.hintLabel = createLabel(
             this.root,
             '',
-            Math.min(safeWidth - 24, 760),
+            Math.max(1, Math.min(safeWidth - 24, 760)),
             compact ? 18 : 22,
             compact ? 9 : 10,
             palette.muted,
@@ -127,11 +130,19 @@ export class TowerDefenseView {
         );
         this.graphics = boardNode.addComponent(Graphics);
 
-        const controlsY = safeBottom + (compact ? 72 : 82);
-        const gap = compact ? 5 : 8;
-        const buttonWidth = Math.max(54, Math.min(compact ? 70 : 84, (safeWidth - gap * 5 - 24) / 6));
-        const totalWidth = buttonWidth * 6 + gap * 5;
+        const columns = compact ? 3 : 6;
+        const gap = compact ? 6 : 8;
+        const buttonWidth = Math.max(
+            44,
+            Math.min(
+                compact ? 92 : 84,
+                (safeWidth - gap * (columns - 1) - 24) / columns,
+            ),
+        );
+        const totalWidth = buttonWidth * columns + gap * (columns - 1);
         const startX = centerX - totalWidth / 2 + buttonWidth / 2;
+        const controlsY = safeBottom + (compact ? 83 : 82);
+        const rowGap = compact ? 40 : 0;
         const buttonSpecs: Array<{
             name: string;
             text: string;
@@ -176,13 +187,15 @@ export class TowerDefenseView {
             },
         ];
         buttonSpecs.forEach((spec, index) => {
+            const row = compact ? Math.floor(index / columns) : 0;
+            const column = compact ? index % columns : index;
             createButton(this.root, {
                 name: spec.name,
                 text: spec.text,
                 width: buttonWidth,
                 height: compact ? 34 : 38,
-                x: startX + index * (buttonWidth + gap),
-                y: controlsY,
+                x: startX + column * (buttonWidth + gap),
+                y: controlsY - row * rowGap,
                 fontSize: compact ? 9 : 10,
                 variant: spec.variant,
                 onPress: spec.onPress,

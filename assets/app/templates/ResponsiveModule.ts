@@ -6,6 +6,9 @@ import type {
 import type { ViewportSnapshot } from '../services/ViewportService';
 import { createUiNode, resizeNode } from '../ui/UiFactory';
 
+const MINIMUM_LAYOUT_WIDTH = 320;
+const MINIMUM_LAYOUT_HEIGHT = 480;
+
 export abstract class ResponsiveModule implements InteractiveModule {
     protected context: ModuleContext | null = null;
     protected root: Node | null = null;
@@ -38,8 +41,10 @@ export abstract class ResponsiveModule implements InteractiveModule {
                         return;
                     }
 
+                    this.root.setScale(1, 1, 1);
                     resizeNode(this.root, snapshot.width, snapshot.height);
                     this.render(snapshot);
+                    this.applyViewportScale(snapshot);
                 } catch (error) {
                     if (initializing) {
                         throw error;
@@ -87,4 +92,24 @@ export abstract class ResponsiveModule implements InteractiveModule {
     protected onUnmount(): void | Promise<void> {}
 
     protected abstract render(viewport: ViewportSnapshot): void;
+
+    private applyViewportScale(viewport: ViewportSnapshot): void {
+        if (!this.root) {
+            return;
+        }
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
+        const safeHeight = Math.max(
+            1,
+            viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom,
+        );
+        const scale = Math.min(
+            1,
+            safeWidth / MINIMUM_LAYOUT_WIDTH,
+            safeHeight / MINIMUM_LAYOUT_HEIGHT,
+        );
+        this.root.setScale(scale, scale, 1);
+    }
 }

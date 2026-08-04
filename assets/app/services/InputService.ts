@@ -58,11 +58,8 @@ export class InputService {
             case KeyCode.ESCAPE:
                 this.emit('back');
                 break;
-            case KeyCode.SPACE:
+            case KeyCode.KEY_P:
                 this.emit('toggle-pause');
-                break;
-            case KeyCode.KEY_R:
-                this.emit('reset');
                 break;
             default:
                 break;

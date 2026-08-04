@@ -61,20 +61,23 @@ export class Game2048View {
         this.hintLabel = null;
 
         const compact = viewport.breakpoint === 'compact';
-        const safeWidth = viewport.width - viewport.safeInsets.left - viewport.safeInsets.right;
+        const safeWidth = Math.max(
+            2,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
         const safeTop = viewport.height / 2 - viewport.safeInsets.top;
         const safeBottom = -viewport.height / 2 + viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = safeTop - (compact ? 64 : 72);
         const hudHeight = compact ? 66 : 78;
-        const controlsHeight = compact ? 100 : 112;
-        const footerHeight = compact ? 24 : 30;
-        const available = Math.min(
+        const controlsHeight = compact ? 116 : 130;
+        const footerHeight = compact ? 40 : 46;
+        const available = Math.max(1, Math.min(
             safeWidth - (compact ? 22 : 48),
             contentTop - safeBottom - hudHeight - controlsHeight - footerHeight,
             compact ? 450 : 560,
-        );
-        this.cellSize = Math.max(34, Math.floor(available / 4));
+        ));
+        this.cellSize = Math.max(1, Math.floor(available / 4));
         this.boardSize = this.cellSize * 4;
         const boardTop = contentTop - hudHeight;
         const boardBottom = boardTop - this.boardSize;
@@ -102,7 +105,7 @@ export class Game2048View {
             boardCenterY,
         );
         this.graphics = board.addComponent(Graphics);
-        const labelFont = Math.max(13, Math.floor(this.cellSize * 0.25));
+        const labelFont = Math.max(8, Math.floor(this.cellSize * 0.25));
         for (let row = 0; row < 4; row += 1) {
             for (let column = 0; column < 4; column += 1) {
                 const labelNode = createLabel(
@@ -123,19 +126,26 @@ export class Game2048View {
             }
         }
 
-        const controlsY = boardBottom - (compact ? 51 : 57);
-        const size = compact ? 38 : 44;
-        const gap = compact ? 42 : 49;
+        const controlsY = boardBottom - (compact ? 68 : 74);
+        const size = Math.max(
+            32,
+            Math.min(compact ? 38 : 44, (safeWidth - 24) / 3),
+        );
+        const gap = compact ? 46 : 50;
         this.createDirectionButtons(centerX, controlsY, size, gap, compact);
         createButton(this.root, {
-            name: 'Game2048Restart', text: 'NEW', width: compact ? 66 : 76,
-            height: size, x: centerX + gap * 2.15, y: controlsY,
-            fontSize: compact ? 10 : 11, variant: 'secondary',
+            name: 'Game2048Restart', text: 'NEW',
+            width: Math.max(size, Math.min(compact ? 66 : 76, safeWidth - 24)),
+            height: size,
+            x: centerX,
+            y: controlsY - gap,
+            fontSize: compact ? 10 : 11,
+            variant: 'secondary',
             onPress: () => this.actions.restart(),
         });
 
         const hintNode = createLabel(
-            this.root, '', Math.min(safeWidth - 20, 620),
+            this.root, '', Math.max(1, Math.min(safeWidth - 20, 620)),
             compact ? 18 : 22, compact ? 9 : 10,
             palette.muted, centerX, safeBottom + (compact ? 13 : 16),
         );
@@ -155,7 +165,7 @@ export class Game2048View {
             this.boardSize,
             this.boardSize,
         );
-        const inset = Math.max(3, this.cellSize * 0.045);
+        const inset = Math.max(1, this.cellSize * 0.045);
         for (let row = 0; row < 4; row += 1) {
             for (let column = 0; column < 4; column += 1) {
                 const value = state.board[row][column];
@@ -167,14 +177,14 @@ export class Game2048View {
                 graphics.fillRect(
                     x,
                     y,
-                    this.cellSize - inset * 2,
-                    this.cellSize - inset * 2,
+                    Math.max(0, this.cellSize - inset * 2),
+                    Math.max(0, this.cellSize - inset * 2),
                 );
                 const label = this.tileLabels[row * 4 + column];
                 if (label) {
                     label.string = value > 0 ? `${value}` : '';
                     label.fontSize = Math.max(
-                        10,
+                        8,
                         Math.floor(this.cellSize * (value >= 1024 ? 0.2 : 0.25)),
                     );
                 }
