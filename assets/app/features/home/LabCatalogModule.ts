@@ -1,4 +1,8 @@
-import { Node } from 'cc';
+import {
+    Mask,
+    Node,
+    ScrollView,
+} from 'cc';
 import type {
     InteractiveModule,
     LabId,
@@ -17,12 +21,6 @@ import {
     palette,
 } from '../../ui/UiFactory';
 import { createCatalogCard } from './CatalogCard';
-
-interface WaterfallPlacement {
-    readonly definition: VisibleModuleDefinition;
-    readonly column: number;
-    readonly height: number;
-}
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -100,7 +98,7 @@ export class LabCatalogModule implements InteractiveModule {
 
         if (this.labId === 'games' && modules.length > 1) {
             this.page = 0;
-            this.renderWaterfall(
+            this.renderScrollableGrid(
                 root,
                 viewport,
                 modules,
@@ -127,7 +125,7 @@ export class LabCatalogModule implements InteractiveModule {
         );
     }
 
-    private renderWaterfall(
+    private renderScrollableGrid(
         root: Node,
         viewport: ViewportSnapshot,
         modules: readonly VisibleModuleDefinition[],
@@ -138,94 +136,100 @@ export class LabCatalogModule implements InteractiveModule {
         contentBottom: number,
         contentWidth: number,
     ): void {
-        const availableHeight = Math.max(1, contentTop - contentBottom);
-        const baseGap = compact ? 10 : 18;
+        const viewportHeight = Math.max(1, contentTop - contentBottom);
+        const gap = compact ? 12 : 20;
         const desiredColumns = compact
-            ? contentWidth >= 300 ? 2 : 1
+            ? contentWidth >= 560 ? 2 : 1
             : viewport.breakpoint === 'wide'
-                ? Math.min(3, modules.length)
-                : Math.min(2, modules.length);
-        const minimumCardWidth = compact ? 132 : 238;
+                ? 3
+                : 2;
+        const minimumCardWidth = compact ? 220 : 260;
         const capacity = Math.max(
             1,
-            Math.floor((contentWidth + baseGap) / (minimumCardWidth + baseGap)),
+            Math.floor((contentWidth + gap) / (minimumCardWidth + gap)),
         );
         const columns = Math.max(
             1,
             Math.min(desiredColumns, capacity, modules.length),
         );
+        const maximumCardWidth = compact ? 420 : 380;
         const cardWidth = Math.max(
             1,
-            (contentWidth - baseGap * (columns - 1)) / columns,
+            Math.min(
+                maximumCardWidth,
+                (contentWidth - gap * (columns - 1)) / columns,
+            ),
         );
-        const rawHeights = modules.map((definition) => {
-            const ratio = this.waterfallRatio(definition.id);
-            return Math.max(
-                compact ? 132 : 190,
-                Math.min(
-                    compact ? 250 : 390,
-                    cardWidth * ratio,
-                ),
-            );
-        });
+        const cardHeight = Math.max(
+            compact ? 230 : 260,
+            Math.min(compact ? 350 : 360, cardWidth * 0.96),
+        );
+        const rows = Math.max(1, Math.ceil(modules.length / columns));
+        const verticalPadding = compact ? 10 : 14;
+        const contentHeight = Math.max(
+            viewportHeight,
+            verticalPadding * 2
+                + rows * cardHeight
+                + Math.max(0, rows - 1) * gap,
+        );
+        const gridWidth = columns * cardWidth + gap * (columns - 1);
+        const startX = -gridWidth / 2 + cardWidth / 2;
+        const startY = contentHeight / 2 - verticalPadding - cardHeight / 2;
+        const scrollCenterY = (contentTop + contentBottom) / 2;
 
-        const rawColumnHeights = new Array<number>(columns).fill(0);
-        for (const height of rawHeights) {
-            const column = this.shortestColumn(rawColumnHeights);
-            rawColumnHeights[column] += (
-                rawColumnHeights[column] > 0 ? baseGap : 0
-            ) + height;
-        }
-        const tallestRawColumn = Math.max(...rawColumnHeights, 1);
-        const scale = Math.min(1, availableHeight / tallestRawColumn);
-        const gap = Math.max(4, baseGap * scale);
-        const scaledHeights = rawHeights.map((height) => Math.max(84, height * scale));
-        const placements: WaterfallPlacement[] = [];
-        const columnHeights = new Array<number>(columns).fill(0);
+        const scrollRoot = createUiNode(
+            root,
+            'GamesCatalogScroll',
+            contentWidth,
+            viewportHeight,
+            centerX,
+            scrollCenterY,
+        );
+        const view = createUiNode(
+            scrollRoot,
+            'View',
+            contentWidth,
+            viewportHeight,
+        );
+        const mask = view.addComponent(Mask);
+        mask.type = Mask.Type.RECT;
+        const content = createUiNode(
+            view,
+            'Content',
+            contentWidth,
+            contentHeight,
+            0,
+            (viewportHeight - contentHeight) / 2,
+        );
 
         for (let index = 0; index < modules.length; index += 1) {
-            const column = this.shortestColumn(columnHeights);
-            const height = scaledHeights[index];
-            placements.push({
-                definition: modules[index],
-                column,
-                height,
-            });
-            columnHeights[column] += (
-                columnHeights[column] > 0 ? gap : 0
-            ) + height;
-        }
-
-        const waterfallWidth = columns * cardWidth + gap * (columns - 1);
-        const startX = centerX - waterfallWidth / 2 + cardWidth / 2;
-        const consumedHeights = new Array<number>(columns).fill(0);
-
-        for (const placement of placements) {
-            const { definition, column, height } = placement;
-            const previousHeight = consumedHeights[column];
-            const y = contentTop
-                - previousHeight
-                - (previousHeight > 0 ? gap : 0)
-                - height / 2;
-            consumedHeights[column] = previousHeight
-                + (previousHeight > 0 ? gap : 0)
-                + height;
-
-            createCatalogCard(root, {
+            const definition = modules[index];
+            const row = Math.floor(index / columns);
+            const column = index % columns;
+            createCatalogCard(content, {
                 name: `ModuleCard:${definition.id}`,
                 title: definition.title,
                 subtitle: definition.catalog.subtitle,
                 cover: definition.catalog.cover ?? fallbackCover,
                 width: cardWidth,
-                height,
+                height: cardHeight,
                 x: startX + column * (cardWidth + gap),
-                y,
+                y: startY - row * (cardHeight + gap),
                 directOpen: compact,
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
             });
         }
+
+        const scrollView = scrollRoot.addComponent(ScrollView);
+        scrollView.content = content;
+        scrollView.horizontal = false;
+        scrollView.vertical = contentHeight > viewportHeight + 1;
+        scrollView.inertia = true;
+        scrollView.brake = 0.72;
+        scrollView.elastic = false;
+        scrollView.cancelInnerEvents = true;
     }
 
     private renderPagedGrid(
@@ -304,25 +308,6 @@ export class LabCatalogModule implements InteractiveModule {
         if (pageCount > 1) {
             this.renderPager(root, viewport, centerX, pageCount);
         }
-    }
-
-    private waterfallRatio(moduleId: string): number {
-        const ratios = [0.86, 1.04, 1.2, 0.94, 1.12, 0.9, 1.16] as const;
-        let hash = 0;
-        for (let index = 0; index < moduleId.length; index += 1) {
-            hash = (hash * 31 + moduleId.charCodeAt(index)) >>> 0;
-        }
-        return ratios[hash % ratios.length];
-    }
-
-    private shortestColumn(heights: readonly number[]): number {
-        let bestIndex = 0;
-        for (let index = 1; index < heights.length; index += 1) {
-            if (heights[index] < heights[bestIndex]) {
-                bestIndex = index;
-            }
-        }
-        return bestIndex;
     }
 
     private renderPager(
