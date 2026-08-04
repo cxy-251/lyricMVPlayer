@@ -3,6 +3,7 @@ import { blockStackerDefinition } from './block-stacker';
 import { brickBreakerDefinition } from './brick-breaker';
 import { cursorSpaceDefinition } from './cursor-space';
 import { minesweeperDefinition } from './minesweeper';
+import { sokobanDefinition } from './sokoban';
 import { tetrisDefinition } from './tetris';
 
 export const gamesLab: LabManifest = {
@@ -19,5 +20,6 @@ export const gamesLab: LabManifest = {
         blockStackerDefinition,
         brickBreakerDefinition,
         tetrisDefinition,
+        sokobanDefinition,
     ],
 };
