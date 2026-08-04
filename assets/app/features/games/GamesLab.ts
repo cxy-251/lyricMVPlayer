@@ -1,4 +1,5 @@
 import type { LabManifest } from '../../contracts/InteractiveModule';
+import { blockStackerDefinition } from './block-stacker';
 import { cursorSpaceDefinition } from './cursor-space';
 import { minesweeperDefinition } from './minesweeper';
 
@@ -13,5 +14,6 @@ export const gamesLab: LabManifest = {
     modules: [
         cursorSpaceDefinition,
         minesweeperDefinition,
+        blockStackerDefinition,
     ],
 };

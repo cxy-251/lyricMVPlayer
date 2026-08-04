@@ -47,6 +47,7 @@ export class MinesweeperView {
     private modeLabel: Label | null = null;
     private boardLayout: MinesweeperBoardLayout | null = null;
     private cellSize = 0;
+    private compactLayout = false;
 
     constructor(
         private readonly root: Node,
@@ -68,6 +69,7 @@ export class MinesweeperView {
         this.modeLabel = null;
 
         const compact = viewport.breakpoint === 'compact';
+        this.compactLayout = compact;
         const safeWidth = Math.max(
             2,
             viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
@@ -78,22 +80,25 @@ export class MinesweeperView {
         );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const safeCenterY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2;
-        const headerHeight = compact ? 118 : 132;
+        const topBandHeight = compact ? 108 : 122;
+        const bottomBandHeight = compact ? 38 : 46;
+        const horizontalPadding = compact ? 18 : 34;
         const maximumBoard = compact ? 520 : 640;
         const availableBoard = Math.min(
-            safeWidth - (compact ? 18 : 36),
-            safeHeight - headerHeight - (compact ? 14 : 28),
+            safeWidth - horizontalPadding,
+            safeHeight - topBandHeight - bottomBandHeight,
             maximumBoard,
         );
         const cellSize = Math.max(
-            18,
-            Math.floor(availableBoard / Math.max(this.rows, this.columns)),
+            12,
+            Math.floor(Math.max(1, availableBoard) / Math.max(this.rows, this.columns)),
         );
         const boardWidth = cellSize * this.columns;
         const boardHeight = cellSize * this.rows;
-        const boardCenterY = safeCenterY - headerHeight * 0.28;
+        const boardCenterY = safeCenterY + (bottomBandHeight - topBandHeight) / 2;
         const boardLeft = centerX - boardWidth / 2;
         const boardBottom = boardCenterY - boardHeight / 2;
+        const boardTop = boardBottom + boardHeight;
         this.cellSize = cellSize;
         this.boardLayout = {
             left: boardLeft,
@@ -104,16 +109,16 @@ export class MinesweeperView {
         };
         this.inputController.setBoardLayout(this.boardLayout, this.rows, this.columns);
 
-        const titleY = boardBottom + boardHeight + (compact ? 78 : 88);
+        const statusY = boardTop + (compact ? 75 : 84);
         const statusNode = createLabel(
             this.root,
             '',
-            Math.min(safeWidth - 20, 680),
-            compact ? 30 : 34,
-            compact ? 15 : 17,
+            Math.min(safeWidth - 20, 650),
+            compact ? 24 : 28,
+            compact ? 13 : 15,
             palette.text,
             centerX,
-            titleY,
+            statusY,
             HorizontalTextAlignment.CENTER,
         );
         this.statusLabel = statusNode.getComponent(Label);
@@ -121,39 +126,46 @@ export class MinesweeperView {
             this.statusLabel.enableWrapText = false;
         }
 
+        const controlsY = boardTop + (compact ? 38 : 44);
+        const buttonWidth = compact ? 76 : 90;
+        const buttonGap = compact ? 45 : 54;
         createButton(this.root, {
             name: 'MinesweeperNewButton',
             text: 'NEW',
-            width: compact ? 82 : 94,
-            height: 40,
-            x: centerX - (compact ? 52 : 60),
-            y: titleY - 42,
-            fontSize: 14,
+            width: buttonWidth,
+            height: compact ? 34 : 38,
+            x: centerX - buttonGap,
+            y: controlsY,
+            fontSize: compact ? 12 : 13,
             variant: 'secondary',
             onPress: () => this.actions.restart(),
         });
         createButton(this.root, {
             name: 'MinesweeperFlagButton',
             text: 'FLAG',
-            width: compact ? 82 : 94,
-            height: 40,
-            x: centerX + (compact ? 52 : 60),
-            y: titleY - 42,
-            fontSize: 14,
+            width: buttonWidth,
+            height: compact ? 34 : 38,
+            x: centerX + buttonGap,
+            y: controlsY,
+            fontSize: compact ? 12 : 13,
             variant: 'secondary',
             onPress: () => this.actions.toggleFlagMode(),
         });
+
         const modeNode = createLabel(
             this.root,
             '',
-            Math.min(safeWidth - 20, 520),
-            24,
-            compact ? 11 : 12,
+            Math.min(safeWidth - 24, 560),
+            compact ? 18 : 22,
+            compact ? 10 : 11,
             palette.muted,
             centerX,
-            boardBottom - 20,
+            boardBottom - (compact ? 22 : 26),
         );
         this.modeLabel = modeNode.getComponent(Label);
+        if (this.modeLabel) {
+            this.modeLabel.enableWrapText = false;
+        }
 
         const board = createUiNode(
             this.root,
@@ -166,7 +178,7 @@ export class MinesweeperView {
         this.boardNode = board;
         this.boardGraphics = board.addComponent(Graphics);
 
-        const fontSize = Math.max(12, Math.floor(cellSize * 0.5));
+        const fontSize = Math.max(10, Math.floor(cellSize * 0.5));
         for (let row = 0; row < this.rows; row += 1) {
             for (let column = 0; column < this.columns; column += 1) {
                 const labelNode = createLabel(
@@ -203,10 +215,16 @@ export class MinesweeperView {
         }
         if (this.modeLabel) {
             const controller = state.controller === 'autopilot'
-                ? 'AI IS PLAYING — TOUCH OR PRESS A KEY TO TAKE OVER'
+                ? this.compactLayout
+                    ? 'AI ACTIVE — TAP TO TAKE OVER'
+                    : 'AI IS PLAYING — TOUCH OR PRESS A KEY TO TAKE OVER'
                 : state.flagMode
-                    ? 'FLAG MODE — TAP A CELL TO MARK IT'
-                    : 'REVEAL MODE — LONG PRESS OR RIGHT CLICK TO FLAG';
+                    ? this.compactLayout
+                        ? 'FLAG MODE — TAP TO MARK'
+                        : 'FLAG MODE — TAP A CELL TO MARK IT'
+                    : this.compactLayout
+                        ? 'TAP TO REVEAL — HOLD TO FLAG'
+                        : 'REVEAL MODE — LONG PRESS OR RIGHT CLICK TO FLAG';
             this.modeLabel.string = controller;
             this.modeLabel.color = state.flagMode ? palette.warning : palette.muted;
         }

@@ -9,7 +9,7 @@ export const minesweeperDefinition: VisibleModuleDefinition = {
     labId: 'games',
     catalog: {
         subtitle: 'deduction grid with seamless AI takeover',
-        cover: 'games',
+        cover: 'minesweeper',
     },
     tags: ['classic', 'logic', 'hybrid-control', 'procedural'],
     capabilities: ['pause', 'reset'],
