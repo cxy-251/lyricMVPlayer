@@ -7,6 +7,7 @@ import type {
     TowerDefenseSlotState,
     TowerDefenseTowerKind,
     TowerDefenseTowerState,
+    TowerDefenseWaveTrait,
 } from './TowerDefenseTypes';
 
 const WIDTH = 12;
@@ -18,7 +19,7 @@ const BUILD_COUNTDOWN = 4;
 const MAX_TOWER_LEVEL = 3;
 const SHOT_DURATION = 0.15;
 
-const PATH: readonly TowerDefensePoint[] = [
+const BASE_PATH: readonly TowerDefensePoint[] = [
     { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 },
     { x: 3, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 3 }, { x: 5, y: 3 },
     { x: 6, y: 3 }, { x: 6, y: 2 }, { x: 6, y: 1 }, { x: 7, y: 1 },
@@ -30,7 +31,7 @@ const PATH: readonly TowerDefensePoint[] = [
     { x: 9, y: 6 }, { x: 10, y: 6 }, { x: 11, y: 6 },
 ];
 
-const SLOT_POINTS: readonly TowerDefensePoint[] = [
+const BASE_SLOT_POINTS: readonly TowerDefensePoint[] = [
     { x: 1, y: 0 },
     { x: 2, y: 2 },
     { x: 4, y: 1 },
@@ -43,6 +44,26 @@ const SLOT_POINTS: readonly TowerDefensePoint[] = [
     { x: 6, y: 5 },
     { x: 4, y: 5 },
     { x: 1, y: 5 },
+];
+
+interface LayoutDefinition {
+    readonly name: string;
+    readonly mirrorX: boolean;
+    readonly mirrorY: boolean;
+}
+
+const LAYOUTS: readonly LayoutDefinition[] = [
+    { name: 'LOW SWITCHBACK', mirrorX: false, mirrorY: false },
+    { name: 'REVERSE LOW', mirrorX: true, mirrorY: false },
+    { name: 'HIGH SWITCHBACK', mirrorX: false, mirrorY: true },
+    { name: 'REVERSE HIGH', mirrorX: true, mirrorY: true },
+];
+
+const WAVE_TRAITS: readonly TowerDefenseWaveTrait[] = [
+    'balanced',
+    'swarm',
+    'armored',
+    'rush',
 ];
 
 interface MutableTower {
@@ -81,6 +102,9 @@ export class TowerDefenseModel {
     private slots: MutableSlot[] = [];
     private enemies: MutableEnemy[] = [];
     private shots: MutableShot[] = [];
+    private currentPath: TowerDefensePoint[] = BASE_PATH.map((point) => ({ ...point }));
+    private currentRouteName = LAYOUTS[0].name;
+    private layoutIndex = -1;
     private currentGold = START_GOLD;
     private currentLives = START_LIVES;
     private currentScore = 0;
@@ -91,6 +115,8 @@ export class TowerDefenseModel {
     private spawnElapsed = 0;
     private buildElapsed = BUILD_COUNTDOWN;
     private nextEnemyId = 1;
+    private waveStartLives = START_LIVES;
+    private lastPerfectBonus = 0;
 
     constructor() {
         this.reset();
@@ -101,12 +127,7 @@ export class TowerDefenseModel {
     }
 
     reset(): void {
-        this.slots = SLOT_POINTS.map((point, id): MutableSlot => ({
-            id,
-            x: point.x,
-            y: point.y,
-            tower: null,
-        }));
+        this.selectNextLayout();
         this.enemies = [];
         this.shots = [];
         this.currentGold = START_GOLD;
@@ -119,6 +140,8 @@ export class TowerDefenseModel {
         this.spawnElapsed = 0;
         this.buildElapsed = BUILD_COUNTDOWN;
         this.nextEnemyId = 1;
+        this.waveStartLives = START_LIVES;
+        this.lastPerfectBonus = 0;
     }
 
     perform(action: TowerDefenseAction): boolean {
@@ -187,7 +210,10 @@ export class TowerDefenseModel {
         return {
             width: WIDTH,
             height: HEIGHT,
-            path: PATH.map((point) => ({ ...point })),
+            routeName: this.currentRouteName,
+            waveTrait: this.waveTrait(this.currentWave),
+            perfectBonus: this.lastPerfectBonus,
+            path: this.currentPath.map((point) => ({ ...point })),
             slots: this.slots.map((slot): TowerDefenseSlotState => ({
                 id: slot.id,
                 x: slot.x,
@@ -221,6 +247,28 @@ export class TowerDefenseModel {
         const base = kind === 'dart' ? 1.9 : 2.2;
         const growth = kind === 'dart' ? 0.28 : 0.32;
         return base + (level - 1) * growth;
+    }
+
+    private selectNextLayout(): void {
+        this.layoutIndex = (this.layoutIndex + 1) % LAYOUTS.length;
+        const layout = LAYOUTS[this.layoutIndex];
+        this.currentRouteName = layout.name;
+        this.currentPath = BASE_PATH.map((point) => this.transformPoint(point, layout));
+        this.slots = BASE_SLOT_POINTS.map((point, id): MutableSlot => ({
+            ...this.transformPoint(point, layout),
+            id,
+            tower: null,
+        }));
+    }
+
+    private transformPoint(
+        point: TowerDefensePoint,
+        layout: LayoutDefinition,
+    ): TowerDefensePoint {
+        return {
+            x: layout.mirrorX ? WIDTH - 1 - point.x : point.x,
+            y: layout.mirrorY ? HEIGHT - 1 - point.y : point.y,
+        };
     }
 
     private build(slotId: number, kind: TowerDefenseTowerKind): boolean {
@@ -262,6 +310,8 @@ export class TowerDefenseModel {
         this.waveEnemyCount = this.waveSize(this.currentWave);
         this.spawnElapsed = this.spawnInterval();
         this.buildElapsed = 0;
+        this.waveStartLives = this.currentLives;
+        this.lastPerfectBonus = 0;
         return true;
     }
 
@@ -291,19 +341,41 @@ export class TowerDefenseModel {
         const heavy = this.currentWave >= 3 && index % 5 === 4;
         const swift = this.currentWave >= 2 && index % 4 === 2;
         const baseHp = 105 + this.currentWave * 40;
-        const hp = heavy ? baseHp * 1.9 : swift ? baseHp * 0.88 : baseHp;
-        const speed = heavy
+        let hp = heavy ? baseHp * 1.9 : swift ? baseHp * 0.88 : baseHp;
+        let speed = heavy
             ? 0.62 + this.currentWave * 0.025
             : swift
                 ? 1.08 + this.currentWave * 0.035
                 : 0.82 + this.currentWave * 0.03;
+        let reward = heavy ? 26 : swift ? 16 : 19;
+
+        switch (this.waveTrait(this.currentWave)) {
+            case 'swarm':
+                hp *= 0.72;
+                speed *= 1.08;
+                reward *= 0.75;
+                break;
+            case 'armored':
+                hp *= 1.42;
+                speed *= 0.88;
+                reward *= 1.28;
+                break;
+            case 'rush':
+                hp *= 0.86;
+                speed *= 1.3;
+                reward *= 1.08;
+                break;
+            case 'balanced':
+                break;
+        }
+
         this.enemies.push({
             id: this.nextEnemyId,
             progress: 0,
             hp,
             maxHp: hp,
             speed,
-            reward: heavy ? 26 : swift ? 16 : 19,
+            reward: Math.max(1, Math.round(reward)),
         });
         this.nextEnemyId += 1;
         this.spawnedCount += 1;
@@ -314,7 +386,7 @@ export class TowerDefenseModel {
             return false;
         }
         let changed = false;
-        const endProgress = PATH.length - 1;
+        const endProgress = this.currentPath.length - 1;
         const survivors: MutableEnemy[] = [];
         for (const enemy of this.enemies) {
             enemy.progress += enemy.speed * dt;
@@ -414,6 +486,14 @@ export class TowerDefenseModel {
     }
 
     private finishWave(): void {
+        if (this.currentLives === this.waveStartLives) {
+            this.lastPerfectBonus = 20 + this.currentWave * 8;
+            this.currentGold += this.lastPerfectBonus;
+            this.currentScore += this.lastPerfectBonus * 20;
+        } else {
+            this.lastPerfectBonus = 0;
+        }
+
         if (this.currentWave >= MAX_WAVES) {
             this.currentPhase = 'won';
             this.shots = [];
@@ -428,12 +508,37 @@ export class TowerDefenseModel {
         this.currentGold += 35 + this.currentWave * 5;
     }
 
+    private waveTrait(wave: number): TowerDefenseWaveTrait {
+        const index = (wave - 1 + this.layoutIndex) % WAVE_TRAITS.length;
+        return WAVE_TRAITS[index];
+    }
+
     private waveSize(wave: number): number {
-        return 6 + wave * 2;
+        const base = 6 + wave * 2;
+        switch (this.waveTrait(wave)) {
+            case 'swarm':
+                return Math.ceil(base * 1.35);
+            case 'armored':
+                return Math.max(4, Math.ceil(base * 0.75));
+            case 'rush':
+                return Math.ceil(base * 1.1);
+            case 'balanced':
+                return base;
+        }
     }
 
     private spawnInterval(): number {
-        return Math.max(0.38, 0.82 - this.currentWave * 0.045);
+        const base = Math.max(0.38, 0.82 - this.currentWave * 0.045);
+        switch (this.waveTrait(this.currentWave)) {
+            case 'swarm':
+                return Math.max(0.24, base * 0.68);
+            case 'armored':
+                return base * 1.12;
+            case 'rush':
+                return Math.max(0.28, base * 0.78);
+            case 'balanced':
+                return base;
+        }
     }
 
     private fireInterval(tower: MutableTower): number {
@@ -444,12 +549,12 @@ export class TowerDefenseModel {
     }
 
     private positionAt(progress: number): TowerDefensePoint {
-        const maxIndex = PATH.length - 1;
+        const maxIndex = this.currentPath.length - 1;
         const clamped = Math.max(0, Math.min(maxIndex, progress));
         const index = Math.min(maxIndex - 1, Math.floor(clamped));
         const local = clamped - index;
-        const first = PATH[index];
-        const second = PATH[Math.min(maxIndex, index + 1)];
+        const first = this.currentPath[index];
+        const second = this.currentPath[Math.min(maxIndex, index + 1)];
         return {
             x: first.x + (second.x - first.x) * local,
             y: first.y + (second.y - first.y) * local,

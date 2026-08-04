@@ -124,9 +124,9 @@ export class BomberMazeViewModel {
                 ? 'respawning'
                 : observation.phase;
         const status = phase === 'won'
-            ? 'MAZE CLEARED'
+            ? `MAZE ${observation.round} CLEARED`
             : phase === 'lost'
-                ? 'RUN ENDED'
+                ? `RUN ENDED · ROUND ${observation.round}`
                 : phase === 'respawning'
                     ? 'LIFE LOST'
                     : phase === 'paused'
@@ -134,8 +134,8 @@ export class BomberMazeViewModel {
                         : controller === 'autopilot'
                             ? hazardActive
                                 ? 'AI HOLDING SAFE POSITION'
-                                : 'AI PLANNING ESCAPES'
-                            : 'HUMAN';
+                                : `AI CLEARING MAZE ${observation.round}`
+                            : `HUMAN · MAZE ${observation.round}`;
         return {
             ...observation,
             phase,
@@ -143,22 +143,28 @@ export class BomberMazeViewModel {
             score: this.model.score,
             lives: this.model.lives,
             status,
-            stats: `SCORE ${this.model.score}`
+            stats: `ROUND ${observation.round}`
+                + `   BEST ${this.model.bestRound}`
+                + `   SCORE ${this.model.score}`
                 + `   LIVES ${this.model.lives}`
-                + `   ENEMIES ${observation.enemies.length}`
-                + `   BOMBS ${observation.activeBombs}/${observation.bombCapacity}`
+                + `   EN ${observation.enemies.length}`
+                + `   BOMB ${observation.activeBombs}/${observation.bombCapacity}`
                 + `   RANGE ${observation.blastRange}`,
             hint: phase === 'respawning'
                 ? 'RESPAWNING...'
-                : phase === 'won' || phase === 'lost'
+                : phase === 'won'
                     ? controller === 'autopilot'
-                        ? 'AI WILL START A NEW MAZE'
-                        : 'MOVE, BOMB OR PRESS NEW'
-                    : controller === 'autopilot'
-                        ? hazardActive
-                            ? 'AI WAITS OUTSIDE THE BLAST AREA'
-                            : 'AI ACTIVE — MOVE OR DROP A BOMB TO TAKE OVER'
-                        : 'ARROWS / WASD / SWIPE   F OR B TO BOMB',
+                        ? 'NEXT MAZE KEEPS POWERUPS'
+                        : 'MOVE OR BOMB FOR NEXT MAZE · NEW RESTARTS RUN'
+                    : phase === 'lost'
+                        ? controller === 'autopilot'
+                            ? 'AI WILL START A NEW RUN'
+                            : 'MOVE, BOMB OR NEW TO START A RUN'
+                        : controller === 'autopilot'
+                            ? hazardActive
+                                ? 'AI WAITS OUTSIDE THE BLAST AREA'
+                                : 'AI ACTIVE — MOVE OR DROP A BOMB TO TAKE OVER'
+                            : 'ARROWS / WASD / SWIPE   F OR B TO BOMB',
             invulnerable: this.model.invulnerable,
         };
     }
@@ -172,7 +178,11 @@ export class BomberMazeViewModel {
         }
 
         if (this.session.shouldRestartTerminal(dt)) {
-            this.model.reset();
+            if (this.model.phase === 'won') {
+                this.model.advanceRound();
+            } else {
+                this.model.reset();
+            }
             this.session.resetTerminalClock();
             this.session.resetAiClock(true);
             this.session.markDirty();
@@ -198,7 +208,11 @@ export class BomberMazeViewModel {
             return;
         }
         this.lifeLostElapsed = 0;
-        this.model.reset();
+        if (this.model.phase === 'won') {
+            this.model.advanceRound();
+        } else {
+            this.model.reset();
+        }
         this.session.resetTerminalClock();
         this.session.resetAiClock(false);
         this.session.markDirty();

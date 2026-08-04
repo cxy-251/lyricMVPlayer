@@ -33,6 +33,7 @@ export interface BomberMazePowerupState extends BomberMazePoint {
 export interface BomberMazeObservation {
     readonly width: number;
     readonly height: number;
+    readonly round: number;
     readonly cells: readonly BomberMazeCellKind[];
     readonly player: BomberMazePoint;
     readonly enemies: readonly BomberMazeEnemyState[];

@@ -2,6 +2,7 @@ export type TowerDefenseTowerKind = 'dart' | 'cannon';
 export type TowerDefensePhase = 'building' | 'wave' | 'won' | 'lost';
 export type TowerDefenseControllerMode = 'human' | 'autopilot';
 export type TowerDefenseDirection = 'up' | 'down' | 'left' | 'right';
+export type TowerDefenseWaveTrait = 'balanced' | 'swarm' | 'armored' | 'rush';
 
 export interface TowerDefensePoint {
     readonly x: number;
@@ -54,6 +55,9 @@ export type TowerDefenseAction =
 export interface TowerDefenseObservation {
     readonly width: number;
     readonly height: number;
+    readonly routeName: string;
+    readonly waveTrait: TowerDefenseWaveTrait;
+    readonly perfectBonus: number;
     readonly path: readonly TowerDefensePoint[];
     readonly slots: readonly TowerDefenseSlotState[];
     readonly enemies: readonly TowerDefenseEnemyState[];

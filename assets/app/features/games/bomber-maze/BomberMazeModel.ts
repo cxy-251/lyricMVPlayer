@@ -14,12 +14,14 @@ import type {
 const WIDTH = 13;
 const HEIGHT = 11;
 const START_LIVES = 3;
+const MAX_LIVES = 4;
 const BOMB_FUSE = 2.15;
 const EXPLOSION_DURATION = 0.36;
-const ENEMY_INTERVAL = 0.32;
+const ENEMY_BASE_INTERVAL = 0.32;
 const INVULNERABLE_DURATION = 1.1;
 const MAX_BOMB_CAPACITY = 4;
 const MAX_BLAST_RANGE = 5;
+const MAX_ENEMIES = 6;
 const DIRECTIONS: readonly BomberMazeDirection[] = ['up', 'down', 'left', 'right'];
 
 const OFFSETS: Record<BomberMazeDirection, readonly [number, number]> = {
@@ -28,6 +30,15 @@ const OFFSETS: Record<BomberMazeDirection, readonly [number, number]> = {
     left: [-1, 0],
     right: [1, 0],
 };
+
+const ENEMY_SPAWNS: readonly BomberMazePoint[] = [
+    { x: WIDTH - 2, y: HEIGHT - 2 },
+    { x: 1, y: HEIGHT - 2 },
+    { x: WIDTH - 2, y: 1 },
+    { x: 1, y: 5 },
+    { x: WIDTH - 2, y: 5 },
+    { x: 5, y: HEIGHT - 2 },
+];
 
 interface MutableBomb {
     x: number;
@@ -75,6 +86,8 @@ export class BomberMazeModel {
     private currentLives = START_LIVES;
     private currentBombCapacity = 1;
     private currentBlastRange = 2;
+    private currentRound = 1;
+    private highestRound = 1;
     private enemyElapsed = 0;
     private invulnerableElapsed = 0;
     private randomState = 0x83a5f17d;
@@ -95,6 +108,14 @@ export class BomberMazeModel {
         return this.currentLives;
     }
 
+    get round(): number {
+        return this.currentRound;
+    }
+
+    get bestRound(): number {
+        return this.highestRound;
+    }
+
     get invulnerable(): boolean {
         return this.invulnerableElapsed > 0;
     }
@@ -106,13 +127,25 @@ export class BomberMazeModel {
         this.currentLives = START_LIVES;
         this.currentBombCapacity = 1;
         this.currentBlastRange = 2;
-        this.enemyElapsed = 0;
-        this.invulnerableElapsed = 0;
-        this.bombs = [];
-        this.explosions = [];
-        this.enemies = [];
-        this.generateBoard();
-        this.resetActors();
+        this.currentRound = 1;
+        this.highestRound = Math.max(this.highestRound, this.currentRound);
+        this.prepareRound();
+    }
+
+    advanceRound(): boolean {
+        if (this.currentPhase !== 'won') {
+            return false;
+        }
+        const completedRound = this.currentRound;
+        this.currentScore += 250 + completedRound * 75;
+        if (completedRound % 3 === 0) {
+            this.currentLives = Math.min(MAX_LIVES, this.currentLives + 1);
+        }
+        this.currentRound += 1;
+        this.highestRound = Math.max(this.highestRound, this.currentRound);
+        this.currentPhase = 'playing';
+        this.prepareRound();
+        return true;
     }
 
     perform(action: BomberMazeAction): boolean {
@@ -188,12 +221,13 @@ export class BomberMazeModel {
 
         this.enemyElapsed += dt;
         let enemySteps = 0;
+        const interval = this.enemyInterval();
         while (
-            this.enemyElapsed >= ENEMY_INTERVAL
+            this.enemyElapsed >= interval
             && enemySteps < 3
             && this.currentPhase === 'playing'
         ) {
-            this.enemyElapsed -= ENEMY_INTERVAL;
+            this.enemyElapsed -= interval;
             changed = this.moveEnemies() || changed;
             enemySteps += 1;
         }
@@ -209,6 +243,7 @@ export class BomberMazeModel {
         return {
             width: WIDTH,
             height: HEIGHT,
+            round: this.currentRound,
             cells: [...this.cells],
             player: { ...this.player },
             enemies: this.enemies
@@ -234,6 +269,16 @@ export class BomberMazeModel {
             blastRange: this.currentBlastRange,
             phase: this.currentPhase,
         };
+    }
+
+    private prepareRound(): void {
+        this.enemyElapsed = 0;
+        this.invulnerableElapsed = 0;
+        this.bombs = [];
+        this.explosions = [];
+        this.enemies = [];
+        this.generateBoard();
+        this.resetActors();
     }
 
     private generateBoard(): void {
@@ -270,8 +315,18 @@ export class BomberMazeModel {
             this.key(WIDTH - 2, 3),
             this.key(WIDTH - 2, 4),
         ]);
+        for (const spawn of ENEMY_SPAWNS) {
+            protectedCells.add(this.key(spawn.x, spawn.y));
+            for (const direction of DIRECTIONS) {
+                const neighbor = this.offset(spawn, direction);
+                if (this.inside(neighbor)) {
+                    protectedCells.add(this.key(neighbor.x, neighbor.y));
+                }
+            }
+        }
 
         const softCells: BomberMazePoint[] = [];
+        const density = Math.min(0.62, 0.43 + (this.currentRound - 1) * 0.025);
         for (let y = 0; y < HEIGHT; y += 1) {
             for (let x = 0; x < WIDTH; x += 1) {
                 const border = x === 0 || y === 0 || x === WIDTH - 1 || y === HEIGHT - 1;
@@ -280,7 +335,7 @@ export class BomberMazeModel {
                     this.setCell(x, y, 'hard-wall');
                     continue;
                 }
-                if (!protectedCells.has(this.key(x, y)) && this.random() < 0.46) {
+                if (!protectedCells.has(this.key(x, y)) && this.random() < density) {
                     this.setCell(x, y, 'soft-wall');
                     softCells.push({ x, y });
                 }
@@ -293,7 +348,8 @@ export class BomberMazeModel {
             softCells[index] = softCells[swapIndex];
             softCells[swapIndex] = temporary;
         }
-        const powerupCount = Math.min(6, softCells.length);
+        const powerupTarget = Math.min(8, 4 + Math.ceil(this.currentRound / 2));
+        const powerupCount = Math.min(powerupTarget, softCells.length);
         for (let index = 0; index < powerupCount; index += 1) {
             const point = softCells[index];
             this.powerups.push({
@@ -308,31 +364,36 @@ export class BomberMazeModel {
 
     private resetActors(): void {
         this.player = { x: 1, y: 1 };
-        const spawns: BomberMazePoint[] = [
-            { x: WIDTH - 2, y: HEIGHT - 2 },
-            { x: 1, y: HEIGHT - 2 },
-            { x: WIDTH - 2, y: 1 },
-        ];
         if (this.enemies.length === 0) {
-            this.enemies = spawns.map((spawn, id): MutableEnemy => ({
-                id,
-                x: spawn.x,
-                y: spawn.y,
-                spawnX: spawn.x,
-                spawnY: spawn.y,
-                direction: id % 2 === 0 ? 'left' : 'down',
-                alive: true,
-            }));
-        } else {
-            for (const enemy of this.enemies) {
-                if (!enemy.alive) {
-                    continue;
-                }
-                enemy.x = enemy.spawnX;
-                enemy.y = enemy.spawnY;
-                enemy.direction = enemy.id % 2 === 0 ? 'left' : 'down';
-            }
+            const count = Math.min(
+                MAX_ENEMIES,
+                3 + Math.floor((this.currentRound - 1) / 2),
+            );
+            this.enemies = ENEMY_SPAWNS
+                .slice(0, count)
+                .map((spawn, id): MutableEnemy => ({
+                    id,
+                    x: spawn.x,
+                    y: spawn.y,
+                    spawnX: spawn.x,
+                    spawnY: spawn.y,
+                    direction: id % 2 === 0 ? 'left' : 'down',
+                    alive: true,
+                }));
+            return;
         }
+        for (const enemy of this.enemies) {
+            if (!enemy.alive) {
+                continue;
+            }
+            enemy.x = enemy.spawnX;
+            enemy.y = enemy.spawnY;
+            enemy.direction = enemy.id % 2 === 0 ? 'left' : 'down';
+        }
+    }
+
+    private enemyInterval(): number {
+        return Math.max(0.18, ENEMY_BASE_INTERVAL - (this.currentRound - 1) * 0.018);
     }
 
     private moveEnemies(): boolean {
@@ -450,7 +511,7 @@ export class BomberMazeModel {
         for (const enemy of this.enemies) {
             if (enemy.alive && this.isExplosionCell(enemy.x, enemy.y)) {
                 enemy.alive = false;
-                this.currentScore += 100;
+                this.currentScore += 100 + this.currentRound * 15;
             }
         }
         if (this.enemies.every((enemy) => !enemy.alive)) {
@@ -484,13 +545,13 @@ export class BomberMazeModel {
         this.bombs = [];
         this.explosions = [];
         this.enemyElapsed = 0;
-        this.resetActors();
         if (this.currentLives === 0) {
             this.currentPhase = 'lost';
             this.invulnerableElapsed = 0;
-        } else {
-            this.invulnerableElapsed = INVULNERABLE_DURATION;
+            return;
         }
+        this.resetActors();
+        this.invulnerableElapsed = INVULNERABLE_DURATION;
     }
 
     private collectPowerup(): void {
@@ -512,7 +573,7 @@ export class BomberMazeModel {
                 this.currentBombCapacity + 1,
             );
         }
-        this.currentScore += 60;
+        this.currentScore += 60 + this.currentRound * 10;
     }
 
     private canOccupy(point: BomberMazePoint): boolean {

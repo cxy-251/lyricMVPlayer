@@ -193,21 +193,25 @@ export class TowerDefenseViewModel {
         const phase = this.session.isPaused ? 'paused' : observation.phase;
         const selected = observation.slots.find((slot) => slot.id === this.selectedSlotId);
         const status = phase === 'won'
-            ? 'ALL WAVES CLEARED'
+            ? `DEFENSE COMPLETE · ${observation.routeName}`
             : phase === 'lost'
-                ? 'BASE OVERRUN'
+                ? `BASE OVERRUN · ${observation.routeName}`
                 : phase === 'paused'
                     ? 'PAUSED'
                     : phase === 'building'
                         ? controller === 'autopilot'
-                            ? 'AI BUILDING'
-                            : 'BUILD PHASE'
+                            ? `AI BUILD · ${observation.routeName}`
+                            : `BUILD · ${observation.routeName}`
                         : controller === 'autopilot'
                             ? 'AI DEFENDING'
                             : 'WAVE ACTIVE';
         const selectedText = selected?.tower
             ? `${selected.tower.kind.toUpperCase()} L${selected.tower.level}`
             : `EMPTY · ${this.selectedKind.toUpperCase()}`;
+        const trait = observation.waveTrait.toUpperCase();
+        const perfect = observation.perfectBonus > 0
+            ? ` · PERFECT +${observation.perfectBonus}`
+            : '';
         return {
             ...observation,
             phase,
@@ -221,12 +225,12 @@ export class TowerDefenseViewModel {
                 + `   SCORE ${observation.score}`,
             hint: phase === 'won' || phase === 'lost'
                 ? controller === 'autopilot'
-                    ? 'AI WILL START A NEW DEFENSE'
+                    ? 'AI WILL ROTATE TO A NEW ROUTE'
                     : 'BUILD OR PRESS NEW'
                 : `${selectedText}`
                     + (observation.phase === 'building'
-                        ? ` · NEXT ${Math.ceil(observation.timeToNextWave)}S`
-                        : ` · EN ${observation.enemies.length}`
+                        ? ` · ${trait} · NEXT ${Math.ceil(observation.timeToNextWave)}S${perfect}`
+                        : ` · ${trait} · EN ${observation.enemies.length}`
                             + ` · ${observation.spawned}/${observation.waveSize}`),
         };
     }
