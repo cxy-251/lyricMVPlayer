@@ -4,8 +4,10 @@ import { brickBreakerDefinition } from './brick-breaker';
 import { connectFourDefinition } from './connect-four';
 import { cursorSpaceDefinition } from './cursor-space';
 import { game2048Definition } from './game-2048';
+import { mazeChaseDefinition } from './maze-chase';
 import { minesweeperDefinition } from './minesweeper';
 import { reversiDefinition } from './reversi';
+import { riverCrossingDefinition } from './river-crossing';
 import { snakeDefinition } from './snake';
 import { sokobanDefinition } from './sokoban';
 import { tetrisDefinition } from './tetris';
@@ -29,5 +31,7 @@ export const gamesLab: LabManifest = {
         game2048Definition,
         connectFourDefinition,
         reversiDefinition,
+        mazeChaseDefinition,
+        riverCrossingDefinition,
     ],
 };
