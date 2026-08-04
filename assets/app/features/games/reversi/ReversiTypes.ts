@@ -1,6 +1,7 @@
 export type ReversiPlayer = 0 | 1 | 2;
 export type ReversiPhase = 'playing' | 'ended' | 'paused';
 export type ReversiControllerMode = 'human' | 'autopilot';
+export type ReversiDifficulty = 'casual' | 'standard' | 'expert';
 
 export interface ReversiCell {
     readonly row: number;
@@ -21,6 +22,15 @@ export interface ReversiViewState extends ReversiObservation {
     readonly focusColumn: number;
     readonly blackCount: number;
     readonly whiteCount: number;
+    readonly round: number;
+    readonly targetWins: number;
+    readonly blackWins: number;
+    readonly whiteWins: number;
+    readonly draws: number;
+    readonly blackMargin: number;
+    readonly whiteMargin: number;
+    readonly openingName: string;
+    readonly difficulty: ReversiDifficulty;
     readonly status: string;
     readonly stats: string;
     readonly hint: string;

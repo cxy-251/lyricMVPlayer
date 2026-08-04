@@ -1,5 +1,6 @@
 import type {
     ReversiCell,
+    ReversiDifficulty,
     ReversiObservation,
     ReversiPlayer,
 } from './ReversiTypes';
@@ -22,14 +23,22 @@ const WEIGHTS = [
 ] as const;
 
 export class ReversiAutopilot {
-    decide(observation: ReversiObservation): ReversiCell | null {
+    decide(
+        observation: ReversiObservation,
+        difficulty: ReversiDifficulty = 'standard',
+    ): ReversiCell | null {
         if (observation.phase !== 'playing' || observation.legalMoves.length === 0) {
             return null;
         }
         const board = observation.board.map((row) => [...row]);
         const root = observation.currentPlayer;
         const empty = board.flat().filter((cell) => cell === 0).length;
-        const depth = empty <= 12 ? 6 : empty <= 24 ? 5 : 4;
+        const baseDepth = empty <= 12 ? 6 : empty <= 24 ? 5 : 4;
+        const depth = difficulty === 'casual'
+            ? Math.min(3, baseDepth)
+            : difficulty === 'expert'
+                ? Math.min(7, baseDepth + 1)
+                : baseDepth;
         const ordered = this.orderMoves(observation.legalMoves);
         let bestMove: ReversiCell | null = null;
         let bestScore = Number.NEGATIVE_INFINITY;

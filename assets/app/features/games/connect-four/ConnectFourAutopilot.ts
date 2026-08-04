@@ -1,4 +1,5 @@
 import type {
+    ConnectFourDifficulty,
     ConnectFourObservation,
     ConnectFourPlayer,
 } from './ConnectFourTypes';
@@ -6,10 +7,12 @@ import type {
 const ROWS = 6;
 const COLUMNS = 7;
 const ORDER = [3, 2, 4, 1, 5, 0, 6] as const;
-const SEARCH_DEPTH = 5;
 
 export class ConnectFourAutopilot {
-    decide(observation: ConnectFourObservation): number | null {
+    decide(
+        observation: ConnectFourObservation,
+        difficulty: ConnectFourDifficulty = 'standard',
+    ): number | null {
         if (observation.phase !== 'playing') {
             return null;
         }
@@ -38,6 +41,11 @@ export class ConnectFourAutopilot {
             }
         }
 
+        const searchDepth = difficulty === 'casual'
+            ? 3
+            : difficulty === 'expert'
+                ? 7
+                : 5;
         let bestColumn: number | null = null;
         let bestScore = Number.NEGATIVE_INFINITY;
         for (const column of ORDER) {
@@ -49,7 +57,7 @@ export class ConnectFourAutopilot {
                 board,
                 opponent,
                 player,
-                SEARCH_DEPTH - 1,
+                searchDepth - 1,
                 Number.NEGATIVE_INFINITY,
                 Number.POSITIVE_INFINITY,
                 row,

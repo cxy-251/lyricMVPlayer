@@ -1,6 +1,7 @@
 export type ConnectFourPlayer = 0 | 1 | 2;
 export type ConnectFourPhase = 'playing' | 'won' | 'draw' | 'paused';
 export type ConnectFourControllerMode = 'human' | 'autopilot';
+export type ConnectFourDifficulty = 'casual' | 'standard' | 'expert';
 
 export interface ConnectFourCell {
     readonly row: number;
@@ -18,6 +19,13 @@ export interface ConnectFourViewState extends ConnectFourObservation {
     readonly winner: ConnectFourPlayer;
     readonly winningCells: readonly ConnectFourCell[];
     readonly focusColumn: number;
+    readonly round: number;
+    readonly targetWins: number;
+    readonly redWins: number;
+    readonly yellowWins: number;
+    readonly draws: number;
+    readonly openingName: string;
+    readonly difficulty: ConnectFourDifficulty;
     readonly status: string;
     readonly stats: string;
     readonly hint: string;
