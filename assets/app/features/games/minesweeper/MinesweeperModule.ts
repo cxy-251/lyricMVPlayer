@@ -1,24 +1,23 @@
-import type {
-    Pausable,
-    Resettable,
-    Updatable,
-} from '../../../contracts/InteractiveModule';
-import type { ViewportSnapshot } from '../../../services/ViewportService';
-import { ResponsiveModule } from '../../../templates/ResponsiveModule';
+import type { Node } from 'cc';
+import { ViewModelGameModule } from '../../../templates/ViewModelGameModule';
 import { MinesweeperView } from './MinesweeperView';
 import { MinesweeperViewModel } from './MinesweeperViewModel';
+import type { MinesweeperViewState } from './MinesweeperTypes';
 
-export class MinesweeperModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
+export class MinesweeperModule extends ViewModelGameModule<
+    MinesweeperViewState,
+    MinesweeperViewModel,
+    MinesweeperView
+> {
     protected readonly rootName = 'MinesweeperModuleRoot';
 
-    private viewModel: MinesweeperViewModel | null = null;
-    private view: MinesweeperView | null = null;
+    protected createViewModel(): MinesweeperViewModel {
+        return new MinesweeperViewModel();
+    }
 
-    protected onMount(): void {
-        this.viewModel = new MinesweeperViewModel();
-        const viewModel = this.viewModel;
-        this.view = new MinesweeperView(
-            this.requireRoot(),
+    protected createView(root: Node, viewModel: MinesweeperViewModel): MinesweeperView {
+        return new MinesweeperView(
+            root,
             viewModel.rows,
             viewModel.columns,
             {
@@ -52,61 +51,5 @@ export class MinesweeperModule extends ResponsiveModule implements Updatable, Pa
                 },
             },
         );
-    }
-
-    protected onUnmount(): void {
-        this.view?.destroy();
-        this.view = null;
-        this.viewModel?.dispose();
-        this.viewModel = null;
-    }
-
-    update(dt: number): void {
-        if (this.viewModel?.update(dt)) {
-            this.renderCurrentState();
-        }
-    }
-
-    pause(): void {
-        this.viewModel?.pause();
-        this.renderCurrentState();
-    }
-
-    resume(): void {
-        this.viewModel?.resume();
-        this.renderCurrentState();
-    }
-
-    reset(): void {
-        this.requireViewModel().reset();
-        this.renderCurrentState();
-    }
-
-    protected render(viewport: ViewportSnapshot): void {
-        this.requireView().layout(viewport);
-        this.renderCurrentState();
-    }
-
-    private renderCurrentState(): void {
-        const viewModel = this.viewModel;
-        const view = this.view;
-        if (!viewModel || !view) {
-            return;
-        }
-        view.render(viewModel.createViewState());
-    }
-
-    private requireViewModel(): MinesweeperViewModel {
-        if (!this.viewModel) {
-            throw new Error('Minesweeper ViewModel is unavailable');
-        }
-        return this.viewModel;
-    }
-
-    private requireView(): MinesweeperView {
-        if (!this.view) {
-            throw new Error('Minesweeper View is unavailable');
-        }
-        return this.view;
     }
 }

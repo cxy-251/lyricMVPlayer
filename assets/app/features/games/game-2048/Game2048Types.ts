@@ -7,7 +7,7 @@ export interface Game2048Observation {
     readonly phase: 'playing' | 'lost';
 }
 
-export interface Game2048ViewState extends Game2048Observation {
+export interface Game2048ViewState extends Omit<Game2048Observation, 'phase'> {
     readonly phase: Game2048Phase;
     readonly controller: Game2048ControllerMode;
     readonly score: number;

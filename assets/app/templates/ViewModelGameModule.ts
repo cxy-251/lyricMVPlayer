@@ -17,9 +17,12 @@ export interface GameViewModel<TState> {
 }
 
 export interface GameView<TState> {
-    layout(viewport: ViewportSnapshot): void;
     render(state: TState): void;
     destroy(): void;
+}
+
+interface DefaultLayoutGameView {
+    layout(viewport: ViewportSnapshot): void;
 }
 
 export abstract class ViewModelGameModule<
@@ -75,8 +78,22 @@ export abstract class ViewModelGameModule<
     }
 
     protected render(viewport: ViewportSnapshot): void {
-        this.requireGameView().layout(viewport);
+        const viewModel = this.requireGameViewModel();
+        const view = this.requireGameView();
+        this.layoutGameView(viewport, viewModel, view);
         this.renderCurrentState();
+    }
+
+    protected layoutGameView(
+        viewport: ViewportSnapshot,
+        _viewModel: TViewModel,
+        view: TView,
+    ): void {
+        const layout = (view as TView & Partial<DefaultLayoutGameView>).layout;
+        if (!layout) {
+            throw new Error(`${this.rootName} View has no default layout method`);
+        }
+        layout.call(view, viewport);
     }
 
     protected requireGameViewModel(): TViewModel {

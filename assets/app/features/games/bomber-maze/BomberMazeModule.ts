@@ -1,22 +1,22 @@
-import type {
-    Pausable,
-    Resettable,
-    Updatable,
-} from '../../../contracts/InteractiveModule';
-import type { ViewportSnapshot } from '../../../services/ViewportService';
-import { ResponsiveModule } from '../../../templates/ResponsiveModule';
+import type { Node } from 'cc';
+import { ViewModelGameModule } from '../../../templates/ViewModelGameModule';
 import { BomberMazeView } from './BomberMazeView';
 import { BomberMazeViewModel } from './BomberMazeViewModel';
+import type { BomberMazeViewState } from './BomberMazeTypes';
 
-export class BomberMazeModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
+export class BomberMazeModule extends ViewModelGameModule<
+    BomberMazeViewState,
+    BomberMazeViewModel,
+    BomberMazeView
+> {
     protected readonly rootName = 'BomberMazeModuleRoot';
-    private viewModel: BomberMazeViewModel | null = null;
-    private view: BomberMazeView | null = null;
 
-    protected onMount(): void {
-        this.viewModel = new BomberMazeViewModel();
-        const viewModel = this.viewModel;
-        this.view = new BomberMazeView(this.requireRoot(), {
+    protected createViewModel(): BomberMazeViewModel {
+        return new BomberMazeViewModel();
+    }
+
+    protected createView(root: Node, viewModel: BomberMazeViewModel): BomberMazeView {
+        return new BomberMazeView(root, {
             move: (direction) => {
                 viewModel.moveFromHuman(direction);
                 this.renderCurrentState();
@@ -30,44 +30,5 @@ export class BomberMazeModule extends ResponsiveModule implements Updatable, Pau
                 this.renderCurrentState();
             },
         });
-    }
-
-    protected onUnmount(): void {
-        this.view?.destroy();
-        this.view = null;
-        this.viewModel?.dispose();
-        this.viewModel = null;
-    }
-
-    update(dt: number): void {
-        if (this.viewModel?.update(dt)) {
-            this.renderCurrentState();
-        }
-    }
-
-    pause(): void {
-        this.viewModel?.pause();
-        this.renderCurrentState();
-    }
-
-    resume(): void {
-        this.viewModel?.resume();
-        this.renderCurrentState();
-    }
-
-    reset(): void {
-        this.viewModel?.reset();
-        this.renderCurrentState();
-    }
-
-    protected render(viewport: ViewportSnapshot): void {
-        this.view?.layout(viewport);
-        this.renderCurrentState();
-    }
-
-    private renderCurrentState(): void {
-        if (this.view && this.viewModel) {
-            this.view.render(this.viewModel.createViewState());
-        }
     }
 }
