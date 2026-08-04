@@ -12,7 +12,11 @@ export interface SnakeObservation {
     readonly height: number;
     readonly snake: readonly SnakePoint[];
     readonly food: SnakePoint;
+    readonly foodValue: 1 | 3;
+    readonly obstacles: readonly SnakePoint[];
     readonly direction: SnakeDirection;
+    readonly foodsEaten: number;
+    readonly stage: number;
     readonly phase: 'playing' | 'won' | 'lost';
 }
 

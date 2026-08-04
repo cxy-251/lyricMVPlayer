@@ -14,6 +14,7 @@ import {
 } from './TetrisTypes';
 
 const PIECES: readonly TetrisPieceType[] = ['I', 'O', 'T', 'J', 'L', 'S', 'Z'];
+const PRESSURE_PIECES: readonly TetrisPieceType[] = ['J', 'L', 'S', 'Z'];
 const LOCK_DELAY = 0.5;
 const MAXIMUM_LOCK_RESETS = 15;
 const SOFT_DROP_INTERVAL = 0.035;
@@ -29,6 +30,10 @@ export class TetrisModel {
     private currentScore = 0;
     private clearedLines = 0;
     private currentLevel = 0;
+    private currentCombo = -1;
+    private backToBackTetris = false;
+    private pressureRowCount = 0;
+    private lastEvent = 'READY';
     private fallAccumulator = 0;
     private lockElapsed = 0;
     private lockResetCount = 0;
@@ -54,6 +59,22 @@ export class TetrisModel {
 
     get level(): number {
         return this.currentLevel;
+    }
+
+    get combo(): number {
+        return Math.max(0, this.currentCombo);
+    }
+
+    get backToBack(): boolean {
+        return this.backToBackTetris;
+    }
+
+    get pressureRows(): number {
+        return this.pressureRowCount;
+    }
+
+    get eventText(): string {
+        return this.lastEvent;
     }
 
     get active(): Readonly<TetrisActivePiece> | null {
@@ -90,6 +111,10 @@ export class TetrisModel {
         this.currentScore = 0;
         this.clearedLines = 0;
         this.currentLevel = 0;
+        this.currentCombo = -1;
+        this.backToBackTetris = false;
+        this.pressureRowCount = 0;
+        this.lastEvent = 'READY';
         this.fallAccumulator = 0;
         this.lockElapsed = 0;
         this.lockResetCount = 0;
@@ -295,12 +320,53 @@ export class TetrisModel {
             }
         }
 
+        const previousLevel = this.currentLevel;
         const lineCount = this.clearCompletedLines();
+        const perfectClear = lineCount > 0
+            && this.board.every((row) => row.every((cell) => cell === null));
         const scoreTable = [0, 100, 300, 500, 800] as const;
-        this.currentScore += scoreTable[lineCount] * (this.currentLevel + 1);
+        let earned = scoreTable[lineCount] * (previousLevel + 1);
+
+        if (lineCount > 0) {
+            this.currentCombo += 1;
+            if (this.currentCombo > 0) {
+                earned += 50 * this.currentCombo * (previousLevel + 1);
+            }
+            if (lineCount === 4) {
+                if (this.backToBackTetris) {
+                    earned += Math.round(scoreTable[4] * 0.5 * (previousLevel + 1));
+                }
+                this.lastEvent = this.backToBackTetris
+                    ? 'BACK-TO-BACK TETRIS'
+                    : 'TETRIS';
+                this.backToBackTetris = true;
+            } else {
+                this.lastEvent = `${lineCount} LINE${lineCount === 1 ? '' : 'S'}`;
+                this.backToBackTetris = false;
+            }
+            if (perfectClear) {
+                earned += 3500 * (previousLevel + 1);
+                this.lastEvent += ' · PERFECT CLEAR';
+            } else if (this.currentCombo > 0) {
+                this.lastEvent += ` · COMBO ${this.currentCombo}`;
+            }
+        } else {
+            this.currentCombo = -1;
+            this.lastEvent = 'STACKING';
+        }
+
+        this.currentScore += earned;
         this.clearedLines += lineCount;
         this.currentLevel = Math.floor(this.clearedLines / 10);
         this.holdAvailable = true;
+
+        const levelsGained = Math.max(0, this.currentLevel - previousLevel);
+        for (let index = 0; index < levelsGained; index += 1) {
+            this.addPressureRow();
+            if (this.currentPhase === 'lost') {
+                return;
+            }
+        }
         this.spawnNextPiece();
     }
 
@@ -317,6 +383,30 @@ export class TetrisModel {
             }
         }
         return cleared;
+    }
+
+    private addPressureRow(): void {
+        const top = this.board[TETRIS_BOARD_HEIGHT - 1];
+        if (top.some((cell) => cell !== null)) {
+            this.currentPhase = 'lost';
+            this.activePiece = null;
+            this.lastEvent = 'PRESSURE TOP OUT';
+            return;
+        }
+        for (let y = TETRIS_BOARD_HEIGHT - 1; y > 0; y -= 1) {
+            this.board[y] = [...this.board[y - 1]];
+        }
+        const hole = Math.floor(this.random() * TETRIS_BOARD_WIDTH);
+        this.board[0] = Array.from(
+            { length: TETRIS_BOARD_WIDTH },
+            (_, column): TetrisPieceType | null => (
+                column === hole
+                    ? null
+                    : PRESSURE_PIECES[Math.floor(this.random() * PRESSURE_PIECES.length)]
+            ),
+        );
+        this.pressureRowCount += 1;
+        this.lastEvent += ' · PRESSURE +1';
     }
 
     private spawnNextPiece(resetHold = true): void {
@@ -347,6 +437,7 @@ export class TetrisModel {
         if (!this.canPlace(piece)) {
             this.currentPhase = 'lost';
             this.activePiece = null;
+            this.lastEvent = 'TOP OUT';
         }
     }
 

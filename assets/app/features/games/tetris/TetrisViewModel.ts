@@ -217,6 +217,7 @@ export class TetrisViewModel {
             : phase === 'paused'
                 ? 'PAUSED'
                 : 'PLAYING';
+        const eventText = this.model.eventText;
         return {
             phase,
             controller: this.controller,
@@ -228,15 +229,24 @@ export class TetrisViewModel {
             score: this.model.score,
             lines: this.model.lines,
             level: this.model.level,
-            status: `${controllerName}  ${phaseName}`,
+            combo: this.model.combo,
+            backToBack: this.model.backToBack,
+            pressureRows: this.model.pressureRows,
+            eventText,
+            status: `${controllerName}  ${phaseName}`
+                + (eventText === 'STACKING' || eventText === 'READY' ? '' : ` · ${eventText}`),
             scoreText: `SCORE ${this.model.score}`
                 + `  LINES ${this.model.lines}`
-                + `  LEVEL ${this.model.level}`,
+                + `  LV ${this.model.level}`
+                + `  COMBO ${this.model.combo}`
+                + `  PRESS ${this.model.pressureRows}`,
             hint: phase === 'lost'
                 ? 'TAP DROP OR PRESS R TO RESTART'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — USE ANY CONTROL TO TAKE OVER'
-                    : 'ARROWS / A-D  Z-X ROTATE  SPACE DROP  C HOLD',
+                : this.model.backToBack
+                    ? 'BACK-TO-BACK READY · CLEAR ANOTHER TETRIS'
+                    : this.controller === 'autopilot'
+                        ? 'AI ACTIVE — USE ANY CONTROL TO TAKE OVER'
+                        : 'ARROWS / A-D  Z-X ROTATE  SPACE DROP  C HOLD',
         };
     }
 

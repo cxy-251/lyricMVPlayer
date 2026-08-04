@@ -115,12 +115,12 @@ export class SnakeViewModel {
         const status = phase === 'won'
             ? 'BOARD CLEARED'
             : phase === 'lost'
-                ? 'CRASHED'
+                ? `CRASHED · STAGE ${observation.stage}`
                 : phase === 'paused'
                     ? 'PAUSED'
                     : this.controller === 'autopilot'
-                        ? 'AI PLAYING'
-                        : 'HUMAN';
+                        ? `AI · STAGE ${observation.stage}`
+                        : `HUMAN · STAGE ${observation.stage}`;
         const terminal = phase === 'won' || phase === 'lost';
         return {
             ...observation,
@@ -132,9 +132,11 @@ export class SnakeViewModel {
             status,
             hint: terminal
                 ? 'PRESS A DIRECTION OR RESTART'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — SWIPE OR PRESS A DIRECTION TO TAKE OVER'
-                    : 'ARROWS / WASD / SWIPE',
+                : observation.foodValue === 3
+                    ? 'BONUS FOOD · WORTH 3 · AVOID NEW OBSTACLES'
+                    : this.controller === 'autopilot'
+                        ? 'AI ACTIVE — SWIPE OR PRESS A DIRECTION TO TAKE OVER'
+                        : 'ARROWS / WASD / SWIPE',
         };
     }
 

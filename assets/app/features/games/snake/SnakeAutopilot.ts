@@ -44,7 +44,10 @@ export class SnakeAutopilot {
         const [offsetX, offsetY] = OFFSETS[direction];
         const next = { x: head.x + offsetX, y: head.y + offsetY };
         const eating = next.x === observation.food.x && next.y === observation.food.y;
-        const occupiedBefore = new Set<string>();
+        const obstacleKeys = new Set(
+            observation.obstacles.map((point) => this.key(point.x, point.y)),
+        );
+        const occupiedBefore = new Set<string>(obstacleKeys);
         const collisionLength = eating
             ? observation.snake.length
             : Math.max(0, observation.snake.length - 1);
@@ -65,7 +68,10 @@ export class SnakeAutopilot {
                 ? observation.snake.length
                 : observation.snake.length - 1),
         ];
-        const blocked = new Set(simulated.slice(1).map((point) => this.key(point.x, point.y)));
+        const blocked = new Set(obstacleKeys);
+        for (const point of simulated.slice(1)) {
+            blocked.add(this.key(point.x, point.y));
+        }
         const area = this.reachableArea(next, blocked, observation.width, observation.height);
         const foodDistance = this.shortestDistance(
             next,
@@ -75,19 +81,23 @@ export class SnakeAutopilot {
             observation.height,
         );
         const tail = simulated[simulated.length - 1];
+        const tailBlocked = new Set(obstacleKeys);
+        for (const point of simulated.slice(1, -1)) {
+            tailBlocked.add(this.key(point.x, point.y));
+        }
         const tailDistance = this.shortestDistance(
             next,
             tail,
-            new Set(simulated.slice(1, -1).map((point) => this.key(point.x, point.y))),
+            tailBlocked,
             observation.width,
             observation.height,
         );
 
         let score = area * 4;
         score += tailDistance >= 0 ? 125 : -180;
-        score += eating ? 240 : 0;
+        score += eating ? 210 + observation.foodValue * 55 : 0;
         score += foodDistance >= 0 ? Math.max(-160, 100 - foodDistance * 9) : -90;
-        if (area < simulated.length + 5) {
+        if (area < simulated.length + observation.obstacles.length + 5) {
             score -= 320;
         }
         const wallDistance = Math.min(

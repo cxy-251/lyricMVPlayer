@@ -23,6 +23,8 @@ import type { SnakeViewActions, SnakeViewState } from './SnakeTypes';
 const BODY = new Color(106, 163, 130, 255);
 const HEAD = new Color(139, 196, 158, 255);
 const FOOD = new Color(197, 103, 96, 255);
+const BONUS_FOOD = new Color(216, 171, 77, 255);
+const OBSTACLE = new Color(91, 99, 95, 255);
 const GRID = new Color(72, 84, 78, 145);
 
 export class SnakeView {
@@ -187,8 +189,17 @@ export class SnakeView {
         }
         graphics.stroke();
 
+        for (const obstacle of state.obstacles) {
+            this.drawCell(graphics, obstacle.x, obstacle.y, OBSTACLE, 0.08);
+        }
         if (state.phase !== 'won') {
-            this.drawCell(graphics, state.food.x, state.food.y, FOOD, 0.24);
+            this.drawCell(
+                graphics,
+                state.food.x,
+                state.food.y,
+                state.foodValue === 3 ? BONUS_FOOD : FOOD,
+                state.foodValue === 3 ? 0.13 : 0.24,
+            );
         }
         for (let index = state.snake.length - 1; index >= 0; index -= 1) {
             const point = state.snake[index];
@@ -216,7 +227,7 @@ export class SnakeView {
         }
         if (this.scoreLabel) {
             this.scoreLabel.string = `SCORE ${state.score}  BEST ${state.bestScore}`
-                + `  SPEED ${state.speed.toFixed(1)}`;
+                + `  STAGE ${state.stage}  SPEED ${state.speed.toFixed(1)}`;
         }
         if (this.hintLabel) {
             this.hintLabel.string = state.hint;

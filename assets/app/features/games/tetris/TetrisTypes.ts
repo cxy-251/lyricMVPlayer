@@ -59,6 +59,10 @@ export interface TetrisViewState {
     readonly score: number;
     readonly lines: number;
     readonly level: number;
+    readonly combo: number;
+    readonly backToBack: boolean;
+    readonly pressureRows: number;
+    readonly eventText: string;
     readonly status: string;
     readonly scoreText: string;
     readonly hint: string;
