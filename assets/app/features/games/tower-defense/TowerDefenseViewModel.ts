@@ -131,6 +131,7 @@ export class TowerDefenseViewModel {
             return;
         }
         this.activateHuman();
+        this.restartTerminalIfNeeded();
         this.selectedKind = kind;
         this.dirty = true;
     }

@@ -188,7 +188,9 @@ export class SnakeView {
         }
         graphics.stroke();
 
-        this.drawCell(graphics, state.food.x, state.food.y, FOOD, 0.24);
+        if (state.phase !== 'won') {
+            this.drawCell(graphics, state.food.x, state.food.y, FOOD, 0.24);
+        }
         for (let index = state.snake.length - 1; index >= 0; index -= 1) {
             const point = state.snake[index];
             this.drawCell(graphics, point.x, point.y, index === 0 ? HEAD : BODY, 0.1);
@@ -207,7 +209,11 @@ export class SnakeView {
 
         if (this.statusLabel) {
             this.statusLabel.string = state.status;
-            this.statusLabel.color = state.phase === 'lost' ? palette.danger : palette.text;
+            this.statusLabel.color = state.phase === 'won'
+                ? palette.accent
+                : state.phase === 'lost'
+                    ? palette.danger
+                    : palette.text;
         }
         if (this.scoreLabel) {
             this.scoreLabel.string = `SCORE ${state.score}  BEST ${state.bestScore}`

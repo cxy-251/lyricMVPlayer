@@ -23,7 +23,7 @@ export class SnakeModel {
     private foodPoint: SnakePoint = { x: 0, y: 0 };
     private currentDirection: SnakeDirection = 'right';
     private requestedDirection: SnakeDirection = 'right';
-    private currentPhase: 'playing' | 'lost' = 'playing';
+    private currentPhase: 'playing' | 'won' | 'lost' = 'playing';
     private currentScore = 0;
     private accumulator = 0;
     private randomState = 0x75d3ac41;
@@ -40,7 +40,7 @@ export class SnakeModel {
         return HEIGHT;
     }
 
-    get phase(): 'playing' | 'lost' {
+    get phase(): 'playing' | 'won' | 'lost' {
         return this.currentPhase;
     }
 
@@ -87,7 +87,7 @@ export class SnakeModel {
             this.accumulator -= interval;
             this.advanceOneCell();
             moved += 1;
-            if (this.currentPhase === 'lost') {
+            if (this.currentPhase !== 'playing') {
                 break;
             }
         }
@@ -147,7 +147,8 @@ export class SnakeModel {
             }
         }
         if (empty.length === 0) {
-            this.currentPhase = 'lost';
+            this.foodPoint = { x: -1, y: -1 };
+            this.currentPhase = 'won';
             return;
         }
         const index = Math.floor(this.random() * empty.length);

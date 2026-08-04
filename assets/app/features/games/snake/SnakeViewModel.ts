@@ -50,7 +50,7 @@ export class SnakeViewModel {
             this.dirty = true;
         }
 
-        if (this.model.phase === 'lost' && this.controller === 'autopilot') {
+        if (this.model.phase !== 'playing' && this.controller === 'autopilot') {
             this.resultElapsed += dt;
             if (this.resultElapsed >= RESULT_HOLD) {
                 this.model.reset();
@@ -72,7 +72,7 @@ export class SnakeViewModel {
             return;
         }
         this.activateHuman();
-        if (this.model.phase === 'lost') {
+        if (this.model.phase !== 'playing') {
             this.model.reset();
         }
         this.dirty = this.model.setDirection(direction) || this.dirty;
@@ -112,13 +112,16 @@ export class SnakeViewModel {
     createViewState(): SnakeViewState {
         const observation = this.model.createObservation();
         const phase = this.paused ? 'paused' : observation.phase;
-        const status = phase === 'lost'
-            ? 'CRASHED'
-            : phase === 'paused'
-                ? 'PAUSED'
-                : this.controller === 'autopilot'
-                    ? 'AI PLAYING'
-                    : 'HUMAN';
+        const status = phase === 'won'
+            ? 'BOARD CLEARED'
+            : phase === 'lost'
+                ? 'CRASHED'
+                : phase === 'paused'
+                    ? 'PAUSED'
+                    : this.controller === 'autopilot'
+                        ? 'AI PLAYING'
+                        : 'HUMAN';
+        const terminal = phase === 'won' || phase === 'lost';
         return {
             ...observation,
             phase,
@@ -127,7 +130,7 @@ export class SnakeViewModel {
             bestScore: this.bestScore,
             speed: this.model.speed,
             status,
-            hint: phase === 'lost'
+            hint: terminal
                 ? 'PRESS A DIRECTION OR RESTART'
                 : this.controller === 'autopilot'
                     ? 'AI ACTIVE — SWIPE OR PRESS A DIRECTION TO TAKE OVER'

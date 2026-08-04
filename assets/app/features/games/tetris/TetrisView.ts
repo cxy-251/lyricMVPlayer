@@ -254,7 +254,7 @@ export class TetrisView {
         if (this.hintLabel) {
             this.hintLabel.string = this.compactLayout
                 ? state.phase === 'lost'
-                    ? 'DROP OR R TO RESTART'
+                    ? 'NEW, DROP OR R TO RESTART'
                     : state.controller === 'autopilot'
                         ? 'AI ACTIVE — USE A CONTROL TO TAKE OVER'
                         : 'MOVE  ROTATE  DROP  HOLD'
@@ -303,16 +303,19 @@ export class TetrisView {
             this.addControl('TetrisDown', 'DOWN', width, buttonHeight, centerX + gap * 1.5, firstY, () => {
                 this.actions.softDropOnce();
             });
-            this.addControl('TetrisHold', 'HOLD', width * 1.25, buttonHeight, centerX - width * 0.72, secondY, () => {
+            this.addControl('TetrisHold', 'HOLD', width, buttonHeight, centerX - gap, secondY, () => {
                 this.actions.hold();
             });
-            this.addControl('TetrisDrop', 'DROP', width * 1.25, buttonHeight, centerX + width * 0.72, secondY, () => {
+            this.addControl('TetrisDrop', 'DROP', width, buttonHeight, centerX, secondY, () => {
                 this.actions.hardDrop();
+            });
+            this.addControl('TetrisNew', 'NEW', width, buttonHeight, centerX + gap, secondY, () => {
+                this.actions.restart();
             });
             return;
         }
 
-        const labels = ['<', '>', 'ROT', 'DOWN', 'HOLD', 'DROP'] as const;
+        const labels = ['<', '>', 'ROT', 'DOWN', 'HOLD', 'DROP', 'NEW'] as const;
         const callbacks = [
             () => this.actions.moveOnce(-1),
             () => this.actions.moveOnce(1),
@@ -320,9 +323,10 @@ export class TetrisView {
             () => this.actions.softDropOnce(),
             () => this.actions.hold(),
             () => this.actions.hardDrop(),
+            () => this.actions.restart(),
         ] as const;
-        const width = 72;
-        const gap = 80;
+        const width = Math.max(44, Math.min(72, (safeWidth - 64) / labels.length));
+        const gap = width + 8;
         const y = controlsTop - buttonHeight / 2;
         for (let index = 0; index < labels.length; index += 1) {
             this.addControl(

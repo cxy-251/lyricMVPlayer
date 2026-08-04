@@ -1,5 +1,5 @@
 export type SnakeDirection = 'up' | 'down' | 'left' | 'right';
-export type SnakePhase = 'playing' | 'paused' | 'lost';
+export type SnakePhase = 'playing' | 'paused' | 'won' | 'lost';
 export type SnakeControllerMode = 'human' | 'autopilot';
 
 export interface SnakePoint {
@@ -13,10 +13,10 @@ export interface SnakeObservation {
     readonly snake: readonly SnakePoint[];
     readonly food: SnakePoint;
     readonly direction: SnakeDirection;
-    readonly phase: 'playing' | 'lost';
+    readonly phase: 'playing' | 'won' | 'lost';
 }
 
-export interface SnakeViewState extends SnakeObservation {
+export interface SnakeViewState extends Omit<SnakeObservation, 'phase'> {
     readonly phase: SnakePhase;
     readonly controller: SnakeControllerMode;
     readonly score: number;
