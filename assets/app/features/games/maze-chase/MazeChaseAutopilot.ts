@@ -28,13 +28,21 @@ export class MazeChaseAutopilot {
             const pelletDistance = this.distanceToNearestPellet(observation, next);
             const reachable = this.reachableArea(observation, next);
             const continuing = direction === observation.direction ? 8 : 0;
-            const danger = enemyDistance <= 1
-                ? -10000
-                : enemyDistance === 2
-                    ? -650
-                    : Math.min(enemyDistance, 8) * 32;
+            const frightened = observation.frightenedRemaining > 0;
+            const danger = frightened
+                ? 0
+                : enemyDistance <= 1
+                    ? -10000
+                    : enemyDistance === 2
+                        ? -650
+                        : Math.min(enemyDistance, 8) * 32;
+            const hunt = frightened && enemyDistance < 99
+                ? Math.max(0, 280 - enemyDistance * 26)
+                : 0;
             const pellet = pelletDistance >= 0 ? 240 - pelletDistance * 18 : -300;
-            const score = danger + pellet + reachable * 2.5 + continuing;
+            const index = next.y * observation.width + next.x;
+            const powerBonus = observation.powerPellets[index] ? 420 : 0;
+            const score = danger + hunt + pellet + powerBonus + reachable * 2.5 + continuing;
             if (score > bestScore) {
                 bestScore = score;
                 best = direction;
@@ -63,9 +71,10 @@ export class MazeChaseAutopilot {
         observation: MazeChaseObservation,
         start: MazeChasePoint,
     ): number {
-        return this.shortestDistance(observation, start, (point) => (
-            observation.pellets[point.y * observation.width + point.x]
-        ));
+        return this.shortestDistance(observation, start, (point) => {
+            const index = point.y * observation.width + point.x;
+            return observation.pellets[index] || observation.powerPellets[index];
+        });
     }
 
     private reachableArea(

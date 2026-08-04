@@ -18,9 +18,13 @@ export interface MazeChaseObservation {
     readonly height: number;
     readonly walls: readonly boolean[];
     readonly pellets: readonly boolean[];
+    readonly powerPellets: readonly boolean[];
     readonly player: MazeChasePoint;
     readonly direction: MazeChaseDirection;
     readonly enemies: readonly MazeChaseEnemyState[];
+    readonly level: number;
+    readonly frightenedRemaining: number;
+    readonly enemyCombo: number;
     readonly phase: MazeChasePhase;
 }
 

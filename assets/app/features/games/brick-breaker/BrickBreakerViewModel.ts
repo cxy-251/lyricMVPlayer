@@ -10,6 +10,9 @@ const AI_TAKEOVER_DELAY = 3;
 const AI_RESULT_HOLD = 1.25;
 const RENDER_STEP = 1 / 30;
 
+type BrickBreakerContract = 'blitz' | 'perfect' | 'multiball';
+const CONTRACTS: readonly BrickBreakerContract[] = ['blitz', 'perfect', 'multiball'];
+
 export class BrickBreakerViewModel {
     private readonly clock = new FixedStepClock(1 / 60, 7);
     private readonly model = new BrickBreakerModel();
@@ -21,6 +24,14 @@ export class BrickBreakerViewModel {
     private resultElapsed = 0;
     private renderAccumulator = RENDER_STEP;
     private bestScore = 0;
+    private contractBonus = 0;
+    private contractStreak = 0;
+    private completedContracts = 0;
+    private levelElapsed = 0;
+    private levelStartLives = 3;
+    private maximumActiveBalls = 1;
+    private contractRecorded = false;
+    private contractResult = 'CONTRACT READY';
     private paused = false;
     private dirty = true;
 
@@ -42,11 +53,19 @@ export class BrickBreakerViewModel {
             } else {
                 this.applyHumanControl();
             }
+            if (this.model.phase === 'playing') {
+                this.levelElapsed += step;
+            }
             this.model.step(step);
+            this.maximumActiveBalls = Math.max(
+                this.maximumActiveBalls,
+                this.model.balls.filter((ball) => ball.active).length,
+            );
+            this.recordContractIfNeeded();
             this.updateResultState(step);
         });
 
-        this.bestScore = Math.max(this.bestScore, this.model.score);
+        this.bestScore = Math.max(this.bestScore, this.totalScore());
         this.renderAccumulator += frameDelta;
         if (steps > 0) {
             this.dirty = true;
@@ -97,7 +116,9 @@ export class BrickBreakerViewModel {
             return;
         }
         if (this.model.phase === 'won') {
+            this.recordContractIfNeeded();
             this.model.advanceLevel();
+            this.beginLevelTracking();
         }
         this.model.launch();
         this.resultElapsed = 0;
@@ -134,7 +155,11 @@ export class BrickBreakerViewModel {
         this.humanTargetNormalized = null;
         this.resultElapsed = 0;
         this.renderAccumulator = RENDER_STEP;
+        this.contractBonus = 0;
+        this.contractStreak = 0;
+        this.completedContracts = 0;
         this.paused = false;
+        this.beginLevelTracking();
         this.dirty = true;
     }
 
@@ -147,12 +172,13 @@ export class BrickBreakerViewModel {
     createViewState(): BrickBreakerViewState {
         const phase = this.paused ? 'paused' : this.model.phase;
         const controllerName = this.controller === 'autopilot' ? 'AI' : 'HUMAN';
+        const contract = this.currentContract();
         const phaseName = phase === 'ready'
             ? 'READY'
             : phase === 'playing'
                 ? 'BREAKING'
                 : phase === 'won'
-                    ? 'LEVEL CLEAR'
+                    ? this.contractResult
                     : phase === 'lost'
                         ? 'GAME OVER'
                         : 'PAUSED';
@@ -166,24 +192,26 @@ export class BrickBreakerViewModel {
             bricks: this.model.createBrickViewStates(),
             powerups: this.model.createPowerupViewStates(),
             lives: this.model.lives,
-            score: this.model.score,
+            score: this.totalScore(),
             level: this.model.level,
             pierceRemaining: this.model.pierceRemaining,
             expandRemaining: this.model.expandRemaining,
             status: `${controllerName}  ${phaseName}`,
-            scoreText: `SCORE ${this.model.score}`
-                + `  BEST ${this.bestScore}`
-                + `  LEVEL ${this.model.level}`
-                + `  LIFE ${this.model.lives}`,
+            scoreText: `S ${this.totalScore()}`
+                + `  B ${this.bestScore}`
+                + `  LV ${this.model.level}`
+                + `  LIFE ${this.model.lives}`
+                + `  C${this.contractStreak}`
+                + `  ${contract.toUpperCase()}`,
             hint: phase === 'lost'
-                ? 'TAP, CLICK OR PRESS SPACE TO RESTART'
+                ? `CONTRACTS ${this.completedContracts} · TAP OR SPACE TO RESTART`
                 : phase === 'won'
-                    ? 'LEVEL CLEAR — NEXT BOARD IS READY'
-                    : this.controller === 'autopilot'
-                        ? 'AI ACTIVE — MOVE OR TOUCH TO TAKE OVER'
-                        : phase === 'ready'
-                            ? 'MOVE THE PADDLE, THEN TAP OR PRESS SPACE TO LAUNCH'
-                            : 'DRAG, MOVE THE MOUSE OR USE LEFT AND RIGHT',
+                    ? `${this.contractResult} · NEXT CONTRACT ${this.nextContract().toUpperCase()}`
+                    : contract === 'blitz'
+                        ? `BLITZ: CLEAR WITHIN ${this.blitzTarget().toFixed(0)}S`
+                        : contract === 'perfect'
+                            ? 'PERFECT: CLEAR WITHOUT LOSING A LIFE'
+                            : 'MULTIBALL: REACH THREE ACTIVE BALLS BEFORE CLEAR',
         };
     }
 
@@ -227,14 +255,72 @@ export class BrickBreakerViewModel {
             return;
         }
         if (this.model.phase === 'won') {
+            this.recordContractIfNeeded();
             this.model.advanceLevel();
+            this.beginLevelTracking();
             this.model.launch();
         } else {
             this.model.reset();
+            this.contractBonus = 0;
+            this.contractStreak = 0;
+            this.completedContracts = 0;
+            this.beginLevelTracking();
         }
         this.autopilot.reset();
         this.resultElapsed = 0;
         this.dirty = true;
+    }
+
+    private recordContractIfNeeded(): void {
+        if (this.model.phase !== 'won' || this.contractRecorded) {
+            return;
+        }
+        this.contractRecorded = true;
+        const contract = this.currentContract();
+        const success = contract === 'blitz'
+            ? this.levelElapsed <= this.blitzTarget()
+            : contract === 'perfect'
+                ? this.model.lives >= this.levelStartLives
+                : this.maximumActiveBalls >= 3;
+        if (success) {
+            this.contractStreak += 1;
+            this.completedContracts += 1;
+            const bonus = 250 + this.model.level * 90 + this.contractStreak * 60;
+            this.contractBonus += bonus;
+            this.contractResult = `CONTRACT +${bonus}`;
+        } else {
+            this.contractStreak = 0;
+            this.contractResult = 'CONTRACT MISSED';
+        }
+        this.bestScore = Math.max(this.bestScore, this.totalScore());
+        this.dirty = true;
+    }
+
+    private beginLevelTracking(): void {
+        this.levelElapsed = 0;
+        this.levelStartLives = this.model.lives;
+        this.maximumActiveBalls = Math.max(
+            1,
+            this.model.balls.filter((ball) => ball.active).length,
+        );
+        this.contractRecorded = false;
+        this.contractResult = `${this.currentContract().toUpperCase()} READY`;
+    }
+
+    private currentContract(): BrickBreakerContract {
+        return CONTRACTS[(this.model.level - 1) % CONTRACTS.length] ?? 'blitz';
+    }
+
+    private nextContract(): BrickBreakerContract {
+        return CONTRACTS[this.model.level % CONTRACTS.length] ?? 'blitz';
+    }
+
+    private blitzTarget(): number {
+        return Math.max(20, 34 - Math.min(12, this.model.level * 1.5));
+    }
+
+    private totalScore(): number {
+        return this.model.score + this.contractBonus;
     }
 
     private activateHumanControl(): void {
@@ -258,7 +344,7 @@ export class BrickBreakerViewModel {
     }
 
     private resetHumanRun(): void {
-        this.bestScore = Math.max(this.bestScore, this.model.score);
+        this.bestScore = Math.max(this.bestScore, this.totalScore());
         this.model.reset();
         this.autopilot.reset();
         this.clock.reset();
@@ -268,6 +354,10 @@ export class BrickBreakerViewModel {
         this.humanTargetNormalized = null;
         this.resultElapsed = 0;
         this.renderAccumulator = RENDER_STEP;
+        this.contractBonus = 0;
+        this.contractStreak = 0;
+        this.completedContracts = 0;
+        this.beginLevelTracking();
         this.dirty = true;
     }
 }

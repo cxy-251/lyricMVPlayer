@@ -32,6 +32,7 @@ const OFFSETS: Record<MazeChaseDirection, readonly [number, number]> = {
 };
 const PLAYER_INTERVAL = 0.115;
 const ENEMY_INTERVAL = 0.155;
+const MAXIMUM_LIVES = 4;
 
 interface MutableEnemy {
     x: number;
@@ -48,7 +49,9 @@ export class MazeChaseModel {
 
     private readonly walls: boolean[] = [];
     private readonly initialPellets: boolean[] = [];
+    private readonly initialPowerPellets: boolean[] = [];
     private pellets: boolean[] = [];
+    private powerPellets: boolean[] = [];
     private player = { x: 0, y: 0 };
     private playerStart = { x: 0, y: 0 };
     private direction: MazeChaseDirection = 'left';
@@ -57,9 +60,12 @@ export class MazeChaseModel {
     private currentPhase: MazeChasePhase = 'playing';
     private currentScore = 0;
     private currentLives = 3;
+    private currentLevel = 1;
     private playerElapsed = 0;
     private enemyElapsed = 0;
     private invulnerableElapsed = 0;
+    private frightenedElapsed = 0;
+    private currentEnemyCombo = 0;
     private patrolPhase = 0;
 
     constructor() {
@@ -79,21 +85,42 @@ export class MazeChaseModel {
         return this.currentLives;
     }
 
+    get level(): number {
+        return this.currentLevel;
+    }
+
+    get frightenedRemaining(): number {
+        return this.frightenedElapsed;
+    }
+
+    get enemyCombo(): number {
+        return this.currentEnemyCombo;
+    }
+
     get remainingPellets(): number {
-        return this.pellets.filter(Boolean).length;
+        return this.pellets.filter(Boolean).length
+            + this.powerPellets.filter(Boolean).length;
     }
 
     reset(): void {
-        this.pellets = [...this.initialPellets];
         this.currentPhase = 'playing';
         this.currentScore = 0;
         this.currentLives = 3;
-        this.playerElapsed = 0;
-        this.enemyElapsed = 0;
-        this.invulnerableElapsed = 0;
-        this.patrolPhase = 0;
-        this.resetActors();
-        this.consumePellet();
+        this.currentLevel = 1;
+        this.prepareLevel();
+    }
+
+    advanceLevel(): boolean {
+        if (this.currentPhase !== 'won') {
+            return false;
+        }
+        const completedLevel = this.currentLevel;
+        this.currentLevel += 1;
+        if (completedLevel % 3 === 0) {
+            this.currentLives = Math.min(MAXIMUM_LIVES, this.currentLives + 1);
+        }
+        this.prepareLevel();
+        return true;
     }
 
     setDesiredDirection(direction: MazeChaseDirection): void {
@@ -115,19 +142,24 @@ export class MazeChaseModel {
         this.playerElapsed += dt;
         this.enemyElapsed += dt;
         this.invulnerableElapsed = Math.max(0, this.invulnerableElapsed - dt);
+        const frightenedBefore = this.frightenedElapsed;
+        this.frightenedElapsed = Math.max(0, this.frightenedElapsed - dt);
+        if (frightenedBefore > 0 && this.frightenedElapsed === 0) {
+            this.currentEnemyCombo = 0;
+        }
         this.patrolPhase += dt;
         let changed = false;
 
-        while (this.playerElapsed >= PLAYER_INTERVAL) {
-            this.playerElapsed -= PLAYER_INTERVAL;
+        while (this.playerElapsed >= this.playerInterval()) {
+            this.playerElapsed -= this.playerInterval();
             changed = this.movePlayer() || changed;
             if (this.currentPhase !== 'playing') {
                 return true;
             }
         }
 
-        while (this.enemyElapsed >= ENEMY_INTERVAL) {
-            this.enemyElapsed -= ENEMY_INTERVAL;
+        while (this.enemyElapsed >= this.enemyInterval()) {
+            this.enemyElapsed -= this.enemyInterval();
             changed = this.moveEnemies() || changed;
             if (this.resolveCollision()) {
                 changed = true;
@@ -136,7 +168,7 @@ export class MazeChaseModel {
                 return true;
             }
         }
-        return changed;
+        return changed || frightenedBefore !== this.frightenedElapsed;
     }
 
     createObservation(): MazeChaseObservation {
@@ -145,6 +177,7 @@ export class MazeChaseModel {
             height: this.height,
             walls: [...this.walls],
             pellets: [...this.pellets],
+            powerPellets: [...this.powerPellets],
             player: { ...this.player },
             direction: this.direction,
             enemies: this.enemies.map((enemy): MazeChaseEnemyState => ({
@@ -153,13 +186,31 @@ export class MazeChaseModel {
                 kind: enemy.kind,
                 direction: enemy.direction,
             })),
+            level: this.currentLevel,
+            frightenedRemaining: this.frightenedElapsed,
+            enemyCombo: this.currentEnemyCombo,
             phase: this.currentPhase,
         };
+    }
+
+    private prepareLevel(): void {
+        this.pellets = [...this.initialPellets];
+        this.powerPellets = [...this.initialPowerPellets];
+        this.currentPhase = 'playing';
+        this.playerElapsed = 0;
+        this.enemyElapsed = 0;
+        this.invulnerableElapsed = 0;
+        this.frightenedElapsed = 0;
+        this.currentEnemyCombo = 0;
+        this.patrolPhase = 0;
+        this.resetActors();
+        this.consumePellet();
     }
 
     private parseMap(): void {
         this.walls.length = 0;
         this.initialPellets.length = 0;
+        this.initialPowerPellets.length = 0;
         this.enemies.length = 0;
         for (let mapRow = MAP.length - 1; mapRow >= 0; mapRow -= 1) {
             const y = MAP.length - 1 - mapRow;
@@ -169,8 +220,10 @@ export class MazeChaseModel {
             }
             for (let x = 0; x < row.length; x += 1) {
                 const symbol = row[x];
+                const powerPellet = symbol === '.' && this.isPowerPelletCoordinate(x, y);
                 this.walls.push(symbol === '#');
-                this.initialPellets.push(symbol === '.');
+                this.initialPellets.push(symbol === '.' && !powerPellet);
+                this.initialPowerPellets.push(powerPellet);
                 if (symbol === '@') {
                     this.playerStart = { x, y };
                 } else if (symbol === 'A' || symbol === 'B' || symbol === 'C') {
@@ -197,10 +250,14 @@ export class MazeChaseModel {
         this.direction = 'left';
         this.desiredDirection = 'left';
         for (const enemy of this.enemies) {
-            enemy.x = enemy.startX;
-            enemy.y = enemy.startY;
-            enemy.direction = enemy.kind === 'ambusher' ? 'right' : 'left';
+            this.resetEnemy(enemy);
         }
+    }
+
+    private resetEnemy(enemy: MutableEnemy): void {
+        enemy.x = enemy.startX;
+        enemy.y = enemy.startY;
+        enemy.direction = enemy.kind === 'ambusher' ? 'right' : 'left';
     }
 
     private movePlayer(): boolean {
@@ -220,14 +277,24 @@ export class MazeChaseModel {
 
     private consumePellet(): void {
         const index = this.index(this.player.x, this.player.y);
-        if (!this.pellets[index]) {
+        if (this.powerPellets[index]) {
+            this.powerPellets[index] = false;
+            this.currentScore += 50;
+            this.frightenedElapsed = Math.max(
+                3.5,
+                6 - (this.currentLevel - 1) * 0.2,
+            );
+            this.currentEnemyCombo = 0;
+        } else if (this.pellets[index]) {
+            this.pellets[index] = false;
+            this.currentScore += 10;
+        } else {
             return;
         }
-        this.pellets[index] = false;
-        this.currentScore += 10;
+
         if (this.remainingPellets === 0) {
             this.currentPhase = 'won';
-            this.currentScore += 500;
+            this.currentScore += 500 + this.currentLevel * 150;
             this.playerElapsed = 0;
             this.enemyElapsed = 0;
         }
@@ -236,7 +303,9 @@ export class MazeChaseModel {
     private moveEnemies(): boolean {
         let moved = false;
         for (const enemy of this.enemies) {
-            const target = this.enemyTarget(enemy.kind);
+            const target = this.frightenedElapsed > 0
+                ? this.frightenedTarget(enemy)
+                : this.enemyTarget(enemy.kind);
             const nextDirection = this.chooseEnemyDirection(enemy, target);
             if (!nextDirection) {
                 continue;
@@ -251,6 +320,13 @@ export class MazeChaseModel {
             moved = true;
         }
         return moved;
+    }
+
+    private frightenedTarget(enemy: MutableEnemy): MazeChasePoint {
+        return {
+            x: enemy.x < this.player.x ? 1 : this.width - 2,
+            y: enemy.y < this.player.y ? 1 : this.height - 2,
+        };
     }
 
     private enemyTarget(kind: MazeChaseEnemyKind): MazeChasePoint {
@@ -270,7 +346,8 @@ export class MazeChaseModel {
             { x: this.width - 2, y: 1 },
             { x: 1, y: this.height - 2 },
         ];
-        return corners[Math.floor(this.patrolPhase / 4) % corners.length];
+        const cycle = Math.max(1.8, 4 - (this.currentLevel - 1) * 0.22);
+        return corners[Math.floor(this.patrolPhase / cycle) % corners.length];
     }
 
     private chooseEnemyDirection(
@@ -302,16 +379,28 @@ export class MazeChaseModel {
         if (this.invulnerableElapsed > 0 || this.currentPhase !== 'playing') {
             return false;
         }
-        const hit = this.enemies.some((enemy) => (
+        const hits = this.enemies.filter((enemy) => (
             enemy.x === this.player.x && enemy.y === this.player.y
         ));
-        if (!hit) {
+        if (hits.length === 0) {
             return false;
+        }
+
+        if (this.frightenedElapsed > 0) {
+            for (const enemy of hits) {
+                const multiplier = 2 ** Math.min(3, this.currentEnemyCombo);
+                this.currentScore += 200 * multiplier;
+                this.currentEnemyCombo += 1;
+                this.resetEnemy(enemy);
+            }
+            return true;
         }
 
         this.currentLives = Math.max(0, this.currentLives - 1);
         this.playerElapsed = 0;
         this.enemyElapsed = 0;
+        this.frightenedElapsed = 0;
+        this.currentEnemyCombo = 0;
         this.resetActors();
         if (this.currentLives === 0) {
             this.currentPhase = 'lost';
@@ -320,6 +409,22 @@ export class MazeChaseModel {
             this.invulnerableElapsed = 1;
         }
         return true;
+    }
+
+    private playerInterval(): number {
+        return Math.max(0.082, PLAYER_INTERVAL - (this.currentLevel - 1) * 0.0025);
+    }
+
+    private enemyInterval(): number {
+        if (this.frightenedElapsed > 0) {
+            return 0.22;
+        }
+        return Math.max(0.095, ENEMY_INTERVAL - (this.currentLevel - 1) * 0.006);
+    }
+
+    private isPowerPelletCoordinate(x: number, y: number): boolean {
+        return (x === 1 || x === this.width - 2)
+            && (y === 1 || y === this.height - 2);
     }
 
     private shortestDistance(start: MazeChasePoint, target: MazeChasePoint): number {

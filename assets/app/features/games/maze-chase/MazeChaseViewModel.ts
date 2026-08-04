@@ -8,7 +8,7 @@ import type {
 
 const AI_TAKEOVER_DELAY = 3;
 const AI_DECISION_INTERVAL = 0.075;
-const RESULT_HOLD = 1.25;
+const RESULT_HOLD = 1.35;
 
 export class MazeChaseViewModel {
     private readonly model = new MazeChaseModel();
@@ -63,7 +63,9 @@ export class MazeChaseViewModel {
             return;
         }
         this.activateHuman();
-        if (this.model.phase !== 'playing') {
+        if (this.model.phase === 'won') {
+            this.model.advanceLevel();
+        } else if (this.model.phase === 'lost') {
             this.model.reset();
         }
         this.model.setDesiredDirection(direction);
@@ -103,15 +105,18 @@ export class MazeChaseViewModel {
 
     createViewState(): MazeChaseViewState {
         const observation = this.model.createObservation();
+        const powered = observation.frightenedRemaining > 0;
         const status = this.paused
             ? 'PAUSED'
             : observation.phase === 'won'
-                ? 'MAZE CLEARED'
+                ? `LEVEL ${observation.level} CLEARED`
                 : observation.phase === 'lost'
-                    ? 'RUN ENDED'
-                    : this.controller === 'autopilot'
-                        ? 'AI NAVIGATING'
-                        : 'HUMAN';
+                    ? `RUN ENDED · LEVEL ${observation.level}`
+                    : powered
+                        ? `POWER MODE · COMBO ${observation.enemyCombo}`
+                        : this.controller === 'autopilot'
+                            ? `AI NAVIGATING · LEVEL ${observation.level}`
+                            : `HUMAN · LEVEL ${observation.level}`;
         return {
             ...observation,
             score: this.model.score,
@@ -119,13 +124,19 @@ export class MazeChaseViewModel {
             remainingPellets: this.model.remainingPellets,
             controller: this.controller,
             status,
-            hint: observation.phase !== 'playing'
+            hint: observation.phase === 'won'
                 ? this.controller === 'autopilot'
-                    ? 'AI WILL START A NEW RUN'
-                    : 'PRESS A DIRECTION OR NEW'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — MOVE TO TAKE OVER'
-                    : 'ARROWS / WASD / SWIPE',
+                    ? 'AI WILL ENTER THE FASTER NEXT LEVEL'
+                    : 'PRESS A DIRECTION FOR THE NEXT LEVEL · NEW RESTARTS RUN'
+                : observation.phase === 'lost'
+                    ? this.controller === 'autopilot'
+                        ? 'AI WILL START A NEW RUN'
+                        : 'PRESS A DIRECTION OR NEW'
+                    : powered
+                        ? `ENEMIES ARE VULNERABLE FOR ${observation.frightenedRemaining.toFixed(1)}S`
+                        : this.controller === 'autopilot'
+                            ? 'AI ACTIVE — MOVE TO TAKE OVER'
+                            : 'POWER PELLETS ENABLE ENEMY COMBOS · ARROWS / WASD / SWIPE',
         };
     }
 
@@ -140,7 +151,11 @@ export class MazeChaseViewModel {
 
         this.resultElapsed += dt;
         if (this.resultElapsed >= RESULT_HOLD) {
-            this.model.reset();
+            if (this.model.phase === 'won') {
+                this.model.advanceLevel();
+            } else {
+                this.model.reset();
+            }
             this.resultElapsed = 0;
             this.aiElapsed = AI_DECISION_INTERVAL;
             this.dirty = true;

@@ -27,6 +27,7 @@ const ENEMY_COLORS: Record<MazeChaseEnemyKind, Color> = {
     ambusher: new Color(181, 149, 95, 255),
     patroller: new Color(111, 145, 170, 255),
 };
+const FRIGHTENED_COLOR = new Color(76, 112, 190, 255);
 
 export class MazeChaseView {
     private readonly input: MazeChaseInputController;
@@ -79,7 +80,7 @@ export class MazeChaseView {
         const statsNode = createLabel(
             this.root,
             '',
-            Math.min(520, safeWidth - 20),
+            Math.min(560, safeWidth - 20),
             20,
             compact ? 9 : 11,
             palette.muted,
@@ -130,7 +131,7 @@ export class MazeChaseView {
         const hintNode = createLabel(
             this.root,
             '',
-            Math.min(600, safeWidth - 20),
+            Math.min(620, safeWidth - 20),
             20,
             compact ? 8 : 10,
             palette.muted,
@@ -145,7 +146,7 @@ export class MazeChaseView {
             return;
         }
         this.statusLabel && (this.statusLabel.string = state.status);
-        this.statsLabel && (this.statsLabel.string = `SCORE ${state.score}   LIVES ${state.lives}   ENERGY ${state.remainingPellets}`);
+        this.statsLabel && (this.statsLabel.string = `LV ${state.level}   SCORE ${state.score}   LIVES ${state.lives}   ENERGY ${state.remainingPellets}`);
         this.hintLabel && (this.hintLabel.string = state.hint);
         const graphics = this.boardGraphics;
         const cell = this.boardWidth / state.width;
@@ -160,6 +161,10 @@ export class MazeChaseView {
                 if (state.walls[index]) {
                     graphics.fillColor = palette.surfaceStrong;
                     graphics.fillRect(left + 1, bottom + 1, cell - 2, cell - 2);
+                } else if (state.powerPellets[index]) {
+                    graphics.fillColor = palette.accent;
+                    graphics.circle(left + cell / 2, bottom + cell / 2, Math.max(2.5, cell * 0.22));
+                    graphics.fill();
                 } else if (state.pellets[index]) {
                     graphics.fillColor = palette.warning;
                     graphics.circle(left + cell / 2, bottom + cell / 2, Math.max(1.5, cell * 0.1));
@@ -171,7 +176,9 @@ export class MazeChaseView {
         for (const enemy of state.enemies) {
             const left = -this.boardWidth / 2 + enemy.x * cell + cell * 0.16;
             const bottom = -this.boardHeight / 2 + enemy.y * cell + cell * 0.16;
-            graphics.fillColor = ENEMY_COLORS[enemy.kind];
+            graphics.fillColor = state.frightenedRemaining > 0
+                ? FRIGHTENED_COLOR
+                : ENEMY_COLORS[enemy.kind];
             graphics.roundRect(left, bottom, cell * 0.68, cell * 0.68, cell * 0.15);
             graphics.fill();
             graphics.fillColor = palette.primaryText;

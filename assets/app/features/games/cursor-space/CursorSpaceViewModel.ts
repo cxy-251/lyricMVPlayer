@@ -23,6 +23,9 @@ const ENEMY_HIT_EXPLOSION_DURATION = 0.24;
 const MAX_VISIBLE_HIT_EXPLOSIONS = 32;
 const MAXIMUM_ESCORTS = 2;
 
+type CursorSpaceMission = 'hunter' | 'survivor' | 'ace';
+const MISSIONS: readonly CursorSpaceMission[] = ['hunter', 'survivor', 'ace'];
+
 interface MutableVectorRenderState {
     x: number;
     y: number;
@@ -115,6 +118,14 @@ export class CursorSpaceViewModel {
     private humanIdleElapsed = AI_TAKEOVER_DELAY;
     private aiActive = true;
     private paused = false;
+    private missionIndex = 0;
+    private missionNumber = 1;
+    private missionStartLevel = 1;
+    private missionStartKills = 0;
+    private missionStartDeaths = 0;
+    private completedMissions = 0;
+    private missionMessage = '';
+    private missionMessageElapsed = 0;
 
     constructor() {
         this.reset();
@@ -172,6 +183,7 @@ export class CursorSpaceViewModel {
             }
             this.model.step(step);
             this.updateHitFeedback(step);
+            this.updateMission(step);
         });
         this.renderAccumulator += frameDelta;
 
@@ -196,6 +208,7 @@ export class CursorSpaceViewModel {
         this.model.reset();
         this.resetHitFeedback();
         this.resetControlState();
+        this.resetMissionState();
         this.clock.reset();
         this.renderAccumulator = 0;
         this.syncRenderState();
@@ -263,13 +276,99 @@ export class CursorSpaceViewModel {
         const stats = this.model.stats;
         const controller = this.aiActive ? 'AI' : 'HUMAN';
         const speed = Math.round(Math.hypot(player.velocity.x, player.velocity.y));
+        const mission = this.currentMission().toUpperCase();
+        const message = this.missionMessageElapsed > 0 ? `  ${this.missionMessage}` : '';
         this.renderState.stats = `${controller} L${stats.level}`
-            + `  HULL ${player.health}/${player.maximumHealth}`
-            + `  WING ${player.escortCount}`
-            + `  SPD ${speed}`
-            + `  K ${stats.enemiesDestroyedByPlayer}`
-            + `  ALL ${stats.enemiesDestroyed}`
-            + `  D ${stats.playerDeaths}`;
+            + `  H${player.health}/${player.maximumHealth}`
+            + `  W${player.escortCount}`
+            + `  F${player.fireSupportLevel}`
+            + `  S${speed}`
+            + `  K${stats.enemiesDestroyedByPlayer}`
+            + `  D${stats.playerDeaths}`
+            + `  M${this.missionNumber} ${mission} ${this.missionProgress()}/${this.missionTarget()}`
+            + `  C${this.completedMissions}`
+            + message;
+    }
+
+    private updateMission(dt: number): void {
+        this.missionMessageElapsed = Math.max(0, this.missionMessageElapsed - dt);
+        const stats = this.model.stats;
+        if (
+            this.currentMission() === 'ace'
+            && stats.playerDeaths > this.missionStartDeaths
+        ) {
+            this.missionStartKills = stats.enemiesDestroyedByPlayer;
+            this.missionStartDeaths = stats.playerDeaths;
+            this.missionMessage = 'ACE RESET';
+            this.missionMessageElapsed = 1.5;
+            return;
+        }
+        if (this.missionProgress() >= this.missionTarget()) {
+            this.completeMission();
+        }
+    }
+
+    private completeMission(): void {
+        const player = this.model.player;
+        const mission = this.currentMission();
+        if (mission === 'hunter') {
+            player.fireSupportLevel = Math.min(6, player.fireSupportLevel + 1);
+            this.missionMessage = 'FIRE +1';
+        } else if (mission === 'survivor') {
+            player.maximumHealth += 1;
+            player.health = player.maximumHealth;
+            this.missionMessage = 'HULL +1';
+        } else if (player.escortCount < MAXIMUM_ESCORTS) {
+            player.escortCount += 1;
+            this.missionMessage = 'WING +1';
+        } else {
+            player.maximumHealth += 1;
+            player.health = player.maximumHealth;
+            this.missionMessage = 'WING MAX · HULL +1';
+        }
+        this.completedMissions += 1;
+        this.missionNumber += 1;
+        this.missionIndex = (this.missionIndex + 1) % MISSIONS.length;
+        this.missionMessageElapsed = 3;
+        this.captureMissionStart();
+    }
+
+    private resetMissionState(): void {
+        this.missionIndex = 0;
+        this.missionNumber = 1;
+        this.completedMissions = 0;
+        this.missionMessage = '';
+        this.missionMessageElapsed = 0;
+        this.captureMissionStart();
+    }
+
+    private captureMissionStart(): void {
+        const stats = this.model.stats;
+        this.missionStartLevel = stats.level;
+        this.missionStartKills = stats.enemiesDestroyedByPlayer;
+        this.missionStartDeaths = stats.playerDeaths;
+    }
+
+    private currentMission(): CursorSpaceMission {
+        return MISSIONS[this.missionIndex] ?? 'hunter';
+    }
+
+    private missionProgress(): number {
+        const stats = this.model.stats;
+        if (this.currentMission() === 'survivor') {
+            return Math.max(0, stats.level - this.missionStartLevel);
+        }
+        return Math.max(0, stats.enemiesDestroyedByPlayer - this.missionStartKills);
+    }
+
+    private missionTarget(): number {
+        if (this.currentMission() === 'survivor') {
+            return 2;
+        }
+        const tier = Math.floor((this.missionNumber - 1) / MISSIONS.length);
+        return this.currentMission() === 'hunter'
+            ? 8 + tier * 3
+            : 6 + tier * 2;
     }
 
     private resetControlState(): void {
