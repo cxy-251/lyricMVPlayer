@@ -122,8 +122,8 @@ export class BlockStackerViewModel {
         const windText = this.model.wind === 0
             ? 'CALM'
             : this.model.wind > 0
-                ? `WIND →${Math.abs(this.model.wind)}`
-                : `WIND ←${Math.abs(this.model.wind)}`;
+                ? `W→${Math.abs(this.model.wind)}`
+                : `W←${Math.abs(this.model.wind)}`;
         return {
             phase,
             controller: this.controller,
@@ -144,11 +144,11 @@ export class BlockStackerViewModel {
             eventText: this.lastEvent,
             status: `${controllerName}  ${phaseName}`
                 + (this.lastEvent === 'STACKED' ? '' : ` · ${this.lastEvent}`),
-            scoreText: `SCORE ${this.model.score}`
-                + `  BEST ${this.bestScore}`
+            scoreText: `S ${this.model.score}`
+                + `  B ${this.bestScore}`
                 + `  LV ${Math.max(0, this.model.level - 1)}`
                 + `  C${this.model.combo}`
-                + `  SHIELD ${this.model.shield}`
+                + `  SH${this.model.shield}`
                 + `  ${windText}`,
             hint: phase === 'lost'
                 ? 'TAP, CLICK OR PRESS SPACE TO RESTART'
