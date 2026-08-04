@@ -67,7 +67,7 @@ export class TowerDefenseView {
         const safeBottom = -viewport.height / 2 + viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = safeTop - (compact ? 64 : 72);
-        const contentBottom = safeBottom + (compact ? 142 : 116);
+        const contentBottom = safeBottom + (compact ? 132 : 84);
         const hudHeight = compact ? 72 : 82;
         const boardAreaHeight = Math.max(1, contentTop - contentBottom - hudHeight);
         const cellSize = Math.max(1, Math.floor(Math.min(
@@ -119,24 +119,11 @@ export class TowerDefenseView {
             centerX,
             contentTop - (compact ? 39 : 46),
         ).getComponent(Label);
-        this.hintLabel = createLabel(
-            this.root,
-            '',
-            Math.max(1, Math.min(safeWidth - 24, 760)),
-            compact ? 18 : 22,
-            compact ? 9 : 10,
-            palette.muted,
-            centerX,
-            boardBottom - (compact ? 16 : 20),
-        ).getComponent(Label);
         if (this.statusLabel) {
             this.statusLabel.enableWrapText = false;
         }
         if (this.statsLabel) {
             this.statsLabel.enableWrapText = false;
-        }
-        if (this.hintLabel) {
-            this.hintLabel.enableWrapText = false;
         }
 
         const columns = compact ? 3 : 6;
@@ -150,8 +137,8 @@ export class TowerDefenseView {
         );
         const totalWidth = buttonWidth * columns + gap * (columns - 1);
         const startX = centerX - totalWidth / 2 + buttonWidth / 2;
-        const controlsY = safeBottom + (compact ? 83 : 82);
-        const rowGap = compact ? 40 : 0;
+        const controlsY = safeBottom + (compact ? 74 : 28);
+        const rowGap = compact ? 48 : 0;
         const buttonSpecs: Array<{
             name: string;
             text: string;
@@ -210,6 +197,20 @@ export class TowerDefenseView {
                 onPress: spec.onPress,
             });
         });
+
+        this.hintLabel = createLabel(
+            this.root,
+            '',
+            Math.max(1, Math.min(safeWidth - 24, 760)),
+            compact ? 18 : 22,
+            compact ? 9 : 10,
+            palette.muted,
+            centerX,
+            safeBottom + (compact ? 112 : 64),
+        ).getComponent(Label);
+        if (this.hintLabel) {
+            this.hintLabel.enableWrapText = false;
+        }
 
         if (this.latestState) {
             this.render(this.latestState);
