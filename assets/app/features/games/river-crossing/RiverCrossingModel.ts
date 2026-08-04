@@ -119,6 +119,10 @@ export class RiverCrossingModel {
             return false;
         }
         const dt = Math.max(0, Math.min(0.1, deltaTime));
+        if (dt <= 0) {
+            return false;
+        }
+
         for (const lane of this.lanes) {
             if (lane.speed === 0) {
                 continue;
@@ -127,12 +131,19 @@ export class RiverCrossingModel {
                 object.x = this.wrapX(object.x + lane.speed * dt, object.width);
             }
         }
+
         const lane = this.lanes[this.player.y];
+        if (!lane) {
+            this.loseLife();
+            return true;
+        }
         if (lane.kind === 'river') {
             const support = this.supportAt(lane, this.player.x);
-            if (support) {
-                this.player.x += lane.speed * dt;
+            if (!support) {
+                this.loseLife();
+                return true;
             }
+            this.player.x += lane.speed * dt;
         }
         this.resolveCurrentLane();
         return true;
@@ -161,20 +172,30 @@ export class RiverCrossingModel {
             this.loseLife();
             return;
         }
+
         const lane = this.lanes[this.player.y];
+        if (!lane) {
+            this.loseLife();
+            return;
+        }
         if (lane.kind === 'road') {
             if (this.supportAt(lane, this.player.x)) {
                 this.loseLife();
             }
-        } else if (lane.kind === 'river') {
+            return;
+        }
+        if (lane.kind === 'river') {
             if (!this.supportAt(lane, this.player.x)) {
                 this.loseLife();
             }
-        } else if (lane.kind === 'goal') {
+            return;
+        }
+        if (lane.kind === 'goal') {
             this.completedCrossings += 1;
             this.currentScore += 250;
             if (this.completedCrossings >= TARGET_CROSSINGS) {
                 this.currentPhase = 'won';
+                this.resetPlayer();
             } else {
                 this.resetPlayer();
             }
@@ -183,21 +204,31 @@ export class RiverCrossingModel {
 
     private supportAt(lane: MutableLane, x: number): MutableObject | null {
         return lane.objects.find((object) => (
-            Math.abs(object.x - x) <= object.width / 2 + 0.32
+            this.periodicDistance(object.x, x, object.width) <= object.width / 2 + 0.32
         )) ?? null;
     }
 
     private loseLife(): void {
-        this.currentLives -= 1;
-        if (this.currentLives <= 0) {
+        if (this.currentPhase !== 'playing') {
+            return;
+        }
+        this.currentLives = Math.max(0, this.currentLives - 1);
+        this.resetPlayer();
+        if (this.currentLives === 0) {
             this.currentPhase = 'lost';
-        } else {
-            this.resetPlayer();
         }
     }
 
     private resetPlayer(): void {
         this.player = { x: Math.floor(WIDTH / 2), y: 0 };
+    }
+
+    private periodicDistance(objectX: number, playerX: number, objectWidth: number): number {
+        const minimum = -objectWidth / 2 - 1;
+        const maximum = WIDTH - 1 + objectWidth / 2 + 1;
+        const span = maximum - minimum;
+        const direct = Math.abs(objectX - playerX);
+        return Math.min(direct, Math.abs(direct - span), Math.abs(direct + span));
     }
 
     private wrapX(x: number, objectWidth: number): number {

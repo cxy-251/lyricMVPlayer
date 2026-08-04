@@ -25,15 +25,19 @@ export class MazeChaseViewModel {
             return false;
         }
         const dt = Math.max(0, Math.min(0.1, deltaTime));
+
+        if (this.model.phase !== 'playing') {
+            return this.updateTerminalState(dt);
+        }
+
         if (this.controller === 'human') {
             this.humanIdleElapsed += dt;
             if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
-                this.controller = 'autopilot';
-                this.aiElapsed = AI_DECISION_INTERVAL;
-                this.dirty = true;
+                this.activateAutopilot();
             }
         }
-        if (this.controller === 'autopilot' && this.model.phase === 'playing') {
+
+        if (this.controller === 'autopilot') {
             this.aiElapsed += dt;
             if (this.aiElapsed >= AI_DECISION_INTERVAL) {
                 this.aiElapsed %= AI_DECISION_INTERVAL;
@@ -43,21 +47,15 @@ export class MazeChaseViewModel {
                 }
             }
         }
-        this.dirty = this.model.step(dt) || this.dirty;
-        if (this.model.phase !== 'playing') {
-            this.resultElapsed += dt;
-            if (this.controller === 'autopilot' && this.resultElapsed >= RESULT_HOLD) {
-                this.model.reset();
-                this.resultElapsed = 0;
-                this.aiElapsed = AI_DECISION_INTERVAL;
-                this.dirty = true;
-            }
-        } else {
-            this.resultElapsed = 0;
+
+        if (this.model.step(dt)) {
+            this.dirty = true;
         }
-        const changed = this.dirty;
-        this.dirty = false;
-        return changed;
+        if (this.model.phase !== 'playing') {
+            this.resultElapsed = 0;
+            this.dirty = true;
+        }
+        return this.consumeDirty();
     }
 
     setDirectionFromHuman(direction: MazeChaseDirection): void {
@@ -65,11 +63,17 @@ export class MazeChaseViewModel {
             return;
         }
         this.activateHuman();
+        if (this.model.phase !== 'playing') {
+            this.model.reset();
+        }
         this.model.setDesiredDirection(direction);
         this.dirty = true;
     }
 
     restartFromHuman(): void {
+        if (this.paused) {
+            return;
+        }
         this.activateHuman();
         this.model.reset();
         this.dirty = true;
@@ -118,11 +122,30 @@ export class MazeChaseViewModel {
             hint: observation.phase !== 'playing'
                 ? this.controller === 'autopilot'
                     ? 'AI WILL START A NEW RUN'
-                    : 'PRESS R OR NEW'
+                    : 'PRESS A DIRECTION OR NEW'
                 : this.controller === 'autopilot'
                     ? 'AI ACTIVE — MOVE TO TAKE OVER'
                     : 'ARROWS / WASD / SWIPE',
         };
+    }
+
+    private updateTerminalState(dt: number): boolean {
+        if (this.controller === 'human') {
+            this.humanIdleElapsed += dt;
+            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
+                this.activateAutopilot();
+            }
+            return this.consumeDirty();
+        }
+
+        this.resultElapsed += dt;
+        if (this.resultElapsed >= RESULT_HOLD) {
+            this.model.reset();
+            this.resultElapsed = 0;
+            this.aiElapsed = AI_DECISION_INTERVAL;
+            this.dirty = true;
+        }
+        return this.consumeDirty();
     }
 
     private activateHuman(): void {
@@ -130,5 +153,20 @@ export class MazeChaseViewModel {
         this.humanIdleElapsed = 0;
         this.aiElapsed = 0;
         this.resultElapsed = 0;
+        this.dirty = true;
+    }
+
+    private activateAutopilot(): void {
+        this.controller = 'autopilot';
+        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
+        this.aiElapsed = AI_DECISION_INTERVAL;
+        this.resultElapsed = 0;
+        this.dirty = true;
+    }
+
+    private consumeDirty(): boolean {
+        const changed = this.dirty;
+        this.dirty = false;
+        return changed;
     }
 }

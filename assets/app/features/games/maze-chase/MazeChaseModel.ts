@@ -97,6 +97,9 @@ export class MazeChaseModel {
     }
 
     setDesiredDirection(direction: MazeChaseDirection): void {
+        if (this.currentPhase !== 'playing') {
+            return;
+        }
         this.desiredDirection = direction;
     }
 
@@ -105,6 +108,10 @@ export class MazeChaseModel {
             return false;
         }
         const dt = Math.max(0, Math.min(0.1, deltaTime));
+        if (dt <= 0) {
+            return false;
+        }
+
         this.playerElapsed += dt;
         this.enemyElapsed += dt;
         this.invulnerableElapsed = Math.max(0, this.invulnerableElapsed - dt);
@@ -118,11 +125,13 @@ export class MazeChaseModel {
                 return true;
             }
         }
+
         while (this.enemyElapsed >= ENEMY_INTERVAL) {
             this.enemyElapsed -= ENEMY_INTERVAL;
-            this.moveEnemies();
-            changed = true;
-            this.resolveCollision();
+            changed = this.moveEnemies() || changed;
+            if (this.resolveCollision()) {
+                changed = true;
+            }
             if (this.currentPhase !== 'playing') {
                 return true;
             }
@@ -138,7 +147,7 @@ export class MazeChaseModel {
             pellets: [...this.pellets],
             player: { ...this.player },
             direction: this.direction,
-            enemies: this.enemies.map((enemy) => ({
+            enemies: this.enemies.map((enemy): MazeChaseEnemyState => ({
                 x: enemy.x,
                 y: enemy.y,
                 kind: enemy.kind,
@@ -155,6 +164,9 @@ export class MazeChaseModel {
         for (let mapRow = MAP.length - 1; mapRow >= 0; mapRow -= 1) {
             const y = MAP.length - 1 - mapRow;
             const row = MAP[mapRow];
+            if (row.length !== this.width) {
+                throw new Error('Maze Chase map rows must have equal width.');
+            }
             for (let x = 0; x < row.length; x += 1) {
                 const symbol = row[x];
                 this.walls.push(symbol === '#');
@@ -200,7 +212,9 @@ export class MazeChaseModel {
         }
         this.player = this.offset(this.player, this.direction);
         this.consumePellet();
-        this.resolveCollision();
+        if (this.currentPhase === 'playing') {
+            this.resolveCollision();
+        }
         return true;
     }
 
@@ -214,17 +228,29 @@ export class MazeChaseModel {
         if (this.remainingPellets === 0) {
             this.currentPhase = 'won';
             this.currentScore += 500;
+            this.playerElapsed = 0;
+            this.enemyElapsed = 0;
         }
     }
 
-    private moveEnemies(): void {
+    private moveEnemies(): boolean {
+        let moved = false;
         for (const enemy of this.enemies) {
             const target = this.enemyTarget(enemy.kind);
-            enemy.direction = this.chooseEnemyDirection(enemy, target);
-            const next = this.offset(enemy, enemy.direction);
+            const nextDirection = this.chooseEnemyDirection(enemy, target);
+            if (!nextDirection) {
+                continue;
+            }
+            enemy.direction = nextDirection;
+            const next = this.offset(enemy, nextDirection);
+            if (!this.inside(next) || this.walls[this.index(next.x, next.y)]) {
+                continue;
+            }
             enemy.x = next.x;
             enemy.y = next.y;
+            moved = true;
         }
+        return moved;
     }
 
     private enemyTarget(kind: MazeChaseEnemyKind): MazeChasePoint {
@@ -250,13 +276,16 @@ export class MazeChaseModel {
     private chooseEnemyDirection(
         enemy: MutableEnemy,
         target: MazeChasePoint,
-    ): MazeChaseDirection {
+    ): MazeChaseDirection | null {
         const reverse = this.opposite(enemy.direction);
         const legal = DIRECTIONS.filter((direction) => this.canMove(enemy, direction));
+        if (legal.length === 0) {
+            return null;
+        }
         const candidates = legal.length > 1
             ? legal.filter((direction) => direction !== reverse)
             : legal;
-        let best = candidates[0] ?? reverse;
+        let best = candidates[0] ?? legal[0];
         let bestDistance = Number.POSITIVE_INFINITY;
         for (const direction of candidates) {
             const next = this.offset(enemy, direction);
@@ -269,28 +298,38 @@ export class MazeChaseModel {
         return best;
     }
 
-    private resolveCollision(): void {
+    private resolveCollision(): boolean {
         if (this.invulnerableElapsed > 0 || this.currentPhase !== 'playing') {
-            return;
+            return false;
         }
         const hit = this.enemies.some((enemy) => (
             enemy.x === this.player.x && enemy.y === this.player.y
         ));
         if (!hit) {
-            return;
+            return false;
         }
-        this.currentLives -= 1;
-        if (this.currentLives <= 0) {
-            this.currentPhase = 'lost';
-            return;
-        }
-        this.resetActors();
-        this.invulnerableElapsed = 1;
+
+        this.currentLives = Math.max(0, this.currentLives - 1);
         this.playerElapsed = 0;
         this.enemyElapsed = 0;
+        this.resetActors();
+        if (this.currentLives === 0) {
+            this.currentPhase = 'lost';
+            this.invulnerableElapsed = 0;
+        } else {
+            this.invulnerableElapsed = 1;
+        }
+        return true;
     }
 
     private shortestDistance(start: MazeChasePoint, target: MazeChasePoint): number {
+        if (
+            !this.inside(start)
+            || !this.inside(target)
+            || this.walls[this.index(start.x, start.y)]
+        ) {
+            return -1;
+        }
         const queue: MazeChasePoint[] = [start];
         const distances = new Array<number>(this.width * this.height).fill(-1);
         distances[this.index(start.x, start.y)] = 0;
@@ -302,8 +341,11 @@ export class MazeChaseModel {
             }
             for (const direction of DIRECTIONS) {
                 const next = this.offset(point, direction);
+                if (!this.inside(next)) {
+                    continue;
+                }
                 const index = this.index(next.x, next.y);
-                if (this.inside(next) && !this.walls[index] && distances[index] < 0) {
+                if (!this.walls[index] && distances[index] < 0) {
                     distances[index] = distance + 1;
                     queue.push(next);
                 }

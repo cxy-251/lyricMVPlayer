@@ -25,40 +25,37 @@ export class RiverCrossingViewModel {
             return false;
         }
         const dt = Math.max(0, Math.min(0.1, deltaTime));
+
+        if (this.model.phase !== 'playing') {
+            return this.updateTerminalState(dt);
+        }
+
         if (this.controller === 'human') {
             this.humanIdleElapsed += dt;
             if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
-                this.controller = 'autopilot';
-                this.aiElapsed = AI_ACTION_INTERVAL;
-                this.dirty = true;
+                this.activateAutopilot();
             }
         }
-        if (this.controller === 'autopilot' && this.model.phase === 'playing') {
+
+        if (this.controller === 'autopilot') {
             this.aiElapsed += dt;
             if (this.aiElapsed >= AI_ACTION_INTERVAL) {
                 this.aiElapsed %= AI_ACTION_INTERVAL;
                 const action = this.autopilot.decide(this.model.createObservation());
-                if (action) {
-                    this.model.move(action);
+                if (action && this.model.move(action)) {
                     this.dirty = true;
                 }
             }
         }
-        this.dirty = this.model.step(dt) || this.dirty;
-        if (this.model.phase !== 'playing') {
-            this.resultElapsed += dt;
-            if (this.controller === 'autopilot' && this.resultElapsed >= RESULT_HOLD) {
-                this.model.reset();
-                this.resultElapsed = 0;
-                this.aiElapsed = AI_ACTION_INTERVAL;
-                this.dirty = true;
-            }
-        } else {
-            this.resultElapsed = 0;
+
+        if (this.model.phase === 'playing' && this.model.step(dt)) {
+            this.dirty = true;
         }
-        const changed = this.dirty;
-        this.dirty = false;
-        return changed;
+        if (this.model.phase !== 'playing') {
+            this.resultElapsed = 0;
+            this.dirty = true;
+        }
+        return this.consumeDirty();
     }
 
     moveFromHuman(direction: RiverCrossingDirection): void {
@@ -66,10 +63,16 @@ export class RiverCrossingViewModel {
             return;
         }
         this.activateHuman();
+        if (this.model.phase !== 'playing') {
+            this.model.reset();
+        }
         this.dirty = this.model.move(direction) || this.dirty;
     }
 
     restartFromHuman(): void {
+        if (this.paused) {
+            return;
+        }
         this.activateHuman();
         this.model.reset();
         this.dirty = true;
@@ -119,11 +122,30 @@ export class RiverCrossingViewModel {
             hint: observation.phase !== 'playing'
                 ? this.controller === 'autopilot'
                     ? 'AI WILL START A NEW RUN'
-                    : 'PRESS R OR NEW'
+                    : 'PRESS A DIRECTION OR NEW'
                 : this.controller === 'autopilot'
                     ? 'AI ACTIVE — HOP TO TAKE OVER'
                     : 'ARROWS / WASD / SWIPE',
         };
+    }
+
+    private updateTerminalState(dt: number): boolean {
+        if (this.controller === 'human') {
+            this.humanIdleElapsed += dt;
+            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
+                this.activateAutopilot();
+            }
+            return this.consumeDirty();
+        }
+
+        this.resultElapsed += dt;
+        if (this.resultElapsed >= RESULT_HOLD) {
+            this.model.reset();
+            this.resultElapsed = 0;
+            this.aiElapsed = AI_ACTION_INTERVAL;
+            this.dirty = true;
+        }
+        return this.consumeDirty();
     }
 
     private activateHuman(): void {
@@ -131,5 +153,20 @@ export class RiverCrossingViewModel {
         this.humanIdleElapsed = 0;
         this.aiElapsed = 0;
         this.resultElapsed = 0;
+        this.dirty = true;
+    }
+
+    private activateAutopilot(): void {
+        this.controller = 'autopilot';
+        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
+        this.aiElapsed = AI_ACTION_INTERVAL;
+        this.resultElapsed = 0;
+        this.dirty = true;
+    }
+
+    private consumeDirty(): boolean {
+        const changed = this.dirty;
+        this.dirty = false;
+        return changed;
     }
 }
