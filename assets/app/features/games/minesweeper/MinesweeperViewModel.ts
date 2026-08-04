@@ -173,8 +173,8 @@ export class MinesweeperViewModel {
             elapsedSeconds: Math.floor(this.model.elapsedSeconds),
             focusRow: this.focusRow,
             focusColumn: this.focusColumn,
-            status: `${controllerName}  ${phaseName}`
-                + `  MINES ${Math.max(0, this.model.remainingMines)}`
+            status: `${controllerName}  ${phaseName}`,
+            score: `MINES ${Math.max(0, this.model.remainingMines)}`
                 + `  TIME ${Math.floor(this.model.elapsedSeconds)}`,
         };
     }

@@ -27,6 +27,11 @@ import type {
 
 export type BlockStackerViewActions = BlockStackerInputActions;
 
+interface Point {
+    readonly x: number;
+    readonly y: number;
+}
+
 const BLOCK_COLORS: readonly Color[] = [
     new Color(112, 139, 126, 255),
     new Color(118, 158, 196, 255),
@@ -37,7 +42,6 @@ const BLOCK_COLORS: readonly Color[] = [
 
 export class BlockStackerView {
     private readonly inputController: BlockStackerInputController;
-    private playfieldNode: Node | null = null;
     private graphics: Graphics | null = null;
     private statusLabel: Label | null = null;
     private scoreLabel: Label | null = null;
@@ -57,7 +61,6 @@ export class BlockStackerView {
         clearNode(this.root);
         this.root.setPosition(0, 0, 0);
         fillNode(this.root, viewport.width, viewport.height, palette.background);
-        this.playfieldNode = null;
         this.graphics = null;
         this.statusLabel = null;
         this.scoreLabel = null;
@@ -70,23 +73,35 @@ export class BlockStackerView {
             2,
             viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
         );
-        const safeHeight = Math.max(
-            2,
-            viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom,
-        );
+        const safeTop = viewport.height / 2 - viewport.safeInsets.top;
+        const safeBottom = -viewport.height / 2 + viewport.safeInsets.bottom;
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const safeCenterY = (viewport.safeInsets.bottom - viewport.safeInsets.top) / 2;
-        const headerHeight = compact ? 88 : 100;
-        const footerHeight = compact ? 36 : 44;
+        const navigationReserve = compact ? 64 : 72;
+        const contentTop = safeTop - navigationReserve;
+        const contentBottom = safeBottom + (compact ? 12 : 18);
+        const hudHeight = compact ? 96 : 108;
+        const footerHeight = compact ? 26 : 32;
         const horizontalPadding = compact ? 16 : 30;
-        const playWidth = Math.max(120, safeWidth - horizontalPadding);
-        const playHeight = Math.max(160, safeHeight - headerHeight - footerHeight);
-        const playCenterY = safeCenterY + (footerHeight - headerHeight) / 2;
-        const playLeft = centerX - playWidth / 2;
-        const playBottom = playCenterY - playHeight / 2;
-        const playTop = playBottom + playHeight;
+        const playHeight = Math.max(
+            170,
+            contentTop - contentBottom - hudHeight - footerHeight,
+        );
+        const scale = Math.max(
+            0.42,
+            Math.min(
+                (safeWidth - horizontalPadding - 4) / 320,
+                (playHeight - 20) / 176,
+            ),
+        );
+        const playWidth = Math.min(
+            safeWidth - horizontalPadding,
+            320 * scale + 4,
+        );
+        const playTop = contentTop - hudHeight;
+        const playBottom = playTop - playHeight;
+        const playCenterY = (playTop + playBottom) / 2;
         this.playfieldLayout = {
-            left: playLeft,
+            left: centerX - playWidth / 2,
             bottom: playBottom,
             width: playWidth,
             height: playHeight,
@@ -96,13 +111,13 @@ export class BlockStackerView {
         const statusNode = createLabel(
             this.root,
             '',
-            playWidth * 0.48,
-            compact ? 22 : 26,
-            compact ? 13 : 15,
+            playWidth,
+            compact ? 20 : 24,
+            compact ? 12 : 14,
             palette.text,
-            playLeft + playWidth * 0.24,
-            playTop + (compact ? 61 : 70),
-            HorizontalTextAlignment.LEFT,
+            centerX,
+            contentTop - (compact ? 11 : 13),
+            HorizontalTextAlignment.CENTER,
         );
         this.statusLabel = statusNode.getComponent(Label);
         if (this.statusLabel) {
@@ -113,10 +128,10 @@ export class BlockStackerView {
             name: 'BlockStackerNewButton',
             text: 'NEW',
             width: compact ? 70 : 82,
-            height: compact ? 34 : 38,
-            x: playLeft + playWidth - (compact ? 38 : 45),
-            y: playTop + (compact ? 61 : 70),
-            fontSize: compact ? 12 : 13,
+            height: compact ? 32 : 36,
+            x: centerX,
+            y: contentTop - (compact ? 70 : 79),
+            fontSize: compact ? 11 : 12,
             variant: 'secondary',
             onPress: () => this.actions.restart(),
         });
@@ -125,11 +140,11 @@ export class BlockStackerView {
             this.root,
             '',
             playWidth,
-            compact ? 20 : 24,
-            compact ? 10 : 12,
+            compact ? 18 : 22,
+            compact ? 9 : 11,
             palette.muted,
             centerX,
-            playTop + (compact ? 26 : 31),
+            contentTop - (compact ? 37 : 43),
         );
         this.scoreLabel = scoreNode.getComponent(Label);
         if (this.scoreLabel) {
@@ -141,10 +156,10 @@ export class BlockStackerView {
             '',
             Math.min(playWidth, 620),
             compact ? 18 : 22,
-            compact ? 10 : 11,
+            compact ? 9 : 10,
             palette.muted,
             centerX,
-            playBottom - (compact ? 21 : 26),
+            playBottom - (compact ? 17 : 20),
         );
         this.hintLabel = hintNode.getComponent(Label);
         if (this.hintLabel) {
@@ -159,7 +174,6 @@ export class BlockStackerView {
             centerX,
             playCenterY,
         );
-        this.playfieldNode = playfield;
         this.graphics = playfield.addComponent(Graphics);
 
         const resultNode = createLabel(
@@ -206,7 +220,6 @@ export class BlockStackerView {
 
     destroy(): void {
         this.inputController.destroy();
-        this.playfieldNode = null;
         this.graphics = null;
         this.statusLabel = null;
         this.scoreLabel = null;
@@ -225,32 +238,29 @@ export class BlockStackerView {
         const width = layout.width;
         const height = layout.height;
         const worldWidth = state.worldHalfWidth * 2;
-        const scale = Math.min(1.65, (width - 22) / worldWidth);
-        const originY = -height / 2 + 30;
+        const scale = (width - 4) / worldWidth;
+        const originY = -height / 2 + 12 + state.blockHeight * scale / 2;
         graphics.clear();
         graphics.fillColor = palette.backgroundRaised;
         graphics.fillRect(-width / 2, -height / 2, width, height);
-        graphics.strokeColor = palette.border;
+        graphics.strokeColor = palette.borderStrong;
         graphics.lineWidth = 2;
         graphics.rect(-width / 2 + 1, -height / 2 + 1, width - 2, height - 2);
         graphics.stroke();
 
         const leftRail = -state.worldHalfWidth * scale;
         const rightRail = state.worldHalfWidth * scale;
-        graphics.strokeColor = palette.border;
+        graphics.strokeColor = palette.borderStrong;
         graphics.lineWidth = 1;
-        graphics.moveTo(leftRail, -height / 2 + 10);
-        graphics.lineTo(leftRail, height / 2 - 10);
-        graphics.moveTo(rightRail, -height / 2 + 10);
-        graphics.lineTo(rightRail, height / 2 - 10);
+        graphics.moveTo(leftRail, -height / 2 + 2);
+        graphics.lineTo(leftRail, height / 2 - 2);
+        graphics.moveTo(rightRail, -height / 2 + 2);
+        graphics.lineTo(rightRail, height / 2 - 2);
         graphics.stroke();
 
         for (const block of state.blocks) {
             const y = originY + (block.y - state.cameraY) * scale;
-            if (y < -height / 2 - state.blockHeight * scale || y > height / 2 + 20) {
-                continue;
-            }
-            this.drawBlock(graphics, block, y, scale);
+            this.drawBlock(graphics, block, y, scale, width, height);
         }
 
         const moving = state.movingBlock;
@@ -262,35 +272,41 @@ export class BlockStackerView {
                 y,
                 moving.width * scale,
                 moving.height * scale,
+                width,
+                height,
             );
         }
 
         for (const fragment of state.fragments) {
             const y = originY + (fragment.y - state.cameraY) * scale;
-            if (y < -height / 2 - 60 || y > height / 2 + 60) {
-                continue;
-            }
-            this.drawFragment(graphics, fragment, y, scale);
+            this.drawFragment(graphics, fragment, y, scale, width, height);
         }
     }
 
     private drawBlock(
         graphics: Graphics,
         block: BlockStackerBlockState,
-        y: number,
+        centerY: number,
         scale: number,
+        playWidth: number,
+        playHeight: number,
     ): void {
         const width = Math.max(1, block.width * scale);
         const height = Math.max(2, block.height * scale);
-        const x = block.x * scale - width / 2;
-        graphics.fillColor = block.perfect
-            ? palette.accent
-            : BLOCK_COLORS[block.level % BLOCK_COLORS.length];
-        graphics.fillRect(x, y - height / 2, width, height);
-        graphics.strokeColor = block.perfect ? palette.primaryText : palette.borderStrong;
-        graphics.lineWidth = Math.max(1, scale);
-        graphics.rect(x, y - height / 2, width, height);
-        graphics.stroke();
+        this.drawClippedRect(
+            graphics,
+            block.x * scale - width / 2,
+            centerY - height / 2,
+            width,
+            height,
+            playWidth,
+            playHeight,
+            block.perfect
+                ? palette.accent
+                : BLOCK_COLORS[block.level % BLOCK_COLORS.length],
+            block.perfect ? palette.primaryText : palette.borderStrong,
+            Math.max(1, scale),
+        );
     }
 
     private drawMovingBlock(
@@ -299,12 +315,47 @@ export class BlockStackerView {
         centerY: number,
         width: number,
         height: number,
+        playWidth: number,
+        playHeight: number,
     ): void {
-        graphics.fillColor = palette.warning;
-        graphics.fillRect(centerX - width / 2, centerY - height / 2, width, height);
-        graphics.strokeColor = palette.primaryText;
-        graphics.lineWidth = 2;
-        graphics.rect(centerX - width / 2, centerY - height / 2, width, height);
+        this.drawClippedRect(
+            graphics,
+            centerX - width / 2,
+            centerY - height / 2,
+            width,
+            height,
+            playWidth,
+            playHeight,
+            palette.warning,
+            palette.primaryText,
+            2,
+        );
+    }
+
+    private drawClippedRect(
+        graphics: Graphics,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        playWidth: number,
+        playHeight: number,
+        fill: Color,
+        stroke: Color,
+        lineWidth: number,
+    ): void {
+        const left = Math.max(x, -playWidth / 2 + 2);
+        const right = Math.min(x + width, playWidth / 2 - 2);
+        const bottom = Math.max(y, -playHeight / 2 + 2);
+        const top = Math.min(y + height, playHeight / 2 - 2);
+        if (right <= left || top <= bottom) {
+            return;
+        }
+        graphics.fillColor = fill;
+        graphics.fillRect(left, bottom, right - left, top - bottom);
+        graphics.strokeColor = stroke;
+        graphics.lineWidth = lineWidth;
+        graphics.rect(left, bottom, right - left, top - bottom);
         graphics.stroke();
     }
 
@@ -313,6 +364,8 @@ export class BlockStackerView {
         fragment: BlockStackerFragmentState,
         centerY: number,
         scale: number,
+        playWidth: number,
+        playHeight: number,
     ): void {
         const centerX = fragment.x * scale;
         const halfWidth = fragment.width * scale / 2;
@@ -325,18 +378,108 @@ export class BlockStackerView {
             [halfWidth, halfHeight],
             [-halfWidth, halfHeight],
         ] as const;
+        const polygon = corners.map(([localX, localY]) => ({
+            x: centerX + localX * cosine - localY * sine,
+            y: centerY + localX * sine + localY * cosine,
+        }));
+        const clipped = this.clipPolygon(
+            polygon,
+            playWidth / 2 - 2,
+            playHeight / 2 - 2,
+        );
+        if (clipped.length < 3) {
+            return;
+        }
         graphics.fillColor = palette.danger;
-        for (let index = 0; index < corners.length; index += 1) {
-            const [localX, localY] = corners[index];
-            const x = centerX + localX * cosine - localY * sine;
-            const y = centerY + localX * sine + localY * cosine;
+        for (let index = 0; index < clipped.length; index += 1) {
+            const point = clipped[index];
             if (index === 0) {
-                graphics.moveTo(x, y);
+                graphics.moveTo(point.x, point.y);
             } else {
-                graphics.lineTo(x, y);
+                graphics.lineTo(point.x, point.y);
             }
         }
         graphics.close();
         graphics.fill();
+    }
+
+    private clipPolygon(
+        points: readonly Point[],
+        halfWidth: number,
+        halfHeight: number,
+    ): Point[] {
+        let result = [...points];
+        result = this.clipEdge(result, 'left', -halfWidth);
+        result = this.clipEdge(result, 'right', halfWidth);
+        result = this.clipEdge(result, 'bottom', -halfHeight);
+        result = this.clipEdge(result, 'top', halfHeight);
+        return result;
+    }
+
+    private clipEdge(
+        points: readonly Point[],
+        edge: 'left' | 'right' | 'bottom' | 'top',
+        boundary: number,
+    ): Point[] {
+        if (points.length === 0) {
+            return [];
+        }
+        const output: Point[] = [];
+        for (let index = 0; index < points.length; index += 1) {
+            const current = points[index];
+            const previous = points[(index + points.length - 1) % points.length];
+            const currentInside = this.insideEdge(current, edge, boundary);
+            const previousInside = this.insideEdge(previous, edge, boundary);
+            if (currentInside !== previousInside) {
+                output.push(this.intersectEdge(previous, current, edge, boundary));
+            }
+            if (currentInside) {
+                output.push(current);
+            }
+        }
+        return output;
+    }
+
+    private insideEdge(
+        point: Point,
+        edge: 'left' | 'right' | 'bottom' | 'top',
+        boundary: number,
+    ): boolean {
+        if (edge === 'left') {
+            return point.x >= boundary;
+        }
+        if (edge === 'right') {
+            return point.x <= boundary;
+        }
+        if (edge === 'bottom') {
+            return point.y >= boundary;
+        }
+        return point.y <= boundary;
+    }
+
+    private intersectEdge(
+        start: Point,
+        end: Point,
+        edge: 'left' | 'right' | 'bottom' | 'top',
+        boundary: number,
+    ): Point {
+        if (edge === 'left' || edge === 'right') {
+            const delta = end.x - start.x;
+            const time = Math.abs(delta) < 0.000001
+                ? 0
+                : (boundary - start.x) / delta;
+            return {
+                x: boundary,
+                y: start.y + (end.y - start.y) * time,
+            };
+        }
+        const delta = end.y - start.y;
+        const time = Math.abs(delta) < 0.000001
+            ? 0
+            : (boundary - start.y) / delta;
+        return {
+            x: start.x + (end.x - start.x) * time,
+            y: boundary,
+        };
     }
 }

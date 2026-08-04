@@ -41,6 +41,7 @@ export interface MinesweeperViewState {
     readonly focusRow: number;
     readonly focusColumn: number;
     readonly status: string;
+    readonly score: string;
 }
 
 export interface MinesweeperBoardLayout {
