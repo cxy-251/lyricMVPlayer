@@ -218,7 +218,9 @@ export class TowerDefenseModel {
     }
 
     static towerRange(kind: TowerDefenseTowerKind, level: number): number {
-        return (kind === 'dart' ? 2.25 : 2.6) + (level - 1) * 0.35;
+        const base = kind === 'dart' ? 1.9 : 2.2;
+        const growth = kind === 'dart' ? 0.28 : 0.32;
+        return base + (level - 1) * growth;
     }
 
     private build(slotId: number, kind: TowerDefenseTowerKind): boolean {
@@ -288,8 +290,8 @@ export class TowerDefenseModel {
         const index = this.spawnedCount;
         const heavy = this.currentWave >= 3 && index % 5 === 4;
         const swift = this.currentWave >= 2 && index % 4 === 2;
-        const baseHp = 42 + this.currentWave * 18;
-        const hp = heavy ? baseHp * 1.8 : swift ? baseHp * 0.82 : baseHp;
+        const baseHp = 105 + this.currentWave * 40;
+        const hp = heavy ? baseHp * 1.9 : swift ? baseHp * 0.88 : baseHp;
         const speed = heavy
             ? 0.62 + this.currentWave * 0.025
             : swift
@@ -361,14 +363,14 @@ export class TowerDefenseModel {
                 remaining: SHOT_DURATION,
             });
             if (tower.kind === 'dart') {
-                target.hp -= 18 + tower.level * 10;
+                target.hp -= 9 + tower.level * 7;
             } else {
-                const damage = 28 + tower.level * 16;
+                const damage = 18 + tower.level * 12;
                 for (const enemy of this.enemies) {
                     const point = this.positionAt(enemy.progress);
                     const dx = point.x - targetPoint.x;
                     const dy = point.y - targetPoint.y;
-                    if (dx * dx + dy * dy <= 0.95 * 0.95) {
+                    if (dx * dx + dy * dy <= 0.82 * 0.82) {
                         enemy.hp -= damage;
                     }
                 }
@@ -435,8 +437,10 @@ export class TowerDefenseModel {
     }
 
     private fireInterval(tower: MutableTower): number {
-        const base = tower.kind === 'dart' ? 0.5 : 1.18;
-        return Math.max(0.22, base - (tower.level - 1) * (tower.kind === 'dart' ? 0.1 : 0.16));
+        const base = tower.kind === 'dart' ? 0.68 : 1.32;
+        const reduction = tower.kind === 'dart' ? 0.09 : 0.14;
+        const minimum = tower.kind === 'dart' ? 0.42 : 0.9;
+        return Math.max(minimum, base - (tower.level - 1) * reduction);
     }
 
     private positionAt(progress: number): TowerDefensePoint {

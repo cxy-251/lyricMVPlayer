@@ -88,6 +88,16 @@ export class TowerDefenseView {
             cellSize,
         };
 
+        const boardNode = createUiNode(
+            this.root,
+            'TowerDefenseBoard',
+            boardWidth,
+            boardHeight,
+            centerX,
+            boardCenterY,
+        );
+        this.graphics = boardNode.addComponent(Graphics);
+
         this.statusLabel = createLabel(
             this.root,
             '',
@@ -119,16 +129,15 @@ export class TowerDefenseView {
             centerX,
             boardBottom - (compact ? 16 : 20),
         ).getComponent(Label);
-
-        const boardNode = createUiNode(
-            this.root,
-            'TowerDefenseBoard',
-            boardWidth,
-            boardHeight,
-            centerX,
-            boardCenterY,
-        );
-        this.graphics = boardNode.addComponent(Graphics);
+        if (this.statusLabel) {
+            this.statusLabel.enableWrapText = false;
+        }
+        if (this.statsLabel) {
+            this.statsLabel.enableWrapText = false;
+        }
+        if (this.hintLabel) {
+            this.hintLabel.enableWrapText = false;
+        }
 
         const columns = compact ? 3 : 6;
         const gap = compact ? 6 : 8;

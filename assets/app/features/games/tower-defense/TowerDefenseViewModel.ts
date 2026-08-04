@@ -207,7 +207,7 @@ export class TowerDefenseViewModel {
                             : 'WAVE ACTIVE';
         const selectedText = selected?.tower
             ? `${selected.tower.kind.toUpperCase()} L${selected.tower.level}`
-            : `EMPTY / ${this.selectedKind.toUpperCase()}`;
+            : `EMPTY · ${this.selectedKind.toUpperCase()}`;
         return {
             ...observation,
             phase,
@@ -215,19 +215,19 @@ export class TowerDefenseViewModel {
             selectedSlotId: this.selectedSlotId,
             selectedKind: this.selectedKind,
             status,
-            stats: `WAVE ${observation.wave}/${observation.maxWaves}`
+            stats: `W${observation.wave}/${observation.maxWaves}`
                 + `   GOLD ${observation.gold}`
                 + `   BASE ${observation.lives}`
                 + `   SCORE ${observation.score}`,
             hint: phase === 'won' || phase === 'lost'
                 ? controller === 'autopilot'
                     ? 'AI WILL START A NEW DEFENSE'
-                    : 'SELECT, BUILD OR PRESS NEW'
+                    : 'BUILD OR PRESS NEW'
                 : `${selectedText}`
                     + (observation.phase === 'building'
-                        ? `   NEXT ${Math.ceil(observation.timeToNextWave)}S`
-                        : `   ENEMIES ${observation.enemies.length}`
-                            + `   SPAWNED ${observation.spawned}/${observation.waveSize}`),
+                        ? ` · NEXT ${Math.ceil(observation.timeToNextWave)}S`
+                        : ` · EN ${observation.enemies.length}`
+                            + ` · ${observation.spawned}/${observation.waveSize}`),
         };
     }
 
