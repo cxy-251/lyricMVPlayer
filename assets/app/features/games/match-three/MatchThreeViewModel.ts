@@ -1,8 +1,8 @@
+import { HybridGameSession } from '../shared/HybridGameSession';
 import { MatchThreeAutopilot } from './MatchThreeAutopilot';
 import { MatchThreeModel } from './MatchThreeModel';
 import type {
     MatchThreeCell,
-    MatchThreeControllerMode,
     MatchThreeDirection,
     MatchThreeViewState,
 } from './MatchThreeTypes';
@@ -15,53 +15,44 @@ const RENDER_INTERVAL = 1 / 20;
 export class MatchThreeViewModel {
     private readonly model = new MatchThreeModel();
     private readonly autopilot = new MatchThreeAutopilot();
-    private controller: MatchThreeControllerMode = 'autopilot';
+    private readonly session = new HybridGameSession({
+        aiTakeoverDelay: AI_TAKEOVER_DELAY,
+        aiActionInterval: AI_ACTION_INTERVAL,
+        resultHold: RESULT_HOLD,
+        renderInterval: RENDER_INTERVAL,
+    });
     private selected: MatchThreeCell | null = null;
     private focus: MatchThreeCell = { row: 3, column: 3 };
-    private humanIdleElapsed = AI_TAKEOVER_DELAY;
-    private aiActionElapsed = AI_ACTION_INTERVAL;
-    private resultElapsed = 0;
-    private renderElapsed = RENDER_INTERVAL;
     private bestScore = 0;
-    private paused = false;
-    private dirty = true;
 
     update(deltaTime: number): boolean {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return false;
         }
-        const dt = Math.max(0, Math.min(0.1, deltaTime));
-        this.renderElapsed += dt;
+        const dt = this.session.beginFrame(deltaTime);
 
         if (this.model.phase !== 'playing') {
             return this.updateTerminalState(dt);
         }
 
-        if (this.controller === 'human') {
-            this.humanIdleElapsed += dt;
-            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
-                this.activateAutopilot();
-            }
+        if (this.session.shouldActivateAutopilot(dt)) {
+            this.activateAutopilot();
         }
 
-        if (this.controller === 'autopilot') {
-            this.aiActionElapsed += dt;
-            if (this.aiActionElapsed >= AI_ACTION_INTERVAL) {
-                this.aiActionElapsed %= AI_ACTION_INTERVAL;
-                const swap = this.autopilot.decide(this.model.createObservation());
-                if (swap && this.model.swap(swap.first, swap.second)) {
-                    this.focus = { ...swap.second };
-                    this.selected = null;
-                    this.bestScore = Math.max(this.bestScore, this.model.score);
-                    this.dirty = true;
-                }
+        if (this.session.shouldRunAi(dt)) {
+            const swap = this.autopilot.decide(this.model.createObservation());
+            if (swap && this.model.swap(swap.first, swap.second)) {
+                this.focus = { ...swap.second };
+                this.selected = null;
+                this.bestScore = Math.max(this.bestScore, this.model.score);
+                this.session.markDirty();
             }
         }
-        return this.consumeRender();
+        return this.session.consumeRender();
     }
 
     selectCellFromHuman(row: number, column: number): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
@@ -71,23 +62,23 @@ export class MatchThreeViewModel {
         this.focus = cell;
         if (!this.selected) {
             this.selected = cell;
-            this.dirty = true;
+            this.session.markDirty();
             return;
         }
         if (this.sameCell(this.selected, cell)) {
             this.selected = null;
-            this.dirty = true;
+            this.session.markDirty();
             return;
         }
         if (this.manhattan(this.selected, cell) === 1) {
             const changed = this.model.swap(this.selected, cell);
             this.bestScore = Math.max(this.bestScore, this.model.score);
             this.selected = changed ? null : cell;
-            this.dirty = true;
+            this.session.markDirty();
             return;
         }
         this.selected = cell;
-        this.dirty = true;
+        this.session.markDirty();
     }
 
     swapCellFromHuman(
@@ -95,7 +86,7 @@ export class MatchThreeViewModel {
         column: number,
         direction: MatchThreeDirection,
     ): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
@@ -106,7 +97,7 @@ export class MatchThreeViewModel {
         if (!this.inside(second)) {
             this.focus = first;
             this.selected = first;
-            this.dirty = true;
+            this.session.markDirty();
             return;
         }
         this.focus = second;
@@ -114,11 +105,11 @@ export class MatchThreeViewModel {
         if (this.model.swap(first, second)) {
             this.bestScore = Math.max(this.bestScore, this.model.score);
         }
-        this.dirty = true;
+        this.session.markDirty();
     }
 
     moveFocusFromHuman(rowDelta: number, columnDelta: number): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
@@ -126,7 +117,7 @@ export class MatchThreeViewModel {
             row: this.focus.row + rowDelta,
             column: this.focus.column + columnDelta,
         });
-        this.dirty = true;
+        this.session.markDirty();
     }
 
     activateFocusedFromHuman(): void {
@@ -134,58 +125,46 @@ export class MatchThreeViewModel {
     }
 
     restartFromHuman(): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
-        this.model.reset();
-        this.selected = null;
-        this.focus = { row: 3, column: 3 };
-        this.dirty = true;
+        this.resetBoard();
+        this.session.markDirty();
     }
 
     pause(): void {
-        this.paused = true;
-        this.dirty = true;
+        this.session.pause();
     }
 
     resume(): void {
-        this.paused = false;
-        this.renderElapsed = RENDER_INTERVAL;
-        this.dirty = true;
+        this.session.resume();
     }
 
     reset(): void {
-        this.model.reset();
-        this.controller = 'autopilot';
-        this.selected = null;
-        this.focus = { row: 3, column: 3 };
-        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
-        this.aiActionElapsed = AI_ACTION_INTERVAL;
-        this.resultElapsed = 0;
-        this.renderElapsed = RENDER_INTERVAL;
-        this.paused = false;
-        this.dirty = true;
+        this.resetBoard();
+        this.session.reset();
     }
 
     dispose(): void {}
 
     createViewState(): MatchThreeViewState {
         const observation = this.model.createObservation();
-        const phase = this.paused ? 'paused' : observation.phase;
+        const controller = this.session.controller;
+        const phase = this.session.isPaused ? 'paused' : observation.phase;
         const status = phase === 'won'
             ? 'TARGET REACHED'
             : phase === 'lost'
                 ? 'OUT OF MOVES'
                 : phase === 'paused'
                     ? 'PAUSED'
-                    : this.controller === 'autopilot'
+                    : controller === 'autopilot'
                         ? 'AI MATCHING'
                         : 'HUMAN';
         return {
             ...observation,
             phase,
-            controller: this.controller,
+            controller,
             selected: this.selected ? { ...this.selected } : null,
             focus: { ...this.focus },
             combo: this.model.combo,
@@ -195,70 +174,53 @@ export class MatchThreeViewModel {
                 + `   MOVES ${observation.movesRemaining}`
                 + `   COMBO ${Math.max(1, this.model.combo)}`,
             hint: phase === 'won' || phase === 'lost'
-                ? this.controller === 'autopilot'
+                ? controller === 'autopilot'
                     ? 'AI WILL START A NEW BOARD'
                     : 'SELECT A TILE OR PRESS NEW'
-                : this.controller === 'autopilot'
+                : controller === 'autopilot'
                     ? 'AI ACTIVE — TAP OR SWIPE TO TAKE OVER'
                     : 'TAP ADJACENT TILES / SWIPE / ARROWS + ENTER',
         };
     }
 
     private updateTerminalState(dt: number): boolean {
-        if (this.controller === 'human') {
-            this.humanIdleElapsed += dt;
-            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
+        if (this.session.controller === 'human') {
+            if (this.session.shouldActivateAutopilot(dt)) {
                 this.activateAutopilot();
             }
-            return this.consumeRender();
+            return this.session.consumeRender();
         }
 
-        this.resultElapsed += dt;
-        if (this.resultElapsed >= RESULT_HOLD) {
-            this.model.reset();
-            this.selected = null;
-            this.focus = { row: 3, column: 3 };
-            this.resultElapsed = 0;
-            this.aiActionElapsed = AI_ACTION_INTERVAL;
-            this.dirty = true;
+        if (this.session.shouldRestartTerminal(dt)) {
+            this.resetBoard();
+            this.session.resetTerminalClock();
+            this.session.resetAiClock(true);
+            this.session.markDirty();
         }
-        return this.consumeRender();
+        return this.session.consumeRender();
     }
 
     private restartTerminalIfNeeded(): void {
         if (this.model.phase === 'playing') {
             return;
         }
-        this.model.reset();
-        this.selected = null;
-        this.focus = { row: 3, column: 3 };
-        this.resultElapsed = 0;
+        this.resetBoard();
+        this.session.resetTerminalClock();
     }
 
     private activateHuman(): void {
-        this.controller = 'human';
-        this.humanIdleElapsed = 0;
-        this.aiActionElapsed = 0;
-        this.resultElapsed = 0;
-        this.dirty = true;
+        this.session.activateHuman();
     }
 
     private activateAutopilot(): void {
-        this.controller = 'autopilot';
         this.selected = null;
-        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
-        this.aiActionElapsed = AI_ACTION_INTERVAL;
-        this.resultElapsed = 0;
-        this.dirty = true;
+        this.session.activateAutopilot();
     }
 
-    private consumeRender(): boolean {
-        if (!this.dirty && this.renderElapsed < RENDER_INTERVAL) {
-            return false;
-        }
-        this.renderElapsed %= RENDER_INTERVAL;
-        this.dirty = false;
-        return true;
+    private resetBoard(): void {
+        this.model.reset();
+        this.selected = null;
+        this.focus = { row: 3, column: 3 };
     }
 
     private clampCell(cell: MatchThreeCell): MatchThreeCell {

@@ -1,7 +1,7 @@
+import { HybridGameSession } from '../shared/HybridGameSession';
 import { TowerDefenseAutopilot } from './TowerDefenseAutopilot';
 import { TowerDefenseModel } from './TowerDefenseModel';
 import type {
-    TowerDefenseControllerMode,
     TowerDefenseDirection,
     TowerDefenseTowerKind,
     TowerDefenseViewState,
@@ -15,63 +15,52 @@ const RENDER_INTERVAL = 1 / 30;
 export class TowerDefenseViewModel {
     private readonly model = new TowerDefenseModel();
     private readonly autopilot = new TowerDefenseAutopilot();
-    private controller: TowerDefenseControllerMode = 'autopilot';
+    private readonly session = new HybridGameSession({
+        aiTakeoverDelay: AI_TAKEOVER_DELAY,
+        aiActionInterval: AI_ACTION_INTERVAL,
+        resultHold: RESULT_HOLD,
+        renderInterval: RENDER_INTERVAL,
+    });
     private selectedSlotId = 0;
     private selectedKind: TowerDefenseTowerKind = 'dart';
-    private humanIdleElapsed = AI_TAKEOVER_DELAY;
-    private aiElapsed = AI_ACTION_INTERVAL;
-    private resultElapsed = 0;
-    private renderElapsed = RENDER_INTERVAL;
-    private paused = false;
-    private dirty = true;
 
     update(deltaTime: number): boolean {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return false;
         }
-        const dt = Math.max(0, Math.min(0.1, deltaTime));
-        this.renderElapsed += dt;
+        const dt = this.session.beginFrame(deltaTime);
 
         if (this.model.phase === 'won' || this.model.phase === 'lost') {
             return this.updateTerminalState(dt);
         }
 
-        if (this.controller === 'human') {
-            this.humanIdleElapsed += dt;
-            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
-                this.activateAutopilot();
-            }
+        if (this.session.shouldActivateAutopilot(dt)) {
+            this.activateAutopilot();
         }
 
-        if (this.controller === 'autopilot') {
-            this.aiElapsed += dt;
-            if (this.aiElapsed >= AI_ACTION_INTERVAL) {
-                this.aiElapsed %= AI_ACTION_INTERVAL;
-                const action = this.autopilot.decide(this.model.createObservation());
-                if (action && this.model.perform(action)) {
-                    if (action.kind === 'build' || action.kind === 'upgrade') {
-                        this.selectedSlotId = action.slotId;
-                    }
-                    if (action.kind === 'build') {
-                        this.selectedKind = action.towerKind;
-                    }
-                    this.dirty = true;
+        if (this.session.shouldRunAi(dt)) {
+            const action = this.autopilot.decide(this.model.createObservation());
+            if (action && this.model.perform(action)) {
+                if (action.kind === 'build' || action.kind === 'upgrade') {
+                    this.selectedSlotId = action.slotId;
                 }
+                if (action.kind === 'build') {
+                    this.selectedKind = action.towerKind;
+                }
+                this.session.markDirty();
             }
         }
 
-        if (this.model.step(dt)) {
-            this.dirty = true;
-        }
+        this.session.markDirty(this.model.step(dt));
         if (this.model.phase === 'won' || this.model.phase === 'lost') {
-            this.resultElapsed = 0;
-            this.dirty = true;
+            this.session.resetTerminalClock();
+            this.session.markDirty();
         }
-        return this.consumeRender();
+        return this.session.consumeRender();
     }
 
     selectSlotFromHuman(slotId: number): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
@@ -79,12 +68,12 @@ export class TowerDefenseViewModel {
         const slots = this.model.createObservation().slots;
         if (slots.some((slot) => slot.id === slotId)) {
             this.selectedSlotId = slotId;
-            this.dirty = true;
+            this.session.markDirty();
         }
     }
 
     moveSelectionFromHuman(direction: TowerDefenseDirection): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
@@ -114,8 +103,12 @@ export class TowerDefenseViewModel {
             if (!valid) {
                 continue;
             }
-            const primary = direction === 'left' || direction === 'right' ? Math.abs(dx) : Math.abs(dy);
-            const secondary = direction === 'left' || direction === 'right' ? Math.abs(dy) : Math.abs(dx);
+            const primary = direction === 'left' || direction === 'right'
+                ? Math.abs(dx)
+                : Math.abs(dy);
+            const secondary = direction === 'left' || direction === 'right'
+                ? Math.abs(dy)
+                : Math.abs(dx);
             const score = primary + secondary * 1.8;
             if (score < bestScore) {
                 bestScore = score;
@@ -123,93 +116,81 @@ export class TowerDefenseViewModel {
             }
         }
         this.selectedSlotId = bestId;
-        this.dirty = true;
+        this.session.markDirty();
     }
 
     selectKindFromHuman(kind: TowerDefenseTowerKind): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
         this.restartTerminalIfNeeded();
         this.selectedKind = kind;
-        this.dirty = true;
+        this.session.markDirty();
     }
 
     buildSelectedFromHuman(): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
         this.restartTerminalIfNeeded();
-        this.dirty = this.model.perform({
+        this.session.markDirty(this.model.perform({
             kind: 'build',
             slotId: this.selectedSlotId,
             towerKind: this.selectedKind,
-        }) || this.dirty;
+        }));
     }
 
     upgradeSelectedFromHuman(): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
         this.restartTerminalIfNeeded();
-        this.dirty = this.model.perform({
+        this.session.markDirty(this.model.perform({
             kind: 'upgrade',
             slotId: this.selectedSlotId,
-        }) || this.dirty;
+        }));
     }
 
     startWaveFromHuman(): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
         this.restartTerminalIfNeeded();
-        this.dirty = this.model.perform({ kind: 'start-wave' }) || this.dirty;
+        this.session.markDirty(this.model.perform({ kind: 'start-wave' }));
     }
 
     restartFromHuman(): void {
-        if (this.paused) {
+        if (this.session.isPaused) {
             return;
         }
         this.activateHuman();
-        this.model.reset();
-        this.selectedSlotId = 0;
-        this.selectedKind = 'dart';
-        this.dirty = true;
+        this.resetDefense();
+        this.session.markDirty();
     }
 
     pause(): void {
-        this.paused = true;
-        this.dirty = true;
+        this.session.pause();
     }
 
     resume(): void {
-        this.paused = false;
-        this.renderElapsed = RENDER_INTERVAL;
-        this.dirty = true;
+        this.session.resume();
     }
 
     reset(): void {
-        this.model.reset();
-        this.controller = 'autopilot';
-        this.selectedSlotId = 0;
-        this.selectedKind = 'dart';
-        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
-        this.aiElapsed = AI_ACTION_INTERVAL;
-        this.resultElapsed = 0;
-        this.renderElapsed = RENDER_INTERVAL;
-        this.paused = false;
-        this.dirty = true;
+        this.resetDefense();
+        this.session.reset();
     }
 
     dispose(): void {}
 
     createViewState(): TowerDefenseViewState {
         const observation = this.model.createObservation();
-        const phase = this.paused ? 'paused' : observation.phase;
+        const controller = this.session.controller;
+        const phase = this.session.isPaused ? 'paused' : observation.phase;
         const selected = observation.slots.find((slot) => slot.id === this.selectedSlotId);
         const status = phase === 'won'
             ? 'ALL WAVES CLEARED'
@@ -218,10 +199,10 @@ export class TowerDefenseViewModel {
                 : phase === 'paused'
                     ? 'PAUSED'
                     : phase === 'building'
-                        ? this.controller === 'autopilot'
+                        ? controller === 'autopilot'
                             ? 'AI BUILDING'
                             : 'BUILD PHASE'
-                        : this.controller === 'autopilot'
+                        : controller === 'autopilot'
                             ? 'AI DEFENDING'
                             : 'WAVE ACTIVE';
         const selectedText = selected?.tower
@@ -230,7 +211,7 @@ export class TowerDefenseViewModel {
         return {
             ...observation,
             phase,
-            controller: this.controller,
+            controller,
             selectedSlotId: this.selectedSlotId,
             selectedKind: this.selectedKind,
             status,
@@ -239,7 +220,7 @@ export class TowerDefenseViewModel {
                 + `   BASE ${observation.lives}`
                 + `   SCORE ${observation.score}`,
             hint: phase === 'won' || phase === 'lost'
-                ? this.controller === 'autopilot'
+                ? controller === 'autopilot'
                     ? 'AI WILL START A NEW DEFENSE'
                     : 'SELECT, BUILD OR PRESS NEW'
                 : `${selectedText}`
@@ -251,60 +232,43 @@ export class TowerDefenseViewModel {
     }
 
     private updateTerminalState(dt: number): boolean {
-        if (this.controller === 'human') {
-            this.humanIdleElapsed += dt;
-            if (this.humanIdleElapsed >= AI_TAKEOVER_DELAY) {
+        if (this.session.controller === 'human') {
+            if (this.session.shouldActivateAutopilot(dt)) {
                 this.activateAutopilot();
             }
-            return this.consumeRender();
+            return this.session.consumeRender();
         }
 
-        this.resultElapsed += dt;
-        if (this.resultElapsed >= RESULT_HOLD) {
-            this.model.reset();
-            this.selectedSlotId = 0;
-            this.selectedKind = 'dart';
-            this.resultElapsed = 0;
-            this.aiElapsed = AI_ACTION_INTERVAL;
-            this.dirty = true;
+        if (this.session.shouldRestartTerminal(dt)) {
+            this.resetDefense();
+            this.session.resetTerminalClock();
+            this.session.resetAiClock(true);
+            this.session.markDirty();
         }
-        return this.consumeRender();
+        return this.session.consumeRender();
     }
 
     private restartTerminalIfNeeded(): void {
         if (this.model.phase !== 'won' && this.model.phase !== 'lost') {
             return;
         }
-        this.model.reset();
-        this.selectedSlotId = 0;
-        this.selectedKind = 'dart';
-        this.resultElapsed = 0;
-        this.aiElapsed = 0;
-        this.dirty = true;
+        this.resetDefense();
+        this.session.resetTerminalClock();
+        this.session.resetAiClock(false);
+        this.session.markDirty();
     }
 
     private activateHuman(): void {
-        this.controller = 'human';
-        this.humanIdleElapsed = 0;
-        this.aiElapsed = 0;
-        this.resultElapsed = 0;
-        this.dirty = true;
+        this.session.activateHuman();
     }
 
     private activateAutopilot(): void {
-        this.controller = 'autopilot';
-        this.humanIdleElapsed = AI_TAKEOVER_DELAY;
-        this.aiElapsed = AI_ACTION_INTERVAL;
-        this.resultElapsed = 0;
-        this.dirty = true;
+        this.session.activateAutopilot();
     }
 
-    private consumeRender(): boolean {
-        if (!this.dirty && this.renderElapsed < RENDER_INTERVAL) {
-            return false;
-        }
-        this.renderElapsed %= RENDER_INTERVAL;
-        this.dirty = false;
-        return true;
+    private resetDefense(): void {
+        this.model.reset();
+        this.selectedSlotId = 0;
+        this.selectedKind = 'dart';
     }
 }
