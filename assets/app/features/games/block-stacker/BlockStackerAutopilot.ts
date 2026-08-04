@@ -21,18 +21,21 @@ export class BlockStackerAutopilot {
         const maximumBias = observation.supportWidth < 34
             ? 0
             : Math.min(2.6, observation.supportWidth * 0.017);
-        const targetBias = Math.sin(observation.level * 2.173 + 0.41) * maximumBias;
+        const windBias = observation.wind * 0.018;
+        const targetBias = Math.sin(observation.level * 2.173 + 0.41) * maximumBias
+            - windBias;
         const targetX = observation.supportX + targetBias;
         const error = observation.movingX - targetX;
         const tolerance = Math.max(
             1.35,
-            Math.min(4.6, observation.movingWidth * 0.034),
+            Math.min(4.8, observation.movingWidth * 0.034 + Math.abs(windBias) * 0.25),
         );
         const crossedTarget = Number.isFinite(this.lastError)
             && error !== 0
             && this.lastError !== 0
             && Math.sign(error) !== Math.sign(this.lastError);
-        const movingTowardTarget = error * observation.direction < 0;
+        const effectiveVelocity = observation.direction * observation.speed + observation.wind;
+        const movingTowardTarget = error * effectiveVelocity < 0;
         const overlapLeft = Math.max(
             observation.movingX - observation.movingWidth / 2,
             observation.supportX - observation.supportWidth / 2,

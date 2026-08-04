@@ -32,6 +32,7 @@ export interface BlockStackerDropResult {
     readonly changed: boolean;
     readonly lost: boolean;
     readonly perfect: boolean;
+    readonly rescued: boolean;
 }
 
 export interface BlockStackerObservation {
@@ -40,6 +41,8 @@ export interface BlockStackerObservation {
     readonly movingWidth: number;
     readonly direction: -1 | 1;
     readonly speed: number;
+    readonly wind: number;
+    readonly shield: number;
     readonly supportX: number;
     readonly supportWidth: number;
     readonly level: number;
@@ -61,6 +64,9 @@ export interface BlockStackerViewState {
     readonly cameraY: number;
     readonly worldHalfWidth: number;
     readonly blockHeight: number;
+    readonly wind: number;
+    readonly shield: number;
+    readonly eventText: string;
     readonly status: string;
     readonly scoreText: string;
     readonly hint: string;

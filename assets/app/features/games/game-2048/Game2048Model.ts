@@ -5,10 +5,13 @@ import {
 import type {
     Game2048Direction,
     Game2048Observation,
+    Game2048RuleSet,
 } from './Game2048Types';
 
 const SIZE = 4;
 const RESET_SALT = 0x9e3779b9;
+const RULE_SETS: readonly Game2048RuleSet[] = ['classic', 'chain', 'corner'];
+const START_TARGET = 128;
 
 export interface Game2048MoveResult {
     readonly board: number[][];
@@ -20,6 +23,12 @@ export class Game2048Model {
     private boardState: number[][] = [];
     private currentScore = 0;
     private currentPhase: 'playing' | 'lost' = 'playing';
+    private currentChain = 0;
+    private highestChain = 0;
+    private currentTargetTile = START_TARGET;
+    private currentRuleSet: Game2048RuleSet = 'classic';
+    private ruleSetIndex = -1;
+    private lastEvent = 'NEW RUN';
 
     constructor(
         private readonly randomSource: RandomSource = new XorShift32Random(0x4f1bbcdc),
@@ -35,14 +44,40 @@ export class Game2048Model {
         return this.currentScore;
     }
 
+    get chain(): number {
+        return this.currentChain;
+    }
+
+    get bestChain(): number {
+        return this.highestChain;
+    }
+
+    get targetTile(): number {
+        return this.currentTargetTile;
+    }
+
+    get ruleSet(): Game2048RuleSet {
+        return this.currentRuleSet;
+    }
+
+    get eventText(): string {
+        return this.lastEvent;
+    }
+
     get maximumTile(): number {
         return Math.max(...this.boardState.flat(), 0);
     }
 
     reset(): void {
+        this.ruleSetIndex = (this.ruleSetIndex + 1) % RULE_SETS.length;
+        this.currentRuleSet = RULE_SETS[this.ruleSetIndex];
         this.boardState = Array.from({ length: SIZE }, () => new Array<number>(SIZE).fill(0));
         this.currentScore = 0;
         this.currentPhase = 'playing';
+        this.currentChain = 0;
+        this.highestChain = 0;
+        this.currentTargetTile = START_TARGET;
+        this.lastEvent = `${this.currentRuleSet.toUpperCase()} MODE`;
         this.randomSource.reset(
             XorShift32Random.mix(this.randomSource.snapshot() ^ RESET_SALT),
         );
@@ -56,16 +91,34 @@ export class Game2048Model {
         }
         const result = Game2048Model.simulateMove(this.boardState, direction);
         if (!result.changed) {
+            this.currentChain = 0;
+            this.lastEvent = 'NO MERGE';
             if (!this.hasAvailableMove(this.boardState)) {
                 this.currentPhase = 'lost';
+                this.lastEvent = 'NO MOVES';
             }
             return false;
         }
+
         this.boardState = result.board;
-        this.currentScore += result.score;
+        if (result.score > 0) {
+            this.currentChain += 1;
+            this.highestChain = Math.max(this.highestChain, this.currentChain);
+        } else {
+            this.currentChain = 0;
+        }
+
+        const multiplier = this.scoreMultiplier(result.score > 0);
+        const earned = Math.round(result.score * multiplier);
+        this.currentScore += earned;
+        this.lastEvent = result.score > 0
+            ? `CHAIN ${this.currentChain} · +${earned}`
+            : 'SHIFT';
+        this.resolveMilestones();
         this.addRandomTile();
         if (!this.hasAvailableMove(this.boardState)) {
             this.currentPhase = 'lost';
+            this.lastEvent = 'NO MOVES';
         }
         return true;
     }
@@ -162,6 +215,60 @@ export class Game2048Model {
         return { values: result, score };
     }
 
+    private scoreMultiplier(merged: boolean): number {
+        if (!merged) {
+            return 1;
+        }
+        switch (this.currentRuleSet) {
+            case 'chain':
+                return 1 + Math.min(4, Math.max(0, this.currentChain - 1)) * 0.25;
+            case 'corner':
+                return this.maximumTileInCorner(this.boardState) ? 1.35 : 1;
+            case 'classic':
+                return 1;
+        }
+    }
+
+    private resolveMilestones(): void {
+        while (this.maximumTile >= this.currentTargetTile) {
+            const reached = this.currentTargetTile;
+            const bonus = reached * 2;
+            const releaseCount = reached >= 512 ? 2 : 1;
+            const released = this.releaseLowestTiles(releaseCount);
+            this.currentScore += bonus;
+            this.currentTargetTile *= 2;
+            this.lastEvent = `TARGET ${reached} · +${bonus} · SPACE +${released}`;
+        }
+    }
+
+    private releaseLowestTiles(count: number): number {
+        const maximum = this.maximumTile;
+        const candidates: Array<{ row: number; column: number; value: number }> = [];
+        for (let row = 0; row < SIZE; row += 1) {
+            for (let column = 0; column < SIZE; column += 1) {
+                const value = this.boardState[row][column];
+                if (value > 0 && value < maximum) {
+                    candidates.push({ row, column, value });
+                }
+            }
+        }
+        candidates.sort((left, right) => left.value - right.value);
+        let released = 0;
+        for (const candidate of candidates.slice(0, count)) {
+            this.boardState[candidate.row][candidate.column] = 0;
+            released += 1;
+        }
+        return released;
+    }
+
+    private maximumTileInCorner(board: readonly (readonly number[])[]): boolean {
+        const maximum = Math.max(...board.flat(), 0);
+        return board[0][0] === maximum
+            || board[0][SIZE - 1] === maximum
+            || board[SIZE - 1][0] === maximum
+            || board[SIZE - 1][SIZE - 1] === maximum;
+    }
+
     private addRandomTile(): void {
         const empty: Array<{ row: number; column: number }> = [];
         for (let row = 0; row < SIZE; row += 1) {
@@ -175,7 +282,14 @@ export class Game2048Model {
             return;
         }
         const location = empty[this.randomSource.nextInt(empty.length)];
-        this.boardState[location.row][location.column] = this.randomSource.next() < 0.9 ? 2 : 4;
+        const twoChance = this.currentRuleSet === 'chain'
+            ? 0.78
+            : this.currentRuleSet === 'corner'
+                ? 0.92
+                : 0.9;
+        this.boardState[location.row][location.column] = this.randomSource.next() < twoChance
+            ? 2
+            : 4;
     }
 
     private hasAvailableMove(board: readonly (readonly number[])[]): boolean {

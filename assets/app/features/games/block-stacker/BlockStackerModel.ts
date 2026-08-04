@@ -15,6 +15,9 @@ const SPEED_PER_LEVEL = 6.4;
 const PERFECT_MINIMUM_TOLERANCE = 1.8;
 const FRAGMENT_GRAVITY = 760;
 const MAXIMUM_VISIBLE_BLOCKS = 72;
+const SHIELD_COMBO_TARGET = 4;
+const WIND_LEVEL_SPAN = 4;
+const WIND_PATTERN: readonly number[] = [0, -28, 22, -38, 34, 16, -20];
 
 interface MutableBlock {
     x: number;
@@ -54,6 +57,8 @@ export class BlockStackerModel {
     private currentPhase: 'playing' | 'lost' = 'playing';
     private currentScore = 0;
     private currentCombo = 0;
+    private currentShield = 0;
+    private currentWind = 0;
 
     constructor() {
         this.reset();
@@ -69,6 +74,14 @@ export class BlockStackerModel {
 
     get combo(): number {
         return this.currentCombo;
+    }
+
+    get shield(): number {
+        return this.currentShield;
+    }
+
+    get wind(): number {
+        return this.currentWind;
     }
 
     get level(): number {
@@ -106,6 +119,8 @@ export class BlockStackerModel {
         this.currentPhase = 'playing';
         this.currentScore = 0;
         this.currentCombo = 0;
+        this.currentShield = 0;
+        this.currentWind = 0;
         this.spawnMovingBlock(START_WIDTH, 1);
     }
 
@@ -124,7 +139,12 @@ export class BlockStackerModel {
         const moving = this.movingBlock;
         const support = this.blocks[this.blocks.length - 1];
         if (this.currentPhase !== 'playing' || !moving || !support) {
-            return { changed: false, lost: this.currentPhase === 'lost', perfect: false };
+            return {
+                changed: false,
+                lost: this.currentPhase === 'lost',
+                perfect: false,
+                rescued: false,
+            };
         }
 
         const movingLeft = moving.x - moving.width / 2;
@@ -140,12 +160,20 @@ export class BlockStackerModel {
                 moving.x,
                 moving.y,
                 moving.width,
-                moving.direction * 42,
+                moving.direction * 42 + this.currentWind * 0.35,
             ));
+            this.currentCombo = 0;
+            if (this.currentShield > 0) {
+                this.currentShield -= 1;
+                this.spawnMovingBlock(
+                    Math.max(12, support.width * 0.92),
+                    moving.level + 1,
+                );
+                return { changed: true, lost: false, perfect: false, rescued: true };
+            }
             this.movingBlock = null;
             this.currentPhase = 'lost';
-            this.currentCombo = 0;
-            return { changed: true, lost: true, perfect: false };
+            return { changed: true, lost: true, perfect: false, rescued: false };
         }
 
         const centerError = Math.abs(moving.x - support.x);
@@ -164,6 +192,9 @@ export class BlockStackerModel {
                 START_WIDTH,
                 support.width + Math.min(5.5, 1.5 + this.currentCombo * 0.45),
             );
+            if (this.currentCombo % SHIELD_COMBO_TARGET === 0) {
+                this.currentShield = 1;
+            }
         } else {
             this.currentCombo = 0;
             if (movingLeft < overlapLeft - 0.001) {
@@ -172,7 +203,7 @@ export class BlockStackerModel {
                     movingLeft + cutWidth / 2,
                     moving.y,
                     cutWidth,
-                    -38,
+                    -38 + this.currentWind * 0.25,
                 ));
             }
             if (movingRight > overlapRight + 0.001) {
@@ -181,7 +212,7 @@ export class BlockStackerModel {
                     overlapRight + cutWidth / 2,
                     moving.y,
                     cutWidth,
-                    38,
+                    38 + this.currentWind * 0.25,
                 ));
             }
         }
@@ -202,7 +233,7 @@ export class BlockStackerModel {
             this.blocks.shift();
         }
         this.spawnMovingBlock(retainedWidth, moving.level + 1);
-        return { changed: true, lost: false, perfect };
+        return { changed: true, lost: false, perfect, rescued: false };
     }
 
     createObservation(): BlockStackerObservation {
@@ -214,6 +245,8 @@ export class BlockStackerModel {
             movingWidth: moving?.width ?? 0,
             direction: moving?.direction ?? 1,
             speed: moving?.speed ?? 0,
+            wind: this.currentWind,
+            shield: this.currentShield,
             supportX: support?.x ?? 0,
             supportWidth: support?.width ?? START_WIDTH,
             level: moving?.level ?? Math.max(1, this.blocks.length),
@@ -234,6 +267,7 @@ export class BlockStackerModel {
         const minimumX = -WORLD_HALF_WIDTH + safeWidth / 2;
         const maximumX = WORLD_HALF_WIDTH - safeWidth / 2;
         const support = this.blocks[this.blocks.length - 1];
+        this.currentWind = this.windForLevel(level);
         this.movingBlock = {
             x: fromLeft ? minimumX : maximumX,
             y: (support?.y ?? 0) + BLOCK_HEIGHT,
@@ -245,6 +279,11 @@ export class BlockStackerModel {
         };
     }
 
+    private windForLevel(level: number): number {
+        const band = Math.floor(Math.max(0, level - 1) / WIND_LEVEL_SPAN);
+        return WIND_PATTERN[band % WIND_PATTERN.length];
+    }
+
     private moveCurrentBlock(dt: number): void {
         const moving = this.movingBlock;
         if (!moving) {
@@ -252,7 +291,7 @@ export class BlockStackerModel {
         }
         const minimumX = -WORLD_HALF_WIDTH + moving.width / 2;
         const maximumX = WORLD_HALF_WIDTH - moving.width / 2;
-        moving.x += moving.direction * moving.speed * dt;
+        moving.x += (moving.direction * moving.speed + this.currentWind) * dt;
         if (moving.x < minimumX) {
             moving.x = minimumX + (minimumX - moving.x);
             moving.direction = 1;

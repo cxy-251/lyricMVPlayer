@@ -23,6 +23,7 @@ export class BlockStackerViewModel {
     private renderAccumulator = RENDER_STEP;
     private cameraY = 0;
     private bestScore = 0;
+    private lastEvent = 'NEW RUN';
     private paused = false;
     private dirty = true;
 
@@ -99,6 +100,7 @@ export class BlockStackerViewModel {
         this.resultElapsed = 0;
         this.renderAccumulator = RENDER_STEP;
         this.cameraY = 0;
+        this.lastEvent = 'NEW RUN';
         this.paused = false;
         this.dirty = true;
     }
@@ -117,6 +119,11 @@ export class BlockStackerViewModel {
             : phase === 'paused'
                 ? 'PAUSED'
                 : 'STACKING';
+        const windText = this.model.wind === 0
+            ? 'CALM'
+            : this.model.wind > 0
+                ? `WIND →${Math.abs(this.model.wind)}`
+                : `WIND ←${Math.abs(this.model.wind)}`;
         return {
             phase,
             controller: this.controller,
@@ -132,16 +139,24 @@ export class BlockStackerViewModel {
             cameraY: this.cameraY,
             worldHalfWidth: this.model.worldHalfWidth,
             blockHeight: this.model.blockHeight,
-            status: `${controllerName}  ${phaseName}`,
+            wind: this.model.wind,
+            shield: this.model.shield,
+            eventText: this.lastEvent,
+            status: `${controllerName}  ${phaseName}`
+                + (this.lastEvent === 'STACKED' ? '' : ` · ${this.lastEvent}`),
             scoreText: `SCORE ${this.model.score}`
                 + `  BEST ${this.bestScore}`
-                + `  LEVEL ${Math.max(0, this.model.level - 1)}`
-                + `  COMBO ${this.model.combo}`,
+                + `  LV ${Math.max(0, this.model.level - 1)}`
+                + `  C${this.model.combo}`
+                + `  SHIELD ${this.model.shield}`
+                + `  ${windText}`,
             hint: phase === 'lost'
                 ? 'TAP, CLICK OR PRESS SPACE TO RESTART'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — TAP THE PLAYFIELD TO TAKE OVER'
-                    : 'TAP, CLICK OR PRESS SPACE TO DROP',
+                : this.model.shield > 0
+                    ? 'SHIELD READY · ONE COMPLETE MISS WILL BE SAVED'
+                    : this.controller === 'autopilot'
+                        ? 'AI ACTIVE — TAP THE PLAYFIELD TO TAKE OVER'
+                        : 'TAP, CLICK OR PRESS SPACE TO DROP',
         };
     }
 
@@ -154,6 +169,7 @@ export class BlockStackerViewModel {
                 this.aiDropArmedElapsed = 0;
                 this.resultElapsed = 0;
                 this.cameraY = 0;
+                this.lastEvent = 'NEW RUN';
                 this.dirty = true;
             }
             return;
@@ -201,6 +217,7 @@ export class BlockStackerViewModel {
         this.aiDropArmedElapsed = 0;
         this.resultElapsed = 0;
         this.cameraY = 0;
+        this.lastEvent = 'NEW RUN';
         this.dirty = true;
     }
 
@@ -209,6 +226,15 @@ export class BlockStackerViewModel {
             return;
         }
         this.bestScore = Math.max(this.bestScore, this.model.score);
+        this.lastEvent = result.rescued
+            ? 'SHIELD SAVE'
+            : result.lost
+                ? 'MISSED'
+                : result.perfect
+                    ? this.model.shield > 0
+                        ? 'PERFECT · SHIELD READY'
+                        : `PERFECT · COMBO ${this.model.combo}`
+                    : 'STACKED';
         this.resultElapsed = 0;
         this.dirty = true;
     }

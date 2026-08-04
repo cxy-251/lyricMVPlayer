@@ -195,8 +195,8 @@ export class Game2048View {
             this.statusLabel.color = state.phase === 'lost' ? palette.danger : palette.text;
         }
         if (this.scoreLabel) {
-            this.scoreLabel.string = `SCORE ${state.score}  BEST ${state.bestScore}`
-                + `  MAX ${state.maximumTile}`;
+            this.scoreLabel.string = `S ${state.score}  BEST ${state.bestScore}`
+                + `  MAX ${state.maximumTile}  C${state.chain}  T${state.targetTile}`;
         }
         if (this.hintLabel) {
             this.hintLabel.string = state.hint;

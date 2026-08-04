@@ -95,6 +95,7 @@ export class Game2048ViewModel {
     createViewState(): Game2048ViewState {
         const observation = this.model.createObservation();
         const phase = this.paused ? 'paused' : observation.phase;
+        const mode = this.model.ruleSet.toUpperCase();
         return {
             ...observation,
             phase,
@@ -102,18 +103,25 @@ export class Game2048ViewModel {
             score: this.model.score,
             bestScore: this.bestScore,
             maximumTile: this.model.maximumTile,
+            chain: this.model.chain,
+            bestChain: this.model.bestChain,
+            targetTile: this.model.targetTile,
+            ruleSet: this.model.ruleSet,
+            eventText: this.model.eventText,
             status: phase === 'lost'
-                ? 'NO MOVES'
+                ? `NO MOVES · ${mode}`
                 : phase === 'paused'
                     ? 'PAUSED'
                     : this.controller === 'autopilot'
-                        ? 'AI THINKING'
-                        : 'HUMAN',
+                        ? `AI · ${mode}`
+                        : `HUMAN · ${mode}`,
             hint: phase === 'lost'
-                ? 'SWIPE OR PRESS NEW TO RESTART'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — SWIPE OR PRESS A DIRECTION TO TAKE OVER'
-                    : 'ARROWS / WASD / SWIPE',
+                ? 'SWIPE OR PRESS NEW TO ROTATE THE RULE SET'
+                : this.model.eventText.startsWith('TARGET')
+                    ? this.model.eventText
+                    : this.controller === 'autopilot'
+                        ? 'AI ACTIVE — SWIPE OR PRESS A DIRECTION TO TAKE OVER'
+                        : `${this.model.eventText} · ARROWS / WASD / SWIPE`,
         };
     }
 
