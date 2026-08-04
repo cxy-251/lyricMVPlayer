@@ -47,6 +47,11 @@ export interface SokobanViewState {
     readonly canUndo: boolean;
     readonly deadlocked: boolean;
     readonly planning: boolean;
+    readonly stars: number;
+    readonly totalStars: number;
+    readonly bestSteps: number | null;
+    readonly bestPushes: number | null;
+    readonly undoCount: number;
     readonly status: string;
     readonly stats: string;
     readonly hint: string;

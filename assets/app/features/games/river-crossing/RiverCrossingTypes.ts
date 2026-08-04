@@ -1,6 +1,7 @@
 export type RiverCrossingDirection = 'up' | 'down' | 'left' | 'right';
 export type RiverCrossingPhase = 'playing' | 'won' | 'lost';
 export type RiverCrossingControllerMode = 'human' | 'autopilot';
+export type RiverCrossingVariant = 'classic' | 'reverse' | 'rush';
 export type RiverLaneKind = 'safe' | 'road' | 'river' | 'goal';
 
 export interface RiverObjectState {
@@ -25,6 +26,9 @@ export interface RiverCrossingObservation {
     readonly height: number;
     readonly player: RiverPlayerState;
     readonly lanes: readonly RiverLaneState[];
+    readonly variant: RiverCrossingVariant;
+    readonly crossingTime: number;
+    readonly difficulty: number;
     readonly phase: RiverCrossingPhase;
 }
 
@@ -33,6 +37,8 @@ export interface RiverCrossingViewState extends RiverCrossingObservation {
     readonly lives: number;
     readonly crossings: number;
     readonly targetCrossings: number;
+    readonly bestCrossing: number;
+    readonly cleanStreak: number;
     readonly controller: RiverCrossingControllerMode;
     readonly status: string;
     readonly hint: string;

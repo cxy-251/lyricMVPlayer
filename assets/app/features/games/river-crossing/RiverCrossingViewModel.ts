@@ -102,30 +102,35 @@ export class RiverCrossingViewModel {
 
     createViewState(): RiverCrossingViewState {
         const observation = this.model.createObservation();
+        const variantName = observation.variant.toUpperCase();
         const status = this.paused
             ? 'PAUSED'
             : observation.phase === 'won'
-                ? 'CROSSING COMPLETE'
+                ? `${variantName} CROSSING COMPLETE`
                 : observation.phase === 'lost'
-                    ? 'NO LIVES LEFT'
+                    ? `${variantName} RUN ENDED`
                     : this.controller === 'autopilot'
-                        ? 'AI TIMING HOPS'
-                        : 'HUMAN';
+                        ? `AI · ${variantName} · STAGE ${observation.difficulty}`
+                        : `HUMAN · ${variantName} · STAGE ${observation.difficulty}`;
         return {
             ...observation,
             score: this.model.score,
             lives: this.model.lives,
             crossings: this.model.crossings,
             targetCrossings: this.model.targetCrossings,
+            bestCrossing: this.model.bestCrossingTime,
+            cleanStreak: this.model.cleanStreak,
             controller: this.controller,
             status,
             hint: observation.phase !== 'playing'
                 ? this.controller === 'autopilot'
-                    ? 'AI WILL START A NEW RUN'
+                    ? 'AI WILL ROTATE TO A NEW TRAFFIC PATTERN'
                     : 'PRESS A DIRECTION OR NEW'
-                : this.controller === 'autopilot'
-                    ? 'AI ACTIVE — HOP TO TAKE OVER'
-                    : 'ARROWS / WASD / SWIPE',
+                : this.model.cleanStreak > 1
+                    ? `CLEAN STREAK ${this.model.cleanStreak} · SPEED KEEPS RISING`
+                    : this.controller === 'autopilot'
+                        ? 'AI ACTIVE — HOP TO TAKE OVER'
+                        : 'FAST CROSSINGS EARN TIME BONUS · ARROWS / WASD / SWIPE',
         };
     }
 

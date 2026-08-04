@@ -2,6 +2,7 @@ import type {
     RiverCrossingDirection,
     RiverCrossingObservation,
     RiverCrossingPhase,
+    RiverCrossingVariant,
     RiverLaneKind,
     RiverLaneState,
 } from './RiverCrossingTypes';
@@ -9,6 +10,7 @@ import type {
 const WIDTH = 11;
 const HEIGHT = 12;
 const TARGET_CROSSINGS = 5;
+const VARIANTS: readonly RiverCrossingVariant[] = ['classic', 'reverse', 'rush'];
 
 interface MutableObject {
     x: number;
@@ -53,6 +55,11 @@ export class RiverCrossingModel {
     private currentScore = 0;
     private currentLives = 3;
     private completedCrossings = 0;
+    private variantIndex = -1;
+    private currentVariant: RiverCrossingVariant = 'classic';
+    private crossingElapsed = 0;
+    private bestCrossingElapsed = Number.POSITIVE_INFINITY;
+    private currentCleanStreak = 0;
 
     constructor() {
         this.reset();
@@ -74,20 +81,29 @@ export class RiverCrossingModel {
         return this.completedCrossings;
     }
 
+    get variant(): RiverCrossingVariant {
+        return this.currentVariant;
+    }
+
+    get bestCrossingTime(): number {
+        return Number.isFinite(this.bestCrossingElapsed) ? this.bestCrossingElapsed : 0;
+    }
+
+    get cleanStreak(): number {
+        return this.currentCleanStreak;
+    }
+
     reset(): void {
-        this.lanes = LANE_DEFINITIONS.map((definition, row) => ({
-            row,
-            kind: definition.kind,
-            speed: definition.speed ?? 0,
-            objects: (definition.positions ?? []).map((x) => ({
-                x,
-                width: definition.width ?? 1,
-            })),
-        }));
+        this.variantIndex = (this.variantIndex + 1) % VARIANTS.length;
+        this.currentVariant = VARIANTS[this.variantIndex] ?? 'classic';
+        this.lanes = this.createLanes();
         this.currentPhase = 'playing';
         this.currentScore = 0;
-        this.currentLives = 3;
+        this.currentLives = this.currentVariant === 'rush' ? 4 : 3;
         this.completedCrossings = 0;
+        this.crossingElapsed = 0;
+        this.bestCrossingElapsed = Number.POSITIVE_INFINITY;
+        this.currentCleanStreak = 0;
         this.resetPlayer();
     }
 
@@ -109,7 +125,7 @@ export class RiverCrossingModel {
             return false;
         }
         this.player = next;
-        this.currentScore += direction === 'up' ? 2 : 1;
+        this.currentScore += direction === 'up' ? 2 + this.completedCrossings : 1;
         this.resolveCurrentLane();
         return true;
     }
@@ -122,6 +138,7 @@ export class RiverCrossingModel {
         if (dt <= 0) {
             return false;
         }
+        this.crossingElapsed += dt;
 
         for (const lane of this.lanes) {
             if (lane.speed === 0) {
@@ -160,8 +177,30 @@ export class RiverCrossingModel {
                 speed: lane.speed,
                 objects: lane.objects.map((object) => ({ ...object })),
             })),
+            variant: this.currentVariant,
+            crossingTime: this.crossingElapsed,
+            difficulty: this.completedCrossings + 1,
             phase: this.currentPhase,
         };
+    }
+
+    private createLanes(): MutableLane[] {
+        const reverse = this.currentVariant === 'reverse';
+        const speedMultiplier = this.currentVariant === 'rush' ? 1.28 : 1;
+        const positionOffset = this.currentVariant === 'rush' ? 0.7 : 0;
+        return LANE_DEFINITIONS.map((definition, row) => ({
+            row,
+            kind: definition.kind,
+            speed: (definition.speed ?? 0) * speedMultiplier * (reverse ? -1 : 1),
+            objects: (definition.positions ?? []).map((sourceX) => {
+                const width = definition.width ?? 1;
+                const mirrored = reverse ? WIDTH - 1 - sourceX : sourceX;
+                return {
+                    x: this.wrapX(mirrored + positionOffset * (row % 2 === 0 ? 1 : -1), width),
+                    width,
+                };
+            }),
+        }));
     }
 
     private resolveCurrentLane(): void {
@@ -191,13 +230,41 @@ export class RiverCrossingModel {
             return;
         }
         if (lane.kind === 'goal') {
-            this.completedCrossings += 1;
-            this.currentScore += 250;
-            if (this.completedCrossings >= TARGET_CROSSINGS) {
-                this.currentPhase = 'won';
-                this.resetPlayer();
-            } else {
-                this.resetPlayer();
+            this.finishCrossing();
+        }
+    }
+
+    private finishCrossing(): void {
+        this.completedCrossings += 1;
+        this.currentCleanStreak += 1;
+        this.bestCrossingElapsed = Math.min(
+            this.bestCrossingElapsed,
+            this.crossingElapsed,
+        );
+        const timeBonus = Math.max(0, 240 - Math.floor(this.crossingElapsed * 18));
+        this.currentScore += 250
+            + timeBonus
+            + this.currentCleanStreak * 35
+            + this.completedCrossings * 20;
+        if (this.completedCrossings >= TARGET_CROSSINGS) {
+            this.currentPhase = 'won';
+            this.resetPlayer();
+            return;
+        }
+        this.raiseDifficulty();
+        this.resetPlayer();
+        this.crossingElapsed = 0;
+    }
+
+    private raiseDifficulty(): void {
+        for (const lane of this.lanes) {
+            if (lane.speed === 0) {
+                continue;
+            }
+            lane.speed *= 1.08;
+            const offset = lane.row % 2 === 0 ? 0.9 : -0.65;
+            for (const object of lane.objects) {
+                object.x = this.wrapX(object.x + offset, object.width);
             }
         }
     }
@@ -213,6 +280,8 @@ export class RiverCrossingModel {
             return;
         }
         this.currentLives = Math.max(0, this.currentLives - 1);
+        this.currentCleanStreak = 0;
+        this.crossingElapsed = 0;
         this.resetPlayer();
         if (this.currentLives === 0) {
             this.currentPhase = 'lost';
