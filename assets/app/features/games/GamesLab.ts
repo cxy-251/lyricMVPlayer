@@ -13,6 +13,7 @@ import { riverCrossingDefinition } from './river-crossing';
 import { snakeDefinition } from './snake';
 import { sokobanDefinition } from './sokoban';
 import { tetrisDefinition } from './tetris';
+import { towerDefenseDefinition } from './tower-defense';
 
 export const gamesLab: LabManifest = {
     definition: {
@@ -37,5 +38,6 @@ export const gamesLab: LabManifest = {
         riverCrossingDefinition,
         matchThreeDefinition,
         bomberMazeDefinition,
+        towerDefenseDefinition,
     ],
 };
