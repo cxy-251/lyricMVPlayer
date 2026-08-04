@@ -1,4 +1,5 @@
 import type { LabManifest } from '../../contracts/InteractiveModule';
+import { defineLabManifest } from '../../core/ManifestValidator';
 import { blockStackerDefinition } from './block-stacker';
 import { bomberMazeDefinition } from './bomber-maze';
 import { brickBreakerDefinition } from './brick-breaker';
@@ -15,7 +16,7 @@ import { sokobanDefinition } from './sokoban';
 import { tetrisDefinition } from './tetris';
 import { towerDefenseDefinition } from './tower-defense';
 
-export const gamesLab: LabManifest = {
+export const gamesLab: LabManifest = defineLabManifest({
     definition: {
         id: 'games',
         title: 'Games Laboratory',
@@ -40,4 +41,4 @@ export const gamesLab: LabManifest = {
         bomberMazeDefinition,
         towerDefenseDefinition,
     ],
-};
+});

@@ -1,9 +1,14 @@
+import {
+    XorShift32Random,
+    type RandomSource,
+} from '../shared/RandomSource';
 import type {
     Game2048Direction,
     Game2048Observation,
 } from './Game2048Types';
 
 const SIZE = 4;
+const RESET_SALT = 0x9e3779b9;
 
 export interface Game2048MoveResult {
     readonly board: number[][];
@@ -15,9 +20,10 @@ export class Game2048Model {
     private boardState: number[][] = [];
     private currentScore = 0;
     private currentPhase: 'playing' | 'lost' = 'playing';
-    private randomState = 0x4f1bbcdc;
 
-    constructor() {
+    constructor(
+        private readonly randomSource: RandomSource = new XorShift32Random(0x4f1bbcdc),
+    ) {
         this.reset();
     }
 
@@ -37,7 +43,9 @@ export class Game2048Model {
         this.boardState = Array.from({ length: SIZE }, () => new Array<number>(SIZE).fill(0));
         this.currentScore = 0;
         this.currentPhase = 'playing';
-        this.randomState = this.nextRandomState(this.randomState ^ 0x9e3779b9);
+        this.randomSource.reset(
+            XorShift32Random.mix(this.randomSource.snapshot() ^ RESET_SALT),
+        );
         this.addRandomTile();
         this.addRandomTile();
     }
@@ -166,8 +174,8 @@ export class Game2048Model {
         if (empty.length === 0) {
             return;
         }
-        const location = empty[Math.floor(this.random() * empty.length)];
-        this.boardState[location.row][location.column] = this.random() < 0.9 ? 2 : 4;
+        const location = empty[this.randomSource.nextInt(empty.length)];
+        this.boardState[location.row][location.column] = this.randomSource.next() < 0.9 ? 2 : 4;
     }
 
     private hasAvailableMove(board: readonly (readonly number[])[]): boolean {
@@ -186,18 +194,5 @@ export class Game2048Model {
             }
         }
         return false;
-    }
-
-    private random(): number {
-        this.randomState = this.nextRandomState(this.randomState);
-        return this.randomState / 0x100000000;
-    }
-
-    private nextRandomState(value: number): number {
-        let state = value >>> 0;
-        state ^= state << 13;
-        state ^= state >>> 17;
-        state ^= state << 5;
-        return state >>> 0;
     }
 }

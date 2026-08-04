@@ -1,3 +1,7 @@
+import {
+    LinearCongruentialRandom,
+    type RandomSource,
+} from '../shared/RandomSource';
 import type {
     MinesweeperCellState,
     MinesweeperCellViewState,
@@ -9,6 +13,7 @@ import type {
 const DEFAULT_ROWS = 9;
 const DEFAULT_COLUMNS = 9;
 const DEFAULT_MINE_COUNT = 10;
+const RESET_INCREMENT = 0x9e3779b9;
 
 interface MinesweeperCell {
     mine: boolean;
@@ -26,12 +31,12 @@ export class MinesweeperModel {
     private phaseValue: MinesweeperPhase = 'ready';
     private generated = false;
     private elapsed = 0;
-    private seed = 0x6d2b79f5;
 
     constructor(
         rows = DEFAULT_ROWS,
         columns = DEFAULT_COLUMNS,
         mineCount = DEFAULT_MINE_COUNT,
+        private readonly randomSource: RandomSource = new LinearCongruentialRandom(0x6d2b79f5),
     ) {
         this.rows = Math.max(4, Math.floor(rows));
         this.columns = Math.max(4, Math.floor(columns));
@@ -70,7 +75,9 @@ export class MinesweeperModel {
     }
 
     reset(): void {
-        this.seed = (this.seed + 0x9e3779b9) >>> 0;
+        this.randomSource.reset(
+            (this.randomSource.snapshot() + RESET_INCREMENT) >>> 0,
+        );
         this.generated = false;
         this.phaseValue = 'ready';
         this.elapsed = 0;
@@ -315,16 +322,11 @@ export class MinesweeperModel {
 
     private shuffle(values: number[]): void {
         for (let index = values.length - 1; index > 0; index -= 1) {
-            const target = Math.floor(this.random() * (index + 1));
+            const target = this.randomSource.nextInt(index + 1);
             const swap = values[index];
             values[index] = values[target];
             values[target] = swap;
         }
-    }
-
-    private random(): number {
-        this.seed = (Math.imul(this.seed, 1664525) + 1013904223) >>> 0;
-        return this.seed / 0x1_0000_0000;
     }
 
     private inBounds(row: number, column: number): boolean {

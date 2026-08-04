@@ -1,3 +1,7 @@
+import {
+    XorShift32Random,
+    type RandomSource,
+} from '../shared/RandomSource';
 import type {
     SnakeDirection,
     SnakeObservation,
@@ -10,6 +14,7 @@ const START_LENGTH = 4;
 const START_INTERVAL = 0.19;
 const MINIMUM_INTERVAL = 0.07;
 const SPEED_GAIN = 0.0045;
+const RESET_SALT = 0x9e3779b9;
 
 const OFFSETS: Record<SnakeDirection, readonly [number, number]> = {
     up: [0, 1],
@@ -26,9 +31,10 @@ export class SnakeModel {
     private currentPhase: 'playing' | 'won' | 'lost' = 'playing';
     private currentScore = 0;
     private accumulator = 0;
-    private randomState = 0x75d3ac41;
 
-    constructor() {
+    constructor(
+        private readonly randomSource: RandomSource = new XorShift32Random(0x75d3ac41),
+    ) {
         this.reset();
     }
 
@@ -64,7 +70,9 @@ export class SnakeModel {
         this.currentPhase = 'playing';
         this.currentScore = 0;
         this.accumulator = 0;
-        this.randomState = this.nextRandomState(this.randomState ^ 0x9e3779b9);
+        this.randomSource.reset(
+            XorShift32Random.mix(this.randomSource.snapshot() ^ RESET_SALT),
+        );
         this.spawnFood();
     }
 
@@ -151,8 +159,7 @@ export class SnakeModel {
             this.currentPhase = 'won';
             return;
         }
-        const index = Math.floor(this.random() * empty.length);
-        this.foodPoint = empty[Math.max(0, Math.min(empty.length - 1, index))];
+        this.foodPoint = empty[this.randomSource.nextInt(empty.length)];
     }
 
     private stepInterval(): number {
@@ -164,19 +171,6 @@ export class SnakeModel {
             || (left === 'down' && right === 'up')
             || (left === 'left' && right === 'right')
             || (left === 'right' && right === 'left');
-    }
-
-    private random(): number {
-        this.randomState = this.nextRandomState(this.randomState);
-        return this.randomState / 0x100000000;
-    }
-
-    private nextRandomState(value: number): number {
-        let state = value >>> 0;
-        state ^= state << 13;
-        state ^= state >>> 17;
-        state ^= state << 5;
-        return state >>> 0;
     }
 
     private key(x: number, y: number): string {
