@@ -6,6 +6,9 @@ import {
     Node,
 } from 'cc';
 import type { ViewportSnapshot } from '../../../services/ViewportService';
+import { fitGridCell } from '../../../ui/layout/BoardFit';
+import { createControlGrid } from '../../../ui/layout/ControlGrid';
+import { createSafeViewportLayout } from '../../../ui/layout/SafeLayout';
 import {
     clearNode,
     createButton,
@@ -47,28 +50,23 @@ export class SnakeView {
         this.scoreLabel = null;
         this.hintLabel = null;
 
-        const compact = viewport.breakpoint === 'compact';
-        const safeWidth = Math.max(
-            2,
-            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
-        );
-        const safeTop = viewport.height / 2 - viewport.safeInsets.top;
-        const safeBottom = -viewport.height / 2 + viewport.safeInsets.bottom;
-        const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const contentTop = safeTop - (compact ? 64 : 72);
+        const safe = createSafeViewportLayout(viewport);
+        const compact = safe.compact;
+        const contentTop = safe.top - (compact ? 64 : 72);
         const hudHeight = compact ? 62 : 72;
         const controlsHeight = compact ? 116 : 130;
         const footerHeight = compact ? 40 : 46;
         const horizontalPadding = compact ? 16 : 34;
-        const availableWidth = Math.max(1, safeWidth - horizontalPadding);
         const availableHeight = Math.max(
             1,
-            contentTop - safeBottom - hudHeight - controlsHeight - footerHeight,
+            contentTop - safe.bottom - hudHeight - controlsHeight - footerHeight,
         );
-        const cellSize = Math.max(1, Math.floor(Math.min(
-            availableWidth / 20,
-            availableHeight / 14,
-        )));
+        const cellSize = fitGridCell({
+            availableWidth: safe.width - horizontalPadding,
+            availableHeight,
+            columns: 20,
+            rows: 14,
+        });
         this.cellSize = cellSize;
         this.boardWidth = cellSize * 20;
         this.boardHeight = cellSize * 14;
@@ -83,7 +81,7 @@ export class SnakeView {
             compact ? 22 : 26,
             compact ? 12 : 14,
             palette.text,
-            centerX,
+            safe.centerX,
             contentTop - (compact ? 12 : 14),
             HorizontalTextAlignment.CENTER,
         );
@@ -96,7 +94,7 @@ export class SnakeView {
             compact ? 18 : 22,
             compact ? 10 : 11,
             palette.muted,
-            centerX,
+            safe.centerX,
             contentTop - (compact ? 36 : 42),
         );
         this.scoreLabel = scoreNode.getComponent(Label);
@@ -106,7 +104,7 @@ export class SnakeView {
             'SnakeBoard',
             this.boardWidth,
             this.boardHeight,
-            centerX,
+            safe.centerX,
             boardCenterY,
         );
         this.graphics = board.addComponent(Graphics);
@@ -114,35 +112,36 @@ export class SnakeView {
         const controlsY = boardBottom - (compact ? 68 : 74);
         const size = Math.max(
             32,
-            Math.min(compact ? 38 : 44, (safeWidth - 24) / 3),
+            Math.min(compact ? 38 : 44, (safe.width - 24) / 3),
         );
         const gap = compact ? 46 : 50;
-        createButton(this.root, {
-            name: 'SnakeUp', text: '↑', width: size, height: size,
-            x: centerX, y: controlsY + gap, fontSize: compact ? 16 : 18,
-            variant: 'secondary', onPress: () => this.actions.direction('up'),
+        const controls = createControlGrid({
+            centerX: safe.centerX,
+            centerY: controlsY,
+            columns: 3,
+            rows: 3,
+            columnStep: gap,
+            rowStep: gap,
+        });
+        this.createControl('SnakeUp', '↑', controls[7], size, compact, () => {
+            this.actions.direction('up');
+        });
+        this.createControl('SnakeLeft', '←', controls[3], size, compact, () => {
+            this.actions.direction('left');
+        });
+        this.createControl('SnakeDown', '↓', controls[4], size, compact, () => {
+            this.actions.direction('down');
+        });
+        this.createControl('SnakeRight', '→', controls[5], size, compact, () => {
+            this.actions.direction('right');
         });
         createButton(this.root, {
-            name: 'SnakeLeft', text: '←', width: size, height: size,
-            x: centerX - gap, y: controlsY, fontSize: compact ? 16 : 18,
-            variant: 'secondary', onPress: () => this.actions.direction('left'),
-        });
-        createButton(this.root, {
-            name: 'SnakeDown', text: '↓', width: size, height: size,
-            x: centerX, y: controlsY, fontSize: compact ? 16 : 18,
-            variant: 'secondary', onPress: () => this.actions.direction('down'),
-        });
-        createButton(this.root, {
-            name: 'SnakeRight', text: '→', width: size, height: size,
-            x: centerX + gap, y: controlsY, fontSize: compact ? 16 : 18,
-            variant: 'secondary', onPress: () => this.actions.direction('right'),
-        });
-        createButton(this.root, {
-            name: 'SnakeRestart', text: 'NEW',
-            width: Math.max(size, Math.min(compact ? 66 : 76, safeWidth - 24)),
+            name: 'SnakeRestart',
+            text: 'NEW',
+            width: Math.max(size, Math.min(compact ? 66 : 76, safe.width - 24)),
             height: size,
-            x: centerX,
-            y: controlsY - gap,
+            x: controls[1].x,
+            y: controls[1].y,
             fontSize: compact ? 10 : 11,
             variant: 'secondary',
             onPress: () => this.actions.restart(),
@@ -151,12 +150,12 @@ export class SnakeView {
         const hintNode = createLabel(
             this.root,
             '',
-            Math.max(1, Math.min(safeWidth - 20, 620)),
+            Math.max(1, Math.min(safe.width - 20, 620)),
             compact ? 18 : 22,
             compact ? 9 : 10,
             palette.muted,
-            centerX,
-            safeBottom + (compact ? 13 : 16),
+            safe.centerX,
+            safe.bottom + (compact ? 13 : 16),
         );
         this.hintLabel = hintNode.getComponent(Label);
     }
@@ -227,6 +226,27 @@ export class SnakeView {
     destroy(): void {
         this.input.destroy();
         clearNode(this.root);
+    }
+
+    private createControl(
+        name: string,
+        text: string,
+        point: { readonly x: number; readonly y: number },
+        size: number,
+        compact: boolean,
+        onPress: () => void,
+    ): void {
+        createButton(this.root, {
+            name,
+            text,
+            width: size,
+            height: size,
+            x: point.x,
+            y: point.y,
+            fontSize: compact ? 16 : 18,
+            variant: 'secondary',
+            onPress,
+        });
     }
 
     private drawCell(

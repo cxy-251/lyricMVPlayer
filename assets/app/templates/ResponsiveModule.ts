@@ -4,6 +4,7 @@ import type {
     ModuleContext,
 } from '../contracts/InteractiveModule';
 import type { ViewportSnapshot } from '../services/ViewportService';
+import { fitViewportScale } from '../ui/layout/SafeLayout';
 import { createUiNode, resizeNode } from '../ui/UiFactory';
 
 const MINIMUM_LAYOUT_WIDTH = 320;
@@ -97,18 +98,10 @@ export abstract class ResponsiveModule implements InteractiveModule {
         if (!this.root) {
             return;
         }
-        const safeWidth = Math.max(
-            1,
-            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
-        );
-        const safeHeight = Math.max(
-            1,
-            viewport.height - viewport.safeInsets.top - viewport.safeInsets.bottom,
-        );
-        const scale = Math.min(
-            1,
-            safeWidth / MINIMUM_LAYOUT_WIDTH,
-            safeHeight / MINIMUM_LAYOUT_HEIGHT,
+        const scale = fitViewportScale(
+            viewport,
+            MINIMUM_LAYOUT_WIDTH,
+            MINIMUM_LAYOUT_HEIGHT,
         );
         this.root.setScale(scale, scale, 1);
     }
