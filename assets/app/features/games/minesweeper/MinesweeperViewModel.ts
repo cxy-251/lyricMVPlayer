@@ -142,8 +142,8 @@ export class MinesweeperViewModel {
         this.challengeIndex = 0;
         this.points = 0;
         this.winStreak = 0;
-        this.startNewBoard(false);
         this.controller = 'autopilot';
+        this.startNewBoard(false);
         this.humanIdleElapsed = AI_TAKEOVER_DELAY;
         this.aiActionElapsed = AI_ACTION_INTERVAL;
         this.renderElapsed = RENDER_INTERVAL;
@@ -223,17 +223,19 @@ export class MinesweeperViewModel {
             this.startNewBoard(true);
             return;
         }
-        if (action.row === undefined || action.column === undefined) {
+        const row = action.row;
+        const column = action.column;
+        if (row === undefined || column === undefined) {
             return;
         }
-        this.focusRow = action.row;
-        this.focusColumn = action.column;
+        this.focusRow = row;
+        this.focusColumn = column;
         this.applyScoredAction(() => (
             action.kind === 'flag'
-                ? this.model.toggleFlag(action.row as number, action.column as number)
+                ? this.model.toggleFlag(row, column)
                 : action.kind === 'chord'
-                    ? this.model.chord(action.row as number, action.column as number)
-                    : this.model.reveal(action.row as number, action.column as number)
+                    ? this.model.chord(row, column)
+                    : this.model.reveal(row, column)
         ));
     }
 
@@ -246,10 +248,11 @@ export class MinesweeperViewModel {
             return;
         }
 
+        const phaseAfter = this.model.phase;
         const revealedGain = Math.max(0, this.revealedCount() - revealedBefore);
-        const flagsAfter = this.flagsUsed();
+        const flagsAfter = phaseAfter === 'won' ? flagsBefore : this.flagsUsed();
         this.maximumFlagsUsed = Math.max(this.maximumFlagsUsed, flagsAfter);
-        if (revealedGain > 0) {
+        if (revealedGain > 0 && phaseAfter !== 'lost') {
             this.safeStreak += 1;
             this.largestSweep = Math.max(this.largestSweep, revealedGain);
             const sweepMultiplier = this.currentChallenge() === 'sweep'
@@ -261,7 +264,7 @@ export class MinesweeperViewModel {
         } else if (flagsAfter > flagsBefore) {
             this.points += this.currentChallenge() === 'low-flag' ? 1 : 3;
         }
-        if (phaseBefore !== 'lost' && this.model.phase === 'lost') {
+        if (phaseBefore !== 'lost' && phaseAfter === 'lost') {
             this.safeStreak = 0;
         }
         this.scoreTerminalIfNeeded();
