@@ -1,4 +1,5 @@
 import {
+    BlockInputEvents,
     HorizontalTextAlignment,
     Node,
 } from 'cc';
@@ -32,6 +33,7 @@ interface NavigationState {
 export class NavigationBar {
     private state: NavigationState | null = null;
     private viewport: ViewportSnapshot;
+    private backPending = false;
     private readonly unsubscribeViewport: () => void;
 
     constructor(
@@ -39,6 +41,8 @@ export class NavigationBar {
         viewportService: ViewportService,
     ) {
         this.viewport = viewportService.current;
+        this.root.getComponent(BlockInputEvents)
+            ?? this.root.addComponent(BlockInputEvents);
         this.unsubscribeViewport = viewportService.subscribe((snapshot) => {
             this.viewport = snapshot;
             this.render();
@@ -48,6 +52,7 @@ export class NavigationBar {
 
     showHome(): void {
         this.state = null;
+        this.backPending = false;
         clearNode(this.root);
         this.root.active = false;
     }
@@ -59,6 +64,7 @@ export class NavigationBar {
             paused: false,
             handlers: { onBack },
         };
+        this.backPending = false;
         this.root.active = true;
         this.render();
     }
@@ -75,6 +81,7 @@ export class NavigationBar {
             paused,
             handlers,
         };
+        this.backPending = false;
         this.root.active = true;
         this.render();
     }
@@ -90,6 +97,8 @@ export class NavigationBar {
 
     dispose(): void {
         this.unsubscribeViewport();
+        this.state = null;
+        this.backPending = false;
         clearNode(this.root);
     }
 
@@ -119,7 +128,7 @@ export class NavigationBar {
             name: 'NavigationBack',
             icon: 'back',
             x: backX,
-            onPress: state.handlers.onBack,
+            onPress: () => this.requestBack(state),
         });
 
         const hasPause = state.capabilities.includes('pause');
@@ -166,5 +175,19 @@ export class NavigationBar {
             0,
             HorizontalTextAlignment.LEFT,
         );
+    }
+
+    private requestBack(state: NavigationState): void {
+        if (this.backPending || this.state !== state) {
+            return;
+        }
+
+        this.backPending = true;
+        try {
+            state.handlers.onBack();
+        } catch (error) {
+            this.backPending = false;
+            throw error;
+        }
     }
 }

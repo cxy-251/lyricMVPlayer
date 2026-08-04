@@ -31,6 +31,7 @@ export class ModuleHost {
     private backgroundPaused = false;
     private appliedPaused = false;
     private runtimeFailed = false;
+    private activationGeneration = 0;
     private readonly unsubscribeViewport: () => void;
 
     constructor(
@@ -62,6 +63,7 @@ export class ModuleHost {
         navigation: ModuleNavigation,
     ): Promise<void> {
         await this.disposeActive();
+        const generation = ++this.activationGeneration;
 
         const snapshot = this.viewport.current;
         const root = createUiNode(
@@ -91,14 +93,32 @@ export class ModuleHost {
             openLab: navigation.openLab,
             back: navigation.back,
             home: navigation.home,
-            reportError: (error) => this.failRuntime(error),
+            reportError: (error) => {
+                if (
+                    generation === this.activationGeneration
+                    && this.activeModule === module
+                ) {
+                    this.failRuntime(error);
+                }
+            },
         };
 
         try {
             await module.mount(context);
+            if (
+                generation !== this.activationGeneration
+                || this.activeModule !== module
+            ) {
+                return;
+            }
             this.syncPauseState();
         } catch (error) {
-            await this.disposeActive();
+            if (
+                generation === this.activationGeneration
+                && this.activeModule === module
+            ) {
+                await this.disposeActive();
+            }
             throw error;
         }
     }
@@ -119,7 +139,9 @@ export class ModuleHost {
         try {
             module.update(dt);
         } catch (error) {
-            this.failRuntime(error);
+            if (this.activeModule === module) {
+                this.failRuntime(error);
+            }
         }
     }
 
@@ -135,7 +157,9 @@ export class ModuleHost {
         try {
             this.syncPauseState();
         } catch (error) {
-            this.failRuntime(error);
+            if (this.activeModule === module) {
+                this.failRuntime(error);
+            }
         }
 
         return this.appliedPaused;
@@ -152,7 +176,9 @@ export class ModuleHost {
             module.reset();
             return true;
         } catch (error) {
-            this.failRuntime(error);
+            if (this.activeModule === module) {
+                this.failRuntime(error);
+            }
             return false;
         }
     }
@@ -190,7 +216,7 @@ export class ModuleHost {
     }
 
     private failRuntime(error: unknown): void {
-        if (this.runtimeFailed) {
+        if (this.runtimeFailed || !this.activeModule) {
             return;
         }
 
@@ -201,6 +227,7 @@ export class ModuleHost {
     }
 
     private async disposeActive(): Promise<void> {
+        ++this.activationGeneration;
         const module = this.activeModule;
         const root = this.activeRoot;
 

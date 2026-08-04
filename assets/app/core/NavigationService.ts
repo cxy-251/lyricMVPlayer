@@ -29,6 +29,7 @@ type NavigationRoute =
 export class NavigationService {
     private transition: Promise<void> = Promise.resolve();
     private route: NavigationRoute = { kind: 'home' };
+    private backRequest: Promise<void> | null = null;
     private disposed = false;
     private disposal: Promise<void> | null = null;
 
@@ -42,45 +43,50 @@ export class NavigationService {
     ) {}
 
     home(): Promise<void> {
-        return this.enqueue(() => this.activate(
-            homeDefinition,
-            this.createHome(),
-            { kind: 'home' },
-        ));
+        return this.enqueue(() => this.activateHomeRoute());
     }
 
     openLab(labId: LabId): Promise<void> {
-        return this.enqueue(() => {
-            const lab = this.registry.getLab(labId);
-            return this.activate(
-                this.createLabDefinition(lab),
-                this.createLabCatalog(labId),
-                { kind: 'lab', labId },
-            );
-        });
+        return this.enqueue(() => this.activateLabRoute(labId));
     }
 
     open(moduleId: string): Promise<void> {
-        return this.enqueue(() => {
-            const definition = this.registry.get(moduleId);
-            return this.activate(
-                definition,
-                definition.create(),
-                { kind: 'module', moduleId, labId: definition.labId },
-            );
-        });
+        return this.enqueue(() => this.activateModuleRoute(moduleId));
     }
 
     back(): Promise<void> {
-        if (this.route.kind === 'module' && this.route.labId) {
-            return this.openLab(this.route.labId);
+        if (this.backRequest) {
+            return this.backRequest;
         }
 
-        if (this.route.kind === 'lab' || this.route.kind === 'module') {
-            return this.home();
-        }
+        const request = this.enqueue(() => {
+            const current = this.route;
 
-        return Promise.resolve();
+            if (current.kind === 'module' && current.labId) {
+                return this.activateLabRoute(current.labId);
+            }
+
+            if (current.kind === 'lab' || current.kind === 'module') {
+                return this.activateHomeRoute();
+            }
+
+            return Promise.resolve();
+        });
+
+        this.backRequest = request;
+        request.then(
+            () => {
+                if (this.backRequest === request) {
+                    this.backRequest = null;
+                }
+            },
+            () => {
+                if (this.backRequest === request) {
+                    this.backRequest = null;
+                }
+            },
+        );
+        return request;
     }
 
     togglePause(): void {
@@ -103,6 +109,7 @@ export class NavigationService {
         }
 
         this.disposed = true;
+        this.backRequest = null;
         this.disposal = (async () => {
             await this.transition.catch(() => undefined);
             this.resetPointerCursor();
@@ -122,6 +129,32 @@ export class NavigationService {
         const next = this.transition.then(operation, operation);
         this.transition = next.catch(() => undefined);
         return next;
+    }
+
+    private activateHomeRoute(): Promise<void> {
+        return this.activate(
+            homeDefinition,
+            this.createHome(),
+            { kind: 'home' },
+        );
+    }
+
+    private activateLabRoute(labId: LabId): Promise<void> {
+        const lab = this.registry.getLab(labId);
+        return this.activate(
+            this.createLabDefinition(lab),
+            this.createLabCatalog(labId),
+            { kind: 'lab', labId },
+        );
+    }
+
+    private activateModuleRoute(moduleId: string): Promise<void> {
+        const definition = this.registry.get(moduleId);
+        return this.activate(
+            definition,
+            definition.create(),
+            { kind: 'module', moduleId, labId: definition.labId },
+        );
     }
 
     private async activate(
