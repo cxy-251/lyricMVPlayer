@@ -1,13 +1,12 @@
 import {
     EventKeyboard,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
     UITransform,
     Vec3,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type {
     SokobanBoardLayout,
     SokobanDirection,
@@ -18,6 +17,7 @@ const SWIPE_THRESHOLD = 18;
 
 export class SokobanInputController {
     private readonly screenPoint = new Vec3();
+    private readonly unbindKeyboard: () => void;
     private boardLayout: SokobanBoardLayout | null = null;
     private touchStartX = 0;
     private touchStartY = 0;
@@ -27,7 +27,10 @@ export class SokobanInputController {
         private readonly root: Node,
         private readonly actions: SokobanViewActions,
     ) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
         this.root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
         this.root.on(Node.EventType.TOUCH_CANCEL, this.handleTouchCancel, this);
@@ -38,46 +41,46 @@ export class SokobanInputController {
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
         this.root.off(Node.EventType.TOUCH_CANCEL, this.handleTouchCancel, this);
         this.touchStartedInside = false;
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_W:
                 this.actions.move('up');
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.actions.move('down');
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.actions.move('left');
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.actions.move('right');
-                break;
+                return true;
             case KeyCode.KEY_Z:
             case KeyCode.KEY_U:
                 this.actions.undo();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             case KeyCode.KEY_Q:
                 this.actions.previousLevel();
-                break;
+                return true;
             case KeyCode.KEY_E:
                 this.actions.nextLevel();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 

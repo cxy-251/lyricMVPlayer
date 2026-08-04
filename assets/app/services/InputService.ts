@@ -1,4 +1,5 @@
 import { EventKeyboard, input, Input, KeyCode } from 'cc';
+import { inputRouter } from './InputRouter';
 
 export type AppAction = 'back' | 'toggle-pause' | 'reset';
 type ActionHandler = () => void;
@@ -14,6 +15,7 @@ export class InputService {
 
         this.started = true;
         input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        input.on(Input.EventType.KEY_UP, this.handleKeyUp, this);
     }
 
     stop(): void {
@@ -22,6 +24,8 @@ export class InputService {
         }
 
         input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        input.off(Input.EventType.KEY_UP, this.handleKeyUp, this);
+        inputRouter.clear();
         this.handlers.clear();
         this.started = false;
     }
@@ -54,6 +58,9 @@ export class InputService {
     }
 
     private readonly handleKeyDown = (event: EventKeyboard): void => {
+        if (inputRouter.dispatchKeyDown(event)) {
+            return;
+        }
         switch (event.keyCode) {
             case KeyCode.ESCAPE:
                 this.emit('back');
@@ -64,5 +71,9 @@ export class InputService {
             default:
                 break;
         }
+    };
+
+    private readonly handleKeyUp = (event: EventKeyboard): void => {
+        inputRouter.dispatchKeyUp(event);
     };
 }

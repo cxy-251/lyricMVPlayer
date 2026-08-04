@@ -2,13 +2,12 @@ import {
     EventKeyboard,
     EventMouse,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
     UITransform,
     Vec3,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { BlockStackerPlayfieldLayout } from './BlockStackerTypes';
 
 export interface BlockStackerInputActions {
@@ -18,13 +17,18 @@ export interface BlockStackerInputActions {
 
 export class BlockStackerInputController {
     private readonly screenPoint = new Vec3();
+    private readonly unbindKeyboard: () => void;
     private playfield: BlockStackerPlayfieldLayout | null = null;
 
     constructor(
         private readonly root: Node,
         private readonly actions: BlockStackerInputActions,
     ) {
-        this.bind();
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
+        this.bindPointer();
     }
 
     setPlayfield(layout: BlockStackerPlayfieldLayout): void {
@@ -34,13 +38,12 @@ export class BlockStackerInputController {
     destroy(): void {
         this.root.off(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
     }
 
-    private bind(): void {
+    private bindPointer(): void {
         this.root.on(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
     }
 
     private readonly handleMouseDown = (event: EventMouse): void => {
@@ -60,17 +63,17 @@ export class BlockStackerInputController {
         }
     };
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ENTER:
             case KeyCode.SPACE:
                 this.actions.drop();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 

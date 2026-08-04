@@ -2,13 +2,12 @@ import {
     EventKeyboard,
     EventMouse,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
     UITransform,
     Vec3,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { BrickBreakerPlayfieldLayout } from './BrickBreakerTypes';
 
 export interface BrickBreakerInputActions {
@@ -21,6 +20,7 @@ export interface BrickBreakerInputActions {
 
 export class BrickBreakerInputController {
     private readonly screenPoint = new Vec3();
+    private readonly unbindKeyboard: () => void;
     private playfield: BrickBreakerPlayfieldLayout | null = null;
     private leftDown = false;
     private rightDown = false;
@@ -29,7 +29,12 @@ export class BrickBreakerInputController {
         private readonly root: Node,
         private readonly actions: BrickBreakerInputActions,
     ) {
-        this.bind();
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+            onKeyUp: this.handleKeyUp,
+        });
+        this.bindPointer();
     }
 
     setPlayfield(layout: BrickBreakerPlayfieldLayout): void {
@@ -44,11 +49,10 @@ export class BrickBreakerInputController {
         this.root.off(Node.EventType.TOUCH_MOVE, this.handleTouchMove, this);
         this.root.off(Node.EventType.TOUCH_END, this.handlePointerRelease, this);
         this.root.off(Node.EventType.TOUCH_CANCEL, this.handlePointerRelease, this);
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
-        input.off(Input.EventType.KEY_UP, this.handleKeyUp, this);
+        this.unbindKeyboard();
     }
 
-    private bind(): void {
+    private bindPointer(): void {
         this.root.on(Node.EventType.MOUSE_MOVE, this.handleMouseMove, this);
         this.root.on(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.on(Node.EventType.MOUSE_LEAVE, this.handlePointerRelease, this);
@@ -56,8 +60,6 @@ export class BrickBreakerInputController {
         this.root.on(Node.EventType.TOUCH_MOVE, this.handleTouchMove, this);
         this.root.on(Node.EventType.TOUCH_END, this.handlePointerRelease, this);
         this.root.on(Node.EventType.TOUCH_CANCEL, this.handlePointerRelease, this);
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
-        input.on(Input.EventType.KEY_UP, this.handleKeyUp, this);
     }
 
     private readonly handleMouseMove = (event: EventMouse): void => {
@@ -99,44 +101,44 @@ export class BrickBreakerInputController {
         this.actions.humanPointerReleased();
     };
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.leftDown = true;
                 this.forwardKeyboardAxis();
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.rightDown = true;
                 this.forwardKeyboardAxis();
-                break;
+                return true;
             case KeyCode.ENTER:
             case KeyCode.SPACE:
                 this.actions.launch();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 
-    private readonly handleKeyUp = (event: EventKeyboard): void => {
+    private readonly handleKeyUp = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.leftDown = false;
                 this.forwardKeyboardAxis();
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.rightDown = false;
                 this.forwardKeyboardAxis();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 

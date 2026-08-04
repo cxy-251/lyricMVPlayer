@@ -1,11 +1,10 @@
 import {
     EventKeyboard,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type {
     Game2048Direction,
     Game2048ViewActions,
@@ -14,6 +13,7 @@ import type {
 const SWIPE_THRESHOLD = 24;
 
 export class Game2048InputController {
+    private readonly unbindKeyboard: () => void;
     private touchStartX = 0;
     private touchStartY = 0;
 
@@ -21,40 +21,43 @@ export class Game2048InputController {
         private readonly root: Node,
         private readonly actions: Game2048ViewActions,
     ) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
         root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_W:
                 this.actions.move('up');
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.actions.move('down');
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.actions.move('left');
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.actions.move('right');
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 

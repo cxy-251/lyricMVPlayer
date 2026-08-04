@@ -1,11 +1,10 @@
 import {
     EventKeyboard,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type {
     BomberMazeDirection,
     BomberMazeViewActions,
@@ -14,6 +13,7 @@ import type {
 const SWIPE_THRESHOLD = 24;
 
 export class BomberMazeInputController {
+    private readonly unbindKeyboard: () => void;
     private touchStartX = 0;
     private touchStartY = 0;
 
@@ -21,22 +21,25 @@ export class BomberMazeInputController {
         private readonly root: Node,
         private readonly actions: BomberMazeViewActions,
     ) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
         root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         const direction = this.directionForKey(event.keyCode);
         if (direction) {
             this.actions.move(direction);
-            return;
+            return true;
         }
         if (
             event.keyCode === KeyCode.KEY_F
@@ -44,7 +47,9 @@ export class BomberMazeInputController {
             || event.keyCode === KeyCode.ENTER
         ) {
             this.actions.placeBomb();
+            return true;
         }
+        return false;
     };
 
     private readonly handleTouchStart = (event: EventTouch): void => {

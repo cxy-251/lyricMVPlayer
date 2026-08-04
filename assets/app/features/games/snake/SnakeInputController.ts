@@ -1,16 +1,16 @@
 import {
     EventKeyboard,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { SnakeDirection, SnakeViewActions } from './SnakeTypes';
 
 const SWIPE_THRESHOLD = 22;
 
 export class SnakeInputController {
+    private readonly unbindKeyboard: () => void;
     private touchStartX = 0;
     private touchStartY = 0;
 
@@ -18,41 +18,44 @@ export class SnakeInputController {
         private readonly root: Node,
         private readonly actions: SnakeViewActions,
     ) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
         root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_W:
                 this.actions.direction('up');
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.actions.direction('down');
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.actions.direction('left');
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.actions.direction('right');
-                break;
+                return true;
             case KeyCode.KEY_R:
             case KeyCode.SPACE:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 

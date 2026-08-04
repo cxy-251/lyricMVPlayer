@@ -1,9 +1,8 @@
 import {
     EventKeyboard,
-    input,
-    Input,
     KeyCode,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type {
     TowerDefenseDirection,
     TowerDefenseTowerKind,
@@ -19,52 +18,57 @@ export interface TowerDefenseInputActions {
 }
 
 export class TowerDefenseInputController {
+    private readonly unbindKeyboard: () => void;
+
     constructor(private readonly actions: TowerDefenseInputActions) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.unbindKeyboard();
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_W:
                 this.actions.moveSelection('up');
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.actions.moveSelection('down');
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.actions.moveSelection('left');
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.actions.moveSelection('right');
-                break;
+                return true;
             case KeyCode.KEY_Q:
                 this.actions.selectKind('dart');
-                break;
+                return true;
             case KeyCode.KEY_E:
                 this.actions.selectKind('cannon');
-                break;
+                return true;
             case KeyCode.ENTER:
                 this.actions.build();
-                break;
+                return true;
             case KeyCode.KEY_U:
                 this.actions.upgrade();
-                break;
+                return true;
             case KeyCode.KEY_F:
                 this.actions.startWave();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 }

@@ -1,82 +1,84 @@
 import {
     EventKeyboard,
-    input,
-    Input,
     KeyCode,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { TetrisViewActions } from './TetrisTypes';
 
 export class TetrisInputController {
+    private readonly unbindKeyboard: () => void;
     private horizontal: -1 | 0 | 1 = 0;
     private softDrop = false;
 
     constructor(private readonly actions: TetrisViewActions) {
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
-        input.on(Input.EventType.KEY_UP, this.handleKeyUp, this);
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+            onKeyUp: this.handleKeyUp,
+        });
     }
 
     destroy(): void {
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
-        input.off(Input.EventType.KEY_UP, this.handleKeyUp, this);
+        this.unbindKeyboard();
         this.horizontal = 0;
         this.softDrop = false;
     }
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 this.setHorizontal(-1);
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 this.setHorizontal(1);
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.setSoftDrop(true);
-                break;
+                return true;
             case KeyCode.ARROW_UP:
             case KeyCode.KEY_X:
                 this.actions.rotateClockwise();
-                break;
+                return true;
             case KeyCode.KEY_Z:
                 this.actions.rotateCounterClockwise();
-                break;
+                return true;
             case KeyCode.SPACE:
                 this.actions.hardDrop();
-                break;
+                return true;
             case KeyCode.KEY_C:
                 this.actions.hold();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 
-    private readonly handleKeyUp = (event: EventKeyboard): void => {
+    private readonly handleKeyUp = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_LEFT:
             case KeyCode.KEY_A:
                 if (this.horizontal === -1) {
                     this.setHorizontal(0);
                 }
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
             case KeyCode.KEY_D:
                 if (this.horizontal === 1) {
                     this.setHorizontal(0);
                 }
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
             case KeyCode.KEY_S:
                 this.setSoftDrop(false);
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 
