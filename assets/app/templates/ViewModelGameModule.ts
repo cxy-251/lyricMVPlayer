@@ -41,10 +41,16 @@ export abstract class ViewModelGameModule<
     }
 
     protected onUnmount(): void {
-        this.view?.destroy();
+        const view = this.view;
+        const viewModel = this.viewModel;
         this.view = null;
-        this.viewModel?.dispose?.();
         this.viewModel = null;
+
+        try {
+            view?.destroy();
+        } finally {
+            viewModel?.dispose?.();
+        }
     }
 
     update(deltaTime: number): void {

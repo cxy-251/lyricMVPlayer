@@ -1,3 +1,4 @@
+import { PREVIEW } from 'cc/env';
 import type { LabManifest } from '../../contracts/InteractiveModule';
 import { defineLabManifest } from '../../core/ManifestValidator';
 import { blockStackerDefinition } from './block-stacker';
@@ -11,10 +12,15 @@ import { mazeChaseDefinition } from './maze-chase';
 import { minesweeperDefinition } from './minesweeper';
 import { reversiDefinition } from './reversi';
 import { riverCrossingDefinition } from './river-crossing';
+import { runGameModelContractChecks } from './shared/GameModelContractChecks';
 import { snakeDefinition } from './snake';
 import { sokobanDefinition } from './sokoban';
 import { tetrisDefinition } from './tetris';
 import { towerDefenseDefinition } from './tower-defense';
+
+if (PREVIEW) {
+    runGameModelContractChecks();
+}
 
 export const gamesLab: LabManifest = defineLabManifest({
     definition: {

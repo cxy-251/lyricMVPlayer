@@ -92,11 +92,21 @@ export class ViewportService {
     subscribe(listener: ViewportListener, emitImmediately = true): () => void {
         this.listeners.add(listener);
 
-        if (emitImmediately) {
-            listener(this.snapshot);
+        try {
+            if (emitImmediately) {
+                listener(this.snapshot);
+            }
+        } catch (error) {
+            this.listeners.delete(listener);
+            throw error;
         }
 
+        let active = true;
         return () => {
+            if (!active) {
+                return;
+            }
+            active = false;
             this.listeners.delete(listener);
         };
     }

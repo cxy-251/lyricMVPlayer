@@ -18,6 +18,7 @@ export class HybridGameSession {
     private dirty = true;
 
     constructor(private readonly options: HybridGameSessionOptions) {
+        this.validateOptions();
         this.humanIdleElapsed = options.aiTakeoverDelay;
         this.aiElapsed = options.aiActionInterval;
         this.renderElapsed = options.renderInterval;
@@ -33,7 +34,8 @@ export class HybridGameSession {
 
     beginFrame(deltaTime: number): number {
         const maximumDeltaTime = this.options.maximumDeltaTime ?? 0.1;
-        const dt = Math.max(0, Math.min(maximumDeltaTime, deltaTime));
+        const candidate = Number.isFinite(deltaTime) ? deltaTime : 0;
+        const dt = Math.max(0, Math.min(maximumDeltaTime, candidate));
         this.renderElapsed += dt;
         return dt;
     }
@@ -124,5 +126,28 @@ export class HybridGameSession {
         this.renderElapsed %= this.options.renderInterval;
         this.dirty = false;
         return true;
+    }
+
+    private validateOptions(): void {
+        const nonNegative = [
+            ['aiTakeoverDelay', this.options.aiTakeoverDelay],
+            ['resultHold', this.options.resultHold],
+        ] as const;
+        for (const [name, value] of nonNegative) {
+            if (!Number.isFinite(value) || value < 0) {
+                throw new Error(`HybridGameSession ${name} must be a finite non-negative number`);
+            }
+        }
+
+        const positive = [
+            ['aiActionInterval', this.options.aiActionInterval],
+            ['renderInterval', this.options.renderInterval],
+            ['maximumDeltaTime', this.options.maximumDeltaTime ?? 0.1],
+        ] as const;
+        for (const [name, value] of positive) {
+            if (!Number.isFinite(value) || value <= 0) {
+                throw new Error(`HybridGameSession ${name} must be a finite positive number`);
+            }
+        }
     }
 }

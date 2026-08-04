@@ -24,7 +24,13 @@ export class InputRouter {
             priority: route.priority ?? 0,
             route,
         });
+
+        let active = true;
         return () => {
+            if (!active) {
+                return;
+            }
+            active = false;
             this.routes.delete(id);
         };
     }
@@ -49,6 +55,9 @@ export class InputRouter {
             (left, right) => right.priority - left.priority || right.id - left.id,
         );
         for (const registered of routes) {
+            if (!this.routes.has(registered.id)) {
+                continue;
+            }
             const handler = registered.route[phase];
             if (handler?.(event)) {
                 return true;

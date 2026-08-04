@@ -2,13 +2,12 @@ import {
     EventKeyboard,
     EventMouse,
     EventTouch,
-    input,
-    Input,
     KeyCode,
     Node,
     UITransform,
     Vec3,
 } from 'cc';
+import { inputRouter } from '../../../services/InputRouter';
 import type { MinesweeperBoardLayout } from './MinesweeperTypes';
 
 const LONG_PRESS_MILLISECONDS = 520;
@@ -30,6 +29,7 @@ interface CellPoint {
 
 export class MinesweeperInputController {
     private readonly screenPoint = new Vec3();
+    private readonly unbindKeyboard: () => void;
     private boardLayout: MinesweeperBoardLayout | null = null;
     private rows = 0;
     private columns = 0;
@@ -40,7 +40,11 @@ export class MinesweeperInputController {
         private readonly root: Node,
         private readonly actions: MinesweeperInputActions,
     ) {
-        this.bind();
+        this.unbindKeyboard = inputRouter.bind({
+            priority: 100,
+            onKeyDown: this.handleKeyDown,
+        });
+        this.bindPointer();
     }
 
     setBoardLayout(
@@ -54,19 +58,19 @@ export class MinesweeperInputController {
     }
 
     destroy(): void {
+        this.unbindKeyboard();
         this.root.off(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.off(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.off(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
         this.root.off(Node.EventType.TOUCH_CANCEL, this.handleTouchCancel, this);
-        input.off(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
+        this.touchStartCell = null;
     }
 
-    private bind(): void {
+    private bindPointer(): void {
         this.root.on(Node.EventType.MOUSE_DOWN, this.handleMouseDown, this);
         this.root.on(Node.EventType.TOUCH_START, this.handleTouchStart, this);
         this.root.on(Node.EventType.TOUCH_END, this.handleTouchEnd, this);
         this.root.on(Node.EventType.TOUCH_CANCEL, this.handleTouchCancel, this);
-        input.on(Input.EventType.KEY_DOWN, this.handleKeyDown, this);
     }
 
     private readonly handleMouseDown = (event: EventMouse): void => {
@@ -113,35 +117,35 @@ export class MinesweeperInputController {
         this.touchStartCell = null;
     };
 
-    private readonly handleKeyDown = (event: EventKeyboard): void => {
+    private readonly handleKeyDown = (event: EventKeyboard): boolean => {
         switch (event.keyCode) {
             case KeyCode.ARROW_UP:
                 this.actions.moveFocus(-1, 0);
-                break;
+                return true;
             case KeyCode.ARROW_DOWN:
                 this.actions.moveFocus(1, 0);
-                break;
+                return true;
             case KeyCode.ARROW_LEFT:
                 this.actions.moveFocus(0, -1);
-                break;
+                return true;
             case KeyCode.ARROW_RIGHT:
                 this.actions.moveFocus(0, 1);
-                break;
+                return true;
             case KeyCode.ENTER:
             case KeyCode.SPACE:
                 this.actions.primaryFocused();
-                break;
+                return true;
             case KeyCode.KEY_F:
                 this.actions.secondaryFocused();
-                break;
+                return true;
             case KeyCode.KEY_R:
                 this.actions.restart();
-                break;
+                return true;
             case KeyCode.TAB:
                 this.actions.toggleFlagMode();
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     };
 
