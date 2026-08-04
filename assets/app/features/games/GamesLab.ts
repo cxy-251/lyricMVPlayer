@@ -1,5 +1,6 @@
 import type { LabManifest } from '../../contracts/InteractiveModule';
 import { blockStackerDefinition } from './block-stacker';
+import { bomberMazeDefinition } from './bomber-maze';
 import { brickBreakerDefinition } from './brick-breaker';
 import { connectFourDefinition } from './connect-four';
 import { cursorSpaceDefinition } from './cursor-space';
@@ -35,5 +36,6 @@ export const gamesLab: LabManifest = {
         mazeChaseDefinition,
         riverCrossingDefinition,
         matchThreeDefinition,
+        bomberMazeDefinition,
     ],
 };
