@@ -1,0 +1,1 @@
+export { minesweeperDefinition } from './MinesweeperDefinition';

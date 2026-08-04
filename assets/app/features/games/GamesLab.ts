@@ -1,5 +1,6 @@
 import type { LabManifest } from '../../contracts/InteractiveModule';
 import { cursorSpaceDefinition } from './cursor-space';
+import { minesweeperDefinition } from './minesweeper';
 
 export const gamesLab: LabManifest = {
     definition: {
@@ -11,5 +12,6 @@ export const gamesLab: LabManifest = {
     },
     modules: [
         cursorSpaceDefinition,
+        minesweeperDefinition,
     ],
 };
