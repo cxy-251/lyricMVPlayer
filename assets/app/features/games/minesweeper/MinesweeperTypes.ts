@@ -1,6 +1,7 @@
 export type MinesweeperPhase = 'ready' | 'playing' | 'paused' | 'won' | 'lost';
 export type MinesweeperControllerMode = 'human' | 'autopilot';
 export type MinesweeperCellState = 'hidden' | 'flagged' | 'revealed';
+export type MinesweeperChallenge = 'classic' | 'sweep' | 'low-flag';
 
 export interface MinesweeperAction {
     readonly kind: 'reveal' | 'flag' | 'chord' | 'restart';
@@ -40,6 +41,11 @@ export interface MinesweeperViewState {
     readonly elapsedSeconds: number;
     readonly focusRow: number;
     readonly focusColumn: number;
+    readonly challenge: MinesweeperChallenge;
+    readonly points: number;
+    readonly bestPoints: number;
+    readonly winStreak: number;
+    readonly safeStreak: number;
     readonly status: string;
     readonly score: string;
 }

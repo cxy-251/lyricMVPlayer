@@ -4,6 +4,7 @@ export type MatchThreeSpecial = 'none' | 'row' | 'column' | 'prism';
 export type MatchThreePhase = 'playing' | 'paused' | 'won' | 'lost';
 export type MatchThreeControllerMode = 'human' | 'autopilot';
 export type MatchThreeDirection = 'up' | 'down' | 'left' | 'right';
+export type MatchThreeObjective = 'score' | 'cascade' | 'special';
 
 export interface MatchThreeCell {
     readonly row: number;
@@ -37,6 +38,11 @@ export interface MatchThreeViewState
     readonly focus: MatchThreeCell;
     readonly combo: number;
     readonly bestScore: number;
+    readonly level: number;
+    readonly runScore: number;
+    readonly objective: MatchThreeObjective;
+    readonly objectiveProgress: number;
+    readonly objectiveTarget: number;
     readonly status: string;
     readonly stats: string;
     readonly hint: string;

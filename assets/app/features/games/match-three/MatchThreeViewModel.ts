@@ -4,6 +4,8 @@ import { MatchThreeModel } from './MatchThreeModel';
 import type {
     MatchThreeCell,
     MatchThreeDirection,
+    MatchThreeObjective,
+    MatchThreePhase,
     MatchThreeViewState,
 } from './MatchThreeTypes';
 
@@ -11,6 +13,7 @@ const AI_TAKEOVER_DELAY = 3;
 const AI_ACTION_INTERVAL = 0.46;
 const RESULT_HOLD = 1.4;
 const RENDER_INTERVAL = 1 / 20;
+const OBJECTIVES: readonly MatchThreeObjective[] = ['score', 'cascade', 'special'];
 
 export class MatchThreeViewModel {
     private readonly model = new MatchThreeModel();
@@ -24,6 +27,10 @@ export class MatchThreeViewModel {
     private selected: MatchThreeCell | null = null;
     private focus: MatchThreeCell = { row: 3, column: 3 };
     private bestScore = 0;
+    private level = 1;
+    private runScore = 0;
+    private objectiveProgress = 0;
+    private levelComplete = false;
 
     update(deltaTime: number): boolean {
         if (this.session.isPaused) {
@@ -31,7 +38,7 @@ export class MatchThreeViewModel {
         }
         const dt = this.session.beginFrame(deltaTime);
 
-        if (this.model.phase !== 'playing') {
+        if (this.terminalPhase() !== 'playing') {
             return this.updateTerminalState(dt);
         }
 
@@ -41,11 +48,14 @@ export class MatchThreeViewModel {
 
         if (this.session.shouldRunAi(dt)) {
             const swap = this.autopilot.decide(this.model.createObservation());
-            if (swap && this.model.swap(swap.first, swap.second)) {
-                this.focus = { ...swap.second };
-                this.selected = null;
-                this.bestScore = Math.max(this.bestScore, this.model.score);
-                this.session.markDirty();
+            if (swap) {
+                const specialsBefore = this.specialCount();
+                if (this.model.swap(swap.first, swap.second)) {
+                    this.focus = { ...swap.second };
+                    this.selected = null;
+                    this.afterSuccessfulSwap(specialsBefore);
+                    this.session.markDirty();
+                }
             }
         }
         return this.session.consumeRender();
@@ -71,8 +81,11 @@ export class MatchThreeViewModel {
             return;
         }
         if (this.manhattan(this.selected, cell) === 1) {
+            const specialsBefore = this.specialCount();
             const changed = this.model.swap(this.selected, cell);
-            this.bestScore = Math.max(this.bestScore, this.model.score);
+            if (changed) {
+                this.afterSuccessfulSwap(specialsBefore);
+            }
             this.selected = changed ? null : cell;
             this.session.markDirty();
             return;
@@ -102,8 +115,9 @@ export class MatchThreeViewModel {
         }
         this.focus = second;
         this.selected = null;
+        const specialsBefore = this.specialCount();
         if (this.model.swap(first, second)) {
-            this.bestScore = Math.max(this.bestScore, this.model.score);
+            this.afterSuccessfulSwap(specialsBefore);
         }
         this.session.markDirty();
     }
@@ -129,7 +143,7 @@ export class MatchThreeViewModel {
             return;
         }
         this.activateHuman();
-        this.resetBoard();
+        this.resetRun();
         this.session.markDirty();
     }
 
@@ -142,7 +156,7 @@ export class MatchThreeViewModel {
     }
 
     reset(): void {
-        this.resetBoard();
+        this.resetRun();
         this.session.reset();
     }
 
@@ -151,16 +165,23 @@ export class MatchThreeViewModel {
     createViewState(): MatchThreeViewState {
         const observation = this.model.createObservation();
         const controller = this.session.controller;
-        const phase = this.session.isPaused ? 'paused' : observation.phase;
+        const phase = this.session.isPaused ? 'paused' : this.terminalPhase();
+        const objective = this.currentObjective();
+        const objectiveName = objective === 'score'
+            ? 'SCORE'
+            : objective === 'cascade'
+                ? 'CASCADE'
+                : 'SPECIALS';
         const status = phase === 'won'
-            ? 'TARGET REACHED'
+            ? `LEVEL ${this.level} CLEARED`
             : phase === 'lost'
-                ? 'OUT OF MOVES'
+                ? `RUN ENDED · LEVEL ${this.level}`
                 : phase === 'paused'
                     ? 'PAUSED'
                     : controller === 'autopilot'
-                        ? 'AI MATCHING'
-                        : 'HUMAN';
+                        ? `AI · ${objectiveName}`
+                        : `HUMAN · ${objectiveName}`;
+        const total = this.runScore + observation.score;
         return {
             ...observation,
             phase,
@@ -169,17 +190,31 @@ export class MatchThreeViewModel {
             focus: { ...this.focus },
             combo: this.model.combo,
             bestScore: this.bestScore,
+            level: this.level,
+            runScore: total,
+            objective,
+            objectiveProgress: this.displayObjectiveProgress(),
+            objectiveTarget: this.objectiveTarget(),
             status,
-            stats: `SCORE ${observation.score}/${observation.targetScore}`
-                + `   MOVES ${observation.movesRemaining}`
-                + `   COMBO ${Math.max(1, this.model.combo)}`,
-            hint: phase === 'won' || phase === 'lost'
+            stats: `LV ${this.level}`
+                + `   RUN ${total}`
+                + `   ${objectiveName} ${this.displayObjectiveProgress()}/${this.objectiveTarget()}`
+                + `   MOVES ${observation.movesRemaining}`,
+            hint: phase === 'won'
                 ? controller === 'autopilot'
-                    ? 'AI WILL START A NEW BOARD'
-                    : 'SELECT A TILE OR PRESS NEW'
-                : controller === 'autopilot'
-                    ? 'AI ACTIVE — TAP OR SWIPE TO TAKE OVER'
-                    : 'TAP ADJACENT TILES / SWIPE / ARROWS + ENTER',
+                    ? 'AI WILL LOAD THE NEXT OBJECTIVE'
+                    : 'SELECT A TILE TO CONTINUE · NEW RESTARTS RUN'
+                : phase === 'lost'
+                    ? controller === 'autopilot'
+                        ? 'AI WILL START A NEW RUN'
+                        : 'SELECT A TILE OR PRESS NEW'
+                    : objective === 'cascade'
+                        ? 'BUILD A 3X CASCADE AND REACH 900 SCORE'
+                        : objective === 'special'
+                            ? 'CREATE 2 SPECIAL TILES AND REACH 900 SCORE'
+                            : controller === 'autopilot'
+                                ? 'AI ACTIVE — TAP OR SWIPE TO TAKE OVER'
+                                : 'REACH 1500 SCORE · TAP / SWIPE / ARROWS + ENTER',
         };
     }
 
@@ -192,7 +227,11 @@ export class MatchThreeViewModel {
         }
 
         if (this.session.shouldRestartTerminal(dt)) {
-            this.resetBoard();
+            if (this.terminalPhase() === 'won') {
+                this.advanceLevel();
+            } else {
+                this.resetRun();
+            }
             this.session.resetTerminalClock();
             this.session.resetAiClock(true);
             this.session.markDirty();
@@ -200,12 +239,105 @@ export class MatchThreeViewModel {
         return this.session.consumeRender();
     }
 
+    private afterSuccessfulSwap(specialsBefore: number): void {
+        const observation = this.model.createObservation();
+        const objective = this.currentObjective();
+        if (objective === 'score') {
+            this.objectiveProgress = observation.score;
+        } else if (objective === 'cascade') {
+            this.objectiveProgress = Math.max(this.objectiveProgress, this.model.combo);
+        } else {
+            const gained = Math.max(0, this.specialCount() - specialsBefore);
+            this.objectiveProgress += gained;
+        }
+
+        const currentTotal = this.runScore + observation.score;
+        this.bestScore = Math.max(this.bestScore, currentTotal);
+        if (this.objectiveSatisfied() || observation.phase === 'won') {
+            this.levelComplete = true;
+            this.session.resetTerminalClock();
+        }
+    }
+
+    private objectiveSatisfied(): boolean {
+        const score = this.model.score;
+        switch (this.currentObjective()) {
+            case 'score':
+                return score >= 1500;
+            case 'cascade':
+                return score >= 900 && this.objectiveProgress >= 3;
+            case 'special':
+                return score >= 900 && this.objectiveProgress >= 2;
+        }
+    }
+
+    private terminalPhase(): MatchThreePhase {
+        if (this.levelComplete) {
+            return 'won';
+        }
+        return this.model.phase;
+    }
+
     private restartTerminalIfNeeded(): void {
-        if (this.model.phase === 'playing') {
+        const phase = this.terminalPhase();
+        if (phase === 'playing') {
             return;
         }
-        this.resetBoard();
+        if (phase === 'won') {
+            this.advanceLevel();
+        } else {
+            this.resetRun();
+        }
         this.session.resetTerminalClock();
+        this.session.resetAiClock(false);
+        this.session.markDirty();
+    }
+
+    private advanceLevel(): void {
+        const levelBonus = 250 + this.level * 75;
+        this.runScore += this.model.score + levelBonus;
+        this.bestScore = Math.max(this.bestScore, this.runScore);
+        this.level += 1;
+        this.resetLevelBoard();
+    }
+
+    private resetRun(): void {
+        this.level = 1;
+        this.runScore = 0;
+        this.resetLevelBoard();
+    }
+
+    private resetLevelBoard(): void {
+        this.model.reset();
+        this.selected = null;
+        this.focus = { row: 3, column: 3 };
+        this.objectiveProgress = 0;
+        this.levelComplete = false;
+    }
+
+    private currentObjective(): MatchThreeObjective {
+        return OBJECTIVES[(this.level - 1) % OBJECTIVES.length] ?? 'score';
+    }
+
+    private displayObjectiveProgress(): number {
+        return this.currentObjective() === 'score'
+            ? Math.min(this.objectiveTarget(), this.model.score)
+            : Math.min(this.objectiveTarget(), this.objectiveProgress);
+    }
+
+    private objectiveTarget(): number {
+        return this.currentObjective() === 'score'
+            ? 1500
+            : this.currentObjective() === 'cascade'
+                ? 3
+                : 2;
+    }
+
+    private specialCount(): number {
+        return this.model.createObservation().board.flat().reduce(
+            (count, tile) => count + (tile.special === 'none' ? 0 : 1),
+            0,
+        );
     }
 
     private activateHuman(): void {
@@ -215,12 +347,6 @@ export class MatchThreeViewModel {
     private activateAutopilot(): void {
         this.selected = null;
         this.session.activateAutopilot();
-    }
-
-    private resetBoard(): void {
-        this.model.reset();
-        this.selected = null;
-        this.focus = { row: 3, column: 3 };
     }
 
     private clampCell(cell: MatchThreeCell): MatchThreeCell {

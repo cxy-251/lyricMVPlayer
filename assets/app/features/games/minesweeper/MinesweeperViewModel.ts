@@ -2,7 +2,9 @@ import { MinesweeperAutopilot } from './MinesweeperAutopilot';
 import { MinesweeperModel } from './MinesweeperModel';
 import type {
     MinesweeperAction,
+    MinesweeperChallenge,
     MinesweeperControllerMode,
+    MinesweeperPhase,
     MinesweeperViewState,
 } from './MinesweeperTypes';
 
@@ -10,6 +12,7 @@ const AI_TAKEOVER_DELAY = 3;
 const AI_ACTION_INTERVAL = 0.22;
 const AI_RESULT_HOLD = 1.35;
 const RENDER_INTERVAL = 1 / 15;
+const CHALLENGES: readonly MinesweeperChallenge[] = ['classic', 'sweep', 'low-flag'];
 
 export class MinesweeperViewModel {
     private readonly model = new MinesweeperModel();
@@ -24,6 +27,14 @@ export class MinesweeperViewModel {
     private focusColumn = Math.floor(this.model.columns / 2);
     private paused = false;
     private dirty = true;
+    private challengeIndex = 0;
+    private points = 0;
+    private bestPoints = 0;
+    private winStreak = 0;
+    private safeStreak = 0;
+    private largestSweep = 0;
+    private maximumFlagsUsed = 0;
+    private terminalScored = false;
 
     get rows(): number {
         return this.model.rows;
@@ -40,6 +51,7 @@ export class MinesweeperViewModel {
         const dt = Math.max(0, Math.min(0.1, deltaTime));
         this.renderElapsed += dt;
         this.model.step(dt);
+        this.scoreTerminalIfNeeded();
 
         if (this.controller === 'human') {
             this.humanIdleElapsed += dt;
@@ -64,17 +76,18 @@ export class MinesweeperViewModel {
         if (!this.prepareHumanAction(row, column)) {
             return;
         }
-        const changed = this.flagMode
-            ? this.model.toggleFlag(row, column)
-            : this.model.reveal(row, column);
-        this.dirty = this.dirty || changed;
+        this.applyScoredAction(() => (
+            this.flagMode
+                ? this.model.toggleFlag(row, column)
+                : this.model.reveal(row, column)
+        ));
     }
 
     secondaryCell(row: number, column: number): void {
         if (!this.prepareHumanAction(row, column)) {
             return;
         }
-        this.dirty = this.model.toggleFlag(row, column) || this.dirty;
+        this.applyScoredAction(() => this.model.toggleFlag(row, column));
     }
 
     primaryFocused(): void {
@@ -108,15 +121,8 @@ export class MinesweeperViewModel {
         if (this.paused) {
             return;
         }
-        this.model.reset();
-        this.autopilot.reset();
-        this.controller = 'human';
-        this.humanIdleElapsed = 0;
-        this.aiActionElapsed = 0;
-        this.resultElapsed = 0;
-        this.flagMode = false;
-        this.centerFocus();
-        this.dirty = true;
+        this.activateHumanControl();
+        this.startNewBoard(true);
     }
 
     pause(): void {
@@ -133,17 +139,15 @@ export class MinesweeperViewModel {
     }
 
     reset(): void {
-        this.model.reset();
-        this.autopilot.reset();
+        this.challengeIndex = 0;
+        this.points = 0;
+        this.winStreak = 0;
+        this.startNewBoard(false);
         this.controller = 'autopilot';
         this.humanIdleElapsed = AI_TAKEOVER_DELAY;
         this.aiActionElapsed = AI_ACTION_INTERVAL;
-        this.resultElapsed = 0;
         this.renderElapsed = RENDER_INTERVAL;
-        this.flagMode = false;
         this.paused = false;
-        this.centerFocus();
-        this.dirty = true;
     }
 
     dispose(): void {
@@ -153,6 +157,12 @@ export class MinesweeperViewModel {
     createViewState(): MinesweeperViewState {
         const phase = this.paused ? 'paused' : this.model.phase;
         const controllerName = this.controller === 'autopilot' ? 'AI' : 'HUMAN';
+        const challenge = this.currentChallenge();
+        const challengeName = challenge === 'classic'
+            ? 'CLASSIC'
+            : challenge === 'sweep'
+                ? 'SWEEP BONUS'
+                : 'LOW FLAG';
         const phaseName = phase === 'ready'
             ? 'READY'
             : phase === 'playing'
@@ -173,8 +183,16 @@ export class MinesweeperViewModel {
             elapsedSeconds: Math.floor(this.model.elapsedSeconds),
             focusRow: this.focusRow,
             focusColumn: this.focusColumn,
-            status: `${controllerName}  ${phaseName}`,
-            score: `MINES ${Math.max(0, this.model.remainingMines)}`
+            challenge,
+            points: this.points,
+            bestPoints: this.bestPoints,
+            winStreak: this.winStreak,
+            safeStreak: this.safeStreak,
+            status: `${controllerName}  ${phaseName} · ${challengeName}`,
+            score: `PTS ${this.points}`
+                + `  BEST ${this.bestPoints}`
+                + `  STREAK ${this.winStreak}`
+                + `  MINES ${Math.max(0, this.model.remainingMines)}`
                 + `  TIME ${Math.floor(this.model.elapsedSeconds)}`,
         };
     }
@@ -183,12 +201,7 @@ export class MinesweeperViewModel {
         if (this.model.phase === 'won' || this.model.phase === 'lost') {
             this.resultElapsed += dt;
             if (this.resultElapsed >= AI_RESULT_HOLD) {
-                this.model.reset();
-                this.autopilot.reset();
-                this.resultElapsed = 0;
-                this.aiActionElapsed = AI_ACTION_INTERVAL;
-                this.centerFocus();
-                this.dirty = true;
+                this.startNewBoard(true);
             }
             return;
         }
@@ -207,10 +220,7 @@ export class MinesweeperViewModel {
 
     private executeAutopilotAction(action: MinesweeperAction): void {
         if (action.kind === 'restart') {
-            this.model.reset();
-            this.autopilot.reset();
-            this.centerFocus();
-            this.dirty = true;
+            this.startNewBoard(true);
             return;
         }
         if (action.row === undefined || action.column === undefined) {
@@ -218,12 +228,106 @@ export class MinesweeperViewModel {
         }
         this.focusRow = action.row;
         this.focusColumn = action.column;
-        const changed = action.kind === 'flag'
-            ? this.model.toggleFlag(action.row, action.column)
-            : action.kind === 'chord'
-                ? this.model.chord(action.row, action.column)
-                : this.model.reveal(action.row, action.column);
-        this.dirty = this.dirty || changed;
+        this.applyScoredAction(() => (
+            action.kind === 'flag'
+                ? this.model.toggleFlag(action.row as number, action.column as number)
+                : action.kind === 'chord'
+                    ? this.model.chord(action.row as number, action.column as number)
+                    : this.model.reveal(action.row as number, action.column as number)
+        ));
+    }
+
+    private applyScoredAction(action: () => boolean): void {
+        const revealedBefore = this.revealedCount();
+        const flagsBefore = this.flagsUsed();
+        const phaseBefore = this.model.phase;
+        const changed = action();
+        if (!changed) {
+            return;
+        }
+
+        const revealedGain = Math.max(0, this.revealedCount() - revealedBefore);
+        const flagsAfter = this.flagsUsed();
+        this.maximumFlagsUsed = Math.max(this.maximumFlagsUsed, flagsAfter);
+        if (revealedGain > 0) {
+            this.safeStreak += 1;
+            this.largestSweep = Math.max(this.largestSweep, revealedGain);
+            const sweepMultiplier = this.currentChallenge() === 'sweep'
+                ? 1 + Math.min(2, revealedGain / 8)
+                : 1;
+            this.points += Math.round(
+                (revealedGain * 6 + Math.min(12, this.safeStreak) * 2) * sweepMultiplier,
+            );
+        } else if (flagsAfter > flagsBefore) {
+            this.points += this.currentChallenge() === 'low-flag' ? 1 : 3;
+        }
+        if (phaseBefore !== 'lost' && this.model.phase === 'lost') {
+            this.safeStreak = 0;
+        }
+        this.scoreTerminalIfNeeded();
+        this.bestPoints = Math.max(this.bestPoints, this.points);
+        this.dirty = true;
+    }
+
+    private scoreTerminalIfNeeded(): void {
+        const phase: MinesweeperPhase = this.model.phase;
+        if ((phase !== 'won' && phase !== 'lost') || this.terminalScored) {
+            return;
+        }
+        this.terminalScored = true;
+        if (phase === 'won') {
+            this.winStreak += 1;
+            const time = Math.floor(this.model.elapsedSeconds);
+            const challengeBonus = this.currentChallenge() === 'classic'
+                ? Math.max(80, 520 - time * 6)
+                : this.currentChallenge() === 'sweep'
+                    ? 120 + this.largestSweep * 24
+                    : 160 + Math.max(0, 8 - this.maximumFlagsUsed) * 70;
+            this.points += challengeBonus + this.winStreak * 50;
+        } else {
+            this.winStreak = 0;
+            this.safeStreak = 0;
+        }
+        this.bestPoints = Math.max(this.bestPoints, this.points);
+        this.resultElapsed = 0;
+        this.dirty = true;
+    }
+
+    private startNewBoard(rotateChallenge: boolean): void {
+        if (rotateChallenge) {
+            this.challengeIndex = (this.challengeIndex + 1) % CHALLENGES.length;
+        }
+        this.model.reset();
+        this.autopilot.reset();
+        this.humanIdleElapsed = this.controller === 'autopilot'
+            ? AI_TAKEOVER_DELAY
+            : 0;
+        this.aiActionElapsed = this.controller === 'autopilot'
+            ? AI_ACTION_INTERVAL
+            : 0;
+        this.resultElapsed = 0;
+        this.flagMode = false;
+        this.safeStreak = 0;
+        this.largestSweep = 0;
+        this.maximumFlagsUsed = 0;
+        this.terminalScored = false;
+        this.centerFocus();
+        this.dirty = true;
+    }
+
+    private currentChallenge(): MinesweeperChallenge {
+        return CHALLENGES[this.challengeIndex] ?? 'classic';
+    }
+
+    private revealedCount(): number {
+        return this.model.createObservation().cells.reduce(
+            (count, cell) => count + (cell.state === 'revealed' ? 1 : 0),
+            0,
+        );
+    }
+
+    private flagsUsed(): number {
+        return this.model.mineCount - this.model.remainingMines;
     }
 
     private prepareHumanAction(row: number, column: number): boolean {
