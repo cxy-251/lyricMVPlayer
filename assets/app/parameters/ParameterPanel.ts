@@ -25,6 +25,10 @@ import type {
     ParameterSchema,
 } from './ParameterSchema';
 
+const DEFAULT_ROW_HEIGHT = 78;
+const DETAILED_ROW_HEIGHT = 94;
+const DETAILED_SCHEMA_ITEM_COUNT = 10;
+
 export interface ParameterPanelLayout {
     readonly width: number;
     readonly x: number;
@@ -377,7 +381,9 @@ export class ParameterPanel {
         const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
         const visibleCount = Math.min(itemCount, pageSize);
         const rows = Math.max(1, Math.ceil(visibleCount / columns));
-        const rowHeight = 78;
+        const rowHeight = itemCount === DETAILED_SCHEMA_ITEM_COUNT
+            ? DETAILED_ROW_HEIGHT
+            : DEFAULT_ROW_HEIGHT;
         const pagerHeight = pageCount > 1 ? 44 : 12;
 
         return {
