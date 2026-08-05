@@ -112,7 +112,7 @@ export class ParameterController {
         const nextIndex = (
             currentIndex + direction + definition.options.length
         ) % definition.options.length;
-        return this.set(definition.options[nextIndex].value, definition.options[nextIndex].value);
+        return this.set(key, definition.options[nextIndex].value);
     }
 
     reset(): void {
