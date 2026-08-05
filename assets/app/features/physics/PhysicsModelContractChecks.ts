@@ -1,15 +1,15 @@
 import { DoublePendulumModel } from './double-pendulum/DoublePendulumModel';
 import { LorenzAttractorModel } from './lorenz-attractor/LorenzAttractorModel';
-import { RestrictedThreeBodyModel } from './restricted-three-body/RestrictedThreeBodyModel';
+import { PlanarThreeBodyModel } from './restricted-three-body/RestrictedThreeBodyModel';
 
 export function runPhysicsModelContractChecks(): void {
     checkDoublePendulumEnergy();
     checkLorenzEquilibrium();
     checkLorenzDeterminism();
     checkLorenzSensitivity();
-    checkRestrictedThreeBodyL4Equilibrium();
-    checkRestrictedThreeBodyDeterminism();
-    checkRestrictedThreeBodyJacobiDrift();
+    checkPlanarThreeBodyBarycenter();
+    checkPlanarThreeBodyDeterminism();
+    checkPlanarThreeBodyConservation();
 }
 
 function checkDoublePendulumEnergy(): void {
@@ -69,48 +69,64 @@ function checkLorenzSensitivity(): void {
     assert(final > initial * 100, 'Lorenz nearby trajectories did not separate');
 }
 
-function checkRestrictedThreeBodyL4Equilibrium(): void {
-    const mu = 0.01215;
-    const model = new RestrictedThreeBodyModel({ mu });
-    const initial = {
-        x: 0.5 - mu,
-        y: Math.sqrt(3) / 2,
-        vx: 0,
-        vy: 0,
-    };
-    model.reset(initial);
-    for (let index = 0; index < 720; index += 1) {
-        model.step(1 / 720);
-    }
-    const state = model.snapshot().state;
+function createPlanarThreeBodyModel(): PlanarThreeBodyModel {
+    const model = new PlanarThreeBodyModel({
+        gravity: 1,
+        softening: 0.015,
+    });
+    model.reset(PlanarThreeBodyModel.createPreset(
+        'figure-eight',
+        [1, 1, 1],
+        1,
+        1,
+    ));
+    return model;
+}
+
+function checkPlanarThreeBodyBarycenter(): void {
+    const model = createPlanarThreeBodyModel();
+    const initial = model.diagnostics();
     assert(
-        Math.hypot(state.x - initial.x, state.y - initial.y) < 1e-8,
-        'Restricted three-body L4 equilibrium drifted',
+        Math.hypot(initial.barycenter.x, initial.barycenter.y) < 1e-12,
+        'Planar three-body initial state was not barycentric',
+    );
+    assert(
+        initial.momentumMagnitude < 1e-12,
+        'Planar three-body initial total momentum was not zero',
     );
 }
 
-function checkRestrictedThreeBodyDeterminism(): void {
-    const first = new RestrictedThreeBodyModel({ mu: 0.01215 });
-    const second = new RestrictedThreeBodyModel({ mu: 0.01215 });
+function checkPlanarThreeBodyDeterminism(): void {
+    const first = createPlanarThreeBodyModel();
+    const second = createPlanarThreeBodyModel();
     for (let index = 0; index < 1200; index += 1) {
-        first.step(1 / 720);
-        second.step(1 / 720);
+        first.step(1 / 600);
+        second.step(1 / 600);
     }
     assertEqual(
         first.snapshot(),
         second.snapshot(),
-        'Restricted three-body integration is not deterministic',
+        'Planar three-body integration is not deterministic',
     );
 }
 
-function checkRestrictedThreeBodyJacobiDrift(): void {
-    const model = new RestrictedThreeBodyModel({ mu: 0.01215 });
-    for (let index = 0; index < 1200; index += 1) {
-        model.step(1 / 720);
+function checkPlanarThreeBodyConservation(): void {
+    const model = createPlanarThreeBodyModel();
+    for (let index = 0; index < 6000; index += 1) {
+        model.step(1 / 600);
     }
+    const diagnostics = model.diagnostics();
     assert(
-        model.diagnostics().normalizedJacobiDrift < 1e-6,
-        'Restricted three-body Jacobi drift exceeded the preview contract',
+        diagnostics.normalizedEnergyDrift < 1e-7,
+        'Planar three-body energy drift exceeded the preview contract',
+    );
+    assert(
+        diagnostics.momentumMagnitude < 1e-9,
+        'Planar three-body momentum drift exceeded the preview contract',
+    );
+    assert(
+        Math.hypot(diagnostics.barycenter.x, diagnostics.barycenter.y) < 1e-9,
+        'Planar three-body barycenter drift exceeded the preview contract',
     );
 }
 
