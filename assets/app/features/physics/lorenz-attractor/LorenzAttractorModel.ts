@@ -5,7 +5,11 @@ import type {
     LorenzState,
 } from './LorenzAttractorTypes';
 
-interface Derivative extends LorenzState {}
+interface Derivative {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+}
 
 const DEFAULT_PRIMARY: LorenzState = { x: 1, y: 1, z: 1 };
 const DEFAULT_SHADOW: LorenzState = { x: 1.00001, y: 1, z: 1 };
