@@ -15,9 +15,9 @@ export interface PlanarThreeBodyParameters {
 }
 
 export type PlanarThreeBodyPreset =
+    | 'hierarchical-triple'
     | 'figure-eight'
-    | 'rotating-triangle'
-    | 'binary-visitor';
+    | 'rotating-triangle';
 
 export interface PlanarThreeBodySnapshot {
     readonly elapsedTime: number;
