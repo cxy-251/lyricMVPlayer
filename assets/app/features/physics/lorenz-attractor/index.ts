@@ -1,0 +1,1 @@
+export { lorenzAttractorDefinition } from './LorenzAttractorDefinition';
