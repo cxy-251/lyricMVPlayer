@@ -3,15 +3,15 @@ import { RestrictedThreeBodyModule } from './RestrictedThreeBodyModule';
 
 export const restrictedThreeBodyDefinition: VisibleModuleDefinition = {
     id: 'restricted-three-body',
-    title: 'Planar Restricted Three-Body',
-    description: 'Follow a massless third body constrained to the z = 0 plane while two primaries move on prescribed circular orbits around their barycenter.',
+    title: 'Planar Three-Body Motion',
+    description: 'Simulate three finite masses moving under their mutual Newtonian gravity in one inertial XY plane, with all three trajectories shown around the common barycenter.',
     category: 'physics',
     labId: 'physics',
     catalog: {
-        subtitle: 'circular primaries · massless third body · z = 0',
+        subtitle: 'three dynamic masses · three trajectories · common barycenter',
         cover: 'restricted-three-body',
     },
-    tags: ['mechanics', 'gravity', 'planar-dynamics', 'orbital-dynamics', 'rk4'],
+    tags: ['mechanics', 'gravity', 'planar-dynamics', 'n-body', 'rk4'],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
     order: 30,
