@@ -15,6 +15,7 @@ export interface NumberParameter extends ParameterBase {
     readonly step: number;
     readonly decimals?: number;
     readonly unit?: string;
+    readonly formatValue?: (value: number) => string;
 }
 
 export interface ToggleParameter extends ParameterBase {
