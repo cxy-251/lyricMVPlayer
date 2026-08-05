@@ -34,7 +34,7 @@ export class PlanarThreeBodyModel {
     constructor(parameters: PlanarThreeBodyParameters) {
         this.parameters = this.validateParameters(parameters);
         this.reset(PlanarThreeBodyModel.createPreset(
-            'figure-eight',
+            'hierarchical-triple',
             [1, 1, 1],
             1,
             this.parameters.gravity,
@@ -71,13 +71,7 @@ export class PlanarThreeBodyModel {
                     vy: x * angularSpeed * velocityScale,
                 };
             });
-        } else if (preset === 'binary-visitor') {
-            bodies = [
-                { mass: masses[0], x: -0.56, y: 0, vx: 0, vy: 0.62 * velocityScale },
-                { mass: masses[1], x: 0.56, y: 0, vx: 0, vy: -0.62 * velocityScale },
-                { mass: masses[2], x: -1.55, y: 0.72, vx: 0.88 * velocityScale, vy: -0.22 * velocityScale },
-            ];
-        } else {
+        } else if (preset === 'figure-eight') {
             bodies = masses.map((mass, index) => ({
                 mass,
                 x: FIGURE_EIGHT_POSITIONS[index].x,
@@ -88,6 +82,48 @@ export class PlanarThreeBodyModel {
                 vy: FIGURE_EIGHT_VELOCITIES[index].y
                     * velocityScale
                     * gravityVelocityScale,
+            }));
+        } else {
+            const innerRadius = 0.28;
+            const outerSeparation = 2.4;
+            const pairMass = masses[0] + masses[1];
+            const totalMass = pairMass + masses[2];
+            const pairCenterX = -masses[2] / totalMass * outerSeparation;
+            const outerX = pairMass / totalMass * outerSeparation;
+            const innerAngularSpeed = Math.sqrt(
+                Math.max(1e-9, gravity * pairMass / (8 * innerRadius ** 3)),
+            );
+            const outerAngularSpeed = Math.sqrt(
+                Math.max(1e-9, gravity * totalMass / outerSeparation ** 3),
+            );
+            const pairCenterVy = -pairCenterX * outerAngularSpeed;
+            const outerVy = -outerX * outerAngularSpeed;
+            bodies = [
+                {
+                    mass: masses[0],
+                    x: pairCenterX - innerRadius,
+                    y: 0,
+                    vx: 0,
+                    vy: pairCenterVy + innerRadius * innerAngularSpeed,
+                },
+                {
+                    mass: masses[1],
+                    x: pairCenterX + innerRadius,
+                    y: 0,
+                    vx: 0,
+                    vy: pairCenterVy - innerRadius * innerAngularSpeed,
+                },
+                {
+                    mass: masses[2],
+                    x: outerX,
+                    y: 0,
+                    vx: 0,
+                    vy: outerVy,
+                },
+            ].map((body) => ({
+                ...body,
+                vx: body.vx * velocityScale,
+                vy: body.vy * velocityScale,
             }));
         }
 
