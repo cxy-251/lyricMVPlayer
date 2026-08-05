@@ -53,6 +53,9 @@ export class LorenzAttractorView {
     private modelLabel: Label | null = null;
     private plotWidth = 1;
     private plotHeight = 1;
+    private informationHeight = 112;
+    private visualizationHeight = 1;
+    private visualizationCenterY = 0;
 
     constructor(
         private readonly root: Node,
@@ -100,6 +103,14 @@ export class LorenzAttractorView {
         const plotBottom = panelY + panelHeight / 2 + 12;
         this.plotWidth = contentWidth;
         this.plotHeight = Math.max(1, plotTop - plotBottom);
+        this.informationHeight = Math.min(
+            compact ? 118 : 132,
+            Math.max(88, this.plotHeight * 0.4),
+        );
+        const visualizationTop = this.plotHeight / 2 - this.informationHeight - 18;
+        const visualizationBottom = -this.plotHeight / 2 + 42;
+        this.visualizationHeight = Math.max(1, visualizationTop - visualizationBottom);
+        this.visualizationCenterY = (visualizationTop + visualizationBottom) / 2;
 
         const plot = createUiNode(
             this.root,
@@ -214,10 +225,15 @@ export class LorenzAttractorView {
         const sin = Math.sin(angle);
         const rotatedX = point.x * cos - point.y * sin;
         const depth = point.x * sin + point.y * cos;
-        const scale = Math.min(this.plotWidth / 52, this.plotHeight / 58);
+        const scale = Math.min(
+            Math.max(1, (this.plotWidth - 48) / 52),
+            Math.max(1, this.visualizationHeight / 58),
+        );
         return {
             x: rotatedX * scale,
-            y: (point.z - 24) * scale + depth * scale * 0.16,
+            y: this.visualizationCenterY
+                + (point.z - 24) * scale
+                + depth * scale * 0.16,
         };
     }
 
@@ -248,20 +264,76 @@ export class LorenzAttractorView {
     }
 
     private createInformationViews(plot: Node, compact: boolean): void {
-        const methodNode = createLabel(
+        const titleY = this.plotHeight / 2 - 18;
+        const titleNode = createLabel(
             plot,
-            'LORENZ 1963 · THREE-MODE CONVECTION MODEL · RK4 1/240 · DIMENSIONLESS',
+            'LORENZ EQUATIONS · DIMENSIONLESS STATE SPACE · RK4 Δt = ¹⁄₂₄₀',
             Math.max(1, this.plotWidth - 32),
             24,
             compact ? 9 : 10,
             palette.subtle,
             0,
-            this.plotHeight / 2 - 20,
+            titleY,
             HorizontalTextAlignment.LEFT,
         );
-        const methodLabel = methodNode.getComponent(Label);
-        if (methodLabel) {
-            methodLabel.enableWrapText = false;
+        const titleLabel = titleNode.getComponent(Label);
+        if (titleLabel) {
+            titleLabel.enableWrapText = false;
+        }
+
+        const cardWidth = Math.max(1, this.plotWidth - 32);
+        const cardHeight = Math.max(58, this.informationHeight - 34);
+        const cardY = this.plotHeight / 2 - 30 - cardHeight / 2;
+        const card = createUiNode(
+            plot,
+            'LorenzEquationCard',
+            cardWidth,
+            cardHeight,
+            0,
+            cardY,
+        );
+        fillNode(card, cardWidth, cardHeight, palette.surfaceSoft, 7);
+        strokeNode(card, cardWidth, cardHeight, palette.border, 7, 1);
+
+        const equationWidth = Math.max(112, cardWidth * (compact ? 0.4 : 0.34));
+        const explanationWidth = Math.max(1, cardWidth - equationWidth - 28);
+        const equationX = -cardWidth / 2 + equationWidth / 2 + 12;
+        const explanationX = cardWidth / 2 - explanationWidth / 2 - 12;
+
+        const equationNode = createLabel(
+            card,
+            'ẋ = σ(y − x)\nẏ = x(ρ − z) − y\nż = xy − βz',
+            equationWidth,
+            Math.max(1, cardHeight - 12),
+            compact ? 12 : 14,
+            palette.primaryText,
+            equationX,
+            0,
+            HorizontalTextAlignment.LEFT,
+        );
+        const equationLabel = equationNode.getComponent(Label);
+        if (equationLabel) {
+            equationLabel.lineHeight = compact ? 20 : 23;
+        }
+
+        const explanationNode = createLabel(
+            card,
+            [
+                'STATES  x circulation · y horizontal temperature contrast · z vertical temperature distortion',
+                'PARAMETERS  σ response rate · ρ thermal driving · β geometric dissipation',
+                'CLASSIC DEFAULT  σ = 10 · ρ = 28 · β = ⁸⁄₃ ≈ 2.667',
+            ].join('\n'),
+            explanationWidth,
+            Math.max(1, cardHeight - 12),
+            compact ? 8 : 10,
+            palette.muted,
+            explanationX,
+            0,
+            HorizontalTextAlignment.LEFT,
+        );
+        const explanationLabel = explanationNode.getComponent(Label);
+        if (explanationLabel) {
+            explanationLabel.lineHeight = compact ? 15 : 18;
         }
 
         const modelNode = createLabel(
@@ -269,10 +341,10 @@ export class LorenzAttractorView {
             '',
             Math.max(1, this.plotWidth - 32),
             24,
-            compact ? 10 : 11,
+            compact ? 9 : 11,
             palette.muted,
             0,
-            this.plotHeight / 2 - 46,
+            this.plotHeight / 2 - this.informationHeight - 7,
             HorizontalTextAlignment.LEFT,
         );
         this.modelLabel = modelNode.getComponent(Label);
@@ -303,13 +375,16 @@ export class LorenzAttractorView {
             return;
         }
 
+        const visualizationTop = this.visualizationCenterY + this.visualizationHeight / 2;
+        const visualizationBottom = this.visualizationCenterY - this.visualizationHeight / 2;
+
         graphics.clear();
         graphics.strokeColor = palette.border;
         graphics.lineWidth = 1;
-        graphics.moveTo(-this.plotWidth / 2 + 24, 0);
-        graphics.lineTo(this.plotWidth / 2 - 24, 0);
-        graphics.moveTo(0, -this.plotHeight / 2 + 42);
-        graphics.lineTo(0, this.plotHeight / 2 - 58);
+        graphics.moveTo(-this.plotWidth / 2 + 24, this.visualizationCenterY);
+        graphics.lineTo(this.plotWidth / 2 - 24, this.visualizationCenterY);
+        graphics.moveTo(0, visualizationBottom);
+        graphics.lineTo(0, visualizationTop);
         graphics.stroke();
     }
 }
