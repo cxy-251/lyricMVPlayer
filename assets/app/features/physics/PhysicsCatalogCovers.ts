@@ -32,9 +32,9 @@ function drawLorenzAttractor(parent: Node, width: number, height: number): void 
 
     const scale = Math.min(width / 54, height / 58);
     let started = false;
-    for (let index = 0; index < 5200; index += 1) {
+    for (let index = 0; index < 3400; index += 1) {
         model.step(1 / 240);
-        if (index < 600 || index % 4 !== 0) {
+        if (index < 420 || index % 3 !== 0) {
             continue;
         }
         const snapshot = model.snapshot();
@@ -71,16 +71,19 @@ function drawRestrictedThreeBody(
     height: number,
 ): void {
     const model = new RestrictedThreeBodyModel({ mu: 0.01215 });
-    model.reset({ x: 0.82, y: 0, vx: 0, vy: 0.18 });
+    model.reset({ x: 0.82, y: 0, vx: 0, vy: 0.17 });
     const samples: Array<{ x: number; y: number }> = [];
 
-    for (let index = 0; index < 12000; index += 1) {
+    for (let index = 0; index < 6400; index += 1) {
         model.step(1 / 720);
-        if (index % 8 === 0) {
-            const state = model.snapshot().state;
-            samples.push({ x: state.x, y: state.y });
+        const snapshot = model.snapshot();
+        if (index % 6 === 0) {
+            samples.push({
+                x: snapshot.state.x,
+                y: snapshot.state.y,
+            });
         }
-        if (model.snapshot().status !== 'active') {
+        if (snapshot.status !== 'active') {
             break;
         }
     }
