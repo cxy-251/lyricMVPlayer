@@ -6,9 +6,13 @@ import { lorenzAttractorDefinition } from './lorenz-attractor';
 import './PhysicsCatalogCovers';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
 import { restrictedThreeBodyDefinition } from './restricted-three-body';
+import { rollingBodyRaceDefinition } from './rolling-body-race';
+import './rolling-body-race/RollingBodyRaceCover';
+import { runRollingBodyRaceContractChecks } from './rolling-body-race/RollingBodyRaceContractChecks';
 
 if (PREVIEW) {
     runPhysicsModelContractChecks();
+    runRollingBodyRaceContractChecks();
 }
 
 export const physicsLab: LabManifest = defineLabManifest({
@@ -23,5 +27,6 @@ export const physicsLab: LabManifest = defineLabManifest({
         doublePendulumDefinition,
         lorenzAttractorDefinition,
         restrictedThreeBodyDefinition,
+        rollingBodyRaceDefinition,
     ],
 });
