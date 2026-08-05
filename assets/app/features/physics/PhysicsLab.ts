@@ -3,6 +3,7 @@ import type { LabManifest } from '../../contracts/InteractiveModule';
 import { defineLabManifest } from '../../core/ManifestValidator';
 import { doublePendulumDefinition } from './double-pendulum';
 import { lorenzAttractorDefinition } from './lorenz-attractor';
+import './PhysicsCatalogCovers';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
 import { restrictedThreeBodyDefinition } from './restricted-three-body';
 
