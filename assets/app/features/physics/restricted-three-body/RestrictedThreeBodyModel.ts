@@ -1,293 +1,310 @@
 import type {
-    CR3BPDiagnostics,
-    CR3BPGravityVectors,
-    CR3BPLagrangePoint,
-    CR3BPParameters,
-    CR3BPSnapshot,
-    CR3BPState,
-    CR3BPStatus,
-    CR3BPVector,
+    PlanarBodyState,
+    PlanarThreeBodyDiagnostics,
+    PlanarThreeBodyParameters,
+    PlanarThreeBodyPreset,
+    PlanarThreeBodySnapshot,
+    PlanarVector,
 } from './RestrictedThreeBodyTypes';
 
-interface Derivative {
+interface BodyDerivative {
     readonly x: number;
     readonly y: number;
     readonly vx: number;
     readonly vy: number;
 }
 
-const DEFAULT_STATE: CR3BPState = {
-    x: 0.82,
-    y: 0,
-    vx: 0,
-    vy: 0.17,
-};
+const FIGURE_EIGHT_POSITIONS: readonly PlanarVector[] = [
+    { x: -0.97000436, y: 0.24308753 },
+    { x: 0.97000436, y: -0.24308753 },
+    { x: 0, y: 0 },
+];
+const FIGURE_EIGHT_VELOCITIES: readonly PlanarVector[] = [
+    { x: 0.466203685, y: 0.43236573 },
+    { x: 0.466203685, y: 0.43236573 },
+    { x: -0.93240737, y: -0.86473146 },
+];
 
-const COLLISION_RADIUS = 0.025;
-const ESCAPE_RADIUS = 4;
-
-export class RestrictedThreeBodyModel {
-    private currentParameters: CR3BPParameters;
-    private state: CR3BPState = { ...DEFAULT_STATE };
-    private initialState: CR3BPState = { ...DEFAULT_STATE };
+export class PlanarThreeBodyModel {
+    private parameters: PlanarThreeBodyParameters;
+    private bodies: PlanarBodyState[] = [];
     private elapsedTime = 0;
-    private status: CR3BPStatus = 'active';
-    private initialJacobiConstant = 0;
+    private initialEnergy = 0;
 
-    constructor(parameters: CR3BPParameters) {
-        this.currentParameters = this.validateParameters(parameters);
-        this.reset();
+    constructor(parameters: PlanarThreeBodyParameters) {
+        this.parameters = this.validateParameters(parameters);
+        this.reset(PlanarThreeBodyModel.createPreset(
+            'figure-eight',
+            [1, 1, 1],
+            1,
+            this.parameters.gravity,
+        ));
     }
 
-    get parameters(): CR3BPParameters {
-        return this.currentParameters;
+    static createPreset(
+        preset: PlanarThreeBodyPreset,
+        masses: readonly number[],
+        velocityScale: number,
+        gravity: number,
+    ): readonly PlanarBodyState[] {
+        if (masses.length !== 3 || masses.some((mass) => !Number.isFinite(mass) || mass <= 0)) {
+            throw new Error('Planar three-body presets require three positive finite masses');
+        }
+        const gravityVelocityScale = Math.sqrt(Math.max(1e-9, gravity));
+        let bodies: PlanarBodyState[];
+
+        if (preset === 'rotating-triangle') {
+            const radius = 0.86;
+            const totalMass = masses[0] + masses[1] + masses[2];
+            const angularSpeed = Math.sqrt(
+                Math.max(1e-9, gravity * totalMass / (3 * Math.sqrt(3) * radius ** 3)),
+            );
+            bodies = masses.map((mass, index) => {
+                const angle = Math.PI / 2 + index * Math.PI * 2 / 3;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                return {
+                    mass,
+                    x,
+                    y,
+                    vx: -y * angularSpeed * velocityScale,
+                    vy: x * angularSpeed * velocityScale,
+                };
+            });
+        } else if (preset === 'binary-visitor') {
+            bodies = [
+                { mass: masses[0], x: -0.56, y: 0, vx: 0, vy: 0.62 * velocityScale },
+                { mass: masses[1], x: 0.56, y: 0, vx: 0, vy: -0.62 * velocityScale },
+                { mass: masses[2], x: -1.55, y: 0.72, vx: 0.88 * velocityScale, vy: -0.22 * velocityScale },
+            ];
+        } else {
+            bodies = masses.map((mass, index) => ({
+                mass,
+                x: FIGURE_EIGHT_POSITIONS[index].x,
+                y: FIGURE_EIGHT_POSITIONS[index].y,
+                vx: FIGURE_EIGHT_VELOCITIES[index].x
+                    * velocityScale
+                    * gravityVelocityScale,
+                vy: FIGURE_EIGHT_VELOCITIES[index].y
+                    * velocityScale
+                    * gravityVelocityScale,
+            }));
+        }
+
+        return this.normalizeBarycentricState(bodies);
     }
 
-    get primaryPosition(): CR3BPVector {
-        return { x: -this.currentParameters.mu, y: 0 };
+    setParameters(parameters: PlanarThreeBodyParameters): void {
+        this.parameters = this.validateParameters(parameters);
     }
 
-    get secondaryPosition(): CR3BPVector {
-        return { x: 1 - this.currentParameters.mu, y: 0 };
-    }
-
-    setParameters(parameters: CR3BPParameters): void {
-        this.currentParameters = this.validateParameters(parameters);
-        this.reset(this.initialState);
-    }
-
-    reset(state: CR3BPState = this.initialState): void {
-        this.initialState = this.validateState(state);
-        this.state = { ...this.initialState };
+    reset(bodies: readonly PlanarBodyState[]): void {
+        if (bodies.length !== 3) {
+            throw new Error('Planar three-body model requires exactly three bodies');
+        }
+        this.bodies = bodies.map((body) => this.validateBody(body));
         this.elapsedTime = 0;
-        this.status = this.classify(this.state);
-        this.initialJacobiConstant = this.jacobiConstant(this.state);
+        this.initialEnergy = this.totalEnergy(this.bodies);
     }
 
     step(dt: number): void {
         if (!Number.isFinite(dt) || dt <= 0) {
-            throw new Error('Restricted three-body step must be positive and finite');
+            throw new Error('Planar three-body step must be positive and finite');
         }
-        if (this.status !== 'active') {
-            return;
-        }
-
-        this.state = this.integrate(this.state, dt);
+        const k1 = this.derivative(this.bodies);
+        const k2 = this.derivative(this.offset(this.bodies, k1, dt / 2));
+        const k3 = this.derivative(this.offset(this.bodies, k2, dt / 2));
+        const k4 = this.derivative(this.offset(this.bodies, k3, dt));
+        this.bodies = this.bodies.map((body, index) => ({
+            mass: body.mass,
+            x: body.x + dt * (
+                k1[index].x + 2 * k2[index].x + 2 * k3[index].x + k4[index].x
+            ) / 6,
+            y: body.y + dt * (
+                k1[index].y + 2 * k2[index].y + 2 * k3[index].y + k4[index].y
+            ) / 6,
+            vx: body.vx + dt * (
+                k1[index].vx + 2 * k2[index].vx + 2 * k3[index].vx + k4[index].vx
+            ) / 6,
+            vy: body.vy + dt * (
+                k1[index].vy + 2 * k2[index].vy + 2 * k3[index].vy + k4[index].vy
+            ) / 6,
+        })).map((body) => this.validateBody(body));
         this.elapsedTime += dt;
-        this.validateState(this.state);
-        this.status = this.classify(this.state);
     }
 
-    snapshot(): CR3BPSnapshot {
+    snapshot(): PlanarThreeBodySnapshot {
         return {
             elapsedTime: this.elapsedTime,
-            state: { ...this.state },
-            status: this.status,
+            bodies: this.bodies.map((body) => ({ ...body })),
         };
     }
 
-    diagnostics(): CR3BPDiagnostics {
-        const jacobiConstant = this.jacobiConstant(this.state);
-        const primary = this.primaryPosition;
-        const secondary = this.secondaryPosition;
-        const primaryDistance = Math.hypot(
-            this.state.x - primary.x,
-            this.state.y - primary.y,
+    accelerations(): readonly PlanarVector[] {
+        return this.computeAccelerations(this.bodies);
+    }
+
+    diagnostics(): PlanarThreeBodyDiagnostics {
+        const totalMass = this.bodies.reduce((sum, body) => sum + body.mass, 0);
+        const momentum = this.bodies.reduce(
+            (sum, body) => ({
+                x: sum.x + body.mass * body.vx,
+                y: sum.y + body.mass * body.vy,
+            }),
+            { x: 0, y: 0 },
         );
-        const secondaryDistance = Math.hypot(
-            this.state.x - secondary.x,
-            this.state.y - secondary.y,
+        const barycenter = this.bodies.reduce(
+            (sum, body) => ({
+                x: sum.x + body.mass * body.x / totalMass,
+                y: sum.y + body.mass * body.y / totalMass,
+            }),
+            { x: 0, y: 0 },
         );
+        let minimumDistance = Number.POSITIVE_INFINITY;
+        for (let left = 0; left < this.bodies.length; left += 1) {
+            for (let right = left + 1; right < this.bodies.length; right += 1) {
+                minimumDistance = Math.min(
+                    minimumDistance,
+                    Math.hypot(
+                        this.bodies[right].x - this.bodies[left].x,
+                        this.bodies[right].y - this.bodies[left].y,
+                    ),
+                );
+            }
+        }
+        const totalEnergy = this.totalEnergy(this.bodies);
         return {
-            jacobiConstant,
-            normalizedJacobiDrift: Math.abs(
-                jacobiConstant - this.initialJacobiConstant,
-            ) / Math.max(1, Math.abs(this.initialJacobiConstant)),
-            speed: Math.hypot(this.state.vx, this.state.vy),
-            primaryDistance,
-            secondaryDistance,
+            totalEnergy,
+            normalizedEnergyDrift: Math.abs(totalEnergy - this.initialEnergy)
+                / Math.max(1, Math.abs(this.initialEnergy)),
+            momentum,
+            momentumMagnitude: Math.hypot(momentum.x, momentum.y),
+            barycenter,
+            minimumDistance,
         };
     }
 
-    gravityVectors(): CR3BPGravityVectors {
-        const { mu } = this.currentParameters;
-        const primary = this.primaryPosition;
-        const secondary = this.secondaryPosition;
-        return {
-            primary: this.gravityFrom(
-                this.state,
-                primary,
-                1 - mu,
-            ),
-            secondary: this.gravityFrom(
-                this.state,
-                secondary,
-                mu,
-            ),
-        };
+    private derivative(bodies: readonly PlanarBodyState[]): readonly BodyDerivative[] {
+        const accelerations = this.computeAccelerations(bodies);
+        return bodies.map((body, index) => ({
+            x: body.vx,
+            y: body.vy,
+            vx: accelerations[index].x,
+            vy: accelerations[index].y,
+        }));
     }
 
-    lagrangePoints(): readonly CR3BPLagrangePoint[] {
-        const { mu } = this.currentParameters;
-        const triangularX = 0.5 - mu;
-        const triangularY = Math.sqrt(3) / 2;
-        return [
-            { name: 'L1', x: this.solveCollinear(1 - mu - Math.cbrt(mu / 3)), y: 0 },
-            { name: 'L2', x: this.solveCollinear(1 - mu + Math.cbrt(mu / 3)), y: 0 },
-            { name: 'L3', x: this.solveCollinear(-1 - 5 * mu / 12), y: 0 },
-            { name: 'L4', x: triangularX, y: triangularY },
-            { name: 'L5', x: triangularX, y: -triangularY },
-        ];
-    }
-
-    private integrate(state: CR3BPState, dt: number): CR3BPState {
-        const k1 = this.derivative(state);
-        const k2 = this.derivative(this.offset(state, k1, dt / 2));
-        const k3 = this.derivative(this.offset(state, k2, dt / 2));
-        const k4 = this.derivative(this.offset(state, k3, dt));
-        return {
-            x: state.x + dt * (k1.x + 2 * k2.x + 2 * k3.x + k4.x) / 6,
-            y: state.y + dt * (k1.y + 2 * k2.y + 2 * k3.y + k4.y) / 6,
-            vx: state.vx + dt * (k1.vx + 2 * k2.vx + 2 * k3.vx + k4.vx) / 6,
-            vy: state.vy + dt * (k1.vy + 2 * k2.vy + 2 * k3.vy + k4.vy) / 6,
-        };
-    }
-
-    private derivative(state: CR3BPState): Derivative {
-        const { mu } = this.currentParameters;
-        const primaryDx = state.x + mu;
-        const secondaryDx = state.x - 1 + mu;
-        const primaryDistance = Math.max(
-            1e-9,
-            Math.hypot(primaryDx, state.y),
-        );
-        const secondaryDistance = Math.max(
-            1e-9,
-            Math.hypot(secondaryDx, state.y),
-        );
-        const primaryCube = primaryDistance ** 3;
-        const secondaryCube = secondaryDistance ** 3;
-        const potentialX = state.x
-            - (1 - mu) * primaryDx / primaryCube
-            - mu * secondaryDx / secondaryCube;
-        const potentialY = state.y
-            - (1 - mu) * state.y / primaryCube
-            - mu * state.y / secondaryCube;
-        return {
-            x: state.vx,
-            y: state.vy,
-            vx: 2 * state.vy + potentialX,
-            vy: -2 * state.vx + potentialY,
-        };
+    private computeAccelerations(bodies: readonly PlanarBodyState[]): readonly PlanarVector[] {
+        const { gravity, softening } = this.parameters;
+        const softeningSquared = softening * softening;
+        return bodies.map((body, index) => {
+            let x = 0;
+            let y = 0;
+            for (let otherIndex = 0; otherIndex < bodies.length; otherIndex += 1) {
+                if (index === otherIndex) {
+                    continue;
+                }
+                const other = bodies[otherIndex];
+                const dx = other.x - body.x;
+                const dy = other.y - body.y;
+                const inverseCube = (dx * dx + dy * dy + softeningSquared) ** -1.5;
+                x += gravity * other.mass * dx * inverseCube;
+                y += gravity * other.mass * dy * inverseCube;
+            }
+            return { x, y };
+        });
     }
 
     private offset(
-        state: CR3BPState,
-        derivative: Derivative,
+        bodies: readonly PlanarBodyState[],
+        derivative: readonly BodyDerivative[],
         scale: number,
-    ): CR3BPState {
-        return {
-            x: state.x + derivative.x * scale,
-            y: state.y + derivative.y * scale,
-            vx: state.vx + derivative.vx * scale,
-            vy: state.vy + derivative.vy * scale,
-        };
+    ): readonly PlanarBodyState[] {
+        return bodies.map((body, index) => ({
+            mass: body.mass,
+            x: body.x + derivative[index].x * scale,
+            y: body.y + derivative[index].y * scale,
+            vx: body.vx + derivative[index].vx * scale,
+            vy: body.vy + derivative[index].vy * scale,
+        }));
     }
 
-    private jacobiConstant(state: CR3BPState): number {
-        const { mu } = this.currentParameters;
-        const primaryDistance = Math.max(
-            1e-9,
-            Math.hypot(state.x + mu, state.y),
+    private totalEnergy(bodies: readonly PlanarBodyState[]): number {
+        const kinetic = bodies.reduce(
+            (sum, body) => sum + 0.5 * body.mass * (
+                body.vx * body.vx + body.vy * body.vy
+            ),
+            0,
         );
-        const secondaryDistance = Math.max(
-            1e-9,
-            Math.hypot(state.x - 1 + mu, state.y),
-        );
-        const twicePotential = state.x * state.x
-            + state.y * state.y
-            + 2 * (1 - mu) / primaryDistance
-            + 2 * mu / secondaryDistance;
-        return twicePotential - state.vx * state.vx - state.vy * state.vy;
-    }
-
-    private gravityFrom(
-        state: CR3BPState,
-        source: CR3BPVector,
-        mass: number,
-    ): CR3BPVector {
-        const dx = source.x - state.x;
-        const dy = source.y - state.y;
-        const distance = Math.max(1e-9, Math.hypot(dx, dy));
-        const factor = mass / (distance ** 3);
-        return { x: dx * factor, y: dy * factor };
-    }
-
-    private solveCollinear(initialGuess: number): number {
-        let x = initialGuess;
-        for (let index = 0; index < 24; index += 1) {
-            const value = this.collinearEquation(x);
-            const epsilon = 1e-6;
-            const slope = (
-                this.collinearEquation(x + epsilon)
-                - this.collinearEquation(x - epsilon)
-            ) / (2 * epsilon);
-            if (!Number.isFinite(slope) || Math.abs(slope) < 1e-10) {
-                break;
+        let potential = 0;
+        for (let left = 0; left < bodies.length; left += 1) {
+            for (let right = left + 1; right < bodies.length; right += 1) {
+                const dx = bodies[right].x - bodies[left].x;
+                const dy = bodies[right].y - bodies[left].y;
+                potential -= this.parameters.gravity
+                    * bodies[left].mass
+                    * bodies[right].mass
+                    / Math.sqrt(
+                        dx * dx
+                        + dy * dy
+                        + this.parameters.softening * this.parameters.softening,
+                    );
             }
-            const next = x - value / slope;
-            if (!Number.isFinite(next)) {
-                break;
-            }
-            if (Math.abs(next - x) < 1e-12) {
-                return next;
-            }
-            x = next;
         }
-        return x;
+        return kinetic + potential;
     }
 
-    private collinearEquation(x: number): number {
-        const { mu } = this.currentParameters;
-        const primaryDx = x + mu;
-        const secondaryDx = x - 1 + mu;
-        return x
-            - (1 - mu) * primaryDx / Math.max(1e-12, Math.abs(primaryDx) ** 3)
-            - mu * secondaryDx / Math.max(1e-12, Math.abs(secondaryDx) ** 3);
-    }
-
-    private classify(state: CR3BPState): CR3BPStatus {
-        const primary = this.primaryPosition;
-        const secondary = this.secondaryPosition;
-        if (Math.hypot(state.x - primary.x, state.y) <= COLLISION_RADIUS) {
-            return 'collision-primary';
+    private validateParameters(
+        parameters: PlanarThreeBodyParameters,
+    ): PlanarThreeBodyParameters {
+        if (!Number.isFinite(parameters.gravity) || parameters.gravity <= 0) {
+            throw new Error('Planar three-body gravity must be positive and finite');
         }
-        if (Math.hypot(state.x - secondary.x, state.y) <= COLLISION_RADIUS) {
-            return 'collision-secondary';
-        }
-        if (Math.hypot(state.x, state.y) >= ESCAPE_RADIUS) {
-            return 'escaped';
-        }
-        return 'active';
-    }
-
-    private validateParameters(parameters: CR3BPParameters): CR3BPParameters {
-        if (
-            !Number.isFinite(parameters.mu)
-            || parameters.mu <= 0
-            || parameters.mu > 0.5
-        ) {
-            throw new Error('Restricted three-body mass ratio mu must be in (0, 0.5]');
+        if (!Number.isFinite(parameters.softening) || parameters.softening < 0) {
+            throw new Error('Planar three-body softening must be finite and non-negative');
         }
         return { ...parameters };
     }
 
-    private validateState(state: CR3BPState): CR3BPState {
-        for (const [name, value] of Object.entries(state)) {
-            if (!Number.isFinite(value) || Math.abs(value) > 1e6) {
-                throw new Error(`Restricted three-body state ${name} diverged`);
+    private validateBody(body: PlanarBodyState): PlanarBodyState {
+        if (!Number.isFinite(body.mass) || body.mass <= 0) {
+            throw new Error('Planar three-body mass must be positive and finite');
+        }
+        for (const [name, value] of Object.entries(body)) {
+            if (name === 'mass') {
+                continue;
+            }
+            if (!Number.isFinite(value) || Math.abs(value) > 1e7) {
+                throw new Error(`Planar three-body state ${name} diverged`);
             }
         }
-        return { ...state };
+        return { ...body };
+    }
+
+    private static normalizeBarycentricState(
+        bodies: readonly PlanarBodyState[],
+    ): readonly PlanarBodyState[] {
+        const totalMass = bodies.reduce((sum, body) => sum + body.mass, 0);
+        const center = bodies.reduce(
+            (sum, body) => ({
+                x: sum.x + body.mass * body.x / totalMass,
+                y: sum.y + body.mass * body.y / totalMass,
+            }),
+            { x: 0, y: 0 },
+        );
+        const centerVelocity = bodies.reduce(
+            (sum, body) => ({
+                x: sum.x + body.mass * body.vx / totalMass,
+                y: sum.y + body.mass * body.vy / totalMass,
+            }),
+            { x: 0, y: 0 },
+        );
+        return bodies.map((body) => ({
+            ...body,
+            x: body.x - center.x,
+            y: body.y - center.y,
+            vx: body.vx - centerVelocity.x,
+            vy: body.vy - centerVelocity.y,
+        }));
     }
 }
