@@ -18,6 +18,8 @@ export type CR3BPStatus =
     | 'collision-secondary'
     | 'escaped';
 
+export type CR3BPReferenceFrame = 'inertial' | 'rotating';
+
 export interface CR3BPSnapshot {
     readonly elapsedTime: number;
     readonly state: CR3BPState;
@@ -53,6 +55,7 @@ export interface RestrictedThreeBodyViewState {
     readonly lagrangePoints: readonly CR3BPLagrangePoint[];
     readonly gravityVectors: CR3BPGravityVectors;
     readonly trail: readonly CR3BPTrailPoint[];
+    readonly referenceFrame: CR3BPReferenceFrame;
     readonly showLagrangePoints: boolean;
     readonly showGravityVectors: boolean;
     readonly diagnosticsText: string;
