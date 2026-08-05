@@ -4,6 +4,7 @@ import type { ParameterSchema } from '../../../parameters/ParameterSchema';
 import type { StorageService } from '../../../services/StorageService';
 import { RestrictedThreeBodyModel } from './RestrictedThreeBodyModel';
 import type {
+    CR3BPLagrangePoint,
     CR3BPParameters,
     CR3BPState,
     CR3BPTrailPoint,
@@ -68,8 +69,8 @@ export const RESTRICTED_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
         kind: 'number',
         key: 'initialVy',
         label: 'Initial ẏ₀',
-        description: 'Initial y velocity. The default produces a close flyby and long looping path.',
-        defaultValue: 0.18,
+        description: 'Initial y velocity. The default produces repeated close flybys without an immediate collision.',
+        defaultValue: 0.17,
         minimum: -2,
         maximum: 2,
         step: 0.01,
@@ -127,6 +128,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
     );
     private readonly model = new RestrictedThreeBodyModel(DEFAULT_PARAMETERS);
     private readonly trail: CR3BPTrailPoint[] = [];
+    private lagrangePoints: readonly CR3BPLagrangePoint[] = this.model.lagrangePoints();
     private parameterApplyTimer: ReturnType<typeof setTimeout> | null = null;
     private paused = false;
     private sampleCounter = 0;
@@ -206,7 +208,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
             diagnostics,
             primary: this.model.primaryPosition,
             secondary: this.model.secondaryPosition,
-            lagrangePoints: this.model.lagrangePoints(),
+            lagrangePoints: this.lagrangePoints,
             gravityVectors: this.model.gravityVectors(),
             trail: this.trail,
             showLagrangePoints: this.getBoolean('showLagrangePoints'),
@@ -256,6 +258,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
             vy: this.getNumber('initialVy'),
         };
         this.model.reset(initialState);
+        this.lagrangePoints = this.model.lagrangePoints();
         this.clock.reset();
         this.sampleCounter = 0;
         this.trail.length = 0;
