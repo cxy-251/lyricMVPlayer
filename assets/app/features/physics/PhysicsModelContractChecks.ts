@@ -8,6 +8,7 @@ export function runPhysicsModelContractChecks(): void {
     checkLorenzDeterminism();
     checkLorenzSensitivity();
     checkPlanarThreeBodyBarycenter();
+    checkPlanarThreeBodyDefaultMotion();
     checkPlanarThreeBodyDeterminism();
     checkPlanarThreeBodyConservation();
 }
@@ -94,6 +95,33 @@ function checkPlanarThreeBodyBarycenter(): void {
         initial.momentumMagnitude < 1e-12,
         'Planar three-body initial total momentum was not zero',
     );
+}
+
+function checkPlanarThreeBodyDefaultMotion(): void {
+    const model = new PlanarThreeBodyModel({
+        gravity: 1,
+        softening: 0.015,
+    });
+    model.reset(PlanarThreeBodyModel.createPreset(
+        'hierarchical-triple',
+        [1, 1, 1],
+        1,
+        1,
+    ));
+    const initial = model.snapshot().bodies;
+    for (let index = 0; index < 1200; index += 1) {
+        model.step(1 / 600);
+    }
+    const final = model.snapshot().bodies;
+    for (let index = 0; index < 3; index += 1) {
+        assert(
+            Math.hypot(
+                final[index].x - initial[index].x,
+                final[index].y - initial[index].y,
+            ) > 0.1,
+            `Planar three-body body ${index + 1} did not move`,
+        );
+    }
 }
 
 function checkPlanarThreeBodyDeterminism(): void {
