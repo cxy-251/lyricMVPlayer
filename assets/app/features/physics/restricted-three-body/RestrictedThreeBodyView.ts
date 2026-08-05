@@ -621,21 +621,15 @@ export class PlanarThreeBodyView {
         if (!parent || !layout) {
             return;
         }
+
         this.parameterPanel?.destroy();
-        try {
-            this.parameterPanel = new ParameterPanel(
-                parent,
-                this.parameterSchema,
-                this.viewModel,
-                {
-                    changed: (key) => this.actions.parameterChanged(key),
-                    reportError: (error) => this.actions.reportError(error),
-                },
-            );
-            this.parameterPanel.layout(layout);
-        } catch (error) {
-            this.parameterPanel = null;
-            this.actions.reportError(error);
-        }
+        this.parameterPanel = new ParameterPanel(
+            parent,
+            this.parameterSchema,
+            this.viewModel,
+            (key) => this.actions.parameterChanged(key),
+            (error) => this.actions.reportError(error),
+        );
+        this.parameterPanel.render(layout);
     }
 }
