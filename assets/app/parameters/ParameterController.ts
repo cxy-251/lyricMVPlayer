@@ -112,7 +112,7 @@ export class ParameterController {
         const nextIndex = (
             currentIndex + direction + definition.options.length
         ) % definition.options.length;
-        return this.set(key, definition.options[nextIndex].value);
+        return this.set(definition.options[nextIndex].value, definition.options[nextIndex].value);
     }
 
     reset(): void {
@@ -165,8 +165,10 @@ export class ParameterController {
     }
 
     private formatNumber(definition: NumberParameter, value: number): string {
-        const decimals = definition.decimals ?? this.inferDecimals(definition.step);
-        return `${value.toFixed(decimals)}${definition.unit ?? ''}`;
+        const formatted = definition.formatValue
+            ? definition.formatValue(value)
+            : value.toFixed(definition.decimals ?? this.inferDecimals(definition.step));
+        return `${formatted}${definition.unit ?? ''}`;
     }
 
     private formatSelect(definition: SelectParameter, value: string): string {
