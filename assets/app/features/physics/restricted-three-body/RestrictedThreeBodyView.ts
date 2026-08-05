@@ -23,34 +23,30 @@ import {
     strokeNode,
 } from '../../../ui/UiFactory';
 import type {
-    CR3BPLagrangePoint,
-    CR3BPReferenceFrame,
-    CR3BPTrailPoint,
-    CR3BPVector,
-    RestrictedThreeBodyViewState,
+    PlanarBodyState,
+    PlanarThreeBodyViewState,
+    PlanarVector,
 } from './RestrictedThreeBodyTypes';
-import type { RestrictedThreeBodyViewModel } from './RestrictedThreeBodyViewModel';
+import type { PlanarThreeBodyViewModel } from './RestrictedThreeBodyViewModel';
 
-const TRAIL_COLOR = new Color(
-    palette.primary.r,
-    palette.primary.g,
-    palette.primary.b,
-    225,
-);
-const PRIMARY_BODY_COLOR = new Color(215, 221, 207, 255);
-const SECONDARY_BODY_COLOR = new Color(181, 149, 95, 255);
-const THIRD_BODY_COLOR = new Color(126, 190, 166, 255);
-const FORCE_PRIMARY_COLOR = new Color(150, 168, 159, 210);
-const FORCE_SECONDARY_COLOR = new Color(181, 149, 95, 220);
-const LAGRANGE_COLOR = new Color(130, 142, 135, 180);
+const BODY_COLORS = [
+    new Color(126, 190, 166, 255),
+    new Color(210, 167, 96, 255),
+    new Color(151, 165, 211, 255),
+] as const;
+const TRAIL_COLORS = [
+    new Color(126, 190, 166, 220),
+    new Color(210, 167, 96, 205),
+    new Color(151, 165, 211, 205),
+] as const;
 const CONTENT_GAP = 14;
 
-export interface RestrictedThreeBodyViewActions {
+export interface PlanarThreeBodyViewActions {
     parameterChanged(key: string): void;
     reportError(error: unknown): void;
 }
 
-export class RestrictedThreeBodyView {
+export class PlanarThreeBodyView {
     private parameterPanel: ParameterPanel | null = null;
     private parameterPanelParent: Node | null = null;
     private parameterPanelLayout: ParameterPanelLayout | null = null;
@@ -67,8 +63,8 @@ export class RestrictedThreeBodyView {
     constructor(
         private readonly root: Node,
         private readonly parameterSchema: ParameterSchema,
-        private readonly viewModel: RestrictedThreeBodyViewModel,
-        private readonly actions: RestrictedThreeBodyViewActions,
+        private readonly viewModel: PlanarThreeBodyViewModel,
+        private readonly actions: PlanarThreeBodyViewActions,
     ) {}
 
     layout(viewport: ViewportSnapshot): void {
@@ -87,14 +83,13 @@ export class RestrictedThreeBodyView {
         fillNode(this.root, viewport.width, viewport.height, palette.background);
 
         const compact = viewport.breakpoint === 'compact';
-        const horizontalPadding = compact ? 16 : 36;
         const safeWidth = Math.max(
             1,
             viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
         );
         const contentWidth = Math.max(
             1,
-            Math.min(1320, safeWidth - horizontalPadding * 2),
+            Math.min(1320, safeWidth - (compact ? 32 : 72)),
         );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
         const contentTop = viewport.height / 2
@@ -104,7 +99,7 @@ export class RestrictedThreeBodyView {
             + viewport.safeInsets.bottom
             + 12;
         const contentHeight = Math.max(1, contentTop - contentBottom);
-        const contentCenterY = (contentTop + contentBottom) / 2;
+        const centerY = (contentTop + contentBottom) / 2;
         const sideInspector = viewport.orientation === 'landscape'
             && safeWidth >= 920
             && contentHeight >= 440;
@@ -112,7 +107,7 @@ export class RestrictedThreeBodyView {
         if (sideInspector) {
             this.layoutSideBySide(
                 centerX,
-                contentCenterY,
+                centerY,
                 contentWidth,
                 contentHeight,
                 viewport.breakpoint,
@@ -130,7 +125,7 @@ export class RestrictedThreeBodyView {
         this.rebuildParameterPanel();
     }
 
-    render(state: RestrictedThreeBodyViewState): void {
+    render(state: PlanarThreeBodyViewState): void {
         if (
             !this.sceneGraphics
             || !this.trailGraphics
@@ -139,17 +134,15 @@ export class RestrictedThreeBodyView {
         ) {
             return;
         }
-
         const span = this.calculateWorldSpan(state);
         this.worldScale = Math.min(
             Math.max(1, (this.plotWidth - 54) / (span * 2)),
-            Math.max(1, (this.plotHeight - 66) / (span * 2)),
+            Math.max(1, (this.plotHeight - 70) / (span * 2)),
         );
         this.drawScene(state, span);
-        this.drawTrail(state);
-        this.drawBodies(state);
+        this.drawTrails(state);
+        this.drawBodies(state.snapshot.bodies);
         this.drawVectors(state);
-
         if (this.diagnosticsLabel) {
             this.diagnosticsLabel.string = state.diagnosticsText;
         }
@@ -177,40 +170,33 @@ export class RestrictedThreeBodyView {
         contentHeight: number,
         breakpoint: ViewportBreakpoint,
     ): void {
-        const inspectorWidth = Math.min(
-            370,
-            Math.max(310, contentWidth * 0.27),
-        );
+        const inspectorWidth = Math.min(370, Math.max(310, contentWidth * 0.27));
         this.plotWidth = Math.max(1, contentWidth - inspectorWidth - CONTENT_GAP);
         this.plotHeight = contentHeight;
         const leftEdge = centerX - contentWidth / 2;
-        const plotX = leftEdge + this.plotWidth / 2;
-        const inspectorX = leftEdge
-            + this.plotWidth
-            + CONTENT_GAP
-            + inspectorWidth / 2;
-
-        const plot = this.createVisualizationPanel(plotX, centerY);
+        const plot = this.createVisualizationPanel(
+            leftEdge + this.plotWidth / 2,
+            centerY,
+        );
         const inspector = this.createInspectorPanel(
             inspectorWidth,
             contentHeight,
-            inspectorX,
+            leftEdge + this.plotWidth + CONTENT_GAP + inspectorWidth / 2,
             centerY,
             false,
         );
-        const panelBreakpoint: ViewportBreakpoint = 'compact';
-        const parameterWidth = Math.max(1, inspectorWidth - 16);
-        const parameterHeight = ParameterPanel.measureHeight(
+        const panelWidth = inspectorWidth - 16;
+        const panelHeight = ParameterPanel.measureHeight(
             this.parameterSchema.length,
-            parameterWidth,
-            panelBreakpoint,
+            panelWidth,
+            'compact',
         );
         this.parameterPanelParent = inspector;
         this.parameterPanelLayout = {
-            width: parameterWidth,
+            width: panelWidth,
             x: 0,
-            y: -contentHeight / 2 + 8 + parameterHeight / 2,
-            breakpoint: panelBreakpoint,
+            y: -contentHeight / 2 + 8 + panelHeight / 2,
+            breakpoint: 'compact',
         };
         this.createGraphicsLayers(plot);
         this.createVisualizationOverlays(plot, breakpoint === 'compact');
@@ -224,29 +210,27 @@ export class RestrictedThreeBodyView {
         contentHeight: number,
         breakpoint: ViewportBreakpoint,
     ): void {
-        const parameterBreakpoint: ViewportBreakpoint = breakpoint === 'wide'
+        const panelBreakpoint: ViewportBreakpoint = breakpoint === 'wide'
             ? 'medium'
             : breakpoint;
-        const parameterHeight = ParameterPanel.measureHeight(
+        const panelHeight = ParameterPanel.measureHeight(
             this.parameterSchema.length,
             contentWidth,
-            parameterBreakpoint,
+            panelBreakpoint,
         );
-        const equationHeight = contentWidth >= 620 ? 124 : 152;
-        const inspectorHeight = equationHeight + CONTENT_GAP + parameterHeight;
+        const equationHeight = contentWidth >= 620 ? 120 : 150;
+        const inspectorHeight = equationHeight + CONTENT_GAP + panelHeight;
         this.plotWidth = contentWidth;
-        this.plotHeight = Math.max(
-            180,
-            contentHeight - inspectorHeight - CONTENT_GAP,
+        this.plotHeight = Math.max(180, contentHeight - inspectorHeight - CONTENT_GAP);
+        const plot = this.createVisualizationPanel(
+            centerX,
+            contentTop - this.plotHeight / 2,
         );
-        const plotY = contentTop - this.plotHeight / 2;
-        const inspectorY = contentBottom + inspectorHeight / 2;
-        const plot = this.createVisualizationPanel(centerX, plotY);
         const inspector = this.createInspectorPanel(
             contentWidth,
             inspectorHeight,
             centerX,
-            inspectorY,
+            contentBottom + inspectorHeight / 2,
             true,
             equationHeight,
         );
@@ -254,8 +238,8 @@ export class RestrictedThreeBodyView {
         this.parameterPanelLayout = {
             width: contentWidth,
             x: 0,
-            y: -inspectorHeight / 2 + parameterHeight / 2,
-            breakpoint: parameterBreakpoint,
+            y: -inspectorHeight / 2 + panelHeight / 2,
+            breakpoint: panelBreakpoint,
         };
         this.createGraphicsLayers(plot);
         this.createVisualizationOverlays(plot, breakpoint === 'compact');
@@ -264,7 +248,7 @@ export class RestrictedThreeBodyView {
     private createVisualizationPanel(x: number, y: number): Node {
         const plot = createUiNode(
             this.root,
-            'RestrictedThreeBodyPlot',
+            'PlanarThreeBodyPlot',
             this.plotWidth,
             this.plotHeight,
             x,
@@ -277,10 +261,10 @@ export class RestrictedThreeBodyView {
     }
 
     private createGraphicsLayers(plot: Node): void {
-        this.sceneGraphics = this.createGraphicsLayer(plot, 'CR3BPScene');
-        this.trailGraphics = this.createGraphicsLayer(plot, 'CR3BPTrail');
-        this.bodyGraphics = this.createGraphicsLayer(plot, 'CR3BPBodies');
-        this.vectorGraphics = this.createGraphicsLayer(plot, 'CR3BPVectors');
+        this.sceneGraphics = this.createGraphicsLayer(plot, 'ThreeBodyScene');
+        this.trailGraphics = this.createGraphicsLayer(plot, 'ThreeBodyTrails');
+        this.bodyGraphics = this.createGraphicsLayer(plot, 'ThreeBodyBodies');
+        this.vectorGraphics = this.createGraphicsLayer(plot, 'ThreeBodyVectors');
     }
 
     private createInspectorPanel(
@@ -289,31 +273,31 @@ export class RestrictedThreeBodyView {
         x: number,
         y: number,
         horizontal: boolean,
-        requestedEquationHeight?: number,
+        requestedHeight?: number,
     ): Node {
         const inspector = createUiNode(
             this.root,
-            'RestrictedThreeBodyInspector',
+            'PlanarThreeBodyInspector',
             width,
             height,
             x,
             y,
         );
-        const equationHeight = requestedEquationHeight
-            ?? Math.min(282, Math.max(222, height * 0.44));
-        const equationCard = createUiNode(
+        const equationHeight = requestedHeight
+            ?? Math.min(268, Math.max(216, height * 0.43));
+        const card = createUiNode(
             inspector,
-            'CR3BPEquationCard',
+            'PlanarThreeBodyEquationCard',
             width,
             equationHeight,
             0,
             height / 2 - equationHeight / 2,
         );
-        fillNode(equationCard, width, equationHeight, palette.surfaceSoft, 9);
-        strokeNode(equationCard, width, equationHeight, palette.border, 9, 1);
+        fillNode(card, width, equationHeight, palette.surfaceSoft, 9);
+        strokeNode(card, width, equationHeight, palette.border, 9, 1);
         createLabel(
-            equationCard,
-            'CIRCULAR RESTRICTED THREE-BODY MODEL',
+            card,
+            'PLANAR NEWTONIAN THREE-BODY MOTION · z = 0',
             Math.max(1, width - 24),
             22,
             horizontal ? 9 : 10,
@@ -322,123 +306,75 @@ export class RestrictedThreeBodyView {
             equationHeight / 2 - 17,
             HorizontalTextAlignment.LEFT,
         );
+        const formula = [
+            'r̈ᵢ = G Σⱼ≠ᵢ mⱼ(rⱼ − rᵢ)',
+            '        ─────────────────',
+            '        (|rⱼ−rᵢ|²+ε²)³ᐟ²',
+            'Rcm = Σmᵢrᵢ / Σmᵢ     P = Σmᵢvᵢ',
+        ].join('\n');
+        const explanation = [
+            'all three masses are dynamic',
+            'inertial frame centered on the system barycenter',
+            'ε = 0.015 only regularizes near-contact forces',
+            'RK4 Δt = ¹⁄₆₀₀ · no stop-on-collision boundary',
+        ].join('\n');
 
         if (horizontal && width >= 650) {
-            this.createHorizontalEquationContent(
-                equationCard,
-                width,
-                equationHeight,
+            const formulaWidth = Math.max(280, width * 0.48);
+            const explanationWidth = width - formulaWidth - 36;
+            this.createMultilineLabel(
+                card,
+                formula,
+                formulaWidth,
+                equationHeight - 34,
+                11,
+                palette.primaryText,
+                -width / 2 + formulaWidth / 2 + 12,
+                -8,
+                18,
+            );
+            this.createMultilineLabel(
+                card,
+                explanation,
+                explanationWidth,
+                equationHeight - 34,
+                9,
+                palette.muted,
+                width / 2 - explanationWidth / 2 - 12,
+                -8,
+                16,
             );
         } else {
-            this.createVerticalEquationContent(
-                equationCard,
-                width,
-                equationHeight,
+            this.createMultilineLabel(
+                card,
+                formula,
+                Math.max(1, width - 24),
+                92,
+                10,
+                palette.primaryText,
+                0,
+                equationHeight / 2 - 76,
+                17,
+            );
+            this.createMultilineLabel(
+                card,
+                explanation,
+                Math.max(1, width - 24),
+                Math.max(1, equationHeight - 112),
+                9,
+                palette.muted,
+                0,
+                -equationHeight / 2 + Math.max(1, equationHeight - 112) / 2 + 8,
+                15,
             );
         }
         return inspector;
     }
 
-    private createHorizontalEquationContent(
-        card: Node,
-        width: number,
-        height: number,
-    ): void {
-        const equationWidth = Math.max(280, width * 0.48);
-        const explanationWidth = Math.max(1, width - equationWidth - 36);
-        const equationNode = createLabel(
-            card,
-            [
-                'ẍ − 2ẏ = ∂Ω/∂x',
-                'ÿ + 2ẋ = ∂Ω/∂y',
-                'Ω = ½(x²+y²) + (1−μ)/r₁ + μ/r₂',
-                'C = 2Ω − (ẋ² + ẏ²)',
-            ].join('\n'),
-            equationWidth,
-            Math.max(1, height - 34),
-            12,
-            palette.primaryText,
-            -width / 2 + equationWidth / 2 + 12,
-            -8,
-            HorizontalTextAlignment.LEFT,
-        );
-        const equationLabel = equationNode.getComponent(Label);
-        if (equationLabel) {
-            equationLabel.lineHeight = 19;
-        }
-        const explanationNode = createLabel(
-            card,
-            [
-                'equations solved in the rotating frame',
-                'inertial view transforms every point at its own time',
-                'distance = 1 · angular speed = 1 · G(m₁+m₂) = 1',
-                'm₃ ≈ 0 · RK4 Δt = ¹⁄₇₂₀ · collision 0.025 · escape 4',
-            ].join('\n'),
-            explanationWidth,
-            Math.max(1, height - 34),
-            9,
-            palette.muted,
-            width / 2 - explanationWidth / 2 - 12,
-            -8,
-            HorizontalTextAlignment.LEFT,
-        );
-        const explanationLabel = explanationNode.getComponent(Label);
-        if (explanationLabel) {
-            explanationLabel.lineHeight = 16;
-        }
-    }
-
-    private createVerticalEquationContent(
-        card: Node,
-        width: number,
-        height: number,
-    ): void {
-        const formulaHeight = 96;
-        const equationNode = createLabel(
-            card,
-            [
-                'ẍ − 2ẏ = ∂Ω/∂x     ÿ + 2ẋ = ∂Ω/∂y',
-                'Ω = ½(x²+y²) + (1−μ)/r₁ + μ/r₂',
-                'C = 2Ω − (ẋ² + ẏ²)',
-            ].join('\n'),
-            Math.max(1, width - 24),
-            formulaHeight,
-            11,
-            palette.primaryText,
-            0,
-            height / 2 - 30 - formulaHeight / 2,
-            HorizontalTextAlignment.LEFT,
-        );
-        const equationLabel = equationNode.getComponent(Label);
-        if (equationLabel) {
-            equationLabel.lineHeight = 18;
-        }
-        const explanationHeight = Math.max(1, height - formulaHeight - 36);
-        const explanationNode = createLabel(
-            card,
-            [
-                'rotating-frame integration · optional inertial display',
-                'm₃ ≈ 0 · normalized units · RK4 Δt = ¹⁄₇₂₀',
-                'C is the Jacobi integral; ΔC measures numerical drift',
-            ].join('\n'),
-            Math.max(1, width - 24),
-            explanationHeight,
-            9,
-            palette.muted,
-            0,
-            -height / 2 + explanationHeight / 2 + 8,
-            HorizontalTextAlignment.LEFT,
-        );
-        const explanationLabel = explanationNode.getComponent(Label);
-        if (explanationLabel) {
-            explanationLabel.lineHeight = 15;
-        }
-    }
-
     private createVisualizationOverlays(plot: Node, compact: boolean): void {
-        const headingNode = createLabel(
+        createLabel(
             plot,
-            'CR3BP TRAJECTORY · TWO PRIMARIES + MASSLESS THIRD BODY',
+            'INERTIAL XY PLANE · THREE TRAJECTORIES · COMMON BARYCENTER',
             Math.max(1, this.plotWidth - 32),
             22,
             compact ? 8 : 9,
@@ -447,17 +383,20 @@ export class RestrictedThreeBodyView {
             this.plotHeight / 2 - 18,
             HorizontalTextAlignment.LEFT,
         );
-        const headingLabel = headingNode.getComponent(Label);
-        if (headingLabel) {
-            headingLabel.enableWrapText = false;
-        }
-
-        const overlayWidth = Math.min(
-            520,
-            Math.max(1, this.plotWidth - 28),
+        createLabel(
+            plot,
+            '● m₁    ● m₂    ● m₃',
+            170,
+            22,
+            compact ? 8 : 9,
+            palette.muted,
+            this.plotWidth / 2 - 99,
+            this.plotHeight / 2 - 18,
+            HorizontalTextAlignment.RIGHT,
         );
+        const overlayWidth = Math.min(620, Math.max(1, this.plotWidth - 28));
         const overlayX = -this.plotWidth / 2 + overlayWidth / 2 + 14;
-        const modelNode = createLabel(
+        const model = createLabel(
             plot,
             '',
             overlayWidth,
@@ -468,12 +407,8 @@ export class RestrictedThreeBodyView {
             -this.plotHeight / 2 + 58,
             HorizontalTextAlignment.LEFT,
         );
-        this.modelLabel = modelNode.getComponent(Label);
-        if (this.modelLabel) {
-            this.modelLabel.enableWrapText = false;
-        }
-
-        const diagnosticsNode = createLabel(
+        this.modelLabel = model.getComponent(Label);
+        const diagnostics = createLabel(
             plot,
             '',
             overlayWidth,
@@ -484,16 +419,16 @@ export class RestrictedThreeBodyView {
             -this.plotHeight / 2 + 32,
             HorizontalTextAlignment.LEFT,
         );
-        this.diagnosticsLabel = diagnosticsNode.getComponent(Label);
+        this.diagnosticsLabel = diagnostics.getComponent(Label);
+        if (this.modelLabel) {
+            this.modelLabel.enableWrapText = false;
+        }
         if (this.diagnosticsLabel) {
             this.diagnosticsLabel.enableWrapText = false;
         }
     }
 
-    private drawScene(
-        state: RestrictedThreeBodyViewState,
-        span: number,
-    ): void {
+    private drawScene(state: PlanarThreeBodyViewState, span: number): void {
         const graphics = this.sceneGraphics;
         if (!graphics) {
             return;
@@ -501,9 +436,8 @@ export class RestrictedThreeBodyView {
         graphics.clear();
         graphics.strokeColor = palette.border;
         graphics.lineWidth = 1;
-
-        const integerLimit = Math.floor(span);
-        for (let value = -integerLimit; value <= integerLimit; value += 1) {
+        const limit = Math.floor(span);
+        for (let value = -limit; value <= limit; value += 1) {
             const verticalA = this.project({ x: value, y: -span });
             const verticalB = this.project({ x: value, y: span });
             graphics.moveTo(verticalA.x, verticalA.y);
@@ -515,266 +449,133 @@ export class RestrictedThreeBodyView {
         }
         graphics.stroke();
 
-        const time = state.snapshot.elapsedTime;
-        const primary = this.project(this.transformPosition(
-            state.primary,
-            time,
-            state.referenceFrame,
-        ));
-        const secondary = this.project(this.transformPosition(
-            state.secondary,
-            time,
-            state.referenceFrame,
-        ));
-        graphics.strokeColor = palette.borderStrong;
-        graphics.lineWidth = 1.2;
-        graphics.moveTo(primary.x, primary.y);
-        graphics.lineTo(secondary.x, secondary.y);
-        graphics.stroke();
-
-        if (state.showLagrangePoints) {
-            this.drawLagrangePoints(
-                graphics,
-                state.lagrangePoints,
-                time,
-                state.referenceFrame,
-            );
+        if (state.showBarycenter) {
+            const center = this.project(state.diagnostics.barycenter);
+            graphics.strokeColor = palette.text;
+            graphics.lineWidth = 1.2;
+            graphics.circle(center.x, center.y, 6);
+            graphics.moveTo(center.x - 9, center.y);
+            graphics.lineTo(center.x + 9, center.y);
+            graphics.moveTo(center.x, center.y - 9);
+            graphics.lineTo(center.x, center.y + 9);
+            graphics.stroke();
         }
     }
 
-    private drawLagrangePoints(
-        graphics: Graphics,
-        points: readonly CR3BPLagrangePoint[],
-        time: number,
-        frame: CR3BPReferenceFrame,
-    ): void {
-        graphics.strokeColor = LAGRANGE_COLOR;
-        graphics.lineWidth = 1;
-        for (const point of points) {
-            const projected = this.project(
-                this.transformPosition(point, time, frame),
-            );
-            const radius = 4;
-            graphics.moveTo(projected.x - radius, projected.y);
-            graphics.lineTo(projected.x + radius, projected.y);
-            graphics.moveTo(projected.x, projected.y - radius);
-            graphics.lineTo(projected.x, projected.y + radius);
-        }
-        graphics.stroke();
-    }
-
-    private drawTrail(state: RestrictedThreeBodyViewState): void {
+    private drawTrails(state: PlanarThreeBodyViewState): void {
         const graphics = this.trailGraphics;
         if (!graphics) {
             return;
         }
         graphics.clear();
-        if (state.trail.length < 2) {
-            return;
-        }
-        graphics.strokeColor = TRAIL_COLOR;
-        graphics.lineWidth = 1.7;
-        state.trail.forEach((point, index) => {
-            const projected = this.project(this.transformTrailPoint(
-                point,
-                state.referenceFrame,
-            ));
-            if (index === 0) {
-                graphics.moveTo(projected.x, projected.y);
-            } else {
-                graphics.lineTo(projected.x, projected.y);
+        state.trails.forEach((trail, bodyIndex) => {
+            if (trail.length < 2) {
+                return;
             }
+            graphics.strokeColor = TRAIL_COLORS[bodyIndex] ?? TRAIL_COLORS[0];
+            graphics.lineWidth = 1.7;
+            trail.forEach((point, index) => {
+                const projected = this.project(point);
+                if (index === 0) {
+                    graphics.moveTo(projected.x, projected.y);
+                } else {
+                    graphics.lineTo(projected.x, projected.y);
+                }
+            });
+            graphics.stroke();
         });
-        graphics.stroke();
     }
 
-    private drawBodies(state: RestrictedThreeBodyViewState): void {
+    private drawBodies(bodies: readonly PlanarBodyState[]): void {
         const graphics = this.bodyGraphics;
         if (!graphics) {
             return;
         }
         graphics.clear();
-        const time = state.snapshot.elapsedTime;
-        const primary = this.project(this.transformPosition(
-            state.primary,
-            time,
-            state.referenceFrame,
-        ));
-        const secondary = this.project(this.transformPosition(
-            state.secondary,
-            time,
-            state.referenceFrame,
-        ));
-        const third = this.project(this.transformPosition(
-            state.snapshot.state,
-            time,
-            state.referenceFrame,
-        ));
-
-        graphics.fillColor = PRIMARY_BODY_COLOR;
-        graphics.circle(primary.x, primary.y, 15);
-        graphics.fill();
-        graphics.fillColor = SECONDARY_BODY_COLOR;
-        graphics.circle(secondary.x, secondary.y, 8);
-        graphics.fill();
-        graphics.fillColor = THIRD_BODY_COLOR;
-        graphics.circle(third.x, third.y, 5.5);
-        graphics.fill();
-
-        graphics.strokeColor = new Color(
-            THIRD_BODY_COLOR.r,
-            THIRD_BODY_COLOR.g,
-            THIRD_BODY_COLOR.b,
-            110,
-        );
-        graphics.lineWidth = 1;
-        graphics.circle(third.x, third.y, 10);
-        graphics.stroke();
+        bodies.forEach((body, index) => {
+            const point = this.project(body);
+            graphics.fillColor = BODY_COLORS[index] ?? BODY_COLORS[0];
+            graphics.circle(
+                point.x,
+                point.y,
+                Math.max(5, Math.min(12, 6.5 * Math.sqrt(body.mass))),
+            );
+            graphics.fill();
+        });
     }
 
-    private drawVectors(state: RestrictedThreeBodyViewState): void {
+    private drawVectors(state: PlanarThreeBodyViewState): void {
         const graphics = this.vectorGraphics;
         if (!graphics) {
             return;
         }
         graphics.clear();
-        if (!state.showGravityVectors) {
+        if (!state.showVelocityVectors) {
             return;
         }
-        const time = state.snapshot.elapsedTime;
-        const origin = this.project(this.transformPosition(
-            state.snapshot.state,
-            time,
-            state.referenceFrame,
-        ));
-        this.drawArrow(
-            graphics,
-            origin,
-            this.transformVector(
-                state.gravityVectors.primary,
-                time,
-                state.referenceFrame,
-            ),
-            FORCE_PRIMARY_COLOR,
-        );
-        this.drawArrow(
-            graphics,
-            origin,
-            this.transformVector(
-                state.gravityVectors.secondary,
-                time,
-                state.referenceFrame,
-            ),
-            FORCE_SECONDARY_COLOR,
-        );
+        state.snapshot.bodies.forEach((body, index) => {
+            const start = this.project(body);
+            const speed = Math.hypot(body.vx, body.vy);
+            if (speed < 1e-8) {
+                return;
+            }
+            const length = Math.min(48, 18 + speed * 18);
+            const direction = { x: body.vx / speed, y: body.vy / speed };
+            const end = {
+                x: start.x + direction.x * length,
+                y: start.y + direction.y * length,
+            };
+            graphics.strokeColor = BODY_COLORS[index] ?? BODY_COLORS[0];
+            graphics.lineWidth = 1.4;
+            graphics.moveTo(start.x, start.y);
+            graphics.lineTo(end.x, end.y);
+            graphics.stroke();
+            this.drawArrowHead(graphics, start, end);
+        });
     }
 
-    private drawArrow(
+    private drawArrowHead(
         graphics: Graphics,
-        origin: CR3BPVector,
-        vector: CR3BPVector,
-        color: Color,
+        start: PlanarVector,
+        end: PlanarVector,
     ): void {
-        const magnitude = Math.hypot(vector.x, vector.y);
-        if (!Number.isFinite(magnitude) || magnitude < 1e-9) {
-            return;
-        }
-        const length = Math.min(72, 18 + Math.log10(1 + magnitude) * 18);
-        const ux = vector.x / magnitude;
-        const uy = vector.y / magnitude;
-        const end = {
-            x: origin.x + ux * length,
-            y: origin.y + uy * length,
-        };
-        const sideX = -uy;
-        const sideY = ux;
-        graphics.strokeColor = color;
-        graphics.lineWidth = 1.4;
-        graphics.moveTo(origin.x, origin.y);
-        graphics.lineTo(end.x, end.y);
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        const length = Math.max(1e-6, Math.hypot(dx, dy));
+        const ux = dx / length;
+        const uy = dy / length;
+        const size = 5;
         graphics.moveTo(end.x, end.y);
         graphics.lineTo(
-            end.x - ux * 8 + sideX * 4,
-            end.y - uy * 8 + sideY * 4,
+            end.x - ux * size - uy * size * 0.55,
+            end.y - uy * size + ux * size * 0.55,
         );
         graphics.moveTo(end.x, end.y);
         graphics.lineTo(
-            end.x - ux * 8 - sideX * 4,
-            end.y - uy * 8 - sideY * 4,
+            end.x - ux * size + uy * size * 0.55,
+            end.y - uy * size - ux * size * 0.55,
         );
         graphics.stroke();
     }
 
-    private calculateWorldSpan(state: RestrictedThreeBodyViewState): number {
-        let maximumRadius = 1.08;
-        for (const point of state.trail) {
-            maximumRadius = Math.max(
-                maximumRadius,
-                Math.abs(point.x),
-                Math.abs(point.y),
-            );
+    private calculateWorldSpan(state: PlanarThreeBodyViewState): number {
+        let span = 1.35;
+        for (const body of state.snapshot.bodies) {
+            span = Math.max(span, Math.abs(body.x), Math.abs(body.y));
         }
-        maximumRadius = Math.max(
-            maximumRadius,
-            Math.abs(state.snapshot.state.x),
-            Math.abs(state.snapshot.state.y),
-        );
-        return Math.min(4.2, Math.max(1.18, maximumRadius * 1.14));
-    }
-
-    private transformTrailPoint(
-        point: CR3BPTrailPoint,
-        frame: CR3BPReferenceFrame,
-    ): CR3BPVector {
-        return this.transformPosition(point, point.time, frame);
-    }
-
-    private transformPosition(
-        point: CR3BPVector,
-        time: number,
-        frame: CR3BPReferenceFrame,
-    ): CR3BPVector {
-        if (frame === 'rotating') {
-            return point;
+        for (const trail of state.trails) {
+            for (const point of trail) {
+                span = Math.max(span, Math.abs(point.x), Math.abs(point.y));
+            }
         }
-        const cosine = Math.cos(time);
-        const sine = Math.sin(time);
-        return {
-            x: point.x * cosine - point.y * sine,
-            y: point.x * sine + point.y * cosine,
-        };
+        return Math.min(8, span * 1.16);
     }
 
-    private transformVector(
-        vector: CR3BPVector,
-        time: number,
-        frame: CR3BPReferenceFrame,
-    ): CR3BPVector {
-        return this.transformPosition(vector, time, frame);
-    }
-
-    private project(point: CR3BPVector): CR3BPVector {
+    private project(point: PlanarVector): PlanarVector {
         return {
             x: point.x * this.worldScale,
             y: point.y * this.worldScale,
         };
-    }
-
-    private rebuildParameterPanel(): void {
-        const parent = this.parameterPanelParent;
-        const layout = this.parameterPanelLayout;
-        if (!parent || !layout) {
-            return;
-        }
-        this.parameterPanel?.destroy();
-        this.parameterPanel = new ParameterPanel(
-            parent,
-            this.parameterSchema,
-            this.viewModel,
-            (key) => this.actions.parameterChanged(key),
-            (error) => this.actions.reportError(error),
-        );
-        this.parameterPanel.render(layout);
     }
 
     private createGraphicsLayer(parent: Node, name: string): Graphics {
@@ -784,5 +585,57 @@ export class RestrictedThreeBodyView {
             this.plotWidth,
             this.plotHeight,
         ).addComponent(Graphics);
+    }
+
+    private createMultilineLabel(
+        parent: Node,
+        text: string,
+        width: number,
+        height: number,
+        fontSize: number,
+        color: Color,
+        x: number,
+        y: number,
+        lineHeight: number,
+    ): void {
+        const node = createLabel(
+            parent,
+            text,
+            width,
+            Math.max(1, height),
+            fontSize,
+            color,
+            x,
+            y,
+            HorizontalTextAlignment.LEFT,
+        );
+        const label = node.getComponent(Label);
+        if (label) {
+            label.lineHeight = lineHeight;
+        }
+    }
+
+    private rebuildParameterPanel(): void {
+        const parent = this.parameterPanelParent;
+        const layout = this.parameterPanelLayout;
+        if (!parent || !layout) {
+            return;
+        }
+        this.parameterPanel?.destroy();
+        try {
+            this.parameterPanel = new ParameterPanel(
+                parent,
+                this.parameterSchema,
+                this.viewModel,
+                {
+                    changed: (key) => this.actions.parameterChanged(key),
+                    reportError: (error) => this.actions.reportError(error),
+                },
+            );
+            this.parameterPanel.layout(layout);
+        } catch (error) {
+            this.parameterPanel = null;
+            this.actions.reportError(error);
+        }
     }
 }
