@@ -1,11 +1,15 @@
 import { DoublePendulumModel } from './double-pendulum/DoublePendulumModel';
 import { LorenzAttractorModel } from './lorenz-attractor/LorenzAttractorModel';
+import { RestrictedThreeBodyModel } from './restricted-three-body/RestrictedThreeBodyModel';
 
 export function runPhysicsModelContractChecks(): void {
     checkDoublePendulumEnergy();
     checkLorenzEquilibrium();
     checkLorenzDeterminism();
     checkLorenzSensitivity();
+    checkRestrictedThreeBodyL4Equilibrium();
+    checkRestrictedThreeBodyDeterminism();
+    checkRestrictedThreeBodyJacobiDrift();
 }
 
 function checkDoublePendulumEnergy(): void {
@@ -63,6 +67,51 @@ function checkLorenzSensitivity(): void {
     }
     const final = model.diagnostics().separation;
     assert(final > initial * 100, 'Lorenz nearby trajectories did not separate');
+}
+
+function checkRestrictedThreeBodyL4Equilibrium(): void {
+    const mu = 0.01215;
+    const model = new RestrictedThreeBodyModel({ mu });
+    const initial = {
+        x: 0.5 - mu,
+        y: Math.sqrt(3) / 2,
+        vx: 0,
+        vy: 0,
+    };
+    model.reset(initial);
+    for (let index = 0; index < 720; index += 1) {
+        model.step(1 / 720);
+    }
+    const state = model.snapshot().state;
+    assert(
+        Math.hypot(state.x - initial.x, state.y - initial.y) < 1e-8,
+        'Restricted three-body L4 equilibrium drifted',
+    );
+}
+
+function checkRestrictedThreeBodyDeterminism(): void {
+    const first = new RestrictedThreeBodyModel({ mu: 0.01215 });
+    const second = new RestrictedThreeBodyModel({ mu: 0.01215 });
+    for (let index = 0; index < 1200; index += 1) {
+        first.step(1 / 720);
+        second.step(1 / 720);
+    }
+    assertEqual(
+        first.snapshot(),
+        second.snapshot(),
+        'Restricted three-body integration is not deterministic',
+    );
+}
+
+function checkRestrictedThreeBodyJacobiDrift(): void {
+    const model = new RestrictedThreeBodyModel({ mu: 0.01215 });
+    for (let index = 0; index < 1200; index += 1) {
+        model.step(1 / 720);
+    }
+    assert(
+        model.diagnostics().normalizedJacobiDrift < 1e-6,
+        'Restricted three-body Jacobi drift exceeded the preview contract',
+    );
 }
 
 function assert(condition: boolean, message: string): void {
