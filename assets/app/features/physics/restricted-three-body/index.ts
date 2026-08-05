@@ -1,0 +1,1 @@
+export { restrictedThreeBodyDefinition } from './RestrictedThreeBodyDefinition';
