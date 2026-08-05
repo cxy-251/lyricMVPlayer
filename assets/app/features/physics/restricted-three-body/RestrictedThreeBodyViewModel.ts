@@ -232,7 +232,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
                 `t ${snapshot.elapsedTime.toFixed(2)}`,
                 `C ${diagnostics.jacobiConstant.toFixed(5)}`,
                 `ΔC ${diagnostics.normalizedJacobiDrift.toExponential(2)}`,
-                `|v| ${diagnostics.speed.toFixed(3)}`,
+                `|v_rot| ${diagnostics.speed.toFixed(3)}`,
             ].join(' · '),
             modelSummary: [
                 `${referenceFrame.toUpperCase()} VIEW`,
