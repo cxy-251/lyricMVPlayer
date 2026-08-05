@@ -4,6 +4,7 @@ import { defineLabManifest } from '../../core/ManifestValidator';
 import { doublePendulumDefinition } from './double-pendulum';
 import { lorenzAttractorDefinition } from './lorenz-attractor';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
+import { restrictedThreeBodyDefinition } from './restricted-three-body';
 
 if (PREVIEW) {
     runPhysicsModelContractChecks();
@@ -20,5 +21,6 @@ export const physicsLab: LabManifest = defineLabManifest({
     modules: [
         doublePendulumDefinition,
         lorenzAttractorDefinition,
+        restrictedThreeBodyDefinition,
     ],
 });
