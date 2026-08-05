@@ -16,6 +16,7 @@ const MAXIMUM_SUBSTEPS = 48;
 const TRAIL_CAPACITY = 2400;
 const SAMPLE_INTERVAL = 4;
 const CLASSIC_BETA = 8 / 3;
+const FRACTION_MATCH_TOLERANCE = 5e-7;
 
 const DEFAULT_PARAMETERS: LorenzParameters = {
     sigma: 10,
@@ -57,8 +58,11 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
         minimum: 0.5,
         maximum: 8,
         step: 1 / 30,
-        decimals: 3,
+        decimals: 6,
         unit: '',
+        formatValue: (value) => Math.abs(value - CLASSIC_BETA) < FRACTION_MATCH_TOLERANCE
+            ? '⁸⁄₃'
+            : value.toFixed(3),
     },
     {
         kind: 'number',
@@ -318,7 +322,7 @@ export class LorenzAttractorViewModel extends ParameterController {
     }
 
     private formatBeta(value: number): string {
-        return Math.abs(value - CLASSIC_BETA) < 1e-9
+        return Math.abs(value - CLASSIC_BETA) < FRACTION_MATCH_TOLERANCE
             ? '⁸⁄₃'
             : value.toFixed(3);
     }
