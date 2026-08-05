@@ -24,6 +24,8 @@ import {
 } from '../../../ui/UiFactory';
 import type {
     CR3BPLagrangePoint,
+    CR3BPReferenceFrame,
+    CR3BPTrailPoint,
     CR3BPVector,
     RestrictedThreeBodyViewState,
 } from './RestrictedThreeBodyTypes';
@@ -143,7 +145,6 @@ export class RestrictedThreeBodyView {
             Math.max(1, (this.plotWidth - 54) / (span * 2)),
             Math.max(1, (this.plotHeight - 66) / (span * 2)),
         );
-
         this.drawScene(state, span);
         this.drawTrail(state);
         this.drawBodies(state);
@@ -231,7 +232,7 @@ export class RestrictedThreeBodyView {
             contentWidth,
             parameterBreakpoint,
         );
-        const equationHeight = contentWidth >= 620 ? 116 : 142;
+        const equationHeight = contentWidth >= 620 ? 124 : 152;
         const inspectorHeight = equationHeight + CONTENT_GAP + parameterHeight;
         this.plotWidth = contentWidth;
         this.plotHeight = Math.max(
@@ -299,7 +300,7 @@ export class RestrictedThreeBodyView {
             y,
         );
         const equationHeight = requestedEquationHeight
-            ?? Math.min(270, Math.max(210, height * 0.43));
+            ?? Math.min(282, Math.max(222, height * 0.44));
         const equationCard = createUiNode(
             inspector,
             'CR3BPEquationCard',
@@ -343,14 +344,19 @@ export class RestrictedThreeBodyView {
         width: number,
         height: number,
     ): void {
-        const equationWidth = Math.max(230, width * 0.42);
+        const equationWidth = Math.max(280, width * 0.48);
         const explanationWidth = Math.max(1, width - equationWidth - 36);
         const equationNode = createLabel(
             card,
-            'ẍ − 2ẏ = ∂Ω/∂x\nÿ + 2ẋ = ∂Ω/∂y\nC = 2Ω − (ẋ² + ẏ²)',
+            [
+                'ẍ − 2ẏ = ∂Ω/∂x',
+                'ÿ + 2ẋ = ∂Ω/∂y',
+                'Ω = ½(x²+y²) + (1−μ)/r₁ + μ/r₂',
+                'C = 2Ω − (ẋ² + ẏ²)',
+            ].join('\n'),
             equationWidth,
             Math.max(1, height - 34),
-            13,
+            12,
             palette.primaryText,
             -width / 2 + equationWidth / 2 + 12,
             -8,
@@ -358,15 +364,15 @@ export class RestrictedThreeBodyView {
         );
         const equationLabel = equationNode.getComponent(Label);
         if (equationLabel) {
-            equationLabel.lineHeight = 21;
+            equationLabel.lineHeight = 19;
         }
         const explanationNode = createLabel(
             card,
             [
-                'two primaries follow a prescribed circular orbit',
-                'third-body mass is neglected · rotating frame',
+                'equations solved in the rotating frame',
+                'inertial view transforms every point at its own time',
                 'distance = 1 · angular speed = 1 · G(m₁+m₂) = 1',
-                'RK4 Δt = ¹⁄₇₂₀ · collision radius 0.025 · escape radius 4',
+                'm₃ ≈ 0 · RK4 Δt = ¹⁄₇₂₀ · collision 0.025 · escape 4',
             ].join('\n'),
             explanationWidth,
             Math.max(1, height - 34),
@@ -387,34 +393,40 @@ export class RestrictedThreeBodyView {
         width: number,
         height: number,
     ): void {
+        const formulaHeight = 96;
         const equationNode = createLabel(
             card,
-            'ẍ − 2ẏ = ∂Ω/∂x\nÿ + 2ẋ = ∂Ω/∂y\nC = 2Ω − (ẋ² + ẏ²)',
+            [
+                'ẍ − 2ẏ = ∂Ω/∂x     ÿ + 2ẋ = ∂Ω/∂y',
+                'Ω = ½(x²+y²) + (1−μ)/r₁ + μ/r₂',
+                'C = 2Ω − (ẋ² + ẏ²)',
+            ].join('\n'),
             Math.max(1, width - 24),
-            76,
-            13,
+            formulaHeight,
+            11,
             palette.primaryText,
             0,
-            height / 2 - 72,
+            height / 2 - 30 - formulaHeight / 2,
             HorizontalTextAlignment.LEFT,
         );
         const equationLabel = equationNode.getComponent(Label);
         if (equationLabel) {
-            equationLabel.lineHeight = 21;
+            equationLabel.lineHeight = 18;
         }
+        const explanationHeight = Math.max(1, height - formulaHeight - 36);
         const explanationNode = createLabel(
             card,
             [
-                'rotating frame · normalized distance and time',
-                'm₃ ≈ 0 · RK4 Δt = ¹⁄₇₂₀',
+                'rotating-frame integration · optional inertial display',
+                'm₃ ≈ 0 · normalized units · RK4 Δt = ¹⁄₇₂₀',
                 'C is the Jacobi integral; ΔC measures numerical drift',
             ].join('\n'),
             Math.max(1, width - 24),
-            Math.max(1, height - 106),
+            explanationHeight,
             9,
             palette.muted,
             0,
-            -height / 2 + Math.max(1, height - 106) / 2 + 8,
+            -height / 2 + explanationHeight / 2 + 8,
             HorizontalTextAlignment.LEFT,
         );
         const explanationLabel = explanationNode.getComponent(Label);
@@ -426,7 +438,7 @@ export class RestrictedThreeBodyView {
     private createVisualizationOverlays(plot: Node, compact: boolean): void {
         const headingNode = createLabel(
             plot,
-            'ROTATING FRAME · TWO PRIMARIES + MASSLESS THIRD BODY',
+            'CR3BP TRAJECTORY · TWO PRIMARIES + MASSLESS THIRD BODY',
             Math.max(1, this.plotWidth - 32),
             22,
             compact ? 8 : 9,
@@ -440,16 +452,19 @@ export class RestrictedThreeBodyView {
             headingLabel.enableWrapText = false;
         }
 
+        const overlayWidth = Math.min(
+            520,
+            Math.max(1, this.plotWidth - 28),
+        );
+        const overlayX = -this.plotWidth / 2 + overlayWidth / 2 + 14;
         const modelNode = createLabel(
             plot,
             '',
-            Math.min(460, Math.max(1, this.plotWidth - 28)),
+            overlayWidth,
             24,
             compact ? 8 : 10,
             palette.muted,
-            -this.plotWidth / 2
-                + Math.min(460, Math.max(1, this.plotWidth - 28)) / 2
-                + 14,
+            overlayX,
             -this.plotHeight / 2 + 58,
             HorizontalTextAlignment.LEFT,
         );
@@ -461,13 +476,11 @@ export class RestrictedThreeBodyView {
         const diagnosticsNode = createLabel(
             plot,
             '',
-            Math.min(460, Math.max(1, this.plotWidth - 28)),
+            overlayWidth,
             24,
             compact ? 8 : 10,
             palette.muted,
-            -this.plotWidth / 2
-                + Math.min(460, Math.max(1, this.plotWidth - 28)) / 2
-                + 14,
+            overlayX,
             -this.plotHeight / 2 + 32,
             HorizontalTextAlignment.LEFT,
         );
@@ -502,8 +515,17 @@ export class RestrictedThreeBodyView {
         }
         graphics.stroke();
 
-        const primary = this.project(state.primary);
-        const secondary = this.project(state.secondary);
+        const time = state.snapshot.elapsedTime;
+        const primary = this.project(this.transformPosition(
+            state.primary,
+            time,
+            state.referenceFrame,
+        ));
+        const secondary = this.project(this.transformPosition(
+            state.secondary,
+            time,
+            state.referenceFrame,
+        ));
         graphics.strokeColor = palette.borderStrong;
         graphics.lineWidth = 1.2;
         graphics.moveTo(primary.x, primary.y);
@@ -511,18 +533,27 @@ export class RestrictedThreeBodyView {
         graphics.stroke();
 
         if (state.showLagrangePoints) {
-            this.drawLagrangePoints(graphics, state.lagrangePoints);
+            this.drawLagrangePoints(
+                graphics,
+                state.lagrangePoints,
+                time,
+                state.referenceFrame,
+            );
         }
     }
 
     private drawLagrangePoints(
         graphics: Graphics,
         points: readonly CR3BPLagrangePoint[],
+        time: number,
+        frame: CR3BPReferenceFrame,
     ): void {
         graphics.strokeColor = LAGRANGE_COLOR;
         graphics.lineWidth = 1;
         for (const point of points) {
-            const projected = this.project(point);
+            const projected = this.project(
+                this.transformPosition(point, time, frame),
+            );
             const radius = 4;
             graphics.moveTo(projected.x - radius, projected.y);
             graphics.lineTo(projected.x + radius, projected.y);
@@ -544,7 +575,10 @@ export class RestrictedThreeBodyView {
         graphics.strokeColor = TRAIL_COLOR;
         graphics.lineWidth = 1.7;
         state.trail.forEach((point, index) => {
-            const projected = this.project(point);
+            const projected = this.project(this.transformTrailPoint(
+                point,
+                state.referenceFrame,
+            ));
             if (index === 0) {
                 graphics.moveTo(projected.x, projected.y);
             } else {
@@ -560,9 +594,22 @@ export class RestrictedThreeBodyView {
             return;
         }
         graphics.clear();
-        const primary = this.project(state.primary);
-        const secondary = this.project(state.secondary);
-        const third = this.project(state.snapshot.state);
+        const time = state.snapshot.elapsedTime;
+        const primary = this.project(this.transformPosition(
+            state.primary,
+            time,
+            state.referenceFrame,
+        ));
+        const secondary = this.project(this.transformPosition(
+            state.secondary,
+            time,
+            state.referenceFrame,
+        ));
+        const third = this.project(this.transformPosition(
+            state.snapshot.state,
+            time,
+            state.referenceFrame,
+        ));
 
         graphics.fillColor = PRIMARY_BODY_COLOR;
         graphics.circle(primary.x, primary.y, 15);
@@ -594,17 +641,30 @@ export class RestrictedThreeBodyView {
         if (!state.showGravityVectors) {
             return;
         }
-        const origin = this.project(state.snapshot.state);
+        const time = state.snapshot.elapsedTime;
+        const origin = this.project(this.transformPosition(
+            state.snapshot.state,
+            time,
+            state.referenceFrame,
+        ));
         this.drawArrow(
             graphics,
             origin,
-            state.gravityVectors.primary,
+            this.transformVector(
+                state.gravityVectors.primary,
+                time,
+                state.referenceFrame,
+            ),
             FORCE_PRIMARY_COLOR,
         );
         this.drawArrow(
             graphics,
             origin,
-            state.gravityVectors.secondary,
+            this.transformVector(
+                state.gravityVectors.secondary,
+                time,
+                state.referenceFrame,
+            ),
             FORCE_SECONDARY_COLOR,
         );
     }
@@ -660,6 +720,37 @@ export class RestrictedThreeBodyView {
             Math.abs(state.snapshot.state.y),
         );
         return Math.min(4.2, Math.max(1.18, maximumRadius * 1.14));
+    }
+
+    private transformTrailPoint(
+        point: CR3BPTrailPoint,
+        frame: CR3BPReferenceFrame,
+    ): CR3BPVector {
+        return this.transformPosition(point, point.time, frame);
+    }
+
+    private transformPosition(
+        point: CR3BPVector,
+        time: number,
+        frame: CR3BPReferenceFrame,
+    ): CR3BPVector {
+        if (frame === 'rotating') {
+            return point;
+        }
+        const cosine = Math.cos(time);
+        const sine = Math.sin(time);
+        return {
+            x: point.x * cosine - point.y * sine,
+            y: point.x * sine + point.y * cosine,
+        };
+    }
+
+    private transformVector(
+        vector: CR3BPVector,
+        time: number,
+        frame: CR3BPReferenceFrame,
+    ): CR3BPVector {
+        return this.transformPosition(vector, time, frame);
     }
 
     private project(point: CR3BPVector): CR3BPVector {
