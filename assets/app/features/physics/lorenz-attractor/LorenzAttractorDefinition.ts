@@ -9,6 +9,7 @@ export const lorenzAttractorDefinition: VisibleModuleDefinition = {
     labId: 'physics',
     catalog: {
         subtitle: 'convection model and sensitive dependence',
+        cover: 'lorenz-attractor',
     },
     tags: ['chaos', 'convection', 'nonlinear-dynamics', 'rk4'],
     capabilities: ['pause', 'reset', 'settings'],
