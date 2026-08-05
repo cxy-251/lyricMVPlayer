@@ -23,16 +23,110 @@ const DEFAULT_PARAMETERS: LorenzParameters = {
 };
 
 export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
-    { kind: 'number', key: 'sigma', label: 'Prandtl parameter σ', defaultValue: 10, minimum: 1, maximum: 24, step: 0.5, decimals: 1, unit: '' },
-    { kind: 'number', key: 'rho', label: 'Rayleigh parameter ρ', defaultValue: 28, minimum: 0.5, maximum: 60, step: 0.5, decimals: 1, unit: '' },
-    { kind: 'number', key: 'beta', label: 'Geometry parameter β', defaultValue: 2.67, minimum: 0.5, maximum: 8, step: 0.1, decimals: 2, unit: '' },
-    { kind: 'number', key: 'initialX', label: 'Initial x', defaultValue: 1, minimum: -20, maximum: 20, step: 0.5, decimals: 1, unit: '' },
-    { kind: 'number', key: 'initialY', label: 'Initial y', defaultValue: 1, minimum: -20, maximum: 20, step: 0.5, decimals: 1, unit: '' },
-    { kind: 'number', key: 'initialZ', label: 'Initial z', defaultValue: 1, minimum: 0, maximum: 50, step: 0.5, decimals: 1, unit: '' },
-    { kind: 'number', key: 'perturbation', label: 'Initial separation', defaultValue: 0.00001, minimum: 0.000001, maximum: 0.01, step: 0.000001, decimals: 6, unit: '' },
-    { kind: 'number', key: 'speed', label: 'Time scale', defaultValue: 1, minimum: 0.25, maximum: 3, step: 0.25, decimals: 2, unit: '×' },
-    { kind: 'toggle', key: 'showShadow', label: 'Nearby trajectory', defaultValue: true, onLabel: 'VISIBLE', offLabel: 'HIDDEN' },
-    { kind: 'toggle', key: 'rotateView', label: 'Auto rotation', defaultValue: true, onLabel: 'ON', offLabel: 'OFF' },
+    {
+        kind: 'number',
+        key: 'sigma',
+        label: 'Prandtl parameter σ',
+        defaultValue: 10,
+        minimum: 1,
+        maximum: 24,
+        step: 0.5,
+        decimals: 1,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'rho',
+        label: 'Rayleigh parameter ρ',
+        defaultValue: 28,
+        minimum: 0.5,
+        maximum: 60,
+        step: 0.5,
+        decimals: 1,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'beta',
+        label: 'Geometry parameter β',
+        defaultValue: 2.67,
+        minimum: 0.5,
+        maximum: 8,
+        step: 0.1,
+        decimals: 2,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'initialX',
+        label: 'Initial x',
+        defaultValue: 1,
+        minimum: -20,
+        maximum: 20,
+        step: 0.5,
+        decimals: 1,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'initialY',
+        label: 'Initial y',
+        defaultValue: 1,
+        minimum: -20,
+        maximum: 20,
+        step: 0.5,
+        decimals: 1,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'initialZ',
+        label: 'Initial z',
+        defaultValue: 1,
+        minimum: 0,
+        maximum: 50,
+        step: 0.5,
+        decimals: 1,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'perturbation',
+        label: 'Initial separation',
+        defaultValue: 0.00001,
+        minimum: 0.000001,
+        maximum: 0.01,
+        step: 0.000001,
+        decimals: 6,
+        unit: '',
+    },
+    {
+        kind: 'number',
+        key: 'speed',
+        label: 'Time scale',
+        defaultValue: 1,
+        minimum: 0.25,
+        maximum: 3,
+        step: 0.25,
+        decimals: 2,
+        unit: '×',
+    },
+    {
+        kind: 'toggle',
+        key: 'showShadow',
+        label: 'Nearby trajectory',
+        defaultValue: true,
+        onLabel: 'VISIBLE',
+        offLabel: 'HIDDEN',
+    },
+    {
+        kind: 'toggle',
+        key: 'rotateView',
+        label: 'Auto rotation',
+        defaultValue: true,
+        onLabel: 'ON',
+        offLabel: 'OFF',
+    },
 ];
 
 export interface LorenzAttractorViewModelCallbacks {
@@ -50,8 +144,15 @@ export class LorenzAttractorViewModel extends ParameterController {
     private sampleCounter = 0;
     private viewAngle = 0;
 
-    constructor(storage: StorageService, private readonly callbacks: LorenzAttractorViewModelCallbacks) {
-        super(storage, 'module:lorenz-attractor:parameters-v1', LORENZ_ATTRACTOR_PARAMETER_SCHEMA);
+    constructor(
+        storage: StorageService,
+        private readonly callbacks: LorenzAttractorViewModelCallbacks,
+    ) {
+        super(
+            storage,
+            'module:lorenz-attractor:parameters-v1',
+            LORENZ_ATTRACTOR_PARAMETER_SCHEMA,
+        );
         this.resetModelFromParameters();
     }
 
@@ -59,23 +160,33 @@ export class LorenzAttractorViewModel extends ParameterController {
         if (this.paused) {
             return false;
         }
-        const speed = this.getNumber('speed');
-        const steps = this.clock.advance(dt, speed, (step) => {
-            this.model.step(step);
-            this.sampleCounter += 1;
-            if (this.sampleCounter >= SAMPLE_INTERVAL) {
-                this.sampleCounter = 0;
-                this.pushTrailPoints();
-            }
-        });
+
+        const steps = this.clock.advance(
+            dt,
+            this.getNumber('speed'),
+            (step) => {
+                this.model.step(step);
+                this.sampleCounter += 1;
+                if (this.sampleCounter >= SAMPLE_INTERVAL) {
+                    this.sampleCounter = 0;
+                    this.pushTrailPoints();
+                }
+            },
+        );
+
         if (this.getBoolean('rotateView')) {
             this.viewAngle = (this.viewAngle + dt * 0.22) % (Math.PI * 2);
         }
         return steps > 0;
     }
 
-    pause(): void { this.paused = true; }
-    resume(): void { this.paused = false; }
+    pause(): void {
+        this.paused = true;
+    }
+
+    resume(): void {
+        this.paused = false;
+    }
 
     reset(): void {
         this.cancelPendingParameterApply();
@@ -138,7 +249,9 @@ export class LorenzAttractorViewModel extends ParameterController {
     }
 
     private cancelPendingParameterApply(): void {
-        if (this.parameterApplyTimer === null) return;
+        if (this.parameterApplyTimer === null) {
+            return;
+        }
         clearTimeout(this.parameterApplyTimer);
         this.parameterApplyTimer = null;
     }
@@ -146,7 +259,10 @@ export class LorenzAttractorViewModel extends ParameterController {
     private resetModelFromParameters(): void {
         this.model.setParameters(this.readParameters());
         const primary = this.readInitialState();
-        const shadow = { ...primary, x: primary.x + this.getNumber('perturbation') };
+        const shadow = {
+            ...primary,
+            x: primary.x + this.getNumber('perturbation'),
+        };
         this.model.reset(primary, shadow);
         this.clock.reset();
         this.sampleCounter = 0;
@@ -174,8 +290,14 @@ export class LorenzAttractorViewModel extends ParameterController {
 
     private pushTrailPoints(): void {
         const snapshot = this.model.snapshot();
-        this.pushBounded(this.primaryTrail, { ...snapshot.primary, time: snapshot.elapsedTime });
-        this.pushBounded(this.shadowTrail, { ...snapshot.shadow, time: snapshot.elapsedTime });
+        this.pushBounded(this.primaryTrail, {
+            ...snapshot.primary,
+            time: snapshot.elapsedTime,
+        });
+        this.pushBounded(this.shadowTrail, {
+            ...snapshot.shadow,
+            time: snapshot.elapsedTime,
+        });
     }
 
     private pushBounded(target: LorenzTrailPoint[], point: LorenzTrailPoint): void {
