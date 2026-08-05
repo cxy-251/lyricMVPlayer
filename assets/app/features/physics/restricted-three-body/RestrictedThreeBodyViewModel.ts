@@ -6,6 +6,7 @@ import { RestrictedThreeBodyModel } from './RestrictedThreeBodyModel';
 import type {
     CR3BPLagrangePoint,
     CR3BPParameters,
+    CR3BPReferenceFrame,
     CR3BPState,
     CR3BPTrailPoint,
     RestrictedThreeBodyViewState,
@@ -86,6 +87,17 @@ export const RESTRICTED_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
         step: 0.25,
         decimals: 2,
         unit: '×',
+    },
+    {
+        kind: 'select',
+        key: 'referenceFrame',
+        label: 'Displayed reference frame',
+        description: 'Inertial view rotates the solved state back into space so both primaries orbit the barycenter.',
+        defaultValue: 'inertial',
+        options: [
+            { value: 'inertial', label: 'INERTIAL · ORBITING PRIMARIES' },
+            { value: 'rotating', label: 'ROTATING · FIXED PRIMARIES' },
+        ],
     },
     {
         kind: 'number',
@@ -188,6 +200,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
     parameterChanged(key: string): boolean {
         if (
             key === 'speed'
+            || key === 'referenceFrame'
             || key === 'trailLength'
             || key === 'showLagrangePoints'
             || key === 'showGravityVectors'
@@ -203,6 +216,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
         const snapshot = this.model.snapshot();
         const diagnostics = this.model.diagnostics();
         const status = snapshot.status.replace('-', ' ').toUpperCase();
+        const referenceFrame = this.getString('referenceFrame') as CR3BPReferenceFrame;
         return {
             snapshot,
             diagnostics,
@@ -211,6 +225,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
             lagrangePoints: this.lagrangePoints,
             gravityVectors: this.model.gravityVectors(),
             trail: this.trail,
+            referenceFrame,
             showLagrangePoints: this.getBoolean('showLagrangePoints'),
             showGravityVectors: this.getBoolean('showGravityVectors'),
             diagnosticsText: [
@@ -220,6 +235,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
                 `|v| ${diagnostics.speed.toFixed(3)}`,
             ].join(' · '),
             modelSummary: [
+                `${referenceFrame.toUpperCase()} VIEW`,
                 status,
                 `μ ${this.model.parameters.mu.toFixed(5)}`,
                 `r₁ ${diagnostics.primaryDistance.toFixed(3)}`,
