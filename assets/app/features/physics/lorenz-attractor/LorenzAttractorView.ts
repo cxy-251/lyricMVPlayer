@@ -207,11 +207,7 @@ export class LorenzAttractorView {
             + this.plotWidth
             + CONTENT_GAP
             + inspectorWidth / 2;
-        const plot = this.createVisualizationPanel(
-            plotX,
-            centerY,
-            breakpoint === 'compact',
-        );
+        const plot = this.createVisualizationPanel(plotX, centerY);
         const inspector = this.createInspectorPanel(
             inspectorWidth,
             contentHeight,
@@ -239,6 +235,7 @@ export class LorenzAttractorView {
         this.trailGraphics = this.createGraphicsLayer(plot, 'LorenzTrails');
         this.markerGraphics = this.createGraphicsLayer(plot, 'LorenzMarkers');
         this.drawReference();
+        this.createVisualizationOverlays(plot, breakpoint === 'compact');
     }
 
     private layoutStacked(
@@ -270,11 +267,7 @@ export class LorenzAttractorView {
         );
         const plotY = contentTop - this.plotHeight / 2;
         const inspectorY = contentBottom + inspectorHeight / 2;
-        const plot = this.createVisualizationPanel(
-            centerX,
-            plotY,
-            breakpoint === 'compact',
-        );
+        const plot = this.createVisualizationPanel(centerX, plotY);
         const inspector = this.createInspectorPanel(
             contentWidth,
             inspectorHeight,
@@ -296,13 +289,10 @@ export class LorenzAttractorView {
         this.trailGraphics = this.createGraphicsLayer(plot, 'LorenzTrails');
         this.markerGraphics = this.createGraphicsLayer(plot, 'LorenzMarkers');
         this.drawReference();
+        this.createVisualizationOverlays(plot, breakpoint === 'compact');
     }
 
-    private createVisualizationPanel(
-        x: number,
-        y: number,
-        compact: boolean,
-    ): Node {
+    private createVisualizationPanel(x: number, y: number): Node {
         const plot = createUiNode(
             this.root,
             'LorenzAttractorPlot',
@@ -314,7 +304,6 @@ export class LorenzAttractorView {
         const radius = Math.min(10, this.plotWidth / 2, this.plotHeight / 2);
         fillNode(plot, this.plotWidth, this.plotHeight, palette.surface, radius);
         strokeNode(plot, this.plotWidth, this.plotHeight, palette.border, radius, 1);
-        this.createVisualizationOverlays(plot, compact);
         return plot;
     }
 
