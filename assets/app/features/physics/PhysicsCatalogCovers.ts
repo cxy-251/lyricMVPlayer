@@ -70,7 +70,7 @@ function drawPlanarThreeBody(
         softening: 0.015,
     });
     model.reset(PlanarThreeBodyModel.createPreset(
-        'figure-eight',
+        'hierarchical-triple',
         [1, 1, 1],
         1,
         1,
@@ -113,7 +113,7 @@ function drawPlanarThreeBody(
             width,
             height,
         );
-        graphics.strokeColor = TRAIL_COLORS[bodyIndex];
+        graphics.strokeColor = TRAIL_COLORS[bodyIndex] ?? TRAIL_COLORS[0];
         graphics.lineWidth = Math.max(1.4, Math.min(width, height) * 0.005);
         trail.forEach((point, index) => {
             const projected = project(point);
@@ -130,7 +130,7 @@ function drawPlanarThreeBody(
     const unit = Math.min(width, height);
     model.snapshot().bodies.forEach((body, index) => {
         const projected = project(body);
-        bodies.fillColor = BODY_COLORS[index];
+        bodies.fillColor = BODY_COLORS[index] ?? BODY_COLORS[0];
         bodies.circle(projected.x, projected.y, Math.max(5, unit * 0.022));
         bodies.fill();
     });
