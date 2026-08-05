@@ -1,0 +1,1 @@
+export { rollingBodyRaceDefinition } from './RollingBodyRaceDefinition';
