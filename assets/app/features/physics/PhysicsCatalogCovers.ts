@@ -1,16 +1,19 @@
 import { Color, Graphics, Node } from 'cc';
-import {
-    registerCatalogCover,
-} from '../home/CatalogCovers';
+import { registerCatalogCover } from '../home/CatalogCovers';
 import { createUiNode, palette } from '../../ui/UiFactory';
 import { LorenzAttractorModel } from './lorenz-attractor/LorenzAttractorModel';
-import { RestrictedThreeBodyModel } from './restricted-three-body/RestrictedThreeBodyModel';
+import { PlanarThreeBodyModel } from './restricted-three-body/RestrictedThreeBodyModel';
 
-const PRIMARY_TRAIL = new Color(126, 158, 143, 230);
-const SECONDARY_TRAIL = new Color(181, 149, 95, 145);
-const PRIMARY_BODY = new Color(215, 221, 207, 255);
-const SECONDARY_BODY = new Color(181, 149, 95, 255);
-const THIRD_BODY = new Color(126, 190, 166, 255);
+const TRAIL_COLORS = [
+    new Color(126, 190, 166, 225),
+    new Color(210, 167, 96, 210),
+    new Color(151, 165, 211, 210),
+] as const;
+const BODY_COLORS = [
+    new Color(126, 190, 166, 255),
+    new Color(210, 167, 96, 255),
+    new Color(151, 165, 211, 255),
+] as const;
 
 function drawLorenzAttractor(parent: Node, width: number, height: number): void {
     const model = new LorenzAttractorModel({
@@ -22,14 +25,12 @@ function drawLorenzAttractor(parent: Node, width: number, height: number): void 
         { x: 1, y: 1, z: 1 },
         { x: 1.00001, y: 1, z: 1 },
     );
-
     const primary = createGraphics(parent, 'LorenzCoverPrimary', width, height);
-    const secondary = createGraphics(parent, 'LorenzCoverNearby', width, height);
-    primary.strokeColor = PRIMARY_TRAIL;
+    const nearby = createGraphics(parent, 'LorenzCoverNearby', width, height);
+    primary.strokeColor = TRAIL_COLORS[0];
     primary.lineWidth = Math.max(1.5, Math.min(width, height) * 0.0055);
-    secondary.strokeColor = SECONDARY_TRAIL;
-    secondary.lineWidth = Math.max(1, Math.min(width, height) * 0.0035);
-
+    nearby.strokeColor = new Color(210, 167, 96, 145);
+    nearby.lineWidth = Math.max(1, Math.min(width, height) * 0.0035);
     const scale = Math.min(width / 54, height / 58);
     let started = false;
     for (let index = 0; index < 3400; index += 1) {
@@ -38,102 +39,101 @@ function drawLorenzAttractor(parent: Node, width: number, height: number): void 
             continue;
         }
         const snapshot = model.snapshot();
-        const primaryX = snapshot.primary.x * scale;
-        const primaryY = (snapshot.primary.z - 25) * scale;
-        const shadowX = snapshot.shadow.x * scale;
-        const shadowY = (snapshot.shadow.z - 25) * scale;
+        const primaryPoint = {
+            x: snapshot.primary.x * scale,
+            y: (snapshot.primary.z - 25) * scale,
+        };
+        const nearbyPoint = {
+            x: snapshot.shadow.x * scale,
+            y: (snapshot.shadow.z - 25) * scale,
+        };
         if (!started) {
-            primary.moveTo(primaryX, primaryY);
-            secondary.moveTo(shadowX, shadowY);
+            primary.moveTo(primaryPoint.x, primaryPoint.y);
+            nearby.moveTo(nearbyPoint.x, nearbyPoint.y);
             started = true;
         } else {
-            primary.lineTo(primaryX, primaryY);
-            secondary.lineTo(shadowX, shadowY);
+            primary.lineTo(primaryPoint.x, primaryPoint.y);
+            nearby.lineTo(nearbyPoint.x, nearbyPoint.y);
         }
     }
-    secondary.stroke();
+    nearby.stroke();
     primary.stroke();
-
-    const marker = createGraphics(parent, 'LorenzCoverMarker', width, height);
-    const current = model.snapshot().primary;
-    marker.fillColor = palette.text;
-    marker.circle(
-        current.x * scale,
-        (current.z - 25) * scale,
-        Math.max(3.5, Math.min(width, height) * 0.014),
-    );
-    marker.fill();
 }
 
-function drawRestrictedThreeBody(
+function drawPlanarThreeBody(
     parent: Node,
     width: number,
     height: number,
 ): void {
-    const model = new RestrictedThreeBodyModel({ mu: 0.01215 });
-    model.reset({ x: 0.82, y: 0, vx: 0, vy: 0.17 });
-    const samples: Array<{ x: number; y: number }> = [];
-
-    for (let index = 0; index < 6400; index += 1) {
-        model.step(1 / 720);
-        const snapshot = model.snapshot();
-        if (index % 6 === 0) {
-            samples.push({
-                x: snapshot.state.x,
-                y: snapshot.state.y,
-            });
+    const model = new PlanarThreeBodyModel({
+        gravity: 1,
+        softening: 0.015,
+    });
+    model.reset(PlanarThreeBodyModel.createPreset(
+        'figure-eight',
+        [1, 1, 1],
+        1,
+        1,
+    ));
+    const trails: Array<Array<{ x: number; y: number }>> = [[], [], []];
+    for (let index = 0; index < 4200; index += 1) {
+        model.step(1 / 600);
+        if (index % 5 !== 0) {
+            continue;
         }
-        if (snapshot.status !== 'active') {
-            break;
+        model.snapshot().bodies.forEach((body, bodyIndex) => {
+            trails[bodyIndex].push({ x: body.x, y: body.y });
+        });
+    }
+    let span = 1.15;
+    for (const trail of trails) {
+        for (const point of trail) {
+            span = Math.max(span, Math.abs(point.x), Math.abs(point.y));
         }
     }
-
-    let span = 1.12;
-    for (const point of samples) {
-        span = Math.max(span, Math.abs(point.x), Math.abs(point.y));
-    }
-    span = Math.min(3.8, span * 1.1);
-    const scale = Math.min(width, height) / (span * 2.08);
+    const scale = Math.min(width, height) / (span * 2.12);
     const project = (point: { x: number; y: number }) => ({
         x: point.x * scale,
         y: point.y * scale,
     });
+    const center = createGraphics(parent, 'ThreeBodyCoverCenter', width, height);
+    center.strokeColor = palette.subtle;
+    center.lineWidth = Math.max(1, Math.min(width, height) * 0.0035);
+    center.circle(0, 0, Math.max(4, Math.min(width, height) * 0.015));
+    center.moveTo(-8, 0);
+    center.lineTo(8, 0);
+    center.moveTo(0, -8);
+    center.lineTo(0, 8);
+    center.stroke();
 
-    const guide = createGraphics(parent, 'ThreeBodyCoverGuide', width, height);
-    const primary = project(model.primaryPosition);
-    const secondary = project(model.secondaryPosition);
-    guide.strokeColor = palette.subtle;
-    guide.lineWidth = Math.max(1, Math.min(width, height) * 0.0035);
-    guide.moveTo(primary.x, primary.y);
-    guide.lineTo(secondary.x, secondary.y);
-    guide.stroke();
-
-    const trail = createGraphics(parent, 'ThreeBodyCoverTrail', width, height);
-    trail.strokeColor = PRIMARY_TRAIL;
-    trail.lineWidth = Math.max(1.5, Math.min(width, height) * 0.0055);
-    samples.forEach((point, index) => {
-        const projected = project(point);
-        if (index === 0) {
-            trail.moveTo(projected.x, projected.y);
-        } else {
-            trail.lineTo(projected.x, projected.y);
-        }
+    trails.forEach((trail, bodyIndex) => {
+        const graphics = createGraphics(
+            parent,
+            `ThreeBodyCoverTrail${bodyIndex + 1}`,
+            width,
+            height,
+        );
+        graphics.strokeColor = TRAIL_COLORS[bodyIndex];
+        graphics.lineWidth = Math.max(1.4, Math.min(width, height) * 0.005);
+        trail.forEach((point, index) => {
+            const projected = project(point);
+            if (index === 0) {
+                graphics.moveTo(projected.x, projected.y);
+            } else {
+                graphics.lineTo(projected.x, projected.y);
+            }
+        });
+        graphics.stroke();
     });
-    trail.stroke();
 
     const bodies = createGraphics(parent, 'ThreeBodyCoverBodies', width, height);
     const unit = Math.min(width, height);
-    bodies.fillColor = PRIMARY_BODY;
-    bodies.circle(primary.x, primary.y, Math.max(8, unit * 0.04));
-    bodies.fill();
-    bodies.fillColor = SECONDARY_BODY;
-    bodies.circle(secondary.x, secondary.y, Math.max(5, unit * 0.024));
-    bodies.fill();
-
-    const current = project(model.snapshot().state);
-    bodies.fillColor = THIRD_BODY;
-    bodies.circle(current.x, current.y, Math.max(4, unit * 0.018));
-    bodies.fill();
+    model.snapshot().bodies.forEach((body, index) => {
+        const projected = project(body);
+        bodies.fillColor = BODY_COLORS[index];
+        bodies.circle(projected.x, projected.y, Math.max(5, unit * 0.022));
+        bodies.fill();
+    });
 }
 
 function createGraphics(
@@ -146,4 +146,4 @@ function createGraphics(
 }
 
 registerCatalogCover('lorenz-attractor', drawLorenzAttractor);
-registerCatalogCover('restricted-three-body', drawRestrictedThreeBody);
+registerCatalogCover('restricted-three-body', drawPlanarThreeBody);
