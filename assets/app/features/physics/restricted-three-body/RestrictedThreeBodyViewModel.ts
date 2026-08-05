@@ -2,80 +2,81 @@ import { FixedStepClock } from '../../../animation/FixedStepClock';
 import { ParameterController } from '../../../parameters/ParameterController';
 import type { ParameterSchema } from '../../../parameters/ParameterSchema';
 import type { StorageService } from '../../../services/StorageService';
-import { RestrictedThreeBodyModel } from './RestrictedThreeBodyModel';
+import { PlanarThreeBodyModel } from './RestrictedThreeBodyModel';
 import type {
-    CR3BPLagrangePoint,
-    CR3BPParameters,
-    CR3BPReferenceFrame,
-    CR3BPState,
-    CR3BPTrailPoint,
-    RestrictedThreeBodyViewState,
+    PlanarThreeBodyPreset,
+    PlanarThreeBodyViewState,
+    PlanarTrailPoint,
 } from './RestrictedThreeBodyTypes';
 
-const FIXED_STEP_SECONDS = 1 / 720;
-const MAXIMUM_SUBSTEPS = 72;
+const FIXED_STEP_SECONDS = 1 / 600;
+const MAXIMUM_SUBSTEPS = 60;
 const PARAMETER_APPLY_DELAY_MS = 140;
-const SAMPLE_INTERVAL = 6;
+const SAMPLE_INTERVAL = 4;
+const SOFTENING_LENGTH = 0.015;
 
-const DEFAULT_PARAMETERS: CR3BPParameters = {
-    mu: 0.01215,
-};
-
-export const RESTRICTED_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
+export const PLANAR_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
     {
-        kind: 'number',
-        key: 'mu',
-        label: 'Mass ratio μ = m₂/(m₁+m₂)',
-        description: 'Normalized secondary mass. 0.01215 approximates the Earth-Moon mass ratio.',
-        defaultValue: 0.01215,
-        minimum: 0.001,
-        maximum: 0.5,
-        step: 0.001,
-        decimals: 5,
+        kind: 'select',
+        key: 'preset',
+        label: 'Initial motion',
+        defaultValue: 'figure-eight',
+        options: [
+            { value: 'figure-eight', label: 'FIGURE EIGHT' },
+            { value: 'rotating-triangle', label: 'ROTATING TRIANGLE' },
+            { value: 'binary-visitor', label: 'BINARY + VISITOR' },
+        ],
     },
     {
         kind: 'number',
-        key: 'initialX',
-        label: 'Initial x₀',
-        description: 'Initial rotating-frame x position of the massless third body.',
-        defaultValue: 0.82,
-        minimum: -2,
+        key: 'mass1',
+        label: 'Mass m₁',
+        defaultValue: 1,
+        minimum: 0.25,
+        maximum: 3,
+        step: 0.05,
+        decimals: 2,
+    },
+    {
+        kind: 'number',
+        key: 'mass2',
+        label: 'Mass m₂',
+        defaultValue: 1,
+        minimum: 0.25,
+        maximum: 3,
+        step: 0.05,
+        decimals: 2,
+    },
+    {
+        kind: 'number',
+        key: 'mass3',
+        label: 'Mass m₃',
+        defaultValue: 1,
+        minimum: 0.25,
+        maximum: 3,
+        step: 0.05,
+        decimals: 2,
+    },
+    {
+        kind: 'number',
+        key: 'gravity',
+        label: 'Gravity strength G',
+        defaultValue: 1,
+        minimum: 0.3,
         maximum: 2,
-        step: 0.01,
+        step: 0.05,
         decimals: 2,
     },
     {
         kind: 'number',
-        key: 'initialY',
-        label: 'Initial y₀',
-        description: 'Initial rotating-frame y position of the massless third body.',
-        defaultValue: 0,
-        minimum: -1.5,
-        maximum: 1.5,
-        step: 0.01,
+        key: 'velocityScale',
+        label: 'Initial velocity scale',
+        defaultValue: 1,
+        minimum: 0.45,
+        maximum: 1.55,
+        step: 0.05,
         decimals: 2,
-    },
-    {
-        kind: 'number',
-        key: 'initialVx',
-        label: 'Initial ẋ₀',
-        description: 'Initial x velocity in normalized rotating-frame units.',
-        defaultValue: 0,
-        minimum: -2,
-        maximum: 2,
-        step: 0.01,
-        decimals: 2,
-    },
-    {
-        kind: 'number',
-        key: 'initialVy',
-        label: 'Initial ẏ₀',
-        description: 'Initial y velocity. The default produces repeated close flybys without an immediate collision.',
-        defaultValue: 0.17,
-        minimum: -2,
-        maximum: 2,
-        step: 0.01,
-        decimals: 2,
+        unit: '×',
     },
     {
         kind: 'number',
@@ -83,27 +84,16 @@ export const RESTRICTED_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
         label: 'Simulation time scale',
         defaultValue: 1,
         minimum: 0.25,
-        maximum: 4,
+        maximum: 3,
         step: 0.25,
         decimals: 2,
         unit: '×',
     },
     {
-        kind: 'select',
-        key: 'referenceFrame',
-        label: 'Displayed reference frame',
-        description: 'Inertial view rotates the solved state back into space so both primaries orbit the barycenter.',
-        defaultValue: 'inertial',
-        options: [
-            { value: 'inertial', label: 'INERTIAL · ORBITING PRIMARIES' },
-            { value: 'rotating', label: 'ROTATING · FIXED PRIMARIES' },
-        ],
-    },
-    {
         kind: 'number',
         key: 'trailLength',
-        label: 'Trajectory samples',
-        defaultValue: 2600,
+        label: 'Trajectory samples per body',
+        defaultValue: 2200,
         minimum: 400,
         maximum: 5000,
         step: 200,
@@ -111,54 +101,55 @@ export const RESTRICTED_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
     },
     {
         kind: 'toggle',
-        key: 'showLagrangePoints',
-        label: 'Lagrange points L₁–L₅',
+        key: 'showVelocityVectors',
+        label: 'Velocity vectors',
         defaultValue: true,
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
     },
     {
         kind: 'toggle',
-        key: 'showGravityVectors',
-        label: 'Gravity vectors',
-        description: 'Show the two physical gravitational acceleration contributions.',
+        key: 'showBarycenter',
+        label: 'System barycenter',
         defaultValue: true,
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
     },
 ];
 
-export interface RestrictedThreeBodyViewModelCallbacks {
+export interface PlanarThreeBodyViewModelCallbacks {
     stateChanged(): void;
     reportError(error: unknown): void;
 }
 
-export class RestrictedThreeBodyViewModel extends ParameterController {
+export class PlanarThreeBodyViewModel extends ParameterController {
     private readonly clock = new FixedStepClock(
         FIXED_STEP_SECONDS,
         MAXIMUM_SUBSTEPS,
     );
-    private readonly model = new RestrictedThreeBodyModel(DEFAULT_PARAMETERS);
-    private readonly trail: CR3BPTrailPoint[] = [];
-    private lagrangePoints: readonly CR3BPLagrangePoint[] = this.model.lagrangePoints();
+    private readonly model = new PlanarThreeBodyModel({
+        gravity: 1,
+        softening: SOFTENING_LENGTH,
+    });
+    private readonly trails: PlanarTrailPoint[][] = [[], [], []];
     private parameterApplyTimer: ReturnType<typeof setTimeout> | null = null;
     private paused = false;
     private sampleCounter = 0;
 
     constructor(
         storage: StorageService,
-        private readonly callbacks: RestrictedThreeBodyViewModelCallbacks,
+        private readonly callbacks: PlanarThreeBodyViewModelCallbacks,
     ) {
         super(
             storage,
-            'module:restricted-three-body:parameters-v1',
-            RESTRICTED_THREE_BODY_PARAMETER_SCHEMA,
+            'module:planar-three-body:parameters-v2',
+            PLANAR_THREE_BODY_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
     }
 
     update(dt: number): boolean {
-        if (this.paused || this.model.snapshot().status !== 'active') {
+        if (this.paused) {
             return false;
         }
         const steps = this.clock.advance(
@@ -169,7 +160,7 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
                 this.sampleCounter += 1;
                 if (this.sampleCounter >= SAMPLE_INTERVAL) {
                     this.sampleCounter = 0;
-                    this.pushTrailPoint();
+                    this.pushTrailPoints();
                 }
             },
         );
@@ -187,12 +178,13 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
     reset(): void {
         this.cancelPendingParameterApply();
         super.reset();
+        this.paused = false;
         this.resetModelFromParameters();
     }
 
     dispose(): void {
         this.cancelPendingParameterApply();
-        this.trail.length = 0;
+        this.clearTrails();
         this.clock.reset();
         super.dispose();
     }
@@ -200,46 +192,40 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
     parameterChanged(key: string): boolean {
         if (
             key === 'speed'
-            || key === 'referenceFrame'
             || key === 'trailLength'
-            || key === 'showLagrangePoints'
-            || key === 'showGravityVectors'
+            || key === 'showVelocityVectors'
+            || key === 'showBarycenter'
         ) {
-            this.trimTrail();
+            this.trimTrails();
             return true;
         }
         this.scheduleParameterApply();
         return false;
     }
 
-    createViewState(): RestrictedThreeBodyViewState {
+    createViewState(): PlanarThreeBodyViewState {
         const snapshot = this.model.snapshot();
         const diagnostics = this.model.diagnostics();
-        const status = snapshot.status.replace('-', ' ').toUpperCase();
-        const referenceFrame = this.getString('referenceFrame') as CR3BPReferenceFrame;
+        const preset = this.getString('preset') as PlanarThreeBodyPreset;
         return {
             snapshot,
             diagnostics,
-            primary: this.model.primaryPosition,
-            secondary: this.model.secondaryPosition,
-            lagrangePoints: this.lagrangePoints,
-            gravityVectors: this.model.gravityVectors(),
-            trail: this.trail,
-            referenceFrame,
-            showLagrangePoints: this.getBoolean('showLagrangePoints'),
-            showGravityVectors: this.getBoolean('showGravityVectors'),
+            accelerations: this.model.accelerations(),
+            trails: this.trails,
+            preset,
+            showVelocityVectors: this.getBoolean('showVelocityVectors'),
+            showBarycenter: this.getBoolean('showBarycenter'),
             diagnosticsText: [
                 `t ${snapshot.elapsedTime.toFixed(2)}`,
-                `C ${diagnostics.jacobiConstant.toFixed(5)}`,
-                `ΔC ${diagnostics.normalizedJacobiDrift.toExponential(2)}`,
-                `|v_rot| ${diagnostics.speed.toFixed(3)}`,
+                `E ${diagnostics.totalEnergy.toFixed(5)}`,
+                `ΔE ${diagnostics.normalizedEnergyDrift.toExponential(2)}`,
+                `|P| ${diagnostics.momentumMagnitude.toExponential(2)}`,
             ].join(' · '),
             modelSummary: [
-                `${referenceFrame.toUpperCase()} VIEW`,
-                status,
-                `μ ${this.model.parameters.mu.toFixed(5)}`,
-                `r₁ ${diagnostics.primaryDistance.toFixed(3)}`,
-                `r₂ ${diagnostics.secondaryDistance.toFixed(3)}`,
+                preset.replaceAll('-', ' ').toUpperCase(),
+                'THREE DYNAMIC MASSES',
+                `rmin ${diagnostics.minimumDistance.toFixed(3)}`,
+                `COM (${diagnostics.barycenter.x.toExponential(1)}, ${diagnostics.barycenter.y.toExponential(1)})`,
             ].join(' · '),
         };
     }
@@ -266,35 +252,52 @@ export class RestrictedThreeBodyViewModel extends ParameterController {
     }
 
     private resetModelFromParameters(): void {
-        this.model.setParameters({ mu: this.getNumber('mu') });
-        const initialState: CR3BPState = {
-            x: this.getNumber('initialX'),
-            y: this.getNumber('initialY'),
-            vx: this.getNumber('initialVx'),
-            vy: this.getNumber('initialVy'),
-        };
-        this.model.reset(initialState);
-        this.lagrangePoints = this.model.lagrangePoints();
+        const gravity = this.getNumber('gravity');
+        this.model.setParameters({
+            gravity,
+            softening: SOFTENING_LENGTH,
+        });
+        this.model.reset(PlanarThreeBodyModel.createPreset(
+            this.getString('preset') as PlanarThreeBodyPreset,
+            [
+                this.getNumber('mass1'),
+                this.getNumber('mass2'),
+                this.getNumber('mass3'),
+            ],
+            this.getNumber('velocityScale'),
+            gravity,
+        ));
+        this.paused = false;
         this.clock.reset();
         this.sampleCounter = 0;
-        this.trail.length = 0;
-        this.pushTrailPoint();
+        this.clearTrails();
+        this.pushTrailPoints();
     }
 
-    private pushTrailPoint(): void {
+    private pushTrailPoints(): void {
         const snapshot = this.model.snapshot();
-        this.trail.push({
-            x: snapshot.state.x,
-            y: snapshot.state.y,
-            time: snapshot.elapsedTime,
+        snapshot.bodies.forEach((body, index) => {
+            this.trails[index].push({
+                x: body.x,
+                y: body.y,
+                time: snapshot.elapsedTime,
+            });
         });
-        this.trimTrail();
+        this.trimTrails();
     }
 
-    private trimTrail(): void {
+    private trimTrails(): void {
         const capacity = Math.max(1, Math.round(this.getNumber('trailLength')));
-        if (this.trail.length > capacity) {
-            this.trail.splice(0, this.trail.length - capacity);
+        for (const trail of this.trails) {
+            if (trail.length > capacity) {
+                trail.splice(0, trail.length - capacity);
+            }
+        }
+    }
+
+    private clearTrails(): void {
+        for (const trail of this.trails) {
+            trail.length = 0;
         }
     }
 }
