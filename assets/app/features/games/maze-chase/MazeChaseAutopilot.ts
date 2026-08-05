@@ -57,6 +57,9 @@ export class MazeChaseAutopilot {
     ): number {
         let best = Number.POSITIVE_INFINITY;
         for (const enemy of observation.enemies) {
+            if (enemy.respawning) {
+                continue;
+            }
             const distance = this.shortestDistance(observation, start, (point) => (
                 point.x === enemy.x && point.y === enemy.y
             ));

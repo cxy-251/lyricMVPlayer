@@ -71,6 +71,8 @@ export class CursorSpaceView {
 
     private instancedRenderer: CursorSpaceInstancedRenderer | null = null;
     private statsLabel: Label | null = null;
+    private statsBaseFontSize = 12;
+    private statsCharacterBudget = 68;
 
     constructor(
         private readonly root: Node,
@@ -147,12 +149,14 @@ export class CursorSpaceView {
 
         this.graphicsRenderer.layout(viewport, bounds, !this.instancedRenderer);
         const statsY = bounds.top + Math.max(12, (navigationHeight - 12) * 0.45);
+        this.statsBaseFontSize = compact ? 10 : 12;
+        this.statsCharacterBudget = compact ? 46 : 68;
         const statsNode = createLabel(
             this.root,
             '',
             Math.min(playWidth, compact ? 420 : 720),
             compact ? 20 : 24,
-            compact ? 10 : 12,
+            this.statsBaseFontSize,
             palette.muted,
             centerX,
             statsY,
@@ -168,6 +172,16 @@ export class CursorSpaceView {
         this.instancedRenderer?.sync(state);
         this.graphicsRenderer.render(state);
         if (this.statsLabel) {
+            const ratio = Math.min(
+                1,
+                this.statsCharacterBudget / Math.max(1, state.stats.length),
+            );
+            const fontSize = Math.max(
+                7,
+                Math.floor(this.statsBaseFontSize * Math.sqrt(ratio)),
+            );
+            this.statsLabel.fontSize = fontSize;
+            this.statsLabel.lineHeight = Math.round(fontSize * 1.35);
             this.statsLabel.string = state.stats;
         }
     }

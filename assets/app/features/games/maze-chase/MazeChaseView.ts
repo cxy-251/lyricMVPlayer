@@ -174,6 +174,9 @@ export class MazeChaseView {
         }
         this.drawPlayer(graphics, state.player.x, state.player.y, state.direction, cell);
         for (const enemy of state.enemies) {
+            if (enemy.respawning) {
+                continue;
+            }
             const left = -this.boardWidth / 2 + enemy.x * cell + cell * 0.16;
             const bottom = -this.boardHeight / 2 + enemy.y * cell + cell * 0.16;
             graphics.fillColor = state.frightenedRemaining > 0

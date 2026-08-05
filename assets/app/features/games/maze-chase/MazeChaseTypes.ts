@@ -11,6 +11,7 @@ export interface MazeChasePoint {
 export interface MazeChaseEnemyState extends MazeChasePoint {
     readonly kind: MazeChaseEnemyKind;
     readonly direction: MazeChaseDirection;
+    readonly respawning: boolean;
 }
 
 export interface MazeChaseObservation {

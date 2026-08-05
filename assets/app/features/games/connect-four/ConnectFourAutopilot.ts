@@ -44,7 +44,7 @@ export class ConnectFourAutopilot {
         const searchDepth = difficulty === 'casual'
             ? 3
             : difficulty === 'expert'
-                ? 7
+                ? 6
                 : 5;
         let bestColumn: number | null = null;
         let bestScore = Number.NEGATIVE_INFINITY;

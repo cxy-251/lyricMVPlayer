@@ -37,7 +37,7 @@ export class ReversiAutopilot {
         const depth = difficulty === 'casual'
             ? Math.min(3, baseDepth)
             : difficulty === 'expert'
-                ? Math.min(7, baseDepth + 1)
+                ? Math.min(6, baseDepth + 1)
                 : baseDepth;
         const ordered = this.orderMoves(observation.legalMoves);
         let bestMove: ReversiCell | null = null;

@@ -32,6 +32,7 @@ const OFFSETS: Record<MazeChaseDirection, readonly [number, number]> = {
 };
 const PLAYER_INTERVAL = 0.115;
 const ENEMY_INTERVAL = 0.155;
+const ENEMY_RESPAWN_DELAY = 1.15;
 const MAXIMUM_LIVES = 4;
 
 interface MutableEnemy {
@@ -41,6 +42,7 @@ interface MutableEnemy {
     startY: number;
     kind: MazeChaseEnemyKind;
     direction: MazeChaseDirection;
+    respawnRemaining: number;
 }
 
 export class MazeChaseModel {
@@ -147,8 +149,9 @@ export class MazeChaseModel {
         if (frightenedBefore > 0 && this.frightenedElapsed === 0) {
             this.currentEnemyCombo = 0;
         }
+        const enemyReactivated = this.updateEnemyRespawns(dt);
         this.patrolPhase += dt;
-        let changed = false;
+        let changed = enemyReactivated;
 
         while (this.playerElapsed >= this.playerInterval()) {
             this.playerElapsed -= this.playerInterval();
@@ -185,6 +188,7 @@ export class MazeChaseModel {
                 y: enemy.y,
                 kind: enemy.kind,
                 direction: enemy.direction,
+                respawning: enemy.respawnRemaining > 0,
             })),
             level: this.currentLevel,
             frightenedRemaining: this.frightenedElapsed,
@@ -239,6 +243,7 @@ export class MazeChaseModel {
                         startY: y,
                         kind,
                         direction: symbol === 'B' ? 'right' : 'left',
+                        respawnRemaining: 0,
                     });
                 }
             }
@@ -254,10 +259,26 @@ export class MazeChaseModel {
         }
     }
 
-    private resetEnemy(enemy: MutableEnemy): void {
+    private resetEnemy(enemy: MutableEnemy, respawnDelay = 0): void {
         enemy.x = enemy.startX;
         enemy.y = enemy.startY;
         enemy.direction = enemy.kind === 'ambusher' ? 'right' : 'left';
+        enemy.respawnRemaining = Math.max(0, respawnDelay);
+    }
+
+    private updateEnemyRespawns(dt: number): boolean {
+        let reactivated = false;
+        for (const enemy of this.enemies) {
+            if (enemy.respawnRemaining <= 0) {
+                continue;
+            }
+            const before = enemy.respawnRemaining;
+            enemy.respawnRemaining = Math.max(0, before - dt);
+            if (enemy.respawnRemaining === 0) {
+                reactivated = true;
+            }
+        }
+        return reactivated;
     }
 
     private movePlayer(): boolean {
@@ -303,6 +324,9 @@ export class MazeChaseModel {
     private moveEnemies(): boolean {
         let moved = false;
         for (const enemy of this.enemies) {
+            if (enemy.respawnRemaining > 0) {
+                continue;
+            }
             const target = this.frightenedElapsed > 0
                 ? this.frightenedTarget(enemy)
                 : this.enemyTarget(enemy.kind);
@@ -380,7 +404,9 @@ export class MazeChaseModel {
             return false;
         }
         const hits = this.enemies.filter((enemy) => (
-            enemy.x === this.player.x && enemy.y === this.player.y
+            enemy.respawnRemaining <= 0
+            && enemy.x === this.player.x
+            && enemy.y === this.player.y
         ));
         if (hits.length === 0) {
             return false;
@@ -391,7 +417,7 @@ export class MazeChaseModel {
                 const multiplier = 2 ** Math.min(3, this.currentEnemyCombo);
                 this.currentScore += 200 * multiplier;
                 this.currentEnemyCombo += 1;
-                this.resetEnemy(enemy);
+                this.resetEnemy(enemy, ENEMY_RESPAWN_DELAY);
             }
             return true;
         }
