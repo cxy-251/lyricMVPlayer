@@ -222,7 +222,7 @@ export class PlanarThreeBodyViewModel extends ParameterController {
                 `|P| ${diagnostics.momentumMagnitude.toExponential(2)}`,
             ].join(' · '),
             modelSummary: [
-                preset.replaceAll('-', ' ').toUpperCase(),
+                preset.split('-').join(' ').toUpperCase(),
                 'THREE DYNAMIC MASSES',
                 `rmin ${diagnostics.minimumDistance.toFixed(3)}`,
                 `COM (${diagnostics.barycenter.x.toExponential(1)}, ${diagnostics.barycenter.y.toExponential(1)})`,
