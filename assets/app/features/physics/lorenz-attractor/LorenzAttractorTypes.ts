@@ -20,7 +20,8 @@ export interface LorenzDiagnostics {
     readonly separation: number;
     readonly logSeparation: number;
     readonly divergence: number;
-    readonly regime: 'stable-origin' | 'fixed-points' | 'chaotic';
+    readonly hopfThreshold: number | null;
+    readonly regime: 'stable-origin' | 'steady-convection' | 'post-hopf';
 }
 
 export interface LorenzTrailPoint extends LorenzState {

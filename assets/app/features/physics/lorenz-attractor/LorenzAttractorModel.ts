@@ -72,11 +72,26 @@ export class LorenzAttractorModel {
         const dz = this.shadow.z - this.primary.z;
         const separation = Math.sqrt(dx * dx + dy * dy + dz * dz);
         const { sigma, rho, beta } = this.currentParameters;
+        const hopfDenominator = sigma - beta - 1;
+        const hopfThreshold = hopfDenominator > 0
+            ? sigma * (sigma + beta + 3) / hopfDenominator
+            : null;
+
+        let regime: LorenzDiagnostics['regime'];
+        if (rho < 1) {
+            regime = 'stable-origin';
+        } else if (hopfThreshold === null || rho < hopfThreshold) {
+            regime = 'steady-convection';
+        } else {
+            regime = 'post-hopf';
+        }
+
         return {
             separation,
             logSeparation: Math.log10(Math.max(1e-16, separation)),
             divergence: -(sigma + 1 + beta),
-            regime: rho < 1 ? 'stable-origin' : rho < 24.74 ? 'fixed-points' : 'chaotic',
+            hopfThreshold,
+            regime,
         };
     }
 
