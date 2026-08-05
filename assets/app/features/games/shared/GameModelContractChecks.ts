@@ -1,9 +1,13 @@
 import type { EventKeyboard } from 'cc';
 import { AppState } from '../../../core/AppState';
 import { InputRouter } from '../../../services/InputRouter';
+import { BomberMazeModel } from '../bomber-maze/BomberMazeModel';
 import { Game2048Model } from '../game-2048/Game2048Model';
+import { MazeChaseModel } from '../maze-chase/MazeChaseModel';
 import { MinesweeperModel } from '../minesweeper/MinesweeperModel';
+import { RiverCrossingModel } from '../river-crossing/RiverCrossingModel';
 import { SnakeModel } from '../snake/SnakeModel';
+import { TowerDefenseModel } from '../tower-defense/TowerDefenseModel';
 import { HybridGameSession } from './HybridGameSession';
 import {
     LinearCongruentialRandom,
@@ -16,8 +20,12 @@ export function runGameModelContractChecks(): void {
     checkHybridSessionContracts();
     checkRandomDeterminism();
     checkSnakeDeterminism();
-    check2048MergeContract();
+    check2048Contracts();
     checkMinesweeperContracts();
+    checkBomberMazeDefaults();
+    checkTowerDefenseProgression();
+    checkRiverCrossingVariants();
+    checkMazeChaseDefaults();
 }
 
 function checkAppStateSubscriptionCleanup(): void {
@@ -146,7 +154,7 @@ function checkSnakeDeterminism(): void {
     );
 }
 
-function check2048MergeContract(): void {
+function check2048Contracts(): void {
     const result = Game2048Model.simulateMove([
         [2, 2, 2, 2],
         [0, 0, 0, 0],
@@ -163,6 +171,14 @@ function check2048MergeContract(): void {
         second.createObservation(),
         '2048 reset is not reproducible',
     );
+
+    assert(first.ruleSet === 'classic', '2048 did not start with the classic rule set');
+    first.reset();
+    assert(first.ruleSet === 'chain', '2048 did not rotate to the chain rule set');
+    first.reset();
+    assert(first.ruleSet === 'corner', '2048 did not rotate to the corner rule set');
+    first.reset();
+    assert(first.ruleSet === 'classic', '2048 rule rotation did not cycle');
 }
 
 function checkMinesweeperContracts(): void {
@@ -195,6 +211,74 @@ function checkMinesweeperContracts(): void {
     assert(flagLimited.toggleFlag(0, 0), 'Minesweeper rejected the first flag');
     assert(!flagLimited.toggleFlag(0, 1), 'Minesweeper accepted more flags than mines');
     assert(flagLimited.toggleFlag(0, 0), 'Minesweeper could not remove a flag');
+}
+
+function checkBomberMazeDefaults(): void {
+    const model = new BomberMazeModel();
+    const observation = model.createObservation();
+    assert(observation.round === 1, 'Bomber Maze did not start at round one');
+    assert(observation.enemies.length === 3, 'Bomber Maze did not start with three enemies');
+    assert(observation.bombCapacity === 1, 'Bomber Maze did not start with one bomb slot');
+    assert(observation.blastRange === 2, 'Bomber Maze did not start with range two');
+}
+
+function checkTowerDefenseProgression(): void {
+    const model = new TowerDefenseModel();
+    const routes: string[] = [];
+    const traits: string[] = [];
+    for (let index = 0; index < 4; index += 1) {
+        const observation = model.createObservation();
+        routes.push(observation.routeName);
+        traits.push(observation.waveTrait);
+        assert(
+            observation.slots.every((slot) => slot.tower === null),
+            'Tower Defense reset retained a tower',
+        );
+        if (index < 3) {
+            model.reset();
+        }
+    }
+    assertEqual(
+        routes,
+        ['LOW SWITCHBACK', 'REVERSE LOW', 'HIGH SWITCHBACK', 'REVERSE HIGH'],
+        'Tower Defense route rotation changed',
+    );
+    assertEqual(
+        traits,
+        ['balanced', 'swarm', 'armored', 'rush'],
+        'Tower Defense first-wave trait rotation changed',
+    );
+    assert(
+        model.perform({ kind: 'start-wave' }),
+        'Tower Defense rejected a wave start from build phase',
+    );
+    assert(model.phase === 'wave', 'Tower Defense did not enter wave phase');
+}
+
+function checkRiverCrossingVariants(): void {
+    const model = new RiverCrossingModel();
+    assert(model.variant === 'classic', 'River Crossing did not start in classic mode');
+    assert(model.lives === 3, 'River Crossing classic mode changed its life count');
+    model.reset();
+    assert(model.variant === 'reverse', 'River Crossing did not rotate to reverse mode');
+    model.reset();
+    assert(model.variant === 'rush', 'River Crossing did not rotate to rush mode');
+    assert(model.lives === 4, 'River Crossing rush mode lost its extra life');
+    model.reset();
+    assert(model.variant === 'classic', 'River Crossing variant rotation did not cycle');
+}
+
+function checkMazeChaseDefaults(): void {
+    const observation = new MazeChaseModel().createObservation();
+    assert(
+        observation.powerPellets.filter(Boolean).length === 4,
+        'Maze Chase did not create four power pellets',
+    );
+    assert(observation.enemies.length === 3, 'Maze Chase did not create three enemies');
+    assert(
+        observation.enemies.every((enemy) => !enemy.respawning),
+        'Maze Chase started with an enemy in respawn state',
+    );
 }
 
 function assertThrows(action: () => void, message: string): void {

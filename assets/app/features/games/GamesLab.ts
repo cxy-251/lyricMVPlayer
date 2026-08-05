@@ -26,7 +26,7 @@ export const gamesLab: LabManifest = defineLabManifest({
     definition: {
         id: 'games',
         title: 'Games Laboratory',
-        description: 'Minimal playable systems built from reusable Cocos runtime primitives.',
+        description: 'Replayable arcade, puzzle and strategy games with AI takeover, progression, rotating challenges and responsive runtime UI.',
         order: 30,
         cover: 'games',
     },
