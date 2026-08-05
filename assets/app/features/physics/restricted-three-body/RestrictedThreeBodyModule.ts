@@ -5,30 +5,30 @@ import type {
 } from '../../../contracts/InteractiveModule';
 import type { ViewportSnapshot } from '../../../services/ViewportService';
 import { ResponsiveModule } from '../../../templates/ResponsiveModule';
-import { RestrictedThreeBodyView } from './RestrictedThreeBodyView';
+import { PlanarThreeBodyView } from './RestrictedThreeBodyView';
 import {
-    RESTRICTED_THREE_BODY_PARAMETER_SCHEMA,
-    RestrictedThreeBodyViewModel,
+    PLANAR_THREE_BODY_PARAMETER_SCHEMA,
+    PlanarThreeBodyViewModel,
 } from './RestrictedThreeBodyViewModel';
 
 export class RestrictedThreeBodyModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
-    protected readonly rootName = 'RestrictedThreeBodyModuleRoot';
+    protected readonly rootName = 'PlanarThreeBodyModuleRoot';
 
-    private viewModel: RestrictedThreeBodyViewModel | null = null;
-    private view: RestrictedThreeBodyView | null = null;
+    private viewModel: PlanarThreeBodyViewModel | null = null;
+    private view: PlanarThreeBodyView | null = null;
 
     protected onMount(): void {
         const context = this.requireContext();
-        this.viewModel = new RestrictedThreeBodyViewModel(
+        this.viewModel = new PlanarThreeBodyViewModel(
             context.storage,
             {
                 stateChanged: () => this.renderCurrentState(),
                 reportError: (error) => context.reportError(error),
             },
         );
-        this.view = new RestrictedThreeBodyView(
+        this.view = new PlanarThreeBodyView(
             this.requireRoot(),
-            RESTRICTED_THREE_BODY_PARAMETER_SCHEMA,
+            PLANAR_THREE_BODY_PARAMETER_SCHEMA,
             this.viewModel,
             {
                 parameterChanged: (key) => {
@@ -81,16 +81,16 @@ export class RestrictedThreeBodyModule extends ResponsiveModule implements Updat
         }
     }
 
-    private requireViewModel(): RestrictedThreeBodyViewModel {
+    private requireViewModel(): PlanarThreeBodyViewModel {
         if (!this.viewModel) {
-            throw new Error('Restricted three-body ViewModel is unavailable');
+            throw new Error('Planar three-body ViewModel is unavailable');
         }
         return this.viewModel;
     }
 
-    private requireView(): RestrictedThreeBodyView {
+    private requireView(): PlanarThreeBodyView {
         if (!this.view) {
-            throw new Error('Restricted three-body View is unavailable');
+            throw new Error('Planar three-body View is unavailable');
         }
         return this.view;
     }
