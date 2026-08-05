@@ -20,7 +20,7 @@ const DEFAULT_STATE: CR3BPState = {
     x: 0.82,
     y: 0,
     vx: 0,
-    vy: 0.18,
+    vy: 0.17,
 };
 
 const COLLISION_RADIUS = 0.025;
