@@ -20,11 +20,11 @@ export const PLANAR_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
         kind: 'select',
         key: 'preset',
         label: 'Initial motion',
-        defaultValue: 'figure-eight',
+        defaultValue: 'hierarchical-triple',
         options: [
+            { value: 'hierarchical-triple', label: 'HIERARCHICAL TRIPLE' },
             { value: 'figure-eight', label: 'FIGURE EIGHT' },
             { value: 'rotating-triangle', label: 'ROTATING TRIANGLE' },
-            { value: 'binary-visitor', label: 'BINARY + VISITOR' },
         ],
     },
     {
@@ -142,7 +142,7 @@ export class PlanarThreeBodyViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:planar-three-body:parameters-v2',
+            'module:planar-three-body:parameters-v3',
             PLANAR_THREE_BODY_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
