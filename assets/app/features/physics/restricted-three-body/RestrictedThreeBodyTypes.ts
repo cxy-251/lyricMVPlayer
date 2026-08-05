@@ -1,63 +1,50 @@
-export interface CR3BPVector {
+export interface PlanarVector {
     readonly x: number;
     readonly y: number;
 }
 
-export interface CR3BPParameters {
-    readonly mu: number;
-}
-
-export interface CR3BPState extends CR3BPVector {
+export interface PlanarBodyState extends PlanarVector {
+    readonly mass: number;
     readonly vx: number;
     readonly vy: number;
 }
 
-export type CR3BPStatus =
-    | 'active'
-    | 'collision-primary'
-    | 'collision-secondary'
-    | 'escaped';
+export interface PlanarThreeBodyParameters {
+    readonly gravity: number;
+    readonly softening: number;
+}
 
-export type CR3BPReferenceFrame = 'inertial' | 'rotating';
+export type PlanarThreeBodyPreset =
+    | 'figure-eight'
+    | 'rotating-triangle'
+    | 'binary-visitor';
 
-export interface CR3BPSnapshot {
+export interface PlanarThreeBodySnapshot {
     readonly elapsedTime: number;
-    readonly state: CR3BPState;
-    readonly status: CR3BPStatus;
+    readonly bodies: readonly PlanarBodyState[];
 }
 
-export interface CR3BPDiagnostics {
-    readonly jacobiConstant: number;
-    readonly normalizedJacobiDrift: number;
-    readonly speed: number;
-    readonly primaryDistance: number;
-    readonly secondaryDistance: number;
+export interface PlanarThreeBodyDiagnostics {
+    readonly totalEnergy: number;
+    readonly normalizedEnergyDrift: number;
+    readonly momentum: PlanarVector;
+    readonly momentumMagnitude: number;
+    readonly barycenter: PlanarVector;
+    readonly minimumDistance: number;
 }
 
-export interface CR3BPTrailPoint extends CR3BPVector {
+export interface PlanarTrailPoint extends PlanarVector {
     readonly time: number;
 }
 
-export interface CR3BPLagrangePoint extends CR3BPVector {
-    readonly name: 'L1' | 'L2' | 'L3' | 'L4' | 'L5';
-}
-
-export interface CR3BPGravityVectors {
-    readonly primary: CR3BPVector;
-    readonly secondary: CR3BPVector;
-}
-
-export interface RestrictedThreeBodyViewState {
-    readonly snapshot: CR3BPSnapshot;
-    readonly diagnostics: CR3BPDiagnostics;
-    readonly primary: CR3BPVector;
-    readonly secondary: CR3BPVector;
-    readonly lagrangePoints: readonly CR3BPLagrangePoint[];
-    readonly gravityVectors: CR3BPGravityVectors;
-    readonly trail: readonly CR3BPTrailPoint[];
-    readonly referenceFrame: CR3BPReferenceFrame;
-    readonly showLagrangePoints: boolean;
-    readonly showGravityVectors: boolean;
+export interface PlanarThreeBodyViewState {
+    readonly snapshot: PlanarThreeBodySnapshot;
+    readonly diagnostics: PlanarThreeBodyDiagnostics;
+    readonly accelerations: readonly PlanarVector[];
+    readonly trails: readonly (readonly PlanarTrailPoint[])[];
+    readonly preset: PlanarThreeBodyPreset;
+    readonly showVelocityVectors: boolean;
+    readonly showBarycenter: boolean;
     readonly diagnosticsText: string;
     readonly modelSummary: string;
 }
