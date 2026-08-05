@@ -19,11 +19,24 @@ import {
     palette,
     strokeNode,
 } from '../../../ui/UiFactory';
-import type { LorenzAttractorViewState, LorenzState } from './LorenzAttractorTypes';
+import type {
+    LorenzAttractorViewState,
+    LorenzState,
+} from './LorenzAttractorTypes';
 import type { LorenzAttractorViewModel } from './LorenzAttractorViewModel';
 
-const PRIMARY_COLOR = new Color(palette.primary.r, palette.primary.g, palette.primary.b, 220);
-const SHADOW_COLOR = new Color(palette.warning.r, palette.warning.g, palette.warning.b, 150);
+const PRIMARY_COLOR = new Color(
+    palette.primary.r,
+    palette.primary.g,
+    palette.primary.b,
+    220,
+);
+const SHADOW_COLOR = new Color(
+    palette.warning.r,
+    palette.warning.g,
+    palette.warning.b,
+    150,
+);
 
 export interface LorenzAttractorViewActions {
     parameterChanged(key: string): void;
@@ -63,12 +76,27 @@ export class LorenzAttractorView {
 
         const compact = viewport.breakpoint === 'compact';
         const horizontalPadding = compact ? 16 : 36;
-        const safeWidth = Math.max(1, viewport.width - viewport.safeInsets.left - viewport.safeInsets.right);
-        const contentWidth = Math.max(1, Math.min(1180, safeWidth - horizontalPadding * 2));
+        const safeWidth = Math.max(
+            1,
+            viewport.width - viewport.safeInsets.left - viewport.safeInsets.right,
+        );
+        const contentWidth = Math.max(
+            1,
+            Math.min(1180, safeWidth - horizontalPadding * 2),
+        );
         const centerX = (viewport.safeInsets.left - viewport.safeInsets.right) / 2;
-        const panelHeight = ParameterPanel.measureHeight(this.parameterSchema.length, contentWidth, viewport.breakpoint);
-        const panelY = -viewport.height / 2 + viewport.safeInsets.bottom + 12 + panelHeight / 2;
-        const plotTop = viewport.height / 2 - viewport.safeInsets.top - (compact ? 70 : 78);
+        const panelHeight = ParameterPanel.measureHeight(
+            this.parameterSchema.length,
+            contentWidth,
+            viewport.breakpoint,
+        );
+        const panelY = -viewport.height / 2
+            + viewport.safeInsets.bottom
+            + 12
+            + panelHeight / 2;
+        const plotTop = viewport.height / 2
+            - viewport.safeInsets.top
+            - (compact ? 70 : 78);
         const plotBottom = panelY + panelHeight / 2 + 12;
         this.plotWidth = contentWidth;
         this.plotHeight = Math.max(1, plotTop - plotBottom);
@@ -91,19 +119,38 @@ export class LorenzAttractorView {
         this.createInformationViews(plot, compact);
         this.drawReference();
 
-        this.parameterPanelLayout = { width: contentWidth, x: centerX, y: panelY, breakpoint: viewport.breakpoint };
+        this.parameterPanelLayout = {
+            width: contentWidth,
+            x: centerX,
+            y: panelY,
+            breakpoint: viewport.breakpoint,
+        };
         this.rebuildParameterPanel();
     }
 
     render(state: LorenzAttractorViewState): void {
         const trails = this.trailGraphics;
         const markers = this.markerGraphics;
-        if (!trails || !markers) return;
+        if (!trails || !markers) {
+            return;
+        }
 
         trails.clear();
-        this.drawTrail(trails, state.primaryTrail, state.viewAngle, PRIMARY_COLOR, 1.7);
+        this.drawTrail(
+            trails,
+            state.primaryTrail,
+            state.viewAngle,
+            PRIMARY_COLOR,
+            1.7,
+        );
         if (state.showShadow) {
-            this.drawTrail(trails, state.shadowTrail, state.viewAngle, SHADOW_COLOR, 1.0);
+            this.drawTrail(
+                trails,
+                state.shadowTrail,
+                state.viewAngle,
+                SHADOW_COLOR,
+                1,
+            );
         }
 
         markers.clear();
@@ -111,6 +158,7 @@ export class LorenzAttractorView {
         markers.fillColor = palette.accent;
         markers.circle(primary.x, primary.y, 5);
         markers.fill();
+
         if (state.showShadow) {
             const shadow = this.project(state.snapshot.shadow, state.viewAngle);
             markers.fillColor = palette.warning;
@@ -118,11 +166,17 @@ export class LorenzAttractorView {
             markers.fill();
         }
 
-        if (this.diagnosticsLabel) this.diagnosticsLabel.string = state.diagnostics;
-        if (this.modelLabel) this.modelLabel.string = state.modelSummary;
+        if (this.diagnosticsLabel) {
+            this.diagnosticsLabel.string = state.diagnostics;
+        }
+        if (this.modelLabel) {
+            this.modelLabel.string = state.modelSummary;
+        }
     }
 
-    refreshParameterPanel(): void { this.rebuildParameterPanel(); }
+    refreshParameterPanel(): void {
+        this.rebuildParameterPanel();
+    }
 
     destroy(): void {
         this.parameterPanel?.destroy();
@@ -138,13 +192,19 @@ export class LorenzAttractorView {
         color: Color,
         width: number,
     ): void {
-        if (points.length < 2) return;
+        if (points.length < 2) {
+            return;
+        }
+
         graphics.strokeColor = color;
         graphics.lineWidth = width;
         points.forEach((point, index) => {
             const projected = this.project(point, angle);
-            if (index === 0) graphics.moveTo(projected.x, projected.y);
-            else graphics.lineTo(projected.x, projected.y);
+            if (index === 0) {
+                graphics.moveTo(projected.x, projected.y);
+            } else {
+                graphics.lineTo(projected.x, projected.y);
+            }
         });
         graphics.stroke();
     }
@@ -163,7 +223,10 @@ export class LorenzAttractorView {
 
     private rebuildParameterPanel(): void {
         const layout = this.parameterPanelLayout;
-        if (!layout) return;
+        if (!layout) {
+            return;
+        }
+
         this.parameterPanel?.destroy();
         this.parameterPanel = new ParameterPanel(
             this.root,
@@ -176,7 +239,12 @@ export class LorenzAttractorView {
     }
 
     private createGraphicsLayer(parent: Node, name: string): Graphics {
-        return createUiNode(parent, name, this.plotWidth, this.plotHeight).addComponent(Graphics);
+        return createUiNode(
+            parent,
+            name,
+            this.plotWidth,
+            this.plotHeight,
+        ).addComponent(Graphics);
     }
 
     private createInformationViews(plot: Node, compact: boolean): void {
@@ -192,7 +260,9 @@ export class LorenzAttractorView {
             HorizontalTextAlignment.LEFT,
         );
         const methodLabel = methodNode.getComponent(Label);
-        if (methodLabel) methodLabel.enableWrapText = false;
+        if (methodLabel) {
+            methodLabel.enableWrapText = false;
+        }
 
         const modelNode = createLabel(
             plot,
@@ -206,7 +276,9 @@ export class LorenzAttractorView {
             HorizontalTextAlignment.LEFT,
         );
         this.modelLabel = modelNode.getComponent(Label);
-        if (this.modelLabel) this.modelLabel.enableWrapText = false;
+        if (this.modelLabel) {
+            this.modelLabel.enableWrapText = false;
+        }
 
         const diagnosticsNode = createLabel(
             plot,
@@ -220,12 +292,17 @@ export class LorenzAttractorView {
             HorizontalTextAlignment.LEFT,
         );
         this.diagnosticsLabel = diagnosticsNode.getComponent(Label);
-        if (this.diagnosticsLabel) this.diagnosticsLabel.enableWrapText = false;
+        if (this.diagnosticsLabel) {
+            this.diagnosticsLabel.enableWrapText = false;
+        }
     }
 
     private drawReference(): void {
         const graphics = this.referenceGraphics;
-        if (!graphics) return;
+        if (!graphics) {
+            return;
+        }
+
         graphics.clear();
         graphics.strokeColor = palette.border;
         graphics.lineWidth = 1;
