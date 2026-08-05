@@ -15,18 +15,20 @@ const FIXED_STEP_SECONDS = 1 / 240;
 const MAXIMUM_SUBSTEPS = 48;
 const TRAIL_CAPACITY = 2400;
 const SAMPLE_INTERVAL = 4;
+const CLASSIC_BETA = 8 / 3;
 
 const DEFAULT_PARAMETERS: LorenzParameters = {
     sigma: 10,
     rho: 28,
-    beta: 8 / 3,
+    beta: CLASSIC_BETA,
 };
 
 export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'sigma',
-        label: 'Prandtl parameter σ',
+        label: 'σ · velocity response',
+        description: 'How quickly circulation responds to the temperature-contrast state.',
         defaultValue: 10,
         minimum: 1,
         maximum: 24,
@@ -37,7 +39,8 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'rho',
-        label: 'Rayleigh parameter ρ',
+        label: 'ρ · thermal driving',
+        description: 'Dimensionless heating strength, analogous to a reduced Rayleigh control parameter.',
         defaultValue: 28,
         minimum: 0.5,
         maximum: 60,
@@ -48,18 +51,20 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'beta',
-        label: 'Geometry parameter β',
-        defaultValue: 2.67,
+        label: 'β · geometry loss · ⁸⁄₃',
+        description: 'Geometric dissipation factor. The classic Lorenz value is exactly 8/3.',
+        defaultValue: CLASSIC_BETA,
         minimum: 0.5,
         maximum: 8,
-        step: 0.1,
-        decimals: 2,
+        step: 1 / 30,
+        decimals: 3,
         unit: '',
     },
     {
         kind: 'number',
         key: 'initialX',
-        label: 'Initial x',
+        label: 'Initial x · circulation',
+        description: 'Initial circulation intensity and direction.',
         defaultValue: 1,
         minimum: -20,
         maximum: 20,
@@ -70,7 +75,8 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'initialY',
-        label: 'Initial y',
+        label: 'Initial y · horizontal ΔT',
+        description: 'Initial horizontal temperature-contrast state.',
         defaultValue: 1,
         minimum: -20,
         maximum: 20,
@@ -81,7 +87,8 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'initialZ',
-        label: 'Initial z',
+        label: 'Initial z · vertical ΔT',
+        description: 'Initial vertical temperature-profile distortion.',
         defaultValue: 1,
         minimum: 0,
         maximum: 50,
@@ -92,7 +99,8 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'perturbation',
-        label: 'Initial separation',
+        label: 'Nearby-state offset Δx₀',
+        description: 'Difference between the two initial states used to demonstrate sensitive dependence.',
         defaultValue: 0.00001,
         minimum: 0.000001,
         maximum: 0.01,
@@ -103,7 +111,7 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'speed',
-        label: 'Time scale',
+        label: 'Simulation time scale',
         defaultValue: 1,
         minimum: 0.25,
         maximum: 3,
@@ -115,6 +123,7 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
         kind: 'toggle',
         key: 'showShadow',
         label: 'Nearby trajectory',
+        description: 'Show the trajectory starting only Δx₀ away from the primary state.',
         defaultValue: true,
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
@@ -122,7 +131,8 @@ export const LORENZ_ATTRACTOR_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'toggle',
         key: 'rotateView',
-        label: 'Auto rotation',
+        label: 'Rotate state-space view',
+        description: 'Rotate the projection of the abstract x-y-z state space.',
         defaultValue: true,
         onLabel: 'ON',
         offLabel: 'OFF',
@@ -230,7 +240,7 @@ export class LorenzAttractorViewModel extends ParameterController {
                 diagnostics.regime.toUpperCase().replace('-', ' '),
                 `σ ${this.model.parameters.sigma.toFixed(2)}`,
                 `ρ ${this.model.parameters.rho.toFixed(2)}`,
-                `β ${this.model.parameters.beta.toFixed(2)}`,
+                `β ${this.formatBeta(this.model.parameters.beta)}`,
             ].join(' · '),
         };
     }
@@ -305,5 +315,11 @@ export class LorenzAttractorViewModel extends ParameterController {
         if (target.length > TRAIL_CAPACITY) {
             target.splice(0, target.length - TRAIL_CAPACITY);
         }
+    }
+
+    private formatBeta(value: number): string {
+        return Math.abs(value - CLASSIC_BETA) < 1e-9
+            ? '⁸⁄₃'
+            : value.toFixed(3);
     }
 }
