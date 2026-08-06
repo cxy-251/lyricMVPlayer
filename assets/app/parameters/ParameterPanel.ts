@@ -26,8 +26,8 @@ import type {
 } from './ParameterSchema';
 
 const DEFAULT_ROW_HEIGHT = 78;
-const DETAILED_ROW_HEIGHT = 162;
-const DETAILED_SCHEMA_ITEM_COUNT = 10;
+const SIDE_PANEL_MAX_ROWS = 5;
+const SIDE_PANEL_MIN_ROW_HEIGHT = 62;
 const DESCRIPTION_THRESHOLD = 112;
 
 export interface ParameterPanelLayout {
@@ -35,6 +35,7 @@ export interface ParameterPanelLayout {
     readonly x: number;
     readonly y: number;
     readonly breakpoint: ViewportBreakpoint;
+    readonly height?: number;
 }
 
 interface PanelMetrics {
@@ -78,6 +79,7 @@ export class ParameterPanel {
             this.schema.length,
             layout.width,
             layout.breakpoint,
+            layout.height,
         );
         this.page = Math.min(this.page, metrics.pageCount - 1);
 
@@ -408,21 +410,40 @@ export class ParameterPanel {
         itemCount: number,
         width: number,
         breakpoint: ViewportBreakpoint,
+        targetHeight?: number,
     ): PanelMetrics {
         const columns = breakpoint === 'compact'
             ? width < 420 ? 1 : 2
             : width < 980
                 ? 3
                 : 4;
-        const maximumRows = 2;
+        const requestedHeight = Number.isFinite(targetHeight)
+            ? Math.max(1, targetHeight as number)
+            : null;
+        const maximumRows = requestedHeight === null
+            ? 2
+            : Math.max(
+                1,
+                Math.min(
+                    SIDE_PANEL_MAX_ROWS,
+                    Math.floor(
+                        (requestedHeight - 44 - 14) / SIDE_PANEL_MIN_ROW_HEIGHT,
+                    ),
+                ),
+            );
         const pageSize = columns * maximumRows;
         const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
         const visibleCount = Math.min(itemCount, pageSize);
         const rows = Math.max(1, Math.ceil(visibleCount / columns));
-        const rowHeight = itemCount === DETAILED_SCHEMA_ITEM_COUNT
-            ? DETAILED_ROW_HEIGHT
-            : DEFAULT_ROW_HEIGHT;
         const pagerHeight = pageCount > 1 ? 44 : 12;
+        const rowHeight = requestedHeight === null
+            ? DEFAULT_ROW_HEIGHT
+            : Math.max(
+                1,
+                (requestedHeight - pagerHeight - 14) / rows,
+            );
+        const height = requestedHeight
+            ?? rows * rowHeight + pagerHeight + 14;
 
         return {
             columns,
@@ -431,7 +452,7 @@ export class ParameterPanel {
             pageCount,
             rowHeight,
             pagerHeight,
-            height: rows * rowHeight + pagerHeight + 14,
+            height,
         };
     }
 }
