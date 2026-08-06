@@ -12,9 +12,10 @@ import type {
 
 const PARAMETER_APPLY_DELAY_MS = 140;
 const FIXED_STEP_SECONDS = 1 / 240;
-const MAXIMUM_SUBSTEPS = 48;
-const TRAIL_CAPACITY = 2400;
-const SAMPLE_INTERVAL = 4;
+const MAXIMUM_SUBSTEPS = 24;
+const TRAIL_CAPACITY = 1600;
+const TRAIL_TRIM_BATCH = 128;
+const SAMPLE_INTERVAL = 8;
 const CLASSIC_BETA = 8 / 3;
 const FRACTION_MATCH_TOLERANCE = 5e-7;
 
@@ -316,7 +317,7 @@ export class LorenzAttractorViewModel extends ParameterController {
 
     private pushBounded(target: LorenzTrailPoint[], point: LorenzTrailPoint): void {
         target.push(point);
-        if (target.length > TRAIL_CAPACITY) {
+        if (target.length > TRAIL_CAPACITY + TRAIL_TRIM_BATCH) {
             target.splice(0, target.length - TRAIL_CAPACITY);
         }
     }
