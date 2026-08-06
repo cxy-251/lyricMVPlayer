@@ -12,8 +12,9 @@ import type {
 
 const PARAMETER_APPLY_DELAY_MS = 140;
 const FIXED_STEP_SECONDS = 1 / 240;
-const MAXIMUM_SUBSTEPS = 32;
+const MAXIMUM_SUBSTEPS = 24;
 const TRAIL_CAPACITY = 480;
+const TRAIL_SAMPLE_INTERVAL = 4;
 
 const DEFAULT_MODEL_PARAMETERS: DoublePendulumParameters = {
     gravity: 9.81,
@@ -155,6 +156,7 @@ export class DoublePendulumViewModel extends ParameterController {
     private readonly model = new DoublePendulumModel(DEFAULT_MODEL_PARAMETERS);
     private parameterApplyTimer: ReturnType<typeof setTimeout> | null = null;
     private paused = false;
+    private trailSampleCounter = 0;
 
     constructor(
         storage: StorageService,
@@ -178,7 +180,11 @@ export class DoublePendulumViewModel extends ParameterController {
             this.getNumber('speed'),
             (step) => {
                 this.model.step(step);
-                this.pushTrailPoint();
+                this.trailSampleCounter += 1;
+                if (this.trailSampleCounter >= TRAIL_SAMPLE_INTERVAL) {
+                    this.trailSampleCounter = 0;
+                    this.pushTrailPoint();
+                }
             },
         );
         return steps > 0;
@@ -263,6 +269,7 @@ export class DoublePendulumViewModel extends ParameterController {
         this.model.reset(this.readInitialState());
         this.clock.reset();
         this.trail.clear();
+        this.trailSampleCounter = 0;
         this.pushTrailPoint();
     }
 
