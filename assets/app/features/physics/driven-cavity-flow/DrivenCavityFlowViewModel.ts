@@ -66,19 +66,19 @@ export const DRIVEN_CAVITY_FLOW_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'select',
         key: 'displayMode',
-        label: 'Flow-field display',
-        defaultValue: 'tracers',
+        label: 'Result contour',
+        defaultValue: 'speed',
         options: [
-            { value: 'tracers', label: 'TRACER PARTICLES' },
-            { value: 'vorticity', label: 'VORTICITY FIELD' },
-            { value: 'speed', label: 'SPEED FIELD' },
+            { value: 'speed', label: 'VELOCITY MAGNITUDE' },
+            { value: 'vorticity', label: 'VORTICITY' },
+            { value: 'tracers', label: 'VELOCITY + PARTICLES' },
         ],
     },
     {
         kind: 'number',
         key: 'tracerCount',
-        label: 'Tracer-particle count',
-        defaultValue: 280,
+        label: 'Particle-track count',
+        defaultValue: 240,
         minimum: 80,
         maximum: 520,
         step: 40,
@@ -125,7 +125,7 @@ export class DrivenCavityFlowViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:driven-cavity-flow:parameters-v1',
+            'module:driven-cavity-flow:parameters-v2',
             DRIVEN_CAVITY_FLOW_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
@@ -191,24 +191,29 @@ export class DrivenCavityFlowViewModel extends ParameterController {
     createViewState(): DrivenCavityFlowViewState {
         const snapshot = this.model.snapshot();
         const diagnostics = this.model.diagnostics();
+        const displayMode = this.getString('displayMode') as CavityDisplayMode;
+        const resultName = displayMode === 'vorticity'
+            ? 'VORTICITY CONTOUR'
+            : displayMode === 'tracers'
+                ? 'VELOCITY CONTOUR + PARTICLES'
+                : 'VELOCITY MAGNITUDE CONTOUR';
         return {
             snapshot,
             diagnostics,
             tracers: this.tracers,
-            displayMode: this.getString('displayMode') as CavityDisplayMode,
+            displayMode,
             showVectors: this.getBoolean('showVectors'),
             showGrid: this.getBoolean('showGrid'),
             diagnosticsText: [
                 `step ${snapshot.elapsedSteps}`,
                 `Re ${diagnostics.reynoldsNumber.toFixed(0)}`,
-                `umax ${diagnostics.maximumSpeed.toFixed(4)}`,
-                `Δm ${diagnostics.normalizedMassDrift.toExponential(2)}`,
+                `max ${diagnostics.maximumSpeed.toFixed(4)}`,
+                `mass drift ${diagnostics.normalizedMassDrift.toExponential(2)}`,
             ].join(' · '),
             modelSummary: [
-                'D2Q9 BGK',
-                `${snapshot.width}² CELLS`,
-                `τ ${diagnostics.relaxationTime.toFixed(3)}`,
-                `Utop ${diagnostics.topMeanVelocityX.toFixed(4)}`,
+                resultName,
+                `${snapshot.width} × ${snapshot.height}`,
+                'TOP WALL →',
             ].join(' · '),
         };
     }
