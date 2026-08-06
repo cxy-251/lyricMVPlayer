@@ -1,67 +1,149 @@
-import { SliderCrankModel } from './SliderCrankModel';
+import { MechanicalLinkagesModel } from './MechanicalLinkagesModel';
+import type {
+    MechanicalLinkageConfiguration,
+    MechanicalLinkageKind,
+} from './SliderCrankTypes';
+
+const TAU = Math.PI * 2;
 
 export function runSliderCrankContractChecks(): void {
-    checkDeadCenters();
-    checkRodConstraint();
-    checkVelocityAtDeadCenters();
-    checkCycleFiniteness();
+    checkSliderCrankConstraint();
+    checkFourBarClosure();
+    checkGenevaIndexingAndDwell();
+    checkAllCyclesRemainFinite();
 }
 
-function checkDeadCenters(): void {
-    const model = createModel();
+function checkSliderCrankConstraint(): void {
+    const model = createModel('slider-crank', 'standard');
     const right = model.sampleAt(0);
     const left = model.sampleAt(Math.PI);
-    assertClose(right.pistonPosition, 3.6, 1e-10, 'Right dead-center position');
-    assertClose(left.pistonPosition, 2.0, 1e-10, 'Left dead-center position');
-    assertClose(right.strokeFraction, 1, 1e-10, 'Right dead-center stroke');
-    assertClose(left.strokeFraction, 0, 1e-10, 'Left dead-center stroke');
-}
-
-function checkRodConstraint(): void {
-    const model = createModel();
+    assert(right.mechanism === 'slider-crank', 'Slider-crank sample type changed');
+    assert(left.mechanism === 'slider-crank', 'Slider-crank sample type changed');
+    assertClose(right.outputVelocity, 0, 1e-9, 'Right dead-center velocity');
+    assertClose(left.outputVelocity, 0, 1e-9, 'Left dead-center velocity');
     for (let index = 0; index < 360; index += 3) {
         const sample = model.sampleAt(index * Math.PI / 180);
-        const distance = Math.hypot(
-            sample.pistonPin.x - sample.crankPin.x,
-            sample.pistonPin.y - sample.crankPin.y,
+        assert(sample.mechanism === 'slider-crank', 'Slider-crank sample type changed');
+        const length = Math.hypot(
+            sample.sliderPin.x - sample.crankPin.x,
+            sample.sliderPin.y - sample.crankPin.y,
         );
-        assertClose(distance, 2.8, 1e-9, 'Connecting-rod length constraint');
+        assertClose(
+            length,
+            sample.rodLength,
+            1e-9,
+            'Slider-crank connecting-rod constraint',
+        );
     }
 }
 
-function checkVelocityAtDeadCenters(): void {
-    const model = createModel();
-    assertClose(
-        model.sampleAt(0).pistonVelocity,
-        0,
-        1e-10,
-        'Right dead-center velocity',
-    );
-    assertClose(
-        model.sampleAt(Math.PI).pistonVelocity,
-        0,
-        1e-10,
-        'Left dead-center velocity',
-    );
-}
-
-function checkCycleFiniteness(): void {
-    const model = createModel();
-    const cycle = model.sampleCycle(181);
-    assert(cycle.length === 181, 'Slider-crank cycle sample count changed');
-    for (const point of cycle) {
-        assert(Number.isFinite(point.position), 'Slider-crank position became non-finite');
-        assert(Number.isFinite(point.velocity), 'Slider-crank velocity became non-finite');
-        assert(Number.isFinite(point.acceleration), 'Slider-crank acceleration became non-finite');
+function checkFourBarClosure(): void {
+    for (const configuration of configurations()) {
+        const model = createModel('four-bar', configuration);
+        for (let index = 0; index < 360; index += 2) {
+            const sample = model.sampleAt(index * Math.PI / 180);
+            assert(sample.mechanism === 'four-bar', 'Four-bar sample type changed');
+            assertClose(
+                distance(sample.fixedInput, sample.crankPin),
+                sample.inputLength,
+                1e-9,
+                'Four-bar input-link constraint',
+            );
+            assertClose(
+                distance(sample.crankPin, sample.couplerPin),
+                sample.couplerLength,
+                1e-9,
+                'Four-bar coupler constraint',
+            );
+            assertClose(
+                distance(sample.fixedOutput, sample.couplerPin),
+                sample.outputLength,
+                1e-9,
+                'Four-bar output-link constraint',
+            );
+            assert(
+                sample.transmissionAngle > 0
+                    && sample.transmissionAngle < Math.PI,
+                'Four-bar transmission angle became invalid',
+            );
+        }
     }
 }
 
-function createModel(): SliderCrankModel {
-    return new SliderCrankModel({
-        crankRadius: 0.8,
-        rodLength: 2.8,
+function checkGenevaIndexingAndDwell(): void {
+    for (const configuration of configurations()) {
+        const model = createModel('geneva', configuration);
+        const start = model.sampleAt(0);
+        const end = model.sampleAt(TAU);
+        const dwell = model.sampleAt(Math.PI);
+        assert(start.mechanism === 'geneva', 'Geneva sample type changed');
+        assert(end.mechanism === 'geneva', 'Geneva sample type changed');
+        assert(dwell.mechanism === 'geneva', 'Geneva sample type changed');
+        const expectedStep = TAU / start.slotCount;
+        assertClose(
+            end.output - start.output,
+            expectedStep,
+            1e-9,
+            'Geneva index angle per driver revolution',
+        );
+        assert(!dwell.engaged, 'Geneva output did not enter its dwell phase');
+        assertClose(
+            dwell.outputVelocity,
+            0,
+            1e-8,
+            'Geneva output velocity during dwell',
+        );
+    }
+}
+
+function checkAllCyclesRemainFinite(): void {
+    for (const mechanism of mechanisms()) {
+        for (const configuration of configurations()) {
+            const model = createModel(mechanism, configuration);
+            const cycleSamples = model.sampleCycle(181);
+            assert(
+                cycleSamples.length === 181,
+                `${mechanism} cycle sample count changed`,
+            );
+            for (const point of cycleSamples) {
+                assert(Number.isFinite(point.output), `${mechanism} output became non-finite`);
+                assert(Number.isFinite(point.velocity), `${mechanism} velocity became non-finite`);
+                assert(
+                    Number.isFinite(point.acceleration),
+                    `${mechanism} acceleration became non-finite`,
+                );
+                assert(Number.isFinite(point.tracePoint.x), `${mechanism} trace x became non-finite`);
+                assert(Number.isFinite(point.tracePoint.y), `${mechanism} trace y became non-finite`);
+            }
+        }
+    }
+}
+
+function createModel(
+    mechanism: MechanicalLinkageKind,
+    configuration: MechanicalLinkageConfiguration,
+): MechanicalLinkagesModel {
+    return new MechanicalLinkagesModel({
+        mechanism,
+        configuration,
+        scale: 1,
         angularVelocity: 2,
     });
+}
+
+function mechanisms(): MechanicalLinkageKind[] {
+    return ['slider-crank', 'four-bar', 'geneva'];
+}
+
+function configurations(): MechanicalLinkageConfiguration[] {
+    return ['compact', 'standard', 'wide'];
+}
+
+function distance(
+    first: { readonly x: number; readonly y: number },
+    second: { readonly x: number; readonly y: number },
+): number {
+    return Math.hypot(second.x - first.x, second.y - first.y);
 }
 
 function assertClose(
