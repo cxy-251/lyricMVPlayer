@@ -5,8 +5,8 @@ import type {
 } from '../../../contracts/InteractiveModule';
 import type { ViewportSnapshot } from '../../../services/ViewportService';
 import { ResponsiveModule } from '../../../templates/ResponsiveModule';
+import { MechanicalLinkagesView } from './MechanicalLinkagesView';
 import type { MechanicalLinkageKind } from './SliderCrankTypes';
-import { SliderCrankView } from './SliderCrankView';
 import {
     SLIDER_CRANK_PARAMETER_SCHEMA,
     SliderCrankViewModel,
@@ -18,7 +18,7 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
     protected readonly rootName = 'MechanicalLinkagesModuleRoot';
 
     private viewModel: SliderCrankViewModel | null = null;
-    private view: SliderCrankView | null = null;
+    private view: MechanicalLinkagesView | null = null;
     private lastRenderAt = 0;
 
     protected onMount(): void {
@@ -29,7 +29,7 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
                 reportError: (error) => context.reportError(error),
             },
         );
-        this.view = new SliderCrankView(
+        this.view = new MechanicalLinkagesView(
             this.requireRoot(),
             SLIDER_CRANK_PARAMETER_SCHEMA,
             this.viewModel,
@@ -103,7 +103,7 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
         return this.viewModel;
     }
 
-    private requireView(): SliderCrankView {
+    private requireView(): MechanicalLinkagesView {
         if (!this.view) {
             throw new Error('Mechanical linkages view is unavailable');
         }
