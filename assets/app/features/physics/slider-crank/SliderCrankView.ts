@@ -22,19 +22,37 @@ import {
     palette,
     strokeNode,
 } from '../../../ui/UiFactory';
-import type { SliderCrankViewState } from './SliderCrankTypes';
+import type {
+    MechanicalLinkageSample,
+    MechanismPoint,
+    SliderCrankViewState,
+} from './SliderCrankTypes';
 import type { SliderCrankViewModel } from './SliderCrankViewModel';
 
 const CONTENT_GAP = 14;
 const SIDE_INFO_HEIGHT = 154;
-const CRANK_COLOR = new Color(92, 151, 211, 255);
-const ROD_COLOR = new Color(210, 167, 96, 255);
-const PISTON_COLOR = new Color(126, 190, 166, 255);
+const INPUT_COLOR = new Color(92, 151, 211, 255);
+const COUPLER_COLOR = new Color(210, 167, 96, 255);
+const OUTPUT_COLOR = new Color(126, 190, 166, 255);
 const VELOCITY_COLOR = new Color(126, 190, 166, 235);
 const ACCELERATION_COLOR = new Color(224, 151, 72, 235);
 const POSITION_COLOR = new Color(231, 235, 227, 220);
+const TRACE_COLOR = new Color(164, 181, 205, 130);
 const GHOST_COLOR = new Color(180, 188, 181, 80);
 const SHADOW_COLOR = new Color(16, 20, 27, 180);
+const TAU = Math.PI * 2;
+
+interface MechanismTransform {
+    readonly scale: number;
+    point(point: MechanismPoint): MechanismPoint;
+}
+
+interface WorldBounds {
+    readonly minimumX: number;
+    readonly maximumX: number;
+    readonly minimumY: number;
+    readonly maximumY: number;
+}
 
 export interface SliderCrankViewActions {
     parameterChanged(key: string): void;
@@ -152,10 +170,7 @@ export class SliderCrankView {
         this.plotWidth = Math.max(1, contentWidth - inspectorWidth - CONTENT_GAP);
         this.plotHeight = contentHeight;
         const leftEdge = centerX - contentWidth / 2;
-        const plot = this.createPlot(
-            leftEdge + this.plotWidth / 2,
-            centerY,
-        );
+        const plot = this.createPlot(leftEdge + this.plotWidth / 2, centerY);
         const inspector = this.createInspector(
             inspectorWidth,
             contentHeight,
@@ -226,7 +241,7 @@ export class SliderCrankView {
     private createPlot(x: number, y: number): Node {
         const plot = createUiNode(
             this.root,
-            'SliderCrankPlot',
+            'MechanicalLinkagesPlot',
             this.plotWidth,
             this.plotHeight,
             x,
@@ -239,9 +254,9 @@ export class SliderCrankView {
     }
 
     private createGraphicsLayers(plot: Node): void {
-        this.mechanismGraphics = this.createGraphics(plot, 'SliderCrankMechanism');
-        this.curveGraphics = this.createGraphics(plot, 'SliderCrankCurves');
-        this.overlayGraphics = this.createGraphics(plot, 'SliderCrankOverlay');
+        this.mechanismGraphics = this.createGraphics(plot, 'MechanicalLinkage');
+        this.curveGraphics = this.createGraphics(plot, 'MechanicalCurves');
+        this.overlayGraphics = this.createGraphics(plot, 'MechanicalOverlay');
     }
 
     private createInspector(
@@ -254,7 +269,7 @@ export class SliderCrankView {
     ): Node {
         const inspector = createUiNode(
             this.root,
-            'SliderCrankInspector',
+            'MechanicalLinkagesInspector',
             width,
             height,
             x,
@@ -262,7 +277,7 @@ export class SliderCrankView {
         );
         const card = createUiNode(
             inspector,
-            'SliderCrankInfoCard',
+            'MechanicalLinkagesInfoCard',
             width,
             infoHeight,
             0,
@@ -272,7 +287,7 @@ export class SliderCrankView {
         strokeNode(card, width, infoHeight, palette.border, 9, 1);
         createLabel(
             card,
-            'SLIDER–CRANK · EXACT PLANAR KINEMATICS',
+            'MECHANICAL LINKAGES · THREE KINEMATIC SYSTEMS',
             Math.max(1, width - 24),
             22,
             horizontal ? 9 : 10,
@@ -281,60 +296,60 @@ export class SliderCrankView {
             infoHeight / 2 - 17,
             HorizontalTextAlignment.LEFT,
         );
-        const formula = [
-            'x = r cosθ + √(l² − r² sin²θ)',
-            'v = ω dx/dθ     a = ω² d²x/dθ²',
+        const mechanisms = [
+            'slider–crank: rotary → reciprocating motion',
+            'four-bar: full crank rotation → rocker motion',
+            'Geneva drive: continuous input → indexed output',
         ].join('\n');
         const explanation = [
-            'blue: crank and flywheel',
-            'amber: connecting rod',
-            'green: piston constrained to the cylinder axis',
-            'plot: white position · green velocity · orange acceleration',
+            'blue: input member · amber: coupler',
+            'green: output member',
+            'white / green / orange curves: output / velocity / acceleration',
         ].join('\n');
         if (horizontal && width >= 650) {
             this.createMultilineLabel(
                 card,
-                formula,
-                width * 0.43,
+                mechanisms,
+                width * 0.51,
                 infoHeight - 34,
-                10,
+                9,
                 palette.primaryText,
-                -width * 0.27,
+                -width * 0.24,
                 -7,
-                18,
+                16,
             );
             this.createMultilineLabel(
                 card,
                 explanation,
-                width * 0.51,
+                width * 0.43,
                 infoHeight - 34,
                 9,
                 palette.muted,
-                width * 0.23,
+                width * 0.27,
                 -7,
                 15,
             );
         } else {
             this.createMultilineLabel(
                 card,
-                formula,
+                mechanisms,
                 Math.max(1, width - 24),
-                48,
-                10,
+                54,
+                9,
                 palette.primaryText,
                 0,
-                infoHeight / 2 - 52,
-                18,
+                infoHeight / 2 - 54,
+                16,
             );
             this.createMultilineLabel(
                 card,
                 explanation,
                 Math.max(1, width - 24),
-                Math.max(1, infoHeight - 72),
+                Math.max(1, infoHeight - 78),
                 9,
                 palette.muted,
                 0,
-                -infoHeight / 2 + Math.max(1, infoHeight - 72) / 2 + 5,
+                -infoHeight / 2 + Math.max(1, infoHeight - 78) / 2 + 5,
                 14,
             );
         }
@@ -344,7 +359,7 @@ export class SliderCrankView {
     private createOverlays(plot: Node, compact: boolean): void {
         createLabel(
             plot,
-            'CRANK ROTATION → RECIPROCATING PISTON MOTION',
+            'ROTARY INPUT · CONSTRAINED MECHANICAL OUTPUT',
             Math.max(1, this.plotWidth - 32),
             22,
             compact ? 8 : 10,
@@ -353,11 +368,11 @@ export class SliderCrankView {
             this.plotHeight / 2 - 18,
             HorizontalTextAlignment.LEFT,
         );
-        const statusWidth = Math.min(650, Math.max(1, this.plotWidth - 28));
+        const statusWidth = Math.min(680, Math.max(1, this.plotWidth - 28));
         const statusHeight = compact ? 54 : 60;
         const status = createUiNode(
             plot,
-            'SliderCrankStatus',
+            'MechanicalLinkagesStatus',
             statusWidth,
             statusHeight,
             -this.plotWidth / 2 + statusWidth / 2 + 14,
@@ -395,180 +410,461 @@ export class SliderCrankView {
         const graphics = this.mechanismGraphics;
         if (!graphics) return;
         graphics.clear();
+        const transform = this.createMechanismTransform(state);
+        if (state.showTrace) this.drawTrace(graphics, state, transform);
+        switch (state.sample.mechanism) {
+            case 'four-bar':
+                this.drawFourBar(graphics, state, transform);
+                break;
+            case 'geneva':
+                this.drawGeneva(graphics, state, transform);
+                break;
+            default:
+                this.drawSliderCrank(graphics, state, transform);
+                break;
+        }
+    }
 
+    private createMechanismTransform(
+        state: SliderCrankViewState,
+    ): MechanismTransform {
+        const bounds = this.worldBounds(state.sample);
         const chartHeight = state.showPlot
             ? Math.min(174, Math.max(110, this.plotHeight * 0.28))
             : 0;
-        const mechanismTop = this.plotHeight / 2 - 42;
-        const mechanismBottom = -this.plotHeight / 2 + 78
+        const top = this.plotHeight / 2 - 44;
+        const bottom = -this.plotHeight / 2 + 78
             + (state.showPlot ? chartHeight + 14 : 0);
-        const mechanismHeight = Math.max(80, mechanismTop - mechanismBottom);
-        const r = state.crankRadius;
-        const l = state.rodLength;
-        const worldMinimum = -r * 1.25;
-        const worldMaximum = l + r * 2.1;
+        const left = -this.plotWidth / 2 + 36;
+        const right = this.plotWidth / 2 - 36;
+        const width = Math.max(1e-6, bounds.maximumX - bounds.minimumX);
+        const height = Math.max(1e-6, bounds.maximumY - bounds.minimumY);
         const scale = Math.max(
             1,
-            Math.min(
-                (this.plotWidth - 72) / (worldMaximum - worldMinimum),
-                mechanismHeight / (r * 3.2),
-            ),
+            Math.min((right - left) / width, (top - bottom) / height),
         );
-        const originX = -this.plotWidth / 2 + 36 - worldMinimum * scale;
-        const axisY = (mechanismTop + mechanismBottom) / 2;
-        const crankPin = {
-            x: originX + state.sample.crankPin.x * scale,
-            y: axisY + state.sample.crankPin.y * scale,
+        const worldCenterX = (bounds.minimumX + bounds.maximumX) / 2;
+        const worldCenterY = (bounds.minimumY + bounds.maximumY) / 2;
+        const screenCenterX = (left + right) / 2;
+        const screenCenterY = (bottom + top) / 2;
+        return {
+            scale,
+            point: (point) => ({
+                x: screenCenterX + (point.x - worldCenterX) * scale,
+                y: screenCenterY + (point.y - worldCenterY) * scale,
+            }),
         };
-        const pistonPin = {
-            x: originX + state.sample.pistonPin.x * scale,
-            y: axisY,
-        };
-        const crankCenter = { x: originX, y: axisY };
-        const pistonWidth = Math.max(30, r * scale * 0.78);
-        const pistonHeight = Math.max(26, r * scale * 0.78);
-        const cylinderStart = originX + (l - r * 1.35) * scale;
-        const cylinderEnd = originX + (l + r * 2) * scale;
+    }
 
-        this.drawDeadCenters(
-            graphics,
-            originX + (l - r) * scale,
-            originX + (l + r) * scale,
-            axisY,
-            pistonHeight,
-        );
+    private worldBounds(sample: MechanicalLinkageSample): WorldBounds {
+        if (sample.mechanism === 'four-bar') {
+            const link = Math.max(
+                sample.inputLength,
+                sample.couplerLength,
+                sample.outputLength,
+            );
+            return {
+                minimumX: -sample.inputLength * 1.1,
+                maximumX: sample.groundLength + sample.outputLength * 1.1,
+                minimumY: -link * 0.8,
+                maximumY: link * 1.35,
+            };
+        }
+        if (sample.mechanism === 'geneva') {
+            const radius = Math.max(sample.driverRadius, sample.wheelRadius);
+            return {
+                minimumX: -radius * 1.35,
+                maximumX: sample.centerDistance + sample.wheelRadius * 1.35,
+                minimumY: -radius * 1.35,
+                maximumY: radius * 1.35,
+            };
+        }
+        return {
+            minimumX: -sample.crankRadius * 1.35,
+            maximumX: sample.rodLength + sample.crankRadius * 2.1,
+            minimumY: -sample.crankRadius * 1.55,
+            maximumY: sample.crankRadius * 1.55,
+        };
+    }
+
+    private drawTrace(
+        graphics: Graphics,
+        state: SliderCrankViewState,
+        transform: MechanismTransform,
+    ): void {
+        if (state.cycleSamples.length < 2) return;
+        graphics.strokeColor = TRACE_COLOR;
+        graphics.lineWidth = 1.2;
+        state.cycleSamples.forEach((sample, index) => {
+            const point = transform.point(sample.tracePoint);
+            if (index === 0) graphics.moveTo(point.x, point.y);
+            else graphics.lineTo(point.x, point.y);
+        });
+        graphics.stroke();
+    }
+
+    private drawSliderCrank(
+        graphics: Graphics,
+        state: SliderCrankViewState,
+        transform: MechanismTransform,
+    ): void {
+        const sample = state.sample;
+        if (sample.mechanism !== 'slider-crank') return;
+        const center = transform.point(sample.crankCenter);
+        const crankPin = transform.point(sample.crankPin);
+        const sliderPin = transform.point(sample.sliderPin);
+        const radius = sample.crankRadius * transform.scale;
+        const pistonWidth = Math.max(28, radius * 0.72);
+        const pistonHeight = Math.max(24, radius * 0.72);
+        const cylinderStart = transform.point({
+            x: sample.rodLength - sample.crankRadius * 1.35,
+            y: 0,
+        }).x;
+        const cylinderEnd = transform.point({
+            x: sample.rodLength + sample.crankRadius * 2,
+            y: 0,
+        }).x;
+
+        graphics.strokeColor = GHOST_COLOR;
+        graphics.lineWidth = 1;
+        for (const worldX of [
+            sample.rodLength - sample.crankRadius,
+            sample.rodLength + sample.crankRadius,
+        ]) {
+            const x = transform.point({ x: worldX, y: 0 }).x;
+            graphics.moveTo(x, sliderPin.y - pistonHeight * 0.72);
+            graphics.lineTo(x, sliderPin.y + pistonHeight * 0.72);
+        }
+        graphics.stroke();
 
         graphics.strokeColor = palette.borderStrong;
         graphics.lineWidth = 2;
-        graphics.moveTo(cylinderStart, axisY + pistonHeight * 0.68);
-        graphics.lineTo(cylinderEnd, axisY + pistonHeight * 0.68);
-        graphics.moveTo(cylinderStart, axisY - pistonHeight * 0.68);
-        graphics.lineTo(cylinderEnd, axisY - pistonHeight * 0.68);
+        graphics.moveTo(cylinderStart, sliderPin.y + pistonHeight * 0.68);
+        graphics.lineTo(cylinderEnd, sliderPin.y + pistonHeight * 0.68);
+        graphics.moveTo(cylinderStart, sliderPin.y - pistonHeight * 0.68);
+        graphics.lineTo(cylinderEnd, sliderPin.y - pistonHeight * 0.68);
         graphics.stroke();
 
         graphics.strokeColor = palette.border;
         graphics.lineWidth = 1.2;
-        graphics.circle(crankCenter.x, crankCenter.y, r * scale);
+        graphics.circle(center.x, center.y, radius);
         graphics.stroke();
+        this.drawLink(graphics, center, crankPin, INPUT_COLOR, radius * 0.08);
+        this.drawLink(graphics, crankPin, sliderPin, COUPLER_COLOR, radius * 0.10);
 
-        graphics.strokeColor = SHADOW_COLOR;
-        graphics.lineWidth = Math.max(9, r * scale * 0.14);
-        graphics.moveTo(crankCenter.x, crankCenter.y);
-        graphics.lineTo(crankPin.x, crankPin.y);
-        graphics.stroke();
-        graphics.strokeColor = CRANK_COLOR;
-        graphics.lineWidth = Math.max(5, r * scale * 0.08);
-        graphics.moveTo(crankCenter.x, crankCenter.y);
-        graphics.lineTo(crankPin.x, crankPin.y);
-        graphics.stroke();
-
-        graphics.strokeColor = SHADOW_COLOR;
-        graphics.lineWidth = Math.max(11, r * scale * 0.17);
-        graphics.moveTo(crankPin.x, crankPin.y);
-        graphics.lineTo(pistonPin.x, pistonPin.y);
-        graphics.stroke();
-        graphics.strokeColor = ROD_COLOR;
-        graphics.lineWidth = Math.max(6, r * scale * 0.10);
-        graphics.moveTo(crankPin.x, crankPin.y);
-        graphics.lineTo(pistonPin.x, pistonPin.y);
-        graphics.stroke();
-
-        graphics.fillColor = PISTON_COLOR;
+        graphics.fillColor = OUTPUT_COLOR;
         graphics.rect(
-            pistonPin.x - pistonWidth * 0.42,
-            axisY - pistonHeight / 2,
+            sliderPin.x - pistonWidth * 0.42,
+            sliderPin.y - pistonHeight / 2,
             pistonWidth,
             pistonHeight,
         );
         graphics.fill();
         graphics.strokeColor = palette.borderStrong;
-        graphics.lineWidth = 1.6;
+        graphics.lineWidth = 1.5;
         graphics.rect(
-            pistonPin.x - pistonWidth * 0.42,
-            axisY - pistonHeight / 2,
+            sliderPin.x - pistonWidth * 0.42,
+            sliderPin.y - pistonHeight / 2,
             pistonWidth,
             pistonHeight,
         );
         graphics.stroke();
+        this.drawJoint(graphics, center, Math.max(6, radius * 0.11));
+        this.drawJoint(graphics, crankPin, Math.max(5, radius * 0.09));
+        this.drawJoint(graphics, sliderPin, Math.max(5, radius * 0.085));
 
-        graphics.fillColor = palette.backgroundRaised;
-        graphics.circle(crankCenter.x, crankCenter.y, Math.max(6, r * scale * 0.11));
-        graphics.circle(crankPin.x, crankPin.y, Math.max(5, r * scale * 0.09));
-        graphics.circle(pistonPin.x, pistonPin.y, Math.max(5, r * scale * 0.085));
-        graphics.fill();
-        graphics.strokeColor = palette.borderStrong;
-        graphics.lineWidth = 1.4;
-        graphics.circle(crankCenter.x, crankCenter.y, Math.max(6, r * scale * 0.11));
-        graphics.circle(crankPin.x, crankPin.y, Math.max(5, r * scale * 0.09));
-        graphics.circle(pistonPin.x, pistonPin.y, Math.max(5, r * scale * 0.085));
-        graphics.stroke();
-
-        if (state.showVelocity) {
-            const normalized = state.sample.pistonVelocity / state.maximumVelocity;
-            this.drawHorizontalArrow(
+        if (state.showKinematics) {
+            this.drawLinearArrow(
                 graphics,
-                pistonPin.x,
-                axisY + pistonHeight * 0.95,
-                normalized,
+                sliderPin,
+                sample.outputVelocity / state.maximumVelocity,
+                { x: 1, y: 0 },
+                pistonHeight * 0.92,
                 VELOCITY_COLOR,
             );
-        }
-        if (state.showAcceleration) {
-            const normalized = state.sample.pistonAcceleration
-                / state.maximumAcceleration;
-            this.drawHorizontalArrow(
+            this.drawLinearArrow(
                 graphics,
-                pistonPin.x,
-                axisY - pistonHeight * 0.95,
-                normalized,
+                sliderPin,
+                sample.outputAcceleration / state.maximumAcceleration,
+                { x: 1, y: 0 },
+                -pistonHeight * 0.92,
                 ACCELERATION_COLOR,
             );
         }
     }
 
-    private drawDeadCenters(
+    private drawFourBar(
         graphics: Graphics,
-        minimumX: number,
-        maximumX: number,
-        axisY: number,
-        pistonHeight: number,
+        state: SliderCrankViewState,
+        transform: MechanismTransform,
     ): void {
-        graphics.strokeColor = GHOST_COLOR;
-        graphics.lineWidth = 1;
-        for (const x of [minimumX, maximumX]) {
-            for (let segment = -2; segment <= 2; segment += 1) {
-                const y = axisY + segment * pistonHeight * 0.32;
-                graphics.moveTo(x, y - pistonHeight * 0.11);
-                graphics.lineTo(x, y + pistonHeight * 0.11);
+        const sample = state.sample;
+        if (sample.mechanism !== 'four-bar') return;
+        const fixedInput = transform.point(sample.fixedInput);
+        const fixedOutput = transform.point(sample.fixedOutput);
+        const crankPin = transform.point(sample.crankPin);
+        const couplerPin = transform.point(sample.couplerPin);
+        const couplerPoint = transform.point(sample.couplerPoint);
+        const baseWidth = Math.max(6, sample.inputLength * transform.scale * 0.08);
+
+        this.drawLink(
+            graphics,
+            fixedInput,
+            fixedOutput,
+            palette.borderStrong,
+            baseWidth * 0.8,
+        );
+        this.drawLink(graphics, fixedInput, crankPin, INPUT_COLOR, baseWidth);
+        this.drawLink(graphics, crankPin, couplerPin, COUPLER_COLOR, baseWidth);
+        this.drawLink(graphics, fixedOutput, couplerPin, OUTPUT_COLOR, baseWidth);
+        this.drawJoint(graphics, fixedInput, Math.max(6, baseWidth * 1.05));
+        this.drawJoint(graphics, fixedOutput, Math.max(6, baseWidth * 1.05));
+        this.drawJoint(graphics, crankPin, Math.max(5, baseWidth * 0.9));
+        this.drawJoint(graphics, couplerPin, Math.max(5, baseWidth * 0.9));
+
+        graphics.fillColor = palette.accent;
+        graphics.circle(couplerPoint.x, couplerPoint.y, Math.max(3.5, baseWidth * 0.55));
+        graphics.fill();
+
+        if (state.showKinematics) {
+            const rocker = {
+                x: couplerPin.x - fixedOutput.x,
+                y: couplerPin.y - fixedOutput.y,
+            };
+            const length = Math.max(1e-6, Math.hypot(rocker.x, rocker.y));
+            const tangent = { x: -rocker.y / length, y: rocker.x / length };
+            this.drawLinearArrow(
+                graphics,
+                couplerPin,
+                sample.outputVelocity / state.maximumVelocity,
+                tangent,
+                0,
+                VELOCITY_COLOR,
+            );
+            this.drawLinearArrow(
+                graphics,
+                couplerPin,
+                sample.outputAcceleration / state.maximumAcceleration,
+                tangent,
+                -12,
+                ACCELERATION_COLOR,
+            );
+        }
+    }
+
+    private drawGeneva(
+        graphics: Graphics,
+        state: SliderCrankViewState,
+        transform: MechanismTransform,
+    ): void {
+        const sample = state.sample;
+        if (sample.mechanism !== 'geneva') return;
+        const driverCenter = transform.point(sample.driverCenter);
+        const wheelCenter = transform.point(sample.wheelCenter);
+        const driverPin = transform.point(sample.driverPin);
+        const driverRadius = sample.driverRadius * transform.scale;
+        const wheelRadius = sample.wheelRadius * transform.scale;
+        const slotStep = TAU / sample.slotCount;
+
+        graphics.strokeColor = palette.border;
+        graphics.lineWidth = 1.5;
+        graphics.circle(driverCenter.x, driverCenter.y, driverRadius * 1.05);
+        graphics.stroke();
+        this.drawLink(
+            graphics,
+            driverCenter,
+            driverPin,
+            INPUT_COLOR,
+            Math.max(5, driverRadius * 0.09),
+        );
+
+        graphics.fillColor = new Color(62, 76, 90, 235);
+        graphics.circle(wheelCenter.x, wheelCenter.y, wheelRadius);
+        graphics.fill();
+        graphics.strokeColor = OUTPUT_COLOR;
+        graphics.lineWidth = 2.2;
+        graphics.circle(wheelCenter.x, wheelCenter.y, wheelRadius);
+        graphics.stroke();
+
+        const relativePinAngle = Math.atan2(
+            sample.driverPin.y - sample.wheelCenter.y,
+            sample.driverPin.x - sample.wheelCenter.x,
+        );
+        let activeSlot = 0;
+        let activeDifference = Number.POSITIVE_INFINITY;
+        for (let slot = 0; slot < sample.slotCount; slot += 1) {
+            const angle = sample.output + slot * slotStep;
+            const difference = Math.abs(this.angleDifference(
+                relativePinAngle,
+                angle,
+            ));
+            if (difference < activeDifference) {
+                activeDifference = difference;
+                activeSlot = slot;
             }
         }
+        for (let slot = 0; slot < sample.slotCount; slot += 1) {
+            const angle = sample.output + slot * slotStep;
+            const inner = {
+                x: wheelCenter.x + Math.cos(angle) * wheelRadius * 0.22,
+                y: wheelCenter.y + Math.sin(angle) * wheelRadius * 0.22,
+            };
+            const outer = {
+                x: wheelCenter.x + Math.cos(angle) * wheelRadius * 0.92,
+                y: wheelCenter.y + Math.sin(angle) * wheelRadius * 0.92,
+            };
+            graphics.strokeColor = sample.engaged && slot === activeSlot
+                ? palette.accent
+                : palette.backgroundRaised;
+            graphics.lineWidth = sample.engaged && slot === activeSlot ? 4 : 2.4;
+            graphics.moveTo(inner.x, inner.y);
+            graphics.lineTo(outer.x, outer.y);
+            graphics.stroke();
+        }
+
+        this.drawJoint(graphics, driverCenter, Math.max(6, driverRadius * 0.11));
+        this.drawJoint(graphics, wheelCenter, Math.max(7, wheelRadius * 0.10));
+        graphics.fillColor = sample.engaged ? palette.accent : COUPLER_COLOR;
+        graphics.circle(driverPin.x, driverPin.y, Math.max(5, driverRadius * 0.10));
+        graphics.fill();
+
+        if (state.showKinematics) {
+            this.drawAngularArrow(
+                graphics,
+                wheelCenter,
+                wheelRadius * 1.12,
+                sample.outputVelocity / state.maximumVelocity,
+                VELOCITY_COLOR,
+            );
+            this.drawAngularArrow(
+                graphics,
+                wheelCenter,
+                wheelRadius * 1.27,
+                sample.outputAcceleration / state.maximumAcceleration,
+                ACCELERATION_COLOR,
+            );
+        }
+    }
+
+    private drawLink(
+        graphics: Graphics,
+        start: MechanismPoint,
+        end: MechanismPoint,
+        color: Color,
+        width: number,
+    ): void {
+        graphics.strokeColor = SHADOW_COLOR;
+        graphics.lineWidth = Math.max(7, width + 5);
+        graphics.moveTo(start.x, start.y);
+        graphics.lineTo(end.x, end.y);
+        graphics.stroke();
+        graphics.strokeColor = color;
+        graphics.lineWidth = Math.max(3, width);
+        graphics.moveTo(start.x, start.y);
+        graphics.lineTo(end.x, end.y);
         graphics.stroke();
     }
 
-    private drawHorizontalArrow(
+    private drawJoint(
         graphics: Graphics,
-        x: number,
-        y: number,
+        point: MechanismPoint,
+        radius: number,
+    ): void {
+        graphics.fillColor = palette.backgroundRaised;
+        graphics.circle(point.x, point.y, radius);
+        graphics.fill();
+        graphics.strokeColor = palette.borderStrong;
+        graphics.lineWidth = 1.4;
+        graphics.circle(point.x, point.y, radius);
+        graphics.stroke();
+    }
+
+    private drawLinearArrow(
+        graphics: Graphics,
+        origin: MechanismPoint,
+        normalized: number,
+        axis: MechanismPoint,
+        normalOffset: number,
+        color: Color,
+    ): void {
+        const magnitude = Math.abs(normalized);
+        if (magnitude < 0.015) return;
+        const sign = normalized < 0 ? -1 : 1;
+        const normal = { x: -axis.y, y: axis.x };
+        const start = {
+            x: origin.x + normal.x * normalOffset,
+            y: origin.y + normal.y * normalOffset,
+        };
+        const length = sign * (12 + 42 * Math.min(1, magnitude));
+        const end = {
+            x: start.x + axis.x * length,
+            y: start.y + axis.y * length,
+        };
+        const head = 7;
+        graphics.strokeColor = SHADOW_COLOR;
+        graphics.lineWidth = 4;
+        graphics.moveTo(start.x, start.y);
+        graphics.lineTo(end.x, end.y);
+        graphics.stroke();
+        graphics.strokeColor = color;
+        graphics.lineWidth = 2;
+        graphics.moveTo(start.x, start.y);
+        graphics.lineTo(end.x, end.y);
+        graphics.lineTo(
+            end.x - axis.x * sign * head + normal.x * head * 0.65,
+            end.y - axis.y * sign * head + normal.y * head * 0.65,
+        );
+        graphics.moveTo(end.x, end.y);
+        graphics.lineTo(
+            end.x - axis.x * sign * head - normal.x * head * 0.65,
+            end.y - axis.y * sign * head - normal.y * head * 0.65,
+        );
+        graphics.stroke();
+    }
+
+    private drawAngularArrow(
+        graphics: Graphics,
+        center: MechanismPoint,
+        radius: number,
         normalized: number,
         color: Color,
     ): void {
         const magnitude = Math.abs(normalized);
         if (magnitude < 0.015) return;
         const sign = normalized < 0 ? -1 : 1;
-        const length = sign * (12 + 42 * Math.min(1, magnitude));
-        const endX = x + length;
-        graphics.strokeColor = SHADOW_COLOR;
-        graphics.lineWidth = 4;
-        graphics.moveTo(x, y);
-        graphics.lineTo(endX, y);
-        graphics.stroke();
+        const span = sign * (0.45 + 1.1 * Math.min(1, magnitude));
+        const startAngle = sign > 0 ? -0.8 : 0.8;
+        const segments = 18;
         graphics.strokeColor = color;
         graphics.lineWidth = 2;
-        graphics.moveTo(x, y);
-        graphics.lineTo(endX, y);
-        graphics.lineTo(endX - sign * 7, y + 5);
-        graphics.moveTo(endX, y);
-        graphics.lineTo(endX - sign * 7, y - 5);
+        let end = { x: center.x, y: center.y };
+        let tangent = { x: 1, y: 0 };
+        for (let index = 0; index <= segments; index += 1) {
+            const angle = startAngle + span * index / segments;
+            const point = {
+                x: center.x + Math.cos(angle) * radius,
+                y: center.y + Math.sin(angle) * radius,
+            };
+            if (index === 0) graphics.moveTo(point.x, point.y);
+            else graphics.lineTo(point.x, point.y);
+            end = point;
+            tangent = {
+                x: -Math.sin(angle) * sign,
+                y: Math.cos(angle) * sign,
+            };
+        }
+        graphics.stroke();
+        const normal = { x: -tangent.y, y: tangent.x };
+        graphics.moveTo(end.x, end.y);
+        graphics.lineTo(
+            end.x - tangent.x * 7 + normal.x * 4,
+            end.y - tangent.y * 7 + normal.y * 4,
+        );
+        graphics.moveTo(end.x, end.y);
+        graphics.lineTo(
+            end.x - tangent.x * 7 - normal.x * 4,
+            end.y - tangent.y * 7 - normal.y * 4,
+        );
         graphics.stroke();
     }
 
@@ -578,7 +874,7 @@ export class SliderCrankView {
         if (!graphics || !overlay) return;
         graphics.clear();
         overlay.clear();
-        if (!state.showPlot || state.cycle.length < 2) return;
+        if (!state.showPlot || state.cycleSamples.length < 2) return;
 
         const chartHeight = Math.min(174, Math.max(110, this.plotHeight * 0.28));
         const left = -this.plotWidth / 2 + 34;
@@ -599,6 +895,10 @@ export class SliderCrankView {
         overlay.lineTo(right, middle);
         overlay.stroke();
 
+        const outputRange = Math.max(
+            1e-9,
+            state.outputMaximum - state.outputMinimum,
+        );
         this.drawCurve(
             graphics,
             state,
@@ -607,34 +907,33 @@ export class SliderCrankView {
             middle,
             chartHeight,
             POSITION_COLOR,
-            (point) => point.position * 2 - 1,
+            (point) => (
+                (point.output - state.outputMinimum) / outputRange * 2 - 1
+            ),
         );
-        if (state.showVelocity) {
-            this.drawCurve(
-                graphics,
-                state,
-                left,
-                right,
-                middle,
-                chartHeight,
-                VELOCITY_COLOR,
-                (point) => point.velocity / state.maximumVelocity,
-            );
-        }
-        if (state.showAcceleration) {
-            this.drawCurve(
-                graphics,
-                state,
-                left,
-                right,
-                middle,
-                chartHeight,
-                ACCELERATION_COLOR,
-                (point) => point.acceleration / state.maximumAcceleration,
-            );
-        }
+        this.drawCurve(
+            graphics,
+            state,
+            left,
+            right,
+            middle,
+            chartHeight,
+            VELOCITY_COLOR,
+            (point) => point.velocity / state.maximumVelocity,
+        );
+        this.drawCurve(
+            graphics,
+            state,
+            left,
+            right,
+            middle,
+            chartHeight,
+            ACCELERATION_COLOR,
+            (point) => point.acceleration / state.maximumAcceleration,
+        );
 
-        const cursor = left + (right - left) * state.sample.angle / (Math.PI * 2);
+        const cursor = left + (right - left)
+            * state.sample.inputAngle / TAU;
         overlay.strokeColor = palette.accent;
         overlay.lineWidth = 1.5;
         overlay.moveTo(cursor, bottom);
@@ -650,18 +949,25 @@ export class SliderCrankView {
         middle: number,
         chartHeight: number,
         color: Color,
-        value: (point: SliderCrankViewState['cycle'][number]) => number,
+        value: (point: SliderCrankViewState['cycleSamples'][number]) => number,
     ): void {
         graphics.strokeColor = color;
         graphics.lineWidth = 1.8;
-        state.cycle.forEach((point, index) => {
-            const x = left + (right - left) * point.angle / (Math.PI * 2);
+        state.cycleSamples.forEach((point, index) => {
+            const x = left + (right - left) * point.angle / TAU;
             const normalized = Math.max(-1, Math.min(1, value(point)));
             const y = middle + normalized * chartHeight * 0.42;
             if (index === 0) graphics.moveTo(x, y);
             else graphics.lineTo(x, y);
         });
         graphics.stroke();
+    }
+
+    private angleDifference(a: number, b: number): number {
+        let difference = (a - b) % TAU;
+        if (difference > Math.PI) difference -= TAU;
+        if (difference < -Math.PI) difference += TAU;
+        return difference;
     }
 
     private createGraphics(parent: Node, name: string): Graphics {
