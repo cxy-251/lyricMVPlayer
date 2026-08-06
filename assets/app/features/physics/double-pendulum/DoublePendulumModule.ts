@@ -11,18 +11,21 @@ import {
     DoublePendulumViewModel,
 } from './DoublePendulumViewModel';
 
+const MINIMUM_RENDER_INTERVAL_MS = 14;
+
 export class DoublePendulumModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'DoublePendulumModuleRoot';
 
     private viewModel: DoublePendulumViewModel | null = null;
     private view: DoublePendulumView | null = null;
+    private lastRenderAt = 0;
 
     protected onMount(): void {
         const context = this.requireContext();
         this.viewModel = new DoublePendulumViewModel(
             context.storage,
             {
-                stateChanged: () => this.renderCurrentState(),
+                stateChanged: () => this.renderCurrentState(true),
                 reportError: (error) => context.reportError(error),
             },
         );
@@ -33,7 +36,7 @@ export class DoublePendulumModule extends ResponsiveModule implements Updatable,
             {
                 parameterChanged: (key) => {
                     if (this.requireViewModel().parameterChanged(key)) {
-                        this.renderCurrentState();
+                        this.renderCurrentState(true);
                     }
                 },
                 reportError: (error) => context.reportError(error),
@@ -46,11 +49,12 @@ export class DoublePendulumModule extends ResponsiveModule implements Updatable,
         this.view = null;
         this.viewModel?.dispose();
         this.viewModel = null;
+        this.lastRenderAt = 0;
     }
 
     update(dt: number): void {
         if (this.viewModel?.update(dt)) {
-            this.renderCurrentState();
+            this.renderCurrentState(false);
         }
     }
 
@@ -67,22 +71,26 @@ export class DoublePendulumModule extends ResponsiveModule implements Updatable,
         const view = this.requireView();
         viewModel.reset();
         view.refreshParameterPanel();
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
     protected render(viewport: ViewportSnapshot): void {
         const view = this.requireView();
         view.layout(viewport);
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
-    private renderCurrentState(): void {
+    private renderCurrentState(force: boolean): void {
         const viewModel = this.viewModel;
         const view = this.view;
         if (!viewModel || !view) {
             return;
         }
-
+        const now = Date.now();
+        if (!force && now - this.lastRenderAt < MINIMUM_RENDER_INTERVAL_MS) {
+            return;
+        }
+        this.lastRenderAt = now;
         view.render(viewModel.createViewState());
     }
 
