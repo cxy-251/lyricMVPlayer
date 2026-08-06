@@ -55,7 +55,6 @@ export class LabTabBar<T extends string> {
 
         clearNode(this.root);
         const columns = LabTabBar.columns(this.tabs.length, safeWidth);
-        const rows = Math.max(1, Math.ceil(this.tabs.length / columns));
         const height = LabTabBar.measureHeight(this.tabs.length, safeWidth);
         resizeNode(this.root, safeWidth, height);
         this.root.setPosition(0, y, 0);
@@ -81,7 +80,7 @@ export class LabTabBar<T extends string> {
                 height: TAB_HEIGHT,
                 x: firstX + column * (tabWidth + TAB_GAP),
                 y: firstY - row * (TAB_HEIGHT + TAB_GAP),
-                fontSize: safeWidth < 430 ? 9 : 10,
+                fontSize: tabWidth < 82 ? 8 : tabWidth < 112 ? 9 : 10,
                 variant: tab.id === active ? 'primary' : 'secondary',
                 shape: 'rounded',
                 onPress: () => {
@@ -97,8 +96,8 @@ export class LabTabBar<T extends string> {
 
     private static columns(tabCount: number, width: number): number {
         if (tabCount <= 1) return 1;
-        if (width < 300) return 2;
-        if (width < 430) return Math.min(4, tabCount);
-        return Math.min(4, tabCount);
+        if (width >= 900) return Math.min(8, tabCount);
+        if (width >= 520) return Math.min(4, tabCount);
+        return Math.min(2, tabCount);
     }
 }
