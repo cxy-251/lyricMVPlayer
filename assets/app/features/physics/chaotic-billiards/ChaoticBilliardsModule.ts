@@ -11,18 +11,21 @@ import {
     ChaoticBilliardsViewModel,
 } from './ChaoticBilliardsViewModel';
 
+const MINIMUM_RENDER_INTERVAL_MS = 14;
+
 export class ChaoticBilliardsModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'ChaoticBilliardsModuleRoot';
 
     private viewModel: ChaoticBilliardsViewModel | null = null;
     private view: ChaoticBilliardsView | null = null;
+    private lastRenderAt = 0;
 
     protected onMount(): void {
         const context = this.requireContext();
         this.viewModel = new ChaoticBilliardsViewModel(
             context.storage,
             {
-                stateChanged: () => this.renderCurrentState(),
+                stateChanged: () => this.renderCurrentState(true),
                 reportError: (error) => context.reportError(error),
             },
         );
@@ -33,7 +36,7 @@ export class ChaoticBilliardsModule extends ResponsiveModule implements Updatabl
             {
                 parameterChanged: (key) => {
                     if (this.requireViewModel().parameterChanged(key)) {
-                        this.renderCurrentState();
+                        this.renderCurrentState(true);
                     }
                 },
                 reportError: (error) => context.reportError(error),
@@ -46,11 +49,12 @@ export class ChaoticBilliardsModule extends ResponsiveModule implements Updatabl
         this.view = null;
         this.viewModel?.dispose();
         this.viewModel = null;
+        this.lastRenderAt = 0;
     }
 
     update(dt: number): void {
         if (this.viewModel?.update(dt)) {
-            this.renderCurrentState();
+            this.renderCurrentState(false);
         }
     }
 
@@ -67,18 +71,24 @@ export class ChaoticBilliardsModule extends ResponsiveModule implements Updatabl
         const view = this.requireView();
         viewModel.reset();
         view.refreshParameterPanel();
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
     protected render(viewport: ViewportSnapshot): void {
         this.requireView().layout(viewport);
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
-    private renderCurrentState(): void {
-        if (this.viewModel && this.view) {
-            this.view.render(this.viewModel.createViewState());
+    private renderCurrentState(force: boolean): void {
+        if (!this.viewModel || !this.view) {
+            return;
         }
+        const now = Date.now();
+        if (!force && now - this.lastRenderAt < MINIMUM_RENDER_INTERVAL_MS) {
+            return;
+        }
+        this.lastRenderAt = now;
+        this.view.render(this.viewModel.createViewState());
     }
 
     private requireViewModel(): ChaoticBilliardsViewModel {
