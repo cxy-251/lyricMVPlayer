@@ -9,10 +9,14 @@ import { lorenzAttractorDefinition } from './lorenz-attractor';
 import './PhysicsCatalogCovers';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
 import { restrictedThreeBodyDefinition } from './restricted-three-body';
+import { sliderCrankDefinition } from './slider-crank';
+import './slider-crank/SliderCrankCover';
+import { runSliderCrankContractChecks } from './slider-crank/SliderCrankContractChecks';
 
 if (PREVIEW) {
     runPhysicsModelContractChecks();
     runChaoticBilliardsContractChecks();
+    runSliderCrankContractChecks();
 }
 
 export const physicsLab: LabManifest = defineLabManifest({
@@ -28,5 +32,6 @@ export const physicsLab: LabManifest = defineLabManifest({
         lorenzAttractorDefinition,
         restrictedThreeBodyDefinition,
         chaoticBilliardsDefinition,
+        sliderCrankDefinition,
     ],
 });
