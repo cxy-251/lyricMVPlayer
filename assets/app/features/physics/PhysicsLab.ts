@@ -6,12 +6,12 @@ import './chaotic-billiards/ChaoticBilliardsCover';
 import { runChaoticBilliardsContractChecks } from './chaotic-billiards/ChaoticBilliardsContractChecks';
 import { doublePendulumDefinition } from './double-pendulum';
 import { lorenzAttractorDefinition } from './lorenz-attractor';
+import { mechanicalLinkagesDefinition } from './slider-crank';
+import './slider-crank/SliderCrankCover';
+import { runSliderCrankContractChecks } from './slider-crank/SliderCrankContractChecks';
 import './PhysicsCatalogCovers';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
 import { restrictedThreeBodyDefinition } from './restricted-three-body';
-import { sliderCrankDefinition } from './slider-crank';
-import './slider-crank/SliderCrankCover';
-import { runSliderCrankContractChecks } from './slider-crank/SliderCrankContractChecks';
 
 if (PREVIEW) {
     runPhysicsModelContractChecks();
@@ -32,6 +32,6 @@ export const physicsLab: LabManifest = defineLabManifest({
         lorenzAttractorDefinition,
         restrictedThreeBodyDefinition,
         chaoticBilliardsDefinition,
-        sliderCrankDefinition,
+        mechanicalLinkagesDefinition,
     ],
 });
