@@ -37,6 +37,7 @@ const NEARBY_COLOR = new Color(210, 167, 96, 255);
 const NEARBY_TRAIL = new Color(210, 167, 96, 170);
 const NORMAL_COLOR = new Color(215, 221, 207, 185);
 const CONTENT_GAP = 14;
+const SIDE_EQUATION_HEIGHT = 160;
 
 export interface ChaoticBilliardsViewActions {
     parameterChanged(key: string): void;
@@ -180,14 +181,9 @@ export class ChaoticBilliardsView {
             centerY,
         );
         const parameterWidth = inspectorWidth - 16;
-        const parameterHeight = ParameterPanel.measureHeight(
-            this.parameterSchema.length,
-            parameterWidth,
-            'compact',
-        );
-        const equationHeight = Math.max(
-            180,
-            contentHeight - parameterHeight - CONTENT_GAP - 8,
+        const parameterHeight = Math.max(
+            1,
+            contentHeight - SIDE_EQUATION_HEIGHT - CONTENT_GAP - 8,
         );
         const inspector = this.createInspectorPanel(
             inspectorWidth,
@@ -195,11 +191,12 @@ export class ChaoticBilliardsView {
             leftEdge + this.plotWidth + CONTENT_GAP + inspectorWidth / 2,
             centerY,
             false,
-            equationHeight,
+            SIDE_EQUATION_HEIGHT,
         );
         this.parameterPanelParent = inspector;
         this.parameterPanelLayout = {
             width: parameterWidth,
+            height: parameterHeight,
             x: 0,
             y: -contentHeight / 2 + 8 + parameterHeight / 2,
             breakpoint: 'compact',
