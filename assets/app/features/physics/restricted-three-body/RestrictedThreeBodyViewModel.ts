@@ -10,9 +10,10 @@ import type {
 } from './RestrictedThreeBodyTypes';
 
 const FIXED_STEP_SECONDS = 1 / 600;
-const MAXIMUM_SUBSTEPS = 60;
+const MAXIMUM_SUBSTEPS = 36;
 const PARAMETER_APPLY_DELAY_MS = 140;
-const SAMPLE_INTERVAL = 4;
+const SAMPLE_INTERVAL = 12;
+const TRAIL_TRIM_BATCH = 128;
 const SOFTENING_LENGTH = 0.015;
 
 export const PLANAR_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
@@ -93,9 +94,9 @@ export const PLANAR_THREE_BODY_PARAMETER_SCHEMA: ParameterSchema = [
         kind: 'number',
         key: 'trailLength',
         label: 'Trajectory samples per body',
-        defaultValue: 2200,
+        defaultValue: 1200,
         minimum: 400,
-        maximum: 5000,
+        maximum: 2400,
         step: 200,
         decimals: 0,
     },
@@ -142,7 +143,7 @@ export class PlanarThreeBodyViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:planar-three-body:parameters-v3',
+            'module:planar-three-body:parameters-v4',
             PLANAR_THREE_BODY_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
@@ -196,7 +197,7 @@ export class PlanarThreeBodyViewModel extends ParameterController {
             || key === 'showVelocityVectors'
             || key === 'showBarycenter'
         ) {
-            this.trimTrails();
+            this.trimTrails(true);
             return true;
         }
         this.scheduleParameterApply();
@@ -283,13 +284,14 @@ export class PlanarThreeBodyViewModel extends ParameterController {
                 time: snapshot.elapsedTime,
             });
         });
-        this.trimTrails();
+        this.trimTrails(false);
     }
 
-    private trimTrails(): void {
+    private trimTrails(force: boolean): void {
         const capacity = Math.max(1, Math.round(this.getNumber('trailLength')));
+        const threshold = force ? capacity : capacity + TRAIL_TRIM_BATCH;
         for (const trail of this.trails) {
-            if (trail.length > capacity) {
+            if (trail.length > threshold) {
                 trail.splice(0, trail.length - capacity);
             }
         }
