@@ -100,7 +100,7 @@ export class SliderCrankViewModel extends ParameterController {
         rodLength: 2.8,
         angularVelocity: 120 * RPM_TO_RADIANS_PER_SECOND,
     });
-    private cycle: SliderCrankCycleSample[] = [];
+    private cycleSamples: SliderCrankCycleSample[] = [];
     private paused = false;
 
     constructor(
@@ -159,7 +159,7 @@ export class SliderCrankViewModel extends ParameterController {
         const direction = this.getString('direction') as SliderCrankDirection;
         let maximumVelocity = 1e-9;
         let maximumAcceleration = 1e-9;
-        for (const point of this.cycle) {
+        for (const point of this.cycleSamples) {
             maximumVelocity = Math.max(maximumVelocity, Math.abs(point.velocity));
             maximumAcceleration = Math.max(
                 maximumAcceleration,
@@ -168,7 +168,7 @@ export class SliderCrankViewModel extends ParameterController {
         }
         return {
             sample,
-            cycle: this.cycle,
+            cycle: this.cycleSamples,
             crankRadius: this.model.parameters.crankRadius,
             rodLength: this.model.parameters.rodLength,
             rpm,
@@ -194,7 +194,7 @@ export class SliderCrankViewModel extends ParameterController {
     }
 
     dispose(): void {
-        this.cycle.length = 0;
+        this.cycleSamples.length = 0;
         super.dispose();
     }
 
@@ -211,6 +211,6 @@ export class SliderCrankViewModel extends ParameterController {
                 * RPM_TO_RADIANS_PER_SECOND,
         });
         if (resetPhase) this.model.reset(0);
-        this.cycle = this.model.sampleCycle(181);
+        this.cycleSamples = this.model.sampleCycle(181);
     }
 }
