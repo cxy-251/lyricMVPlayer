@@ -1,12 +1,32 @@
 import { Color, Graphics, Node } from 'cc';
 import { registerCatalogCover } from '../../home/CatalogCovers';
 import { createUiNode, palette } from '../../../ui/UiFactory';
+import { DrivenCavityFlowModel } from './DrivenCavityFlowModel';
 
-const FLOW = new Color(126, 190, 166, 210);
-const SECONDARY = new Color(210, 167, 96, 175);
+const CONTOUR_COLORS = [
+    new Color(24, 43, 120, 245),
+    new Color(27, 78, 171, 245),
+    new Color(33, 132, 202, 245),
+    new Color(40, 181, 190, 245),
+    new Color(72, 199, 126, 245),
+    new Color(151, 205, 72, 245),
+    new Color(224, 210, 55, 245),
+    new Color(242, 156, 43, 245),
+    new Color(220, 74, 40, 245),
+] as const;
 
 function drawDrivenCavityFlow(parent: Node, width: number, height: number): void {
-    const size = Math.max(1, Math.min(width, height) - 34);
+    const model = new DrivenCavityFlowModel({
+        width: 24,
+        height: 24,
+        lidSpeed: 0.08,
+        kinematicViscosity: 0.04,
+    });
+    model.step(180);
+    const snapshot = model.snapshot();
+    const diagnostics = model.diagnostics();
+
+    const size = Math.max(1, Math.min(width, height) - 42);
     const half = size / 2;
     const graphics = createUiNode(
         parent,
@@ -14,6 +34,34 @@ function drawDrivenCavityFlow(parent: Node, width: number, height: number): void
         width,
         height,
     ).addComponent(Graphics);
+    const cellSize = size / snapshot.width + 0.8;
+    const maximum = Math.max(1e-6, diagnostics.maximumSpeed);
+
+    for (let band = 0; band < CONTOUR_COLORS.length; band += 1) {
+        graphics.fillColor = CONTOUR_COLORS[band];
+        for (let y = 0; y < snapshot.height; y += 1) {
+            for (let x = 0; x < snapshot.width; x += 1) {
+                const cell = y * snapshot.width + x;
+                const speed = Math.hypot(
+                    snapshot.velocityX[cell],
+                    snapshot.velocityY[cell],
+                );
+                const normalized = Math.max(0, Math.min(1, speed / maximum));
+                const scalarBand = Math.min(
+                    CONTOUR_COLORS.length - 1,
+                    Math.floor(normalized * CONTOUR_COLORS.length),
+                );
+                if (scalarBand !== band) continue;
+                graphics.rect(
+                    -half + x / snapshot.width * size,
+                    -half + y / snapshot.height * size,
+                    cellSize,
+                    cellSize,
+                );
+            }
+        }
+        graphics.fill();
+    }
 
     graphics.strokeColor = palette.borderStrong;
     graphics.lineWidth = Math.max(1.5, Math.min(width, height) * 0.006);
@@ -30,43 +78,6 @@ function drawDrivenCavityFlow(parent: Node, width: number, height: number): void
         graphics.lineTo(x + 6, arrowY + 4);
         graphics.moveTo(x + 11, arrowY);
         graphics.lineTo(x + 6, arrowY - 4);
-    }
-    graphics.stroke();
-
-    drawVortex(graphics, size * 0.34, size * 0.29, -size * 0.02, size * 0.02, FLOW, 1.8);
-    drawVortex(graphics, size * 0.18, size * 0.14, size * 0.23, -size * 0.23, SECONDARY, 1.2);
-
-    graphics.fillColor = palette.primary;
-    for (let index = 0; index < 24; index += 1) {
-        const angle = -Math.PI * 2 * index / 24 + 0.35;
-        const radius = size * (0.16 + 0.13 * ((index % 5) / 4));
-        graphics.circle(
-            Math.cos(angle) * radius - size * 0.02,
-            Math.sin(angle) * radius * 0.82 + size * 0.02,
-            Math.max(1.2, size * 0.006),
-        );
-    }
-    graphics.fill();
-}
-
-function drawVortex(
-    graphics: Graphics,
-    radiusX: number,
-    radiusY: number,
-    centerX: number,
-    centerY: number,
-    color: Color,
-    lineWidth: number,
-): void {
-    graphics.strokeColor = color;
-    graphics.lineWidth = lineWidth;
-    for (let index = 0; index <= 80; index += 1) {
-        const angle = -Math.PI * 2 * index / 80;
-        const contraction = 1 - index / 240;
-        const x = centerX + Math.cos(angle) * radiusX * contraction;
-        const y = centerY + Math.sin(angle) * radiusY * contraction;
-        if (index === 0) graphics.moveTo(x, y);
-        else graphics.lineTo(x, y);
     }
     graphics.stroke();
 }
