@@ -1,1 +1,1 @@
-export { sliderCrankDefinition } from './SliderCrankDefinition';
+export { mechanicalLinkagesDefinition } from './SliderCrankDefinition';
