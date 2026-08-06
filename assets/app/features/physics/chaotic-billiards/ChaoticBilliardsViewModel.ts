@@ -43,7 +43,7 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         key: 'initialY',
         label: 'Initial vertical position y₀',
         description: 'Both particles start at x = 0 and share this vertical position inside the table.',
-        defaultValue: 0.18,
+        defaultValue: 0.8,
         minimum: -0.8,
         maximum: 0.8,
         step: 0.02,
@@ -54,7 +54,7 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         key: 'launchAngle',
         label: 'Launch angle θ₀',
         description: 'Direction of the primary particle measured from the positive x axis.',
-        defaultValue: 27,
+        defaultValue: 10,
         minimum: 5,
         maximum: 85,
         step: 1,
@@ -76,7 +76,7 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
     {
         kind: 'number',
         key: 'straightHalfLength',
-        label: 'Stadium straight half-length',
+        label: 'Stadium half-length a',
         description: 'Half of each straight wall. The circle view ignores this value and sets a = 0.',
         defaultValue: 1.1,
         minimum: 0.35,
@@ -89,7 +89,7 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         key: 'speed',
         label: 'Simulation time scale',
         description: 'Playback multiplier only; it does not alter the geometric path or collision law.',
-        defaultValue: 1,
+        defaultValue: 2,
         minimum: 0.25,
         maximum: 4,
         step: 0.25,
@@ -101,7 +101,7 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         key: 'trailLength',
         label: 'Trajectory samples',
         description: 'Maximum retained points for each trajectory before older path segments are removed.',
-        defaultValue: 2600,
+        defaultValue: 1400,
         minimum: 400,
         maximum: 5000,
         step: 200,
@@ -155,7 +155,7 @@ export class ChaoticBilliardsViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:chaotic-billiards:parameters-v1',
+            'module:chaotic-billiards:parameters-v2',
             CHAOTIC_BILLIARDS_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
@@ -221,6 +221,11 @@ export class ChaoticBilliardsViewModel extends ParameterController {
         const snapshot = this.model.snapshot();
         const diagnostics = this.model.diagnostics();
         const parameters = this.model.parameters;
+        const separationState = parameters.boundary === 'circle'
+            ? 'REGULAR REFERENCE'
+            : diagnostics.separation >= 0.05
+                ? 'NEARBY PATHS DIVERGED'
+                : 'NEARBY PATHS SEPARATING';
         return {
             snapshot,
             diagnostics,
@@ -237,7 +242,7 @@ export class ChaoticBilliardsViewModel extends ParameterController {
             ].join(' · '),
             modelSummary: [
                 parameters.boundary.toUpperCase(),
-                'SPECULAR REFLECTION',
+                separationState,
                 `|v| ${diagnostics.primarySpeed.toFixed(3)}`,
                 parameters.boundary === 'stadium'
                     ? `a ${parameters.straightHalfLength.toFixed(2)}`
