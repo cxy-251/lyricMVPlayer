@@ -5,6 +5,7 @@ import type {
 } from '../../../contracts/InteractiveModule';
 import type { ViewportSnapshot } from '../../../services/ViewportService';
 import { ResponsiveModule } from '../../../templates/ResponsiveModule';
+import type { MechanicalLinkageKind } from './SliderCrankTypes';
 import { SliderCrankView } from './SliderCrankView';
 import {
     SLIDER_CRANK_PARAMETER_SCHEMA,
@@ -14,7 +15,7 @@ import {
 const MINIMUM_RENDER_INTERVAL_MS = 14;
 
 export class SliderCrankModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
-    protected readonly rootName = 'SliderCrankModuleRoot';
+    protected readonly rootName = 'MechanicalLinkagesModuleRoot';
 
     private viewModel: SliderCrankViewModel | null = null;
     private view: SliderCrankView | null = null;
@@ -33,6 +34,9 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
             SLIDER_CRANK_PARAMETER_SCHEMA,
             this.viewModel,
             {
+                mechanismChanged: (mechanism) => {
+                    this.selectMechanism(mechanism);
+                },
                 parameterChanged: (key) => {
                     if (this.requireViewModel().parameterChanged(key)) {
                         this.renderCurrentState(true);
@@ -78,6 +82,12 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
         this.renderCurrentState(true);
     }
 
+    private selectMechanism(mechanism: MechanicalLinkageKind): void {
+        if (this.requireViewModel().selectMechanism(mechanism)) {
+            this.renderCurrentState(true);
+        }
+    }
+
     private renderCurrentState(force: boolean): void {
         if (!this.viewModel || !this.view) return;
         const now = Date.now();
@@ -88,14 +98,14 @@ export class SliderCrankModule extends ResponsiveModule implements Updatable, Pa
 
     private requireViewModel(): SliderCrankViewModel {
         if (!this.viewModel) {
-            throw new Error('Slider-crank ViewModel is unavailable');
+            throw new Error('Mechanical linkages ViewModel is unavailable');
         }
         return this.viewModel;
     }
 
     private requireView(): SliderCrankView {
         if (!this.view) {
-            throw new Error('Slider-crank view is unavailable');
+            throw new Error('Mechanical linkages view is unavailable');
         }
         return this.view;
     }
