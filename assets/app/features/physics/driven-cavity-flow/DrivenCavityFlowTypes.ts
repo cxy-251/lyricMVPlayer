@@ -1,5 +1,5 @@
 export type CavityResolution = 'low' | 'medium' | 'high';
-export type CavityDisplayMode = 'tracers' | 'vorticity' | 'speed';
+export type CavityDisplayMode = 'speed' | 'pressure' | 'vorticity' | 'tracers';
 
 export interface DrivenCavityFlowParameters {
     readonly width: number;
