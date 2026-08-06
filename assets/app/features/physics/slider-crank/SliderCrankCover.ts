@@ -227,4 +227,4 @@ function drawJoint(
     graphics.stroke();
 }
 
-registerCatalogCover('slider-crank', drawMechanicalLinkages);
+registerCatalogCover('mechanical-linkages', drawMechanicalLinkages);
