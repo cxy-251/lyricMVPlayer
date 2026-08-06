@@ -28,6 +28,7 @@ import type {
 const DEFAULT_ROW_HEIGHT = 78;
 const DETAILED_ROW_HEIGHT = 162;
 const DETAILED_SCHEMA_ITEM_COUNT = 10;
+const DESCRIPTION_THRESHOLD = 112;
 
 export interface ParameterPanelLayout {
     readonly width: number;
@@ -143,7 +144,7 @@ export class ParameterPanel {
         if (definition.kind === 'number') {
             this.renderNumber(group, definition, width, height);
         } else if (definition.kind === 'toggle') {
-            this.renderToggle(group, definition, width);
+            this.renderToggle(group, definition, width, height);
         } else {
             this.renderSelect(group, definition, width, height);
         }
@@ -155,7 +156,8 @@ export class ParameterPanel {
         width: number,
         height: number,
     ): void {
-        const labelY = height / 2 - 18;
+        const detailed = height >= DESCRIPTION_THRESHOLD;
+        const labelY = detailed ? height / 2 - 22 : height / 2 - 18;
         createLabel(
             group,
             definition.label,
@@ -179,6 +181,7 @@ export class ParameterPanel {
             HorizontalTextAlignment.RIGHT,
         );
         const valueLabel = valueNode.getComponent(Label);
+        this.renderDescription(group, definition.description, width, height);
         const range = Math.max(definition.step, definition.maximum - definition.minimum);
         const initialProgress = (this.controller.getNumber(definition.key) - definition.minimum) / range;
 
@@ -186,7 +189,7 @@ export class ParameterPanel {
             name: `${definition.key}:slider`,
             width: Math.max(44, width - 6),
             progress: initialProgress,
-            y: -height * 0.19,
+            y: detailed ? -height / 2 + 29 : -height * 0.19,
             onChange: (progress) => {
                 this.guard(() => {
                     const next = this.valueFromProgress(definition, progress);
@@ -208,7 +211,10 @@ export class ParameterPanel {
         group: Node,
         definition: ParameterDefinition & { readonly kind: 'toggle' },
         width: number,
+        height: number,
     ): void {
+        const detailed = height >= DESCRIPTION_THRESHOLD;
+        const controlY = detailed ? height / 2 - 24 : 0;
         createLabel(
             group,
             definition.label,
@@ -217,13 +223,15 @@ export class ParameterPanel {
             11,
             nativeTheme.muted,
             -28,
-            0,
+            controlY,
             HorizontalTextAlignment.LEFT,
         );
+        this.renderDescription(group, definition.description, width, height);
         createNativeToggle(group, {
             name: `${definition.key}:toggle`,
             checked: this.controller.getBoolean(definition.key),
             x: width / 2 - 30,
+            y: controlY,
             onChange: (checked) => {
                 this.guard(() => {
                     if (!this.controller.set(definition.key, checked)) {
@@ -242,7 +250,9 @@ export class ParameterPanel {
         width: number,
         height: number,
     ): void {
-        const labelY = height / 2 - 18;
+        const detailed = height >= DESCRIPTION_THRESHOLD;
+        const labelY = detailed ? height / 2 - 22 : height / 2 - 18;
+        const selectorY = detailed ? -height / 2 + 31 : -height * 0.2;
         createLabel(
             group,
             definition.label,
@@ -253,13 +263,14 @@ export class ParameterPanel {
             0,
             labelY,
         );
+        this.renderDescription(group, definition.description, width, height);
         const valueWidth = Math.max(36, width - 100);
 
         createIconButton(group, {
             name: `${definition.key}:previous`,
             icon: 'chevron-left',
             x: -valueWidth / 2 - 26,
-            y: -height * 0.2,
+            y: selectorY,
             onPress: () => this.guard(() => this.change(
                 definition.key,
                 () => this.controller.cycle(definition.key, -1),
@@ -273,18 +284,45 @@ export class ParameterPanel {
             12,
             nativeTheme.ink,
             0,
-            -height * 0.2,
+            selectorY,
         );
         createIconButton(group, {
             name: `${definition.key}:next`,
             icon: 'chevron-right',
             x: valueWidth / 2 + 26,
-            y: -height * 0.2,
+            y: selectorY,
             onPress: () => this.guard(() => this.change(
                 definition.key,
                 () => this.controller.cycle(definition.key, 1),
             )),
         });
+    }
+
+    private renderDescription(
+        parent: Node,
+        description: string | undefined,
+        width: number,
+        height: number,
+    ): void {
+        if (!description || height < DESCRIPTION_THRESHOLD) {
+            return;
+        }
+        const node = createLabel(
+            parent,
+            description,
+            Math.max(1, width - 8),
+            Math.max(32, height - 84),
+            9,
+            nativeTheme.muted,
+            0,
+            3,
+            HorizontalTextAlignment.LEFT,
+        );
+        const label = node.getComponent(Label);
+        if (label) {
+            label.lineHeight = 13;
+            label.enableWrapText = true;
+        }
     }
 
     private renderPager(metrics: PanelMetrics, width: number): void {
