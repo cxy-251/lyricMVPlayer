@@ -97,7 +97,7 @@ export class LabTabBar<T extends string> {
     private static columns(tabCount: number, width: number): number {
         if (tabCount <= 1) return 1;
         if (width >= 900) return Math.min(8, tabCount);
-        if (width >= 520) return Math.min(4, tabCount);
+        if (width >= 340) return Math.min(4, tabCount);
         return Math.min(2, tabCount);
     }
 }
