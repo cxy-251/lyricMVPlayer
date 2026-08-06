@@ -468,6 +468,30 @@ export class DrivenCavityFlowView {
     }
 
     private scalarPresentation(state: DrivenCavityFlowViewState): ScalarPresentation {
+        if (state.displayMode === 'pressure') {
+            let minimum = Number.POSITIVE_INFINITY;
+            let maximum = Number.NEGATIVE_INFINITY;
+            for (let index = 0; index < state.snapshot.density.length; index += 1) {
+                const pressure = (state.snapshot.density[index] - 1) / 3;
+                minimum = Math.min(minimum, pressure);
+                maximum = Math.max(maximum, pressure);
+            }
+            if (!Number.isFinite(minimum) || !Number.isFinite(maximum)) {
+                minimum = -1e-6;
+                maximum = 1e-6;
+            }
+            if (maximum - minimum < 1e-8) {
+                const center = (minimum + maximum) / 2;
+                minimum = center - 1e-6;
+                maximum = center + 1e-6;
+            }
+            return {
+                title: 'Pressure Contour',
+                unit: 'p* [(lu/step)²]',
+                minimum,
+                maximum,
+            };
+        }
         if (state.displayMode === 'vorticity') {
             const maximum = Math.max(
                 1e-6,
@@ -509,12 +533,14 @@ export class DrivenCavityFlowView {
             for (let y = 0; y < height; y += stride) {
                 for (let x = 0; x < width; x += stride) {
                     const cell = y * width + x;
-                    const scalar = state.displayMode === 'vorticity'
-                        ? state.snapshot.vorticity[cell]
-                        : Math.hypot(
-                            state.snapshot.velocityX[cell],
-                            state.snapshot.velocityY[cell],
-                        );
+                    const scalar = state.displayMode === 'pressure'
+                        ? (state.snapshot.density[cell] - 1) / 3
+                        : state.displayMode === 'vorticity'
+                            ? state.snapshot.vorticity[cell]
+                            : Math.hypot(
+                                state.snapshot.velocityX[cell],
+                                state.snapshot.velocityY[cell],
+                            );
                     const normalized = Math.max(
                         0,
                         Math.min(1, (scalar - presentation.minimum) / range),
