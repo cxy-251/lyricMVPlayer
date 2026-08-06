@@ -9,9 +9,10 @@ import type {
     ChaoticBilliardsViewState,
 } from './ChaoticBilliardsTypes';
 
-const FIXED_STEP_SECONDS = 1 / 240;
-const MAXIMUM_SUBSTEPS = 48;
-const SAMPLE_INTERVAL = 2;
+const FIXED_STEP_SECONDS = 1 / 120;
+const MAXIMUM_SUBSTEPS = 16;
+const SAMPLE_INTERVAL = 4;
+const TRAIL_TRIM_BATCH = 128;
 const PARAMETER_APPLY_DELAY_MS = 140;
 
 export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
@@ -101,10 +102,10 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         key: 'trailLength',
         label: 'Trajectory samples',
         description: 'Maximum retained points for each trajectory before older path segments are removed.',
-        defaultValue: 1400,
-        minimum: 400,
-        maximum: 5000,
-        step: 200,
+        defaultValue: 900,
+        minimum: 300,
+        maximum: 2400,
+        step: 100,
         decimals: 0,
     },
     {
@@ -155,7 +156,7 @@ export class ChaoticBilliardsViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:chaotic-billiards:parameters-v2',
+            'module:chaotic-billiards:parameters-v3',
             CHAOTIC_BILLIARDS_PARAMETER_SCHEMA,
         );
         this.resetModelFromParameters();
@@ -204,13 +205,15 @@ export class ChaoticBilliardsViewModel extends ParameterController {
     }
 
     parameterChanged(key: string): boolean {
+        if (key === 'trailLength') {
+            this.trimTrails(true);
+            return true;
+        }
         if (
             key === 'speed'
-            || key === 'trailLength'
             || key === 'showNearby'
             || key === 'showNormals'
         ) {
-            this.trimTrails();
             return true;
         }
         this.scheduleParameterApply();
@@ -305,16 +308,23 @@ export class ChaoticBilliardsViewModel extends ParameterController {
             y: snapshot.nearby.y,
             time: snapshot.elapsedTime,
         });
-        this.trimTrails();
+        this.trimTrails(false);
     }
 
-    private trimTrails(): void {
+    private trimTrails(force: boolean): void {
         const capacity = Math.max(1, Math.round(this.getNumber('trailLength')));
-        if (this.primaryTrail.length > capacity) {
-            this.primaryTrail.splice(0, this.primaryTrail.length - capacity);
-        }
-        if (this.nearbyTrail.length > capacity) {
-            this.nearbyTrail.splice(0, this.nearbyTrail.length - capacity);
+        const threshold = force ? capacity : capacity + TRAIL_TRIM_BATCH;
+        this.trimTrail(this.primaryTrail, capacity, threshold);
+        this.trimTrail(this.nearbyTrail, capacity, threshold);
+    }
+
+    private trimTrail(
+        trail: BilliardTrailPoint[],
+        capacity: number,
+        threshold: number,
+    ): void {
+        if (trail.length > threshold) {
+            trail.splice(0, trail.length - capacity);
         }
     }
 }
