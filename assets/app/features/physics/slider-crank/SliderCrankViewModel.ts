@@ -12,17 +12,30 @@ import type {
 
 const RPM_TO_RADIANS_PER_SECOND = Math.PI * 2 / 60;
 
-export const SLIDER_CRANK_PARAMETER_SCHEMA: ParameterSchema = [
+export const MECHANICAL_LINKAGE_TABS: readonly {
+    readonly id: MechanicalLinkageKind;
+    readonly label: string;
+}[] = [
+    { id: 'slider-crank', label: 'SLIDER–CRANK' },
+    { id: 'four-bar', label: 'FOUR-BAR' },
+    { id: 'geneva', label: 'GENEVA' },
+    { id: 'scotch-yoke', label: 'SCOTCH YOKE' },
+    { id: 'quick-return', label: 'QUICK RETURN' },
+    { id: 'ratchet', label: 'RATCHET' },
+    { id: 'cam-follower', label: 'CAM FOLLOWER' },
+    { id: 'elliptic-gears', label: 'ELLIPTIC GEARS' },
+];
+
+const MECHANISM_STORAGE_SCHEMA: ParameterSchema = [
     {
         kind: 'select',
         key: 'mechanism',
         label: 'Mechanism',
         defaultValue: 'slider-crank',
-        options: [
-            { value: 'slider-crank', label: 'SLIDER–CRANK' },
-            { value: 'four-bar', label: 'FOUR-BAR LINKAGE' },
-            { value: 'geneva', label: 'GENEVA DRIVE' },
-        ],
+        options: MECHANICAL_LINKAGE_TABS.map((tab) => ({
+            value: tab.id,
+            label: tab.label,
+        })),
     },
     {
         kind: 'select',
@@ -104,6 +117,9 @@ export const SLIDER_CRANK_PARAMETER_SCHEMA: ParameterSchema = [
     },
 ];
 
+export const SLIDER_CRANK_PARAMETER_SCHEMA: ParameterSchema =
+    MECHANISM_STORAGE_SCHEMA.slice(1);
+
 export interface SliderCrankViewModelCallbacks {
     reportError(error: unknown): void;
 }
@@ -124,8 +140,8 @@ export class SliderCrankViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:mechanical-linkages:parameters-v1',
-            SLIDER_CRANK_PARAMETER_SCHEMA,
+            'module:mechanical-linkages:parameters-v2',
+            MECHANISM_STORAGE_SCHEMA,
         );
         this.applyParameters(true);
     }
@@ -152,18 +168,25 @@ export class SliderCrankViewModel extends ParameterController {
         this.applyParameters(true);
     }
 
+    selectMechanism(mechanism: MechanicalLinkageKind): boolean {
+        if (!this.set('mechanism', mechanism)) return false;
+        try {
+            this.applyParameters(true);
+        } catch (error) {
+            this.callbacks.reportError(error);
+        }
+        return true;
+    }
+
     parameterChanged(key: string): boolean {
         if (
-            key === 'mechanism'
-            || key === 'configuration'
+            key === 'configuration'
             || key === 'rpm'
             || key === 'scale'
             || key === 'direction'
         ) {
             try {
-                this.applyParameters(
-                    key === 'mechanism' || key === 'configuration',
-                );
+                this.applyParameters(key === 'configuration');
             } catch (error) {
                 this.callbacks.reportError(error);
             }
@@ -239,55 +262,134 @@ export class SliderCrankViewModel extends ParameterController {
     private diagnosticsText(
         sample: SliderCrankViewState['sample'],
     ): string {
-        const angle = sample.inputAngle * 180 / Math.PI;
-        if (sample.mechanism === 'four-bar') {
-            return [
-                `θin ${angle.toFixed(1)}°`,
-                `θout ${(sample.output * 180 / Math.PI).toFixed(1)}°`,
-                `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
-                `μ ${(sample.transmissionAngle * 180 / Math.PI).toFixed(1)}°`,
-            ].join(' · ');
+        const inputDegrees = sample.inputAngle * 180 / Math.PI;
+        switch (sample.mechanism) {
+            case 'four-bar':
+                return [
+                    `θin ${inputDegrees.toFixed(1)}°`,
+                    `θout ${this.degrees(sample.output).toFixed(1)}°`,
+                    `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                    `μ ${(sample.transmissionAngle * 180 / Math.PI).toFixed(1)}°`,
+                ].join(' · ');
+            case 'geneva':
+                return [
+                    `θin ${inputDegrees.toFixed(1)}°`,
+                    `index ${this.degrees(sample.output).toFixed(1)}°`,
+                    `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                    sample.engaged ? 'PIN ENGAGED' : 'DWELL',
+                ].join(' · ');
+            case 'scotch-yoke':
+                return [
+                    `θ ${inputDegrees.toFixed(1)}°`,
+                    `x ${sample.output.toFixed(3)} m`,
+                    `v ${sample.outputVelocity.toFixed(3)} m/s`,
+                    `a ${sample.outputAcceleration.toFixed(2)} m/s²`,
+                ].join(' · ');
+            case 'quick-return':
+                return [
+                    `θ ${inputDegrees.toFixed(1)}°`,
+                    `x ${sample.output.toFixed(3)} m`,
+                    sample.forwardStroke ? 'CUTTING STROKE' : 'RETURN STROKE',
+                    `QRR ${sample.quickReturnRatio.toFixed(2)}`,
+                ].join(' · ');
+            case 'ratchet':
+                return [
+                    `θin ${inputDegrees.toFixed(1)}°`,
+                    `index ${this.degrees(sample.output).toFixed(1)}°`,
+                    `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                    sample.engaged ? 'DRIVE STROKE' : 'PAWL RETURN',
+                ].join(' · ');
+            case 'cam-follower':
+                return [
+                    `θcam ${inputDegrees.toFixed(1)}°`,
+                    `lift ${sample.output.toFixed(3)} m`,
+                    `v ${sample.outputVelocity.toFixed(3)} m/s`,
+                    sample.motionPhase,
+                ].join(' · ');
+            case 'elliptic-gears':
+                return [
+                    `θin ${inputDegrees.toFixed(1)}°`,
+                    `θout ${this.degrees(sample.output).toFixed(1)}°`,
+                    `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                    `i ${(sample.inputPitchRadius / sample.outputPitchRadius).toFixed(2)}`,
+                ].join(' · ');
+            default:
+                return [
+                    `θ ${inputDegrees.toFixed(1)}°`,
+                    `x ${sample.output.toFixed(3)} m`,
+                    `v ${sample.outputVelocity.toFixed(3)} m/s`,
+                    `a ${sample.outputAcceleration.toFixed(2)} m/s²`,
+                ].join(' · ');
         }
-        if (sample.mechanism === 'geneva') {
-            return [
-                `θin ${angle.toFixed(1)}°`,
-                `index ${(sample.output * 180 / Math.PI).toFixed(1)}°`,
-                `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
-                sample.engaged ? 'PIN ENGAGED' : 'DWELL',
-            ].join(' · ');
-        }
-        return [
-            `θ ${angle.toFixed(1)}°`,
-            `x ${sample.output.toFixed(3)} m`,
-            `v ${sample.outputVelocity.toFixed(3)} m/s`,
-            `a ${sample.outputAcceleration.toFixed(2)} m/s²`,
-        ].join(' · ');
     }
 
     private modelSummary(sample: SliderCrankViewState['sample']): string {
         const rpm = this.getNumber('rpm');
-        if (sample.mechanism === 'four-bar') {
-            return [
-                'FOUR-BAR CRANK–ROCKER',
-                `a ${sample.inputLength.toFixed(2)}`,
-                `b ${sample.couplerLength.toFixed(2)}`,
-                `c ${sample.outputLength.toFixed(2)}`,
-                `${rpm.toFixed(0)} rpm`,
-            ].join(' · ');
+        switch (sample.mechanism) {
+            case 'four-bar':
+                return [
+                    'FOUR-BAR CRANK–ROCKER',
+                    `a ${sample.inputLength.toFixed(2)}`,
+                    `b ${sample.couplerLength.toFixed(2)}`,
+                    `c ${sample.outputLength.toFixed(2)}`,
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'geneva':
+                return [
+                    'EXTERNAL GENEVA DRIVE',
+                    `${sample.slotCount} SLOTS`,
+                    sample.engaged ? 'INDEXING' : 'LOCKED DWELL',
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'scotch-yoke':
+                return [
+                    'SCOTCH YOKE',
+                    `stroke ${(2 * sample.crankRadius).toFixed(2)} m`,
+                    'PURE HARMONIC OUTPUT',
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'quick-return':
+                return [
+                    'WHITWORTH QUICK RETURN',
+                    `ratio ${sample.quickReturnRatio.toFixed(2)}`,
+                    sample.forwardStroke ? 'WORKING' : 'RETURNING',
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'ratchet':
+                return [
+                    'PAWL AND RATCHET',
+                    `${sample.toothCount} TEETH`,
+                    sample.engaged ? 'ADVANCING' : 'HOLDING',
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'cam-follower':
+                return [
+                    'RADIAL CAM + TRANSLATING FOLLOWER',
+                    `lift ${sample.lift.toFixed(2)} m`,
+                    sample.motionPhase,
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            case 'elliptic-gears':
+                return [
+                    'CONJUGATE ELLIPTIC GEARS',
+                    `e ${sample.eccentricity.toFixed(2)}`,
+                    'VARIABLE SPEED RATIO',
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
+            default:
+                return [
+                    'SLIDER–CRANK',
+                    `stroke ${(2 * sample.crankRadius).toFixed(2)} m`,
+                    `l/r ${(sample.rodLength / sample.crankRadius).toFixed(2)}`,
+                    `${rpm.toFixed(0)} rpm`,
+                ].join(' · ');
         }
-        if (sample.mechanism === 'geneva') {
-            return [
-                'EXTERNAL GENEVA DRIVE',
-                `${sample.slotCount} SLOTS`,
-                sample.engaged ? 'INDEXING' : 'LOCKED DWELL',
-                `${rpm.toFixed(0)} rpm`,
-            ].join(' · ');
-        }
-        return [
-            'SLIDER–CRANK',
-            `stroke ${(2 * sample.crankRadius).toFixed(2)} m`,
-            `l/r ${(sample.rodLength / sample.crankRadius).toFixed(2)}`,
-            `${rpm.toFixed(0)} rpm`,
-        ].join(' · ');
+    }
+
+    private degrees(angle: number): number {
+        let value = angle * 180 / Math.PI % 360;
+        if (value > 180) value -= 360;
+        if (value < -180) value += 360;
+        return value;
     }
 }
