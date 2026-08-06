@@ -1,18 +1,18 @@
 import { PREVIEW } from 'cc/env';
 import type { LabManifest } from '../../contracts/InteractiveModule';
 import { defineLabManifest } from '../../core/ManifestValidator';
+import { chaoticBilliardsDefinition } from './chaotic-billiards';
+import './chaotic-billiards/ChaoticBilliardsCover';
+import { runChaoticBilliardsContractChecks } from './chaotic-billiards/ChaoticBilliardsContractChecks';
 import { doublePendulumDefinition } from './double-pendulum';
 import { lorenzAttractorDefinition } from './lorenz-attractor';
 import './PhysicsCatalogCovers';
 import { runPhysicsModelContractChecks } from './PhysicsModelContractChecks';
 import { restrictedThreeBodyDefinition } from './restricted-three-body';
-import { rollingBodyRaceDefinition } from './rolling-body-race';
-import './rolling-body-race/RollingBodyRaceCover';
-import { runRollingBodyRaceContractChecks } from './rolling-body-race/RollingBodyRaceContractChecks';
 
 if (PREVIEW) {
     runPhysicsModelContractChecks();
-    runRollingBodyRaceContractChecks();
+    runChaoticBilliardsContractChecks();
 }
 
 export const physicsLab: LabManifest = defineLabManifest({
@@ -27,6 +27,6 @@ export const physicsLab: LabManifest = defineLabManifest({
         doublePendulumDefinition,
         lorenzAttractorDefinition,
         restrictedThreeBodyDefinition,
-        rollingBodyRaceDefinition,
+        chaoticBilliardsDefinition,
     ],
 });
