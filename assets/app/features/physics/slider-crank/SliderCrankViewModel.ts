@@ -1,9 +1,11 @@
 import { ParameterController } from '../../../parameters/ParameterController';
 import type { ParameterSchema } from '../../../parameters/ParameterSchema';
 import type { StorageService } from '../../../services/StorageService';
-import { SliderCrankModel } from './SliderCrankModel';
+import { MechanicalLinkagesModel } from './MechanicalLinkagesModel';
 import type {
-    SliderCrankCycleSample,
+    MechanicalLinkageConfiguration,
+    MechanicalLinkageCycleSample,
+    MechanicalLinkageKind,
     SliderCrankDirection,
     SliderCrankViewState,
 } from './SliderCrankTypes';
@@ -12,41 +14,53 @@ const RPM_TO_RADIANS_PER_SECOND = Math.PI * 2 / 60;
 
 export const SLIDER_CRANK_PARAMETER_SCHEMA: ParameterSchema = [
     {
+        kind: 'select',
+        key: 'mechanism',
+        label: 'Mechanism',
+        defaultValue: 'slider-crank',
+        options: [
+            { value: 'slider-crank', label: 'SLIDER–CRANK' },
+            { value: 'four-bar', label: 'FOUR-BAR LINKAGE' },
+            { value: 'geneva', label: 'GENEVA DRIVE' },
+        ],
+    },
+    {
+        kind: 'select',
+        key: 'configuration',
+        label: 'Geometry configuration',
+        defaultValue: 'standard',
+        options: [
+            { value: 'compact', label: 'COMPACT' },
+            { value: 'standard', label: 'STANDARD' },
+            { value: 'wide', label: 'WIDE' },
+        ],
+    },
+    {
         kind: 'number',
         key: 'rpm',
-        label: 'Input crank speed',
-        defaultValue: 120,
-        minimum: 20,
-        maximum: 360,
+        label: 'Input shaft speed',
+        defaultValue: 90,
+        minimum: 10,
+        maximum: 240,
         step: 10,
         decimals: 0,
         unit: ' rpm',
     },
     {
         kind: 'number',
-        key: 'crankRadius',
-        label: 'Crank radius r',
-        defaultValue: 0.8,
-        minimum: 0.4,
+        key: 'scale',
+        label: 'Mechanism size',
+        defaultValue: 1,
+        minimum: 0.7,
         maximum: 1.4,
         step: 0.1,
         decimals: 1,
-        unit: ' m',
-    },
-    {
-        kind: 'number',
-        key: 'rodRatio',
-        label: 'Connecting-rod ratio l/r',
-        defaultValue: 3.5,
-        minimum: 2.2,
-        maximum: 5,
-        step: 0.1,
-        decimals: 1,
+        unit: '×',
     },
     {
         kind: 'select',
         key: 'direction',
-        label: 'Crank rotation',
+        label: 'Input rotation',
         defaultValue: 'counterclockwise',
         options: [
             { value: 'counterclockwise', label: 'COUNTERCLOCKWISE' },
@@ -66,16 +80,16 @@ export const SLIDER_CRANK_PARAMETER_SCHEMA: ParameterSchema = [
     },
     {
         kind: 'toggle',
-        key: 'showVelocity',
-        label: 'Piston velocity vector',
+        key: 'showKinematics',
+        label: 'Output velocity / acceleration',
         defaultValue: true,
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
     },
     {
         kind: 'toggle',
-        key: 'showAcceleration',
-        label: 'Piston acceleration vector',
+        key: 'showTrace',
+        label: 'Point trajectory',
         defaultValue: true,
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
@@ -95,12 +109,13 @@ export interface SliderCrankViewModelCallbacks {
 }
 
 export class SliderCrankViewModel extends ParameterController {
-    private readonly model = new SliderCrankModel({
-        crankRadius: 0.8,
-        rodLength: 2.8,
-        angularVelocity: 120 * RPM_TO_RADIANS_PER_SECOND,
+    private readonly model = new MechanicalLinkagesModel({
+        mechanism: 'slider-crank',
+        configuration: 'standard',
+        scale: 1,
+        angularVelocity: 90 * RPM_TO_RADIANS_PER_SECOND,
     });
-    private cycleSamples: SliderCrankCycleSample[] = [];
+    private cycleSamples: MechanicalLinkageCycleSample[] = [];
     private paused = false;
 
     constructor(
@@ -109,10 +124,10 @@ export class SliderCrankViewModel extends ParameterController {
     ) {
         super(
             storage,
-            'module:slider-crank:parameters-v1',
+            'module:mechanical-linkages:parameters-v1',
             SLIDER_CRANK_PARAMETER_SCHEMA,
         );
-        this.applyParameters(false);
+        this.applyParameters(true);
     }
 
     update(dt: number): boolean {
@@ -139,13 +154,16 @@ export class SliderCrankViewModel extends ParameterController {
 
     parameterChanged(key: string): boolean {
         if (
-            key === 'rpm'
-            || key === 'crankRadius'
-            || key === 'rodRatio'
+            key === 'mechanism'
+            || key === 'configuration'
+            || key === 'rpm'
+            || key === 'scale'
             || key === 'direction'
         ) {
             try {
-                this.applyParameters(false);
+                this.applyParameters(
+                    key === 'mechanism' || key === 'configuration',
+                );
             } catch (error) {
                 this.callbacks.reportError(error);
             }
@@ -155,41 +173,44 @@ export class SliderCrankViewModel extends ParameterController {
 
     createViewState(): SliderCrankViewState {
         const sample = this.model.snapshot();
-        const rpm = this.getNumber('rpm');
+        const mechanism = this.getString('mechanism') as MechanicalLinkageKind;
+        const configuration = this.getString(
+            'configuration',
+        ) as MechanicalLinkageConfiguration;
         const direction = this.getString('direction') as SliderCrankDirection;
+        let outputMinimum = Number.POSITIVE_INFINITY;
+        let outputMaximum = Number.NEGATIVE_INFINITY;
         let maximumVelocity = 1e-9;
         let maximumAcceleration = 1e-9;
         for (const point of this.cycleSamples) {
+            outputMinimum = Math.min(outputMinimum, point.output);
+            outputMaximum = Math.max(outputMaximum, point.output);
             maximumVelocity = Math.max(maximumVelocity, Math.abs(point.velocity));
             maximumAcceleration = Math.max(
                 maximumAcceleration,
                 Math.abs(point.acceleration),
             );
         }
+        if (!Number.isFinite(outputMinimum) || !Number.isFinite(outputMaximum)) {
+            outputMinimum = -1;
+            outputMaximum = 1;
+        }
         return {
+            mechanism,
+            configuration,
             sample,
-            cycle: this.cycleSamples,
-            crankRadius: this.model.parameters.crankRadius,
-            rodLength: this.model.parameters.rodLength,
-            rpm,
+            cycleSamples: this.cycleSamples,
+            rpm: this.getNumber('rpm'),
             direction,
+            outputMinimum,
+            outputMaximum,
             maximumVelocity,
             maximumAcceleration,
-            showVelocity: this.getBoolean('showVelocity'),
-            showAcceleration: this.getBoolean('showAcceleration'),
+            showKinematics: this.getBoolean('showKinematics'),
+            showTrace: this.getBoolean('showTrace'),
             showPlot: this.getBoolean('showPlot'),
-            diagnosticsText: [
-                `θ ${(sample.angle * 180 / Math.PI).toFixed(1)}°`,
-                `x ${sample.pistonPosition.toFixed(3)} m`,
-                `v ${sample.pistonVelocity.toFixed(3)} m/s`,
-                `a ${sample.pistonAcceleration.toFixed(2)} m/s²`,
-            ].join(' · '),
-            modelSummary: [
-                'SLIDER–CRANK',
-                `stroke ${(2 * this.model.parameters.crankRadius).toFixed(2)} m`,
-                `l/r ${(this.model.parameters.rodLength / this.model.parameters.crankRadius).toFixed(2)}`,
-                `${rpm.toFixed(0)} rpm`,
-            ].join(' · '),
+            diagnosticsText: this.diagnosticsText(sample),
+            modelSummary: this.modelSummary(sample),
         };
     }
 
@@ -199,18 +220,74 @@ export class SliderCrankViewModel extends ParameterController {
     }
 
     private applyParameters(resetPhase: boolean): void {
-        const crankRadius = this.getNumber('crankRadius');
-        const rodLength = crankRadius * this.getNumber('rodRatio');
         const direction = this.getString('direction') as SliderCrankDirection;
         const sign = direction === 'clockwise' ? -1 : 1;
         this.model.setParameters({
-            crankRadius,
-            rodLength,
+            mechanism: this.getString('mechanism') as MechanicalLinkageKind,
+            configuration: this.getString(
+                'configuration',
+            ) as MechanicalLinkageConfiguration,
+            scale: this.getNumber('scale'),
             angularVelocity: sign
                 * this.getNumber('rpm')
                 * RPM_TO_RADIANS_PER_SECOND,
         });
         if (resetPhase) this.model.reset(0);
         this.cycleSamples = this.model.sampleCycle(181);
+    }
+
+    private diagnosticsText(
+        sample: SliderCrankViewState['sample'],
+    ): string {
+        const angle = sample.inputAngle * 180 / Math.PI;
+        if (sample.mechanism === 'four-bar') {
+            return [
+                `θin ${angle.toFixed(1)}°`,
+                `θout ${(sample.output * 180 / Math.PI).toFixed(1)}°`,
+                `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                `μ ${(sample.transmissionAngle * 180 / Math.PI).toFixed(1)}°`,
+            ].join(' · ');
+        }
+        if (sample.mechanism === 'geneva') {
+            return [
+                `θin ${angle.toFixed(1)}°`,
+                `index ${(sample.output * 180 / Math.PI).toFixed(1)}°`,
+                `ωout ${sample.outputVelocity.toFixed(2)} rad/s`,
+                sample.engaged ? 'PIN ENGAGED' : 'DWELL',
+            ].join(' · ');
+        }
+        return [
+            `θ ${angle.toFixed(1)}°`,
+            `x ${sample.output.toFixed(3)} m`,
+            `v ${sample.outputVelocity.toFixed(3)} m/s`,
+            `a ${sample.outputAcceleration.toFixed(2)} m/s²`,
+        ].join(' · ');
+    }
+
+    private modelSummary(sample: SliderCrankViewState['sample']): string {
+        const rpm = this.getNumber('rpm');
+        if (sample.mechanism === 'four-bar') {
+            return [
+                'FOUR-BAR CRANK–ROCKER',
+                `a ${sample.inputLength.toFixed(2)}`,
+                `b ${sample.couplerLength.toFixed(2)}`,
+                `c ${sample.outputLength.toFixed(2)}`,
+                `${rpm.toFixed(0)} rpm`,
+            ].join(' · ');
+        }
+        if (sample.mechanism === 'geneva') {
+            return [
+                'EXTERNAL GENEVA DRIVE',
+                `${sample.slotCount} SLOTS`,
+                sample.engaged ? 'INDEXING' : 'LOCKED DWELL',
+                `${rpm.toFixed(0)} rpm`,
+            ].join(' · ');
+        }
+        return [
+            'SLIDER–CRANK',
+            `stroke ${(2 * sample.crankRadius).toFixed(2)} m`,
+            `l/r ${(sample.rodLength / sample.crankRadius).toFixed(2)}`,
+            `${rpm.toFixed(0)} rpm`,
+        ].join(' · ');
     }
 }
