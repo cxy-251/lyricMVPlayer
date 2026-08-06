@@ -5,7 +5,7 @@ import { ChaoticBilliardsModel } from './ChaoticBilliardsModel';
 import type { BilliardVector } from './ChaoticBilliardsTypes';
 
 const PRIMARY = new Color(126, 190, 166, 220);
-const NEARBY = new Color(210, 167, 96, 170);
+const NEARBY = new Color(210, 167, 96, 190);
 
 function drawChaoticBilliards(parent: Node, width: number, height: number): void {
     const halfLength = 1.1;
@@ -16,13 +16,13 @@ function drawChaoticBilliards(parent: Node, width: number, height: number): void
         straightHalfLength: halfLength,
         particleSpeed: 1,
     });
-    model.reset(0.18, 27 * Math.PI / 180, 0.001 * Math.PI / 180);
+    model.reset(0.8, 10 * Math.PI / 180, 0.001 * Math.PI / 180);
 
     const primaryTrail: BilliardVector[] = [];
     const nearbyTrail: BilliardVector[] = [];
-    for (let index = 0; index < 3600; index += 1) {
+    for (let index = 0; index < 1800; index += 1) {
         model.step(1 / 120);
-        if (index % 4 === 0) {
+        if (index % 3 === 0) {
             const snapshot = model.snapshot();
             primaryTrail.push(snapshot.primary);
             nearbyTrail.push(snapshot.nearby);
@@ -59,8 +59,26 @@ function drawChaoticBilliards(parent: Node, width: number, height: number): void
     boundary.lineTo(first.x, first.y);
     boundary.stroke();
 
-    drawTrail(parent, 'ChaoticBilliardsCoverPrimary', primaryTrail, PRIMARY, scale, width, height, 1.7);
-    drawTrail(parent, 'ChaoticBilliardsCoverNearby', nearbyTrail, NEARBY, scale, width, height, 1.1);
+    drawTrail(
+        parent,
+        'ChaoticBilliardsCoverPrimary',
+        primaryTrail,
+        PRIMARY,
+        scale,
+        width,
+        height,
+        1.8,
+    );
+    drawTrail(
+        parent,
+        'ChaoticBilliardsCoverNearby',
+        nearbyTrail,
+        NEARBY,
+        scale,
+        width,
+        height,
+        1.4,
+    );
 
     const particles = createUiNode(
         parent,
@@ -71,6 +89,13 @@ function drawChaoticBilliards(parent: Node, width: number, height: number): void
     const snapshot = model.snapshot();
     const primary = project(snapshot.primary);
     const nearby = project(snapshot.nearby);
+
+    particles.strokeColor = palette.warning;
+    particles.lineWidth = 1;
+    particles.moveTo(primary.x, primary.y);
+    particles.lineTo(nearby.x, nearby.y);
+    particles.stroke();
+
     particles.fillColor = PRIMARY;
     particles.circle(primary.x, primary.y, Math.max(4, Math.min(width, height) * 0.016));
     particles.fill();
