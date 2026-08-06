@@ -3,15 +3,22 @@ import { SliderCrankModule } from './SliderCrankModule';
 
 export const sliderCrankDefinition: VisibleModuleDefinition = {
     id: 'slider-crank',
-    title: 'Slider–Crank Mechanism',
-    description: 'Inspect how a rotating crank and connecting rod generate reciprocating piston motion, including exact displacement, velocity, acceleration and dead-center geometry.',
+    title: 'Mechanical Linkages',
+    description: 'Compare three practical planar mechanisms: slider–crank reciprocation, four-bar crank–rocker motion, and Geneva intermittent indexing, with exact constraints and synchronized output kinematics.',
     category: 'physics',
     labId: 'physics',
     catalog: {
-        subtitle: 'crank · connecting rod · piston kinematics',
+        subtitle: 'slider–crank · four-bar linkage · Geneva indexing',
         cover: 'slider-crank',
     },
-    tags: ['mechanics', 'mechanism', 'kinematics', 'slider-crank', 'piston'],
+    tags: [
+        'mechanics',
+        'mechanism',
+        'kinematics',
+        'slider-crank',
+        'four-bar',
+        'geneva-drive',
+    ],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
     order: 50,
