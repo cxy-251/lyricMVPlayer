@@ -4,11 +4,11 @@ import { SliderCrankModule } from './SliderCrankModule';
 export const sliderCrankDefinition: VisibleModuleDefinition = {
     id: 'slider-crank',
     title: 'Mechanical Linkages',
-    description: 'Compare three practical planar mechanisms: slider–crank reciprocation, four-bar crank–rocker motion, and Geneva intermittent indexing, with exact constraints and synchronized output kinematics.',
+    description: 'Explore eight practical planar mechanisms in one tabbed laboratory: slider–crank, four-bar, Geneva, Scotch yoke, Whitworth quick return, ratchet, cam follower and conjugate elliptic gears.',
     category: 'physics',
     labId: 'physics',
     catalog: {
-        subtitle: 'slider–crank · four-bar linkage · Geneva indexing',
+        subtitle: '8 mechanisms · tabbed kinematics · constrained motion',
         cover: 'slider-crank',
     },
     tags: [
@@ -18,6 +18,11 @@ export const sliderCrankDefinition: VisibleModuleDefinition = {
         'slider-crank',
         'four-bar',
         'geneva-drive',
+        'scotch-yoke',
+        'quick-return',
+        'ratchet',
+        'cam',
+        'elliptic-gears',
     ],
     capabilities: ['pause', 'reset', 'settings'],
     status: 'ready',
