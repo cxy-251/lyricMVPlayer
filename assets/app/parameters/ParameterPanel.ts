@@ -28,7 +28,7 @@ import type {
 const DEFAULT_ROW_HEIGHT = 78;
 const SIDE_PANEL_MAX_ROWS = 5;
 const SIDE_PANEL_MIN_ROW_HEIGHT = 62;
-const DESCRIPTION_THRESHOLD = 112;
+const TITLE_HEIGHT = 36;
 
 export interface ParameterPanelLayout {
     readonly width: number;
@@ -158,48 +158,37 @@ export class ParameterPanel {
         width: number,
         height: number,
     ): void {
-        const detailed = height >= DESCRIPTION_THRESHOLD;
-        const labelY = detailed ? height / 2 - 22 : height / 2 - 18;
-        createLabel(
-            group,
-            definition.label,
-            Math.max(1, width * 0.58),
-            24,
-            11,
-            nativeTheme.muted,
-            -width * 0.21,
-            labelY,
-            HorizontalTextAlignment.LEFT,
-        );
+        this.renderWrappedTitle(group, definition.label, width, height);
+
         const valueNode = createLabel(
             group,
             this.controller.format(definition),
-            Math.max(1, width * 0.4),
-            24,
+            Math.max(1, width - 8),
+            22,
             12,
             nativeTheme.ink,
-            width * 0.28,
-            labelY,
+            0,
+            2,
             HorizontalTextAlignment.RIGHT,
         );
         const valueLabel = valueNode.getComponent(Label);
-        this.renderDescription(group, definition.description, width, height);
+        if (valueLabel) {
+            valueLabel.enableWrapText = false;
+        }
+
         const range = Math.max(definition.step, definition.maximum - definition.minimum);
         const initialProgress = (this.controller.getNumber(definition.key) - definition.minimum) / range;
-
         createNativeSlider(group, {
             name: `${definition.key}:slider`,
             width: Math.max(44, width - 6),
             progress: initialProgress,
-            y: detailed ? -height / 2 + 29 : -height * 0.19,
+            y: -height / 2 + 20,
             onChange: (progress) => {
                 this.guard(() => {
                     const next = this.valueFromProgress(definition, progress);
-
                     if (!this.controller.set(definition.key, next)) {
                         return;
                     }
-
                     if (valueLabel) {
                         valueLabel.string = this.controller.format(definition);
                     }
@@ -215,31 +204,17 @@ export class ParameterPanel {
         width: number,
         height: number,
     ): void {
-        const detailed = height >= DESCRIPTION_THRESHOLD;
-        const controlY = detailed ? height / 2 - 24 : 0;
-        createLabel(
-            group,
-            definition.label,
-            Math.max(1, width - 74),
-            32,
-            11,
-            nativeTheme.muted,
-            -28,
-            controlY,
-            HorizontalTextAlignment.LEFT,
-        );
-        this.renderDescription(group, definition.description, width, height);
+        this.renderWrappedTitle(group, definition.label, width, height);
         createNativeToggle(group, {
             name: `${definition.key}:toggle`,
             checked: this.controller.getBoolean(definition.key),
             x: width / 2 - 30,
-            y: controlY,
+            y: -height / 2 + 22,
             onChange: (checked) => {
                 this.guard(() => {
                     if (!this.controller.set(definition.key, checked)) {
                         return;
                     }
-
                     this.onChange(definition.key);
                 });
             },
@@ -252,21 +227,9 @@ export class ParameterPanel {
         width: number,
         height: number,
     ): void {
-        const detailed = height >= DESCRIPTION_THRESHOLD;
-        const labelY = detailed ? height / 2 - 22 : height / 2 - 18;
-        const selectorY = detailed ? -height / 2 + 31 : -height * 0.2;
-        createLabel(
-            group,
-            definition.label,
-            Math.max(1, width - 8),
-            22,
-            11,
-            nativeTheme.muted,
-            0,
-            labelY,
-        );
-        this.renderDescription(group, definition.description, width, height);
+        this.renderWrappedTitle(group, definition.label, width, height);
         const valueWidth = Math.max(36, width - 100);
+        const selectorY = -height / 2 + 23;
 
         createIconButton(group, {
             name: `${definition.key}:previous`,
@@ -278,16 +241,21 @@ export class ParameterPanel {
                 () => this.controller.cycle(definition.key, -1),
             )),
         });
-        createLabel(
+        const valueNode = createLabel(
             group,
             this.controller.format(definition),
             valueWidth,
-            36,
-            12,
+            34,
+            11,
             nativeTheme.ink,
             0,
             selectorY,
         );
+        const valueLabel = valueNode.getComponent(Label);
+        if (valueLabel) {
+            valueLabel.enableWrapText = true;
+            valueLabel.lineHeight = 14;
+        }
         createIconButton(group, {
             name: `${definition.key}:next`,
             icon: 'chevron-right',
@@ -300,30 +268,27 @@ export class ParameterPanel {
         });
     }
 
-    private renderDescription(
+    private renderWrappedTitle(
         parent: Node,
-        description: string | undefined,
+        text: string,
         width: number,
         height: number,
     ): void {
-        if (!description || height < DESCRIPTION_THRESHOLD) {
-            return;
-        }
         const node = createLabel(
             parent,
-            description,
+            text,
             Math.max(1, width - 8),
-            Math.max(32, height - 84),
-            9,
+            TITLE_HEIGHT,
+            10,
             nativeTheme.muted,
             0,
-            3,
+            height / 2 - TITLE_HEIGHT / 2 - 2,
             HorizontalTextAlignment.LEFT,
         );
         const label = node.getComponent(Label);
         if (label) {
-            label.lineHeight = 13;
             label.enableWrapText = true;
+            label.lineHeight = 13;
         }
     }
 
@@ -387,7 +352,6 @@ export class ParameterPanel {
         if (!action()) {
             return;
         }
-
         this.onChange(key);
         this.renderCurrent();
     }
@@ -438,10 +402,7 @@ export class ParameterPanel {
         const pagerHeight = pageCount > 1 ? 44 : 12;
         const rowHeight = requestedHeight === null
             ? DEFAULT_ROW_HEIGHT
-            : Math.max(
-                1,
-                (requestedHeight - pagerHeight - 14) / rows,
-            );
+            : Math.max(1, (requestedHeight - pagerHeight - 14) / rows);
         const height = requestedHeight
             ?? rows * rowHeight + pagerHeight + 14;
 
