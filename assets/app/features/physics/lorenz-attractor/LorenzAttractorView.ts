@@ -43,6 +43,7 @@ const SHADOW_COLOR = new Color(
 const CONTENT_GAP = 14;
 const EDGE_PADDING_WIDE = 36;
 const EDGE_PADDING_COMPACT = 16;
+const SIDE_EQUATION_HEIGHT = 160;
 
 export interface LorenzAttractorViewActions {
     parameterChanged(key: string): void;
@@ -214,18 +215,19 @@ export class LorenzAttractorView {
             inspectorX,
             centerY,
             false,
+            SIDE_EQUATION_HEIGHT,
         );
 
         const panelBreakpoint: ViewportBreakpoint = 'compact';
         const parameterWidth = Math.max(1, inspectorWidth - 16);
-        const parameterHeight = ParameterPanel.measureHeight(
-            this.parameterSchema.length,
-            parameterWidth,
-            panelBreakpoint,
+        const parameterHeight = Math.max(
+            1,
+            contentHeight - SIDE_EQUATION_HEIGHT - CONTENT_GAP - 8,
         );
         this.parameterPanelParent = inspector;
         this.parameterPanelLayout = {
             width: parameterWidth,
+            height: parameterHeight,
             x: 0,
             y: -contentHeight / 2 + 8 + parameterHeight / 2,
             breakpoint: panelBreakpoint,
