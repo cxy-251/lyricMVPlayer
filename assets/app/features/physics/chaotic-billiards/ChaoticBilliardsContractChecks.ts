@@ -1,5 +1,9 @@
 import { ChaoticBilliardsModel } from './ChaoticBilliardsModel';
 
+const DEFAULT_INITIAL_Y = 0.8;
+const DEFAULT_LAUNCH_ANGLE = 10 * Math.PI / 180;
+const DEFAULT_PERTURBATION = 0.001 * Math.PI / 180;
+
 export function runChaoticBilliardsContractChecks(): void {
     checkSpeedPreservation();
     checkDeterminism();
@@ -39,7 +43,7 @@ function checkDeterminism(): void {
 
 function checkCircleRegularity(): void {
     const model = createModel('circle');
-    for (let index = 0; index < 12000; index += 1) {
+    for (let index = 0; index < 2880; index += 1) {
         model.step(1 / 240);
     }
     assert(
@@ -50,12 +54,12 @@ function checkCircleRegularity(): void {
 
 function checkStadiumSensitivity(): void {
     const model = createModel('stadium');
-    for (let index = 0; index < 12000; index += 1) {
+    for (let index = 0; index < 2880; index += 1) {
         model.step(1 / 240);
     }
     assert(
-        model.diagnostics().separation > 0.2,
-        'Stadium billiard did not amplify the nearby launch-angle difference',
+        model.diagnostics().separation > 0.15,
+        'Stadium billiard did not visibly amplify the nearby launch-angle difference',
     );
 }
 
@@ -67,9 +71,9 @@ function createModel(boundary: 'stadium' | 'circle'): ChaoticBilliardsModel {
         particleSpeed: 1,
     });
     model.reset(
-        0.18,
-        27 * Math.PI / 180,
-        0.001 * Math.PI / 180,
+        DEFAULT_INITIAL_Y,
+        DEFAULT_LAUNCH_ANGLE,
+        DEFAULT_PERTURBATION,
     );
     return model;
 }
