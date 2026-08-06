@@ -107,6 +107,14 @@ export const CHAOTIC_BILLIARDS_PARAMETER_SCHEMA: ParameterSchema = [
         onLabel: 'VISIBLE',
         offLabel: 'HIDDEN',
     },
+    {
+        kind: 'toggle',
+        key: 'showNormals',
+        label: 'Last collision normals',
+        defaultValue: true,
+        onLabel: 'VISIBLE',
+        offLabel: 'HIDDEN',
+    },
 ];
 
 export interface ChaoticBilliardsViewModelCallbacks {
@@ -186,7 +194,12 @@ export class ChaoticBilliardsViewModel extends ParameterController {
     }
 
     parameterChanged(key: string): boolean {
-        if (key === 'speed' || key === 'trailLength' || key === 'showNearby') {
+        if (
+            key === 'speed'
+            || key === 'trailLength'
+            || key === 'showNearby'
+            || key === 'showNormals'
+        ) {
             this.trimTrails();
             return true;
         }
@@ -205,6 +218,7 @@ export class ChaoticBilliardsViewModel extends ParameterController {
             primaryTrail: this.primaryTrail,
             nearbyTrail: this.nearbyTrail,
             showNearby: this.getBoolean('showNearby'),
+            showNormals: this.getBoolean('showNormals'),
             diagnosticsText: [
                 `t ${snapshot.elapsedTime.toFixed(2)}`,
                 `Δr ${diagnostics.separation.toExponential(2)}`,
