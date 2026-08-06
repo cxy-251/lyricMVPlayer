@@ -70,6 +70,7 @@ export const DRIVEN_CAVITY_FLOW_PARAMETER_SCHEMA: ParameterSchema = [
         defaultValue: 'speed',
         options: [
             { value: 'speed', label: 'VELOCITY MAGNITUDE' },
+            { value: 'pressure', label: 'PRESSURE' },
             { value: 'vorticity', label: 'VORTICITY' },
             { value: 'tracers', label: 'VELOCITY + PARTICLES' },
         ],
@@ -192,11 +193,13 @@ export class DrivenCavityFlowViewModel extends ParameterController {
         const snapshot = this.model.snapshot();
         const diagnostics = this.model.diagnostics();
         const displayMode = this.getString('displayMode') as CavityDisplayMode;
-        const resultName = displayMode === 'vorticity'
-            ? 'VORTICITY CONTOUR'
-            : displayMode === 'tracers'
-                ? 'VELOCITY CONTOUR + PARTICLES'
-                : 'VELOCITY MAGNITUDE CONTOUR';
+        const resultName = displayMode === 'pressure'
+            ? 'PRESSURE CONTOUR'
+            : displayMode === 'vorticity'
+                ? 'VORTICITY CONTOUR'
+                : displayMode === 'tracers'
+                    ? 'VELOCITY CONTOUR + PARTICLES'
+                    : 'VELOCITY MAGNITUDE CONTOUR';
         return {
             snapshot,
             diagnostics,
@@ -207,7 +210,7 @@ export class DrivenCavityFlowViewModel extends ParameterController {
             diagnosticsText: [
                 `step ${snapshot.elapsedSteps}`,
                 `Re ${diagnostics.reynoldsNumber.toFixed(0)}`,
-                `max ${diagnostics.maximumSpeed.toFixed(4)}`,
+                `max |u| ${diagnostics.maximumSpeed.toFixed(4)}`,
                 `mass drift ${diagnostics.normalizedMassDrift.toExponential(2)}`,
             ].join(' · '),
             modelSummary: [
