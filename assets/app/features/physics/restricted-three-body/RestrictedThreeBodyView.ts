@@ -40,6 +40,7 @@ const TRAIL_COLORS = [
     new Color(151, 165, 211, 205),
 ] as const;
 const CONTENT_GAP = 14;
+const SIDE_EQUATION_HEIGHT = 170;
 
 export interface PlanarThreeBodyViewActions {
     parameterChanged(key: string): void;
@@ -184,16 +185,17 @@ export class PlanarThreeBodyView {
             leftEdge + this.plotWidth + CONTENT_GAP + inspectorWidth / 2,
             centerY,
             false,
+            SIDE_EQUATION_HEIGHT,
         );
         const panelWidth = inspectorWidth - 16;
-        const panelHeight = ParameterPanel.measureHeight(
-            this.parameterSchema.length,
-            panelWidth,
-            'compact',
+        const panelHeight = Math.max(
+            1,
+            contentHeight - SIDE_EQUATION_HEIGHT - CONTENT_GAP - 8,
         );
         this.parameterPanelParent = inspector;
         this.parameterPanelLayout = {
             width: panelWidth,
+            height: panelHeight,
             x: 0,
             y: -contentHeight / 2 + 8 + panelHeight / 2,
             breakpoint: 'compact',
