@@ -50,6 +50,7 @@ export interface ChaoticBilliardsViewState {
     readonly primaryTrail: readonly BilliardTrailPoint[];
     readonly nearbyTrail: readonly BilliardTrailPoint[];
     readonly showNearby: boolean;
+    readonly showNormals: boolean;
     readonly diagnosticsText: string;
     readonly modelSummary: string;
 }
