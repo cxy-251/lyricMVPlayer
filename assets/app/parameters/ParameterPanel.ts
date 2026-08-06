@@ -26,7 +26,7 @@ import type {
 } from './ParameterSchema';
 
 const DEFAULT_ROW_HEIGHT = 78;
-const DETAILED_ROW_HEIGHT = 94;
+const DETAILED_ROW_HEIGHT = 162;
 const DETAILED_SCHEMA_ITEM_COUNT = 10;
 
 export interface ParameterPanelLayout {
