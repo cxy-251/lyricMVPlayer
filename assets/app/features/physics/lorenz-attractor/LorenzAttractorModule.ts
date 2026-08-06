@@ -7,15 +7,18 @@ import {
     LorenzAttractorViewModel,
 } from './LorenzAttractorViewModel';
 
+const MINIMUM_RENDER_INTERVAL_MS = 14;
+
 export class LorenzAttractorModule extends ResponsiveModule implements Updatable, Pausable, Resettable {
     protected readonly rootName = 'LorenzAttractorModuleRoot';
     private viewModel: LorenzAttractorViewModel | null = null;
     private view: LorenzAttractorView | null = null;
+    private lastRenderAt = 0;
 
     protected onMount(): void {
         const context = this.requireContext();
         this.viewModel = new LorenzAttractorViewModel(context.storage, {
-            stateChanged: () => this.renderCurrentState(),
+            stateChanged: () => this.renderCurrentState(true),
             reportError: (error) => context.reportError(error),
         });
         this.view = new LorenzAttractorView(
@@ -24,7 +27,9 @@ export class LorenzAttractorModule extends ResponsiveModule implements Updatable
             this.viewModel,
             {
                 parameterChanged: (key) => {
-                    if (this.requireViewModel().parameterChanged(key)) this.renderCurrentState();
+                    if (this.requireViewModel().parameterChanged(key)) {
+                        this.renderCurrentState(true);
+                    }
                 },
                 reportError: (error) => context.reportError(error),
             },
@@ -36,39 +41,59 @@ export class LorenzAttractorModule extends ResponsiveModule implements Updatable
         this.view = null;
         this.viewModel?.dispose();
         this.viewModel = null;
+        this.lastRenderAt = 0;
     }
 
     update(dt: number): void {
-        if (this.viewModel?.update(dt)) this.renderCurrentState();
+        if (this.viewModel?.update(dt)) {
+            this.renderCurrentState(false);
+        }
     }
 
-    pause(): void { this.viewModel?.pause(); }
-    resume(): void { this.viewModel?.resume(); }
+    pause(): void {
+        this.viewModel?.pause();
+    }
+
+    resume(): void {
+        this.viewModel?.resume();
+    }
 
     reset(): void {
         const viewModel = this.requireViewModel();
         const view = this.requireView();
         viewModel.reset();
         view.refreshParameterPanel();
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
     protected render(viewport: ViewportSnapshot): void {
         this.requireView().layout(viewport);
-        this.renderCurrentState();
+        this.renderCurrentState(true);
     }
 
-    private renderCurrentState(): void {
-        if (this.viewModel && this.view) this.view.render(this.viewModel.createViewState());
+    private renderCurrentState(force: boolean): void {
+        if (!this.viewModel || !this.view) {
+            return;
+        }
+        const now = Date.now();
+        if (!force && now - this.lastRenderAt < MINIMUM_RENDER_INTERVAL_MS) {
+            return;
+        }
+        this.lastRenderAt = now;
+        this.view.render(this.viewModel.createViewState());
     }
 
     private requireViewModel(): LorenzAttractorViewModel {
-        if (!this.viewModel) throw new Error('Lorenz attractor ViewModel is unavailable');
+        if (!this.viewModel) {
+            throw new Error('Lorenz attractor ViewModel is unavailable');
+        }
         return this.viewModel;
     }
 
     private requireView(): LorenzAttractorView {
-        if (!this.view) throw new Error('Lorenz attractor View is unavailable');
+        if (!this.view) {
+            throw new Error('Lorenz attractor View is unavailable');
+        }
         return this.view;
     }
 }
