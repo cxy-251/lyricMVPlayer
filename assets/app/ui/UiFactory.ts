@@ -280,6 +280,15 @@ export function createIconButton(
         readonly y?: number;
         readonly tone?: SurfaceTone;
         readonly selected?: boolean;
+        readonly colors?: {
+            readonly control: Color;
+            readonly hover: Color;
+            readonly selected: Color;
+            readonly border: Color;
+            readonly borderStrong: Color;
+            readonly icon: Color;
+            readonly selectedIcon: Color;
+        };
         readonly onPress: () => void;
     },
 ): Node {
@@ -292,19 +301,22 @@ export function createIconButton(
         options.y ?? 0,
     );
     const visual = createUiNode(root, '__IconButtonVisual', 36, 36);
+    const colors = options.colors;
 
     const paint = (hovered: boolean): void => {
         const background = options.selected
-            ? nativeTheme.controlSelected
+            ? colors?.selected ?? nativeTheme.controlSelected
             : hovered
-                ? nativeTheme.controlHover
-                : nativeTheme.control;
+                ? colors?.hover ?? nativeTheme.controlHover
+                : colors?.control ?? nativeTheme.control;
         fillNode(visual, 36, 36, background, 18);
         strokeNode(
             visual,
             36,
             36,
-            hovered ? nativeTheme.borderStrong : nativeTheme.border,
+            hovered
+                ? colors?.borderStrong ?? nativeTheme.borderStrong
+                : colors?.border ?? nativeTheme.border,
             18,
         );
     };
@@ -314,7 +326,9 @@ export function createIconButton(
         visual,
         options.icon,
         18,
-        options.selected ? nativeTheme.accent : nativeTheme.ink,
+        options.selected
+            ? colors?.selectedIcon ?? nativeTheme.accent
+            : colors?.icon ?? nativeTheme.ink,
     );
     attachButton(root, visual, 0.93, options.onPress, paint);
     return root;

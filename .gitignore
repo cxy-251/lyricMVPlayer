@@ -4,4 +4,5 @@ local/
 profiles/
 build/
 node_modules/
+native/
 .DS_Store

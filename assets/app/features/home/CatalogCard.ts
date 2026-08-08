@@ -1,5 +1,6 @@
 import {
     Button,
+    Color,
     HorizontalTextAlignment,
     Node,
     sys,
@@ -31,13 +32,25 @@ export interface CatalogCardOptions {
     readonly x: number;
     readonly y: number;
     readonly directOpen?: boolean;
+    readonly style?: CatalogCardStyle;
     readonly onOpen: () => void;
+}
+
+export interface CatalogCardStyle {
+    readonly card: Color;
+    readonly hover: Color;
+    readonly border: Color;
+    readonly ink: Color;
+    readonly muted: Color;
+    readonly accent: Color;
+    readonly radius?: number;
 }
 
 export function createCatalogCard(parent: Node, options: CatalogCardOptions): Node {
     const width = Math.max(1, options.width);
     const height = Math.max(1, options.height);
-    const radius = Math.min(22, Math.max(1, width * 0.038), width / 2, height / 2);
+    const style = options.style;
+    const radius = style?.radius ?? Math.min(22, Math.max(1, width * 0.038), width / 2, height / 2);
     const directOpen = options.directOpen ?? sys.isMobile;
     const hit = createUiNode(
         parent,
@@ -48,8 +61,8 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         options.y,
     );
     const card = createUiNode(hit, '__CardVisual', width, height);
-    fillNode(card, width, height, nativeTheme.card, radius);
-    strokeNode(card, width, height, nativeTheme.border, radius, 1);
+    fillNode(card, width, height, style?.card ?? nativeTheme.card, radius);
+    strokeNode(card, width, height, style?.border ?? nativeTheme.border, radius, 1);
 
     const hoverWidth = Math.max(1, width - 2);
     const hoverHeight = Math.max(1, height - 2);
@@ -58,7 +71,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         hoverLayer,
         hoverWidth,
         hoverHeight,
-        nativeTheme.cardHover,
+        style?.hover ?? nativeTheme.cardHover,
         Math.min(Math.max(1, radius - 1), hoverWidth / 2, hoverHeight / 2),
     );
     const hoverOpacity = hoverLayer.addComponent(UIOpacity);
@@ -99,7 +112,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         Math.max(1, width - 52),
         Math.max(1, Math.min(42, detailHeight * 0.38)),
         titleFontSize,
-        nativeTheme.ink,
+        style?.ink ?? nativeTheme.ink,
         0,
         titleY,
         HorizontalTextAlignment.CENTER,
@@ -110,7 +123,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         Math.max(1, width - 68),
         Math.max(1, Math.min(26, detailHeight * 0.24)),
         subtitleFontSize,
-        nativeTheme.muted,
+        style?.muted ?? nativeTheme.muted,
         0,
         subtitleY,
         HorizontalTextAlignment.CENTER,
@@ -119,7 +132,7 @@ export function createCatalogCard(parent: Node, options: CatalogCardOptions): No
         detail,
         'chevron-right',
         Math.max(10, Math.min(18, width * 0.05)),
-        nativeTheme.accent,
+        style?.accent ?? nativeTheme.accent,
         0,
         iconY,
     );

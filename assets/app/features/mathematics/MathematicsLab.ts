@@ -1,15 +1,22 @@
 import type { LabManifest } from '../../contracts/InteractiveModule';
-import { lissajousDefinition } from './lissajous';
+import { defineLabManifest } from '../../core/ManifestValidator';
+import {
+    circleMotionDefinition,
+    motionCurvesDefinition,
+    triangleMotionDefinition,
+} from './geometry-motion';
 
-export const mathematicsLab: LabManifest = {
+export const mathematicsLab: LabManifest = defineLabManifest({
     definition: {
         id: 'mathematics',
         title: 'Mathematics Laboratory',
-        description: 'Interactive curves, geometry and mathematical systems.',
+        description: 'Continuous 2D plane geometry: constructions move while their hidden relations remain visible.',
         order: 10,
         cover: 'mathematics',
     },
     modules: [
-        lissajousDefinition,
+        triangleMotionDefinition,
+        circleMotionDefinition,
+        motionCurvesDefinition,
     ],
-};
+});

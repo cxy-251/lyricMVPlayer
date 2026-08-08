@@ -1,4 +1,5 @@
 import {
+    Color,
     Mask,
     Node,
     ScrollView,
@@ -20,7 +21,27 @@ import {
     nativeTheme,
     palette,
 } from '../../ui/UiFactory';
-import { createCatalogCard } from './CatalogCard';
+import { createCatalogCard, type CatalogCardStyle } from './CatalogCard';
+
+const MATHEMATICS_CATALOG_STYLE: CatalogCardStyle = {
+    card: new Color(26, 24, 51, 255),
+    hover: new Color(37, 34, 70, 255),
+    border: new Color(74, 69, 111, 255),
+    ink: new Color(242, 237, 225, 255),
+    muted: new Color(157, 154, 184, 255),
+    accent: new Color(79, 214, 226, 255),
+    radius: 3,
+};
+
+const PHYSICS_CATALOG_STYLE: CatalogCardStyle = {
+    card: new Color(35, 32, 24, 255),
+    hover: new Color(48, 42, 29, 255),
+    border: new Color(92, 76, 45, 255),
+    ink: new Color(241, 232, 210, 255),
+    muted: new Color(171, 161, 140, 255),
+    accent: new Color(255, 177, 59, 255),
+    radius: 4,
+};
 
 export class LabCatalogModule implements InteractiveModule {
     private root: Node | null = null;
@@ -94,7 +115,16 @@ export class LabCatalogModule implements InteractiveModule {
         );
 
         clearNode(root);
-        fillNode(root, viewport.width, viewport.height, palette.background);
+        fillNode(
+            root,
+            viewport.width,
+            viewport.height,
+            this.labId === 'mathematics'
+                ? new Color(16, 15, 31, 255)
+                : this.labId === 'physics'
+                    ? new Color(23, 22, 18, 255)
+                    : palette.background,
+        );
 
         if (this.labId === 'games' && modules.length > 1) {
             this.page = 0;
@@ -216,6 +246,7 @@ export class LabCatalogModule implements InteractiveModule {
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
                 directOpen: compact,
+                style: this.catalogStyle(),
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
@@ -299,6 +330,7 @@ export class LabCatalogModule implements InteractiveModule {
                 x: startX + column * (cardWidth + gap),
                 y: startY - row * (cardHeight + gap),
                 directOpen: compact,
+                style: this.catalogStyle(),
                 onOpen: () => {
                     void this.context?.open(definition.id);
                 },
@@ -350,5 +382,15 @@ export class LabCatalogModule implements InteractiveModule {
                 this.render(viewport);
             },
         });
+    }
+
+    private catalogStyle(): CatalogCardStyle | undefined {
+        if (this.labId === 'mathematics') {
+            return MATHEMATICS_CATALOG_STYLE;
+        }
+        if (this.labId === 'physics') {
+            return PHYSICS_CATALOG_STYLE;
+        }
+        return undefined;
     }
 }
