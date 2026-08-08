@@ -4,16 +4,16 @@ import { DoublePendulumModule } from './DoublePendulumModule';
 export const doublePendulumDefinition: VisibleModuleDefinition = {
     id: 'double-pendulum',
     title: 'Double Pendulum',
-    description: 'Explore chaotic initial conditions with a fixed-step RK4 model and energy diagnostics.',
+    description: 'Compare nearly identical double pendulums as their trajectories separate into visible chaos.',
     category: 'physics',
     labId: 'physics',
     catalog: {
-        subtitle: 'chaos and energy conservation',
+        subtitle: 'chaotic twins · RK4 energy check',
         cover: 'double-pendulum',
     },
-    tags: ['mechanics', 'chaos', 'conservation', 'rk4'],
-    capabilities: ['pause', 'reset', 'settings'],
+    tags: ['mechanics', 'chaos', 'conservation', 'rk4', 'continuous-animation'],
+    capabilities: ['pause', 'reset'],
     status: 'ready',
-    order: 10,
+    order: 25,
     create: () => new DoublePendulumModule(),
 };

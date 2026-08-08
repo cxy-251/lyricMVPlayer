@@ -33,10 +33,15 @@ export interface DoublePendulumDiagnostics {
 export interface DoublePendulumViewState {
     readonly positions: DoublePendulumPositions;
     readonly trail: readonly DoublePendulumPoint[];
+    readonly companionPositions: DoublePendulumPositions;
+    readonly companionTrail: readonly DoublePendulumPoint[];
     readonly mass1: number;
     readonly mass2: number;
     readonly length1: number;
     readonly length2: number;
     readonly showTrail: boolean;
+    readonly presetIndex: number;
+    readonly elapsedTime: number;
+    readonly divergence: number;
     readonly diagnostics: string;
 }

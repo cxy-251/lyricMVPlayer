@@ -276,10 +276,15 @@ export class LabCatalogModule implements InteractiveModule {
     ): void {
         const availableHeight = Math.max(1, contentTop - contentBottom);
         const singleModule = modules.length === 1;
+        const balancedFour = !compact
+            && modules.length === 4
+            && availableHeight >= 520;
         const columns = compact
             ? 1
             : singleModule
                 ? 1
+                : balancedFour
+                    ? 2
                 : viewport.breakpoint === 'wide'
                     ? Math.min(3, modules.length)
                     : Math.min(2, modules.length);
@@ -291,10 +296,12 @@ export class LabCatalogModule implements InteractiveModule {
             maximumCardWidth,
             (contentWidth - gap * (columns - 1)) / columns,
         ));
-        const preferredCardHeight = Math.min(
-            singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
-            cardWidth * (singleModule ? 1.14 : 1.08),
-        );
+        const preferredCardHeight = balancedFour
+            ? Math.min((availableHeight - gap) / 2, cardWidth * 0.72)
+            : Math.min(
+                singleModule ? compact ? 430 : 660 : compact ? 400 : 500,
+                cardWidth * (singleModule ? 1.14 : 1.08),
+            );
         const cardHeight = Math.max(1, Math.min(preferredCardHeight, availableHeight));
         const rowsPerPage = Math.max(
             1,

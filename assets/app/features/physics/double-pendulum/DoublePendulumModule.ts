@@ -6,10 +6,7 @@ import type {
 import type { ViewportSnapshot } from '../../../services/ViewportService';
 import { ResponsiveModule } from '../../../templates/ResponsiveModule';
 import { DoublePendulumView } from './DoublePendulumView';
-import {
-    DOUBLE_PENDULUM_PARAMETER_SCHEMA,
-    DoublePendulumViewModel,
-} from './DoublePendulumViewModel';
+import { DoublePendulumViewModel } from './DoublePendulumViewModel';
 
 const MINIMUM_RENDER_INTERVAL_MS = 14;
 
@@ -31,13 +28,9 @@ export class DoublePendulumModule extends ResponsiveModule implements Updatable,
         );
         this.view = new DoublePendulumView(
             this.requireRoot(),
-            DOUBLE_PENDULUM_PARAMETER_SCHEMA,
-            this.viewModel,
             {
-                parameterChanged: (key) => {
-                    if (this.requireViewModel().parameterChanged(key)) {
-                        this.renderCurrentState(true);
-                    }
+                presetChanged: (index) => {
+                    this.requireViewModel().selectPreset(index);
                 },
                 reportError: (error) => context.reportError(error),
             },
@@ -67,10 +60,7 @@ export class DoublePendulumModule extends ResponsiveModule implements Updatable,
     }
 
     reset(): void {
-        const viewModel = this.requireViewModel();
-        const view = this.requireView();
-        viewModel.reset();
-        view.refreshParameterPanel();
+        this.requireViewModel().reset();
         this.renderCurrentState(true);
     }
 

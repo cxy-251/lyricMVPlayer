@@ -239,54 +239,78 @@ function drawLissajous(parent: Node, width: number, height: number): void {
 
 function drawDoublePendulum(parent: Node, width: number, height: number): void {
     const unit = Math.min(width, height);
-    const length1 = unit * 0.25;
-    const length2 = unit * 0.29;
-    const theta1 = 0.52;
-    const theta2 = 0.88;
+    const track = new Color(241, 232, 210, 235);
+    const trackSoft = new Color(241, 232, 210, 64);
+    const amber = new Color(255, 177, 59, 255);
+    const red = new Color(228, 86, 60, 255);
+    const cyan = new Color(98, 183, 198, 220);
+    const cyanSoft = new Color(98, 183, 198, 92);
+    const length1 = unit * 0.24;
+    const length2 = unit * 0.28;
+    const theta1 = 0.61;
+    const theta2 = 1.02;
+    const twinTheta1 = theta1 - 0.065;
+    const twinTheta2 = theta2 + 0.11;
     const pivotY = unit * 0.23;
     const x1 = Math.sin(theta1) * length1;
     const y1 = pivotY - Math.cos(theta1) * length1;
     const x2 = x1 + Math.sin(theta2) * length2;
     const y2 = y1 - Math.cos(theta2) * length2;
+    const twinX1 = Math.sin(twinTheta1) * length1;
+    const twinY1 = pivotY - Math.cos(twinTheta1) * length1;
+    const twinX2 = twinX1 + Math.sin(twinTheta2) * length2;
+    const twinY2 = twinY1 - Math.cos(twinTheta2) * length2;
 
     const path = createGraphics(parent, 'PendulumPath', width, height);
-    path.strokeColor = coverAccentSoft;
-    path.lineWidth = Math.max(1.25, unit * 0.004);
-    for (let index = 0; index < 8; index += 1) {
-        const angleA = -1.36 + index * 0.115;
-        const angleB = angleA + 0.064;
-        const radius = length2 * 0.76;
-        path.moveTo(x1 + Math.sin(angleA) * radius, y1 - Math.cos(angleA) * radius);
-        path.lineTo(x1 + Math.sin(angleB) * radius, y1 - Math.cos(angleB) * radius);
+    path.strokeColor = cyanSoft;
+    path.lineWidth = Math.max(1.25, unit * 0.0045);
+    for (let index = 0; index <= 90; index += 1) {
+        const t = index / 90 * Math.PI * 2;
+        const x = Math.sin(t * 1.7 + 0.8) * unit * 0.25;
+        const y = -unit * 0.07 + Math.sin(t * 2.4) * unit * 0.19;
+        if (index === 0) {
+            path.moveTo(x, y);
+        } else {
+            path.lineTo(x, y);
+        }
     }
     path.stroke();
 
+    const twin = createGraphics(parent, 'PendulumTwin', width, height);
+    twin.strokeColor = cyan;
+    twin.lineWidth = Math.max(1.25, unit * 0.0045);
+    twin.moveTo(0, pivotY);
+    twin.lineTo(twinX1, twinY1);
+    twin.lineTo(twinX2, twinY2);
+    twin.stroke();
+    twin.strokeColor = cyan;
+    twin.circle(twinX1, twinY1, Math.max(5, unit * 0.018));
+    twin.circle(twinX2, twinY2, Math.max(6, unit * 0.022));
+    twin.stroke();
+
     const rods = createGraphics(parent, 'PendulumRods', width, height);
-    rods.strokeColor = palette.text;
-    rods.lineWidth = Math.max(1.75, unit * 0.006);
+    rods.strokeColor = track;
+    rods.lineWidth = Math.max(1.75, unit * 0.007);
     rods.moveTo(0, pivotY);
     rods.lineTo(x1, y1);
     rods.lineTo(x2, y2);
     rods.stroke();
 
     const pivot = createGraphics(parent, 'PendulumPivot', width, height);
-    pivot.fillColor = palette.surface;
-    pivot.strokeColor = palette.text;
+    pivot.fillColor = trackSoft;
+    pivot.strokeColor = track;
     pivot.lineWidth = Math.max(1.25, unit * 0.0045);
     pivot.circle(0, pivotY, Math.max(5, unit * 0.017));
     pivot.fill();
     pivot.stroke();
 
     const firstMass = createGraphics(parent, 'PendulumFirstMass', width, height);
-    firstMass.fillColor = palette.surface;
-    firstMass.strokeColor = coverAccentStrong;
-    firstMass.lineWidth = Math.max(1.25, unit * 0.0045);
+    firstMass.fillColor = amber;
     firstMass.circle(x1, y1, Math.max(6, unit * 0.021));
     firstMass.fill();
-    firstMass.stroke();
 
     const secondMass = createGraphics(parent, 'PendulumSecondMass', width, height);
-    secondMass.fillColor = coverAccentStrong;
+    secondMass.fillColor = red;
     secondMass.circle(x2, y2, Math.max(7, unit * 0.026));
     secondMass.fill();
 }
