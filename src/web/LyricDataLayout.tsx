@@ -263,7 +263,7 @@ export const LyricDataLayout: React.FC = () => {
 
     const load = async () => {
       try {
-        const manifestResponse = await fetch("/library-manifest.json");
+        const manifestResponse = await fetch(`${import.meta.env.BASE_URL}library-manifest.json`);
         if (!manifestResponse.ok) {
           throw new Error(`Failed to load library-manifest.json: ${manifestResponse.status}`);
         }

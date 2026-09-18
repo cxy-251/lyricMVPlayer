@@ -8,7 +8,12 @@ import {demo21RubiksSolverDevPlugin} from "./packages/web3dlab/demos/021-paper-r
 const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const paperWorkspaceRoot = path.join(repoRoot, "packages", "paper-video");
 const paperArtifactRoot = path.join(repoRoot, "artifacts", "paper-video", "output");
+// GH_PAGES_BASE lets the GitHub Pages workflow build for a project subpath
+// (e.g. "/lyricMVPlayer/") without touching the Cloudflare Pages build, which
+// keeps the default root base ("/").
+const base = process.env.GH_PAGES_BASE || "/";
 export default defineConfig({
+  base,
   plugins: [react(), glsl(), demo21RubiksSolverDevPlugin(repoRoot)],
   optimizeDeps: {
     exclude: ["cubing"],

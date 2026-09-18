@@ -11,6 +11,13 @@ const currentSongConfigPath = path.join(projectRoot, "src", "remotion", "current
 const libraryStatePath = path.join(commonRoot, "library-state.json");
 const queueCsvPath = path.join(commonRoot, "production-queue.csv");
 const demoOnly = process.argv.includes("--demo");
+// PUBLIC_BASE_URL lets the GitHub Pages workflow bake asset URLs for a project
+// subpath (e.g. "/lyricMVPlayer/") into the generated manifest/render-input
+// JSON. Defaults to "/" to match the existing Cloudflare Pages (root) deploy.
+const publicBase = (() => {
+  const raw = process.env.PUBLIC_BASE_URL || "/";
+  return raw.endsWith("/") ? raw : `${raw}/`;
+})();
 
 const ensureDir = (targetPath) => {
   fs.mkdirSync(targetPath, {recursive: true});
@@ -324,11 +331,11 @@ for (const songDirName of songDirNames) {
   const hasLyrics = Array.isArray(renderInput.lyrics) && renderInput.lyrics.length > 0;
   const rewrittenRenderInput = {
     ...renderInput,
-    audioSrc: `/songs/${encodeURIComponent(songDirName)}/audio.mp3`,
+    audioSrc: `${publicBase}songs/${encodeURIComponent(songDirName)}/audio.mp3`,
     background: {
       ...renderInput.background,
       kind: backgroundFileName ? "image" : renderInput.background?.kind ?? "color",
-      src: backgroundFileName ? `/songs/${encodeURIComponent(songDirName)}/${backgroundFileName}` : undefined,
+      src: backgroundFileName ? `${publicBase}songs/${encodeURIComponent(songDirName)}/${backgroundFileName}` : undefined,
     },
     songDir: songDirName,
   };
@@ -342,8 +349,8 @@ for (const songDirName of songDirNames) {
     id: songDirName,
     title: renderInput.title,
     artist: renderInput.artist,
-    renderInputUrl: `/songs/${encodeURIComponent(songDirName)}/render-input.json`,
-    audioFeaturesUrl: `/songs/${encodeURIComponent(songDirName)}/audio-features.json`,
+    renderInputUrl: `${publicBase}songs/${encodeURIComponent(songDirName)}/render-input.json`,
+    audioFeaturesUrl: `${publicBase}songs/${encodeURIComponent(songDirName)}/audio-features.json`,
     assetStatus: {
       audio: true,
       audioFeatures: true,

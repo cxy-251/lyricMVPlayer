@@ -191,7 +191,9 @@ const usePaperLibrary = () => {
     let cancelled = false;
     const loadPaperLibrary = async () => {
       try {
-        const library = await fetchPublicJson<{papers: PaperLibraryEntry[]}>("/paper-library.json");
+        const library = await fetchPublicJson<{papers: PaperLibraryEntry[]}>(
+          `${import.meta.env.BASE_URL}paper-library.json`,
+        );
         const manifests = await Promise.all(
           library.papers.slice(0, 80).map(async (paper) => {
             const manifest = normalizeManifestPaths(await fetchJson<RenderManifest>(paper.renderManifestPath));

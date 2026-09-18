@@ -39,7 +39,7 @@ const EffectLabRoute: React.FC = () => {
     let cancelled = false;
     const loadSong = async () => {
       try {
-        const manifestResponse = await fetch("/library-manifest.json");
+        const manifestResponse = await fetch(`${import.meta.env.BASE_URL}library-manifest.json`);
         if (!manifestResponse.ok) throw new Error("Failed to load manifest");
         const manifest = await manifestResponse.json();
         
@@ -121,6 +121,11 @@ const spectrumAtlasFallback = <div className="web-route-status">Loading spectrum
 //   /previews/*         → PaperStudioPage  (legacy)
 //   /templates/*        → PaperStudioPage  (legacy)
 
+// Strips the trailing slash from Vite's BASE_URL ("/" -> "", "/lyricMVPlayer/" -> "/lyricMVPlayer")
+// so the router works both at the domain root (Cloudflare Pages) and under a
+// GitHub Pages project subpath.
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 export const router = createBrowserRouter([
   {
     // Pathless layout: loads lyric data and makes it available to child routes
@@ -177,4 +182,4 @@ export const router = createBrowserRouter([
     path: "/studio/papers/*",
     element: <Suspense fallback={paperFallback}><PaperStudioPage /></Suspense>,
   },
-]);
+], {basename: routerBasename});

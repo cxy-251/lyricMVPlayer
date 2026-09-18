@@ -51,7 +51,7 @@ export const createAlbumTrack = ({
     id,
     title: renderInput.title || title || parsed.title,
     artist: renderInput.artist || artist || parsed.artist,
-    audioSrc: renderInput.audioSrc || `/songs/${encodeURIComponent(id)}/audio.mp3`,
+    audioSrc: renderInput.audioSrc || `${import.meta.env.BASE_URL}songs/${encodeURIComponent(id)}/audio.mp3`,
     coverSrc: renderInput.background?.src,
     durationInFrames: Math.max(1, renderInput.durationInFrames ?? Math.round(fps * 30)),
     fps,
@@ -65,9 +65,9 @@ export const loadAlbumTracksFromPublicManifest = async (): Promise<{
 }> => {
   let manifest: PublicLibraryManifest;
   try {
-    manifest = await fetchJson<PublicLibraryManifest>("/library-manifest.json");
+    manifest = await fetchJson<PublicLibraryManifest>(`${import.meta.env.BASE_URL}library-manifest.json`);
   } catch (err: any) {
-    throw new Error(`Failed to fetch /library-manifest.json: ${err?.message || err}`);
+    throw new Error(`Failed to fetch library-manifest.json: ${err?.message || err}`);
   }
 
   let gallerySongs = manifest.songs;
